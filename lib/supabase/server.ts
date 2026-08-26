@@ -1,4 +1,4 @@
-import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
 export async function createClient() {
@@ -12,21 +12,19 @@ export async function createClient() {
         getAll() {
           return cookieStore.getAll();
         },
-
         setAll(
-          cookiesToSet: {
+          cookiesToSet: Array<{
             name: string;
             value: string;
-            options?: CookieOptions;
-          }[]
+            options?: Parameters<typeof cookieStore.set>[2];
+          }>
         ) {
           try {
-            cookiesToSet.forEach(({ name, value, options }) => {
-              cookieStore.set(name, value, options);
-            });
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            );
           } catch {
-            // Cookie writes can fail inside certain Server Components.
-            // Middleware/auth refresh can handle them when necessary.
+            // Cookie writes can fail in Server Components.
           }
         },
       },
