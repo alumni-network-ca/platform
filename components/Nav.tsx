@@ -1,1 +1,30 @@
-import Link from 'next/link';import {Brand} from './Brand';export function Nav(){return <header className="topnav"><Brand/><nav className="navlinks"><Link href="/directory">Directory</Link><Link href="/directory?mentoring=true">Mentorship</Link><Link href="/admin">Admin</Link></nav><div className="navcta"><Link className="btn btnGhost" href="/login">Sign in</Link><Link className="btn btnPrimary" href="/claim">Claim your profile</Link></div></header>}
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Brand } from "./Brand";
+import { AuthActions } from "./AuthActions";
+
+const links = [
+  ["/", "Home"],
+  ["/directory", "Directory"],
+  ["/directory?mentoring=true", "Mentorship"],
+  ["/admin", "Admin"],
+] as const;
+
+export function Nav() {
+  const pathname = usePathname();
+  return (
+    <header className="topnav">
+      <Brand />
+      <nav className="navlinks" aria-label="Primary navigation">
+        {links.map(([href, label]) => {
+          const base = href.split("?")[0];
+          const active = base === "/" ? pathname === "/" : pathname.startsWith(base);
+          return <Link key={href} className={active ? "active" : ""} href={href}>{label}</Link>;
+        })}
+      </nav>
+      <AuthActions />
+    </header>
+  );
+}

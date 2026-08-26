@@ -24,7 +24,7 @@ export async function createClient() {
               cookieStore.set(name, value, options)
             );
           } catch {
-            // Cookie writes can fail in Server Components.
+            // Server Components cannot always write cookies.
           }
         },
       },
