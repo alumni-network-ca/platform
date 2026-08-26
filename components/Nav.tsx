@@ -8,8 +8,6 @@ import { AuthActions } from "./AuthActions";
 const links = [
   ["/", "Home"],
   ["/directory", "Directory"],
-  ["/directory?mentoring=true", "Mentorship"],
-  ["/admin", "Admin"],
 ] as const;
 
 export function Nav() {
@@ -19,8 +17,7 @@ export function Nav() {
       <Brand />
       <nav className="navlinks" aria-label="Primary navigation">
         {links.map(([href, label]) => {
-          const base = href.split("?")[0];
-          const active = base === "/" ? pathname === "/" : pathname.startsWith(base);
+          const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
           return <Link key={href} className={active ? "active" : ""} href={href}>{label}</Link>;
         })}
       </nav>
