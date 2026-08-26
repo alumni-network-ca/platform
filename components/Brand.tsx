@@ -1,0 +1,1 @@
+export function Brand(){return <div className="brand"><div className="mark">✦</div><div><div className="brandName">Herzliah Alumni Network</div><div className="brandSub">Private alumni directory</div></div></div>}
