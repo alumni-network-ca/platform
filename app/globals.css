@@ -27,3 +27,50 @@
 .adminGrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:22px}.adminTableCard{padding:0;overflow:hidden}.adminTableCard h3{padding:18px 20px;margin:0;border-bottom:1px solid var(--line)}.adminTableCard td small{display:block;color:var(--slate);font-size:10px;margin-top:3px}.statCard strong{font-size:26px;display:block}.statCard span{font-size:12px;color:var(--slate);display:block;margin-top:5px}
 @media(max-width:850px){.claimPage,.profileEditLayout,.adminGrid{grid-template-columns:1fr}.claimPage{gap:22px}.stickyCard{position:static}.myProfileHeader{flex-direction:column}.claimIntro h1{font-size:38px}}
 @media(max-width:600px){.choiceGrid,.formGrid{grid-template-columns:1fr}.full{grid-column:auto}.onboardingCard{padding:24px}.accountLink{display:none}}
+
+/* V4 polish */
+.brand{align-items:center!important}
+.brandLogo.brandIcon{
+  width:46px!important;
+  height:46px!important;
+  border-radius:50%!important;
+  object-fit:cover!important;
+  object-position:center center!important;
+  display:block!important;
+  flex:0 0 46px!important;
+  transform:translateY(0)!important;
+}
+.brandText{display:flex;flex-direction:column;justify-content:center;min-height:46px}
+.brandName{line-height:1.05}
+.brandSub{line-height:1;margin-top:6px}
+.wizardShell{max-width:1020px;margin:0 auto}
+.wizardTop{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:24px}
+.stepTabs{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:22px 0 30px}
+.stepTab{border:1px solid var(--line);background:#fff;border-radius:9px;padding:10px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--slate)}
+.stepTab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.stepTab.done{background:var(--burgundy-soft);color:var(--burgundy);border-color:var(--burgundy-soft)}
+.wizardSection{background:#fff;border:1px solid var(--line);border-radius:14px;padding:28px;margin-bottom:18px}
+.wizardSection h2{font-family:Georgia,serif;font-weight:500;font-size:27px;margin:0 0 8px}
+.wizardSection .intro{color:var(--slate);font-size:14px;line-height:1.55;margin-bottom:24px}
+.wizardActions{display:flex;justify-content:space-between;gap:12px;margin-top:24px}
+.selectOther{display:grid;grid-template-columns:1fr;gap:8px}
+.repeatCard{border:1px solid var(--line);border-radius:10px;padding:16px;margin:12px 0;background:#fbfbfc}
+.repeatHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.repeatHead h4{margin:0}
+.removeBtn{border:0;background:transparent;color:var(--burgundy);font-weight:700;cursor:pointer}
+.addRowBtn{border:1px dashed #aeb6c8;background:#fff;color:var(--ink);border-radius:8px;padding:10px 13px;font-weight:700;cursor:pointer}
+.reviewGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.reviewBox{background:#fafafb;border:1px solid var(--line);border-radius:9px;padding:15px}
+.reviewBox h4{margin:0 0 8px}
+.reviewBox p{margin:3px 0;color:var(--slate);font-size:13px}
+.adminSearchBar{display:flex;gap:10px;margin:16px 0}
+.adminSearchBar input{flex:1}
+.adminAlumniList{max-height:650px;overflow:auto;border:1px solid var(--line);border-radius:10px}
+.adminAlumniList table{margin:0}
+.adminName{font-weight:750}.adminMeta{font-size:11px;color:var(--slate);margin-top:3px}
+.profileTimeline{display:flex;flex-direction:column;gap:14px}
+.timelineItem{display:grid;grid-template-columns:110px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
+.timelineItem:last-child{border-bottom:0}
+.timelineYears{font-size:12px;color:var(--slate);font-family:monospace}
+.timelineTitle{font-weight:750}.timelineSub{font-size:13px;color:var(--slate);margin-top:3px}
+@media(max-width:800px){.stepTabs{grid-template-columns:1fr 1fr}.reviewGrid{grid-template-columns:1fr}.timelineItem{grid-template-columns:1fr}.wizardSection{padding:21px}}
