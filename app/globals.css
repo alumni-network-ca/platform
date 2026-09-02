@@ -17,7 +17,7 @@
 @media(max-width:600px){.topnav{display:flex;flex-wrap:wrap}.brand{flex:1}.navcta .btnGhost{display:none}.navlinks{width:100%;overflow-x:auto;justify-content:flex-start}.grid3,.filterPanel,.statCards,.profileGrid{grid-template-columns:1fr}.statsInner{grid-template-columns:1fr 1fr}.directoryToolbar{flex-direction:column}.person{grid-template-columns:48px 1fr}.ctas,.footer,.footer div,.authFooter{flex-direction:column;align-items:stretch}.footer div{gap:10px}.authPage{padding-top:35px}}
 
 /* Product V3 */
-.brandIcon{width:42px!important;height:42px!important;border-radius:50%;object-fit:cover;background:#fff}
+.brandIcon{width:42px!important;height:42px!important;object-fit:contain;background:transparent}
 .accountLink{font-size:13px;color:#d2d7e4;padding:8px 8px}.accountLink:hover{color:#fff}
 .textButton{border:0;background:transparent;color:var(--burgundy);font-weight:750;font-size:12px;cursor:pointer;padding:3px 0}
 .fieldLabel{display:flex;flex-direction:column;gap:7px;font-size:13px;font-weight:700;margin:14px 0}
@@ -33,8 +33,8 @@
 .brandLogo.brandIcon{
   width:46px!important;
   height:46px!important;
-  border-radius:50%!important;
-  object-fit:cover!important;
+  border-radius:0!important;
+  object-fit:contain!important;
   object-position:center center!important;
   display:block!important;
   flex:0 0 46px!important;
