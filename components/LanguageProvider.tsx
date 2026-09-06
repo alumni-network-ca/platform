@@ -13,10 +13,14 @@ import {
   translations,
 } from "@/lib/i18n";
 
+type TranslationSet =
+  | typeof translations.en
+  | typeof translations.fr;
+
 type LanguageContextType = {
   locale: Locale;
   setLocale: (locale: Locale) => void;
-  t: typeof translations.en;
+  t: TranslationSet;
 };
 
 const LanguageContext =
@@ -41,9 +45,7 @@ export function LanguageProvider({
     }
   }, []);
 
-  function setLocale(
-    newLocale: Locale
-  ) {
+  function setLocale(newLocale: Locale) {
     setLocaleState(newLocale);
 
     localStorage.setItem(
@@ -51,7 +53,8 @@ export function LanguageProvider({
       newLocale
     );
 
-    document.cookie = `herzliah-language=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
+    document.cookie =
+      `herzliah-language=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
   }
 
   return (
