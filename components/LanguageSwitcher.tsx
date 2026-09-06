@@ -3,10 +3,7 @@
 import { useLanguage } from "./LanguageProvider";
 
 export function LanguageSwitcher() {
-  const {
-    locale,
-    setLocale,
-  } = useLanguage();
+  const { locale, setLocale } = useLanguage();
 
   return (
     <div
@@ -16,25 +13,20 @@ export function LanguageSwitcher() {
         gap: 6,
         fontSize: 13,
         fontWeight: 700,
+        color: "white",
       }}
     >
       <button
         type="button"
-        onClick={() =>
-          setLocale("en")
-        }
+        onClick={() => setLocale("en")}
         style={{
           border: "none",
           background: "transparent",
           cursor: "pointer",
-          fontWeight:
-            locale === "en"
-              ? 800
-              : 500,
-          opacity:
-            locale === "en"
-              ? 1
-              : 0.55,
+          color: "white",
+          fontWeight: locale === "en" ? 800 : 500,
+          opacity: locale === "en" ? 1 : 0.6,
+          padding: 0,
         }}
       >
         EN
@@ -42,7 +34,8 @@ export function LanguageSwitcher() {
 
       <span
         style={{
-          opacity: 0.4,
+          color: "white",
+          opacity: 0.5,
         }}
       >
         |
@@ -50,21 +43,15 @@ export function LanguageSwitcher() {
 
       <button
         type="button"
-        onClick={() =>
-          setLocale("fr")
-        }
+        onClick={() => setLocale("fr")}
         style={{
           border: "none",
           background: "transparent",
           cursor: "pointer",
-          fontWeight:
-            locale === "fr"
-              ? 800
-              : 500,
-          opacity:
-            locale === "fr"
-              ? 1
-              : 0.55,
+          color: "white",
+          fontWeight: locale === "fr" ? 800 : 500,
+          opacity: locale === "fr" ? 1 : 0.6,
+          padding: 0,
         }}
       >
         FR
