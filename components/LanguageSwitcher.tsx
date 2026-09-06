@@ -1,9 +1,26 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useLanguage } from "./LanguageProvider";
 
 export function LanguageSwitcher() {
-  const { locale, setLocale } = useLanguage();
+  const {
+    locale,
+    setLocale,
+  } = useLanguage();
+
+  const router = useRouter();
+
+  function changeLanguage(
+    language: "en" | "fr"
+  ) {
+    setLocale(language);
+
+    document.cookie =
+      `herzliah-language=${language}; path=/; max-age=31536000; SameSite=Lax`;
+
+    router.refresh();
+  }
 
   return (
     <div
@@ -18,14 +35,22 @@ export function LanguageSwitcher() {
     >
       <button
         type="button"
-        onClick={() => setLocale("en")}
+        onClick={() =>
+          changeLanguage("en")
+        }
         style={{
           border: "none",
           background: "transparent",
           cursor: "pointer",
           color: "white",
-          fontWeight: locale === "en" ? 800 : 500,
-          opacity: locale === "en" ? 1 : 0.6,
+          fontWeight:
+            locale === "en"
+              ? 800
+              : 500,
+          opacity:
+            locale === "en"
+              ? 1
+              : 0.6,
           padding: 0,
         }}
       >
@@ -43,14 +68,22 @@ export function LanguageSwitcher() {
 
       <button
         type="button"
-        onClick={() => setLocale("fr")}
+        onClick={() =>
+          changeLanguage("fr")
+        }
         style={{
           border: "none",
           background: "transparent",
           cursor: "pointer",
           color: "white",
-          fontWeight: locale === "fr" ? 800 : 500,
-          opacity: locale === "fr" ? 1 : 0.6,
+          fontWeight:
+            locale === "fr"
+              ? 800
+              : 500,
+          opacity:
+            locale === "fr"
+              ? 1
+              : 0.6,
           padding: 0,
         }}
       >
