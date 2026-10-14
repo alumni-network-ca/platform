@@ -23,8 +23,8 @@ const FORCE_FIELDS = args.has("--force-fields");
 const ROOT = path.resolve(import.meta.dirname, "../..");
 const PROJECT_DIR = path.join(ROOT, ".github/project");
 const MUTATION_GAP_MS = 1000; // stays under GitHub's 80 content-creating requests per minute
-const GRAPHQL_BATCH = 20;
-const GRAPHQL_GAP_MS = 3000; // 20 mutations x 5 points every 3 s stays under 2,000 points per minute
+const GRAPHQL_BATCH = 10;
+const GRAPHQL_GAP_MS = 1500; // 10 mutations x 5 points every 1.5 s stays under 2,000 points per minute
 
 const stats = { created: 0, updated: 0, closed: 0, linked: 0, labels: 0, milestones: 0, projectItems: 0, fieldValues: 0 };
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -420,14 +420,14 @@ async function ensureFields(projectId) {
     const field = fields.get(def.name);
     if (!field) {
       log(`create field ${def.name}`);
-      await graphql(
+      if (!DRY_RUN) await graphql(
         `mutation($p: ID!, $name: String!, $opts: [ProjectV2SingleSelectFieldOptionInput!]) {
           createProjectV2Field(input: { projectId: $p, dataType: SINGLE_SELECT, name: $name, singleSelectOptions: $opts }) { projectV2Field { ... on ProjectV2FieldCommon { id } } } }`,
         { p: projectId, name: def.name, opts: options },
       );
     } else if (def.options.map((o) => o.name).join("|") !== field.options.map((o) => o.name).join("|")) {
       log(`update options of field ${def.name}`);
-      try {
+      if (!DRY_RUN) try {
         await graphql(
           `mutation($f: ID!, $opts: [ProjectV2SingleSelectFieldOptionInput!]) {
             updateProjectV2Field(input: { fieldId: $f, singleSelectOptions: $opts }) { projectV2Field { ... on ProjectV2FieldCommon { id } } } }`,
@@ -445,7 +445,7 @@ async function ensureFields(projectId) {
     for (const name of list) {
       if (fields.has(name)) continue;
       log(`create field ${name}`);
-      await graphql(
+      if (!DRY_RUN) await graphql(
         `mutation($p: ID!, $name: String!) { createProjectV2Field(input: { projectId: $p, dataType: ${type}, name: $name }) { projectV2Field { ... on ProjectV2FieldCommon { id } } } }`,
         { p: projectId, name },
       );
@@ -480,10 +480,32 @@ async function loadProjectItems(projectId) {
   return items;
 }
 
+// Project mutations are idempotent, so a chunk that fails with a transient server error is retried, then sent one by one.
 async function runBatched(mutations) {
   for (let i = 0; i < mutations.length; i += GRAPHQL_BATCH) {
     const chunk = mutations.slice(i, i + GRAPHQL_BATCH);
-    await graphql(`mutation { ${chunk.map((m, j) => `m${j}: ${m}`).join("\n")} }`);
+    const send = (list) => graphql(`mutation { ${list.map((m, j) => `m${j}: ${m}`).join("\n")} }`);
+    try {
+      await send(chunk);
+    } catch (e) {
+      console.warn(`  batch failed (${e.message.slice(0, 80)}); retrying one by one`);
+      await sleep(10_000);
+      for (const m of chunk) {
+        for (let attempt = 1; ; attempt++) {
+          try {
+            await send([m]);
+            break;
+          } catch (err) {
+            if (attempt === 3) {
+              console.warn(`  giving up on one mutation (re-run the seeder to retry): ${err.message.slice(0, 80)}`);
+              break;
+            }
+            await sleep(5_000 * attempt);
+          }
+        }
+        await sleep(GRAPHQL_GAP_MS / GRAPHQL_BATCH);
+      }
+    }
     await sleep(GRAPHQL_GAP_MS);
   }
 }
