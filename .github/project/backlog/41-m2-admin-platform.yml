@@ -1,0 +1,360 @@
+defaults:
+  milestone: M2
+  assignee: Gderhy
+  track: Tech
+
+items:
+  # ---------------------------------------------------------------- admin (WS2)
+  - key: ADM-01
+    title: "Admin shell: tenant-scoped, permission-aware navigation"
+    epic: EPIC-ADM
+    labels: [type:feature, area:admin, area:ui, P0, launch-blocker]
+    size: S
+    depends: [FND-02, FND-11]
+    reqs: [F13]
+    class: Refactor
+    summary: |
+      An /admin layout for owner, admin and reviewer, requiring MFA. The nav shows only the sections the role allows,
+      and the server re-checks every page and action. Handles users with several memberships (fixes F20).
+    ac:
+      - Each role sees exactly its matrix (ADR 0005); hidden pages return 403 when requested directly.
+
+  - key: ADM-02
+    title: "Admin dashboard: lifecycle counts and contacts initiated, with date filters"
+    epic: EPIC-ADM
+    labels: [type:feature, area:admin, P1, launch-blocker]
+    size: M
+    depends: [ADM-01]
+    reqs: [F12, E8]
+    summary: |
+      Cards: imported, invited (pending, expired, bounced), claimed, pending review, published, overdue confirmation
+      and contacts initiated, with a date range filter. Each card links to the filtered roster or queue. Counts come
+      from tenant-scoped SQL functions.
+    ac:
+      - The numbers match the seeded fixtures in tests.
+
+  - key: ADM-03
+    title: "Alumni roster: server-side search, filters, pagination, record detail"
+    epic: EPIC-ADM
+    labels: [type:feature, area:admin, P0, launch-blocker]
+    size: L
+    depends: [ADM-01]
+    reqs: [F12]
+    class: Refactor
+    summary: |
+      Filters: status, invitation status, class year, published/hidden, freshness state, bounced email, and text.
+      The record detail shows public and private fields (according to permission), invitations, the claim and request
+      history and the audit trail. Reviewers see it read-only.
+    ac:
+      - Works with 10k records (paginated server-side); filters are reflected in the URL and reused by export (EXP-01).
+
+  - key: ADM-04
+    title: "Record actions: edit, suspend/reactivate, archive, mark deceased, resend/revoke invitation"
+    epic: EPIC-ADM
+    labels: [type:feature, area:admin, P0, launch-blocker]
+    size: L
+    depends: [ADM-03, ONB-01]
+    reqs: [F12, F14, S3, S7]
+    summary: |
+      Each action is a permission-checked RPC with an audit record, and a reason is required for suspend, archive and
+      deceased. A suspension revokes access on the next request. Staff edits never set last_confirmed_at (E6).
+    ac:
+      - A reviewer is denied every mutating action by both the UI and direct RPC calls.
+
+  - key: ADM-05
+    title: "Approval queue UI (access requests and claim conflicts)"
+    epic: EPIC-ADM
+    labels: [type:feature, area:admin, area:onboarding, P0, launch-blocker]
+    size: M
+    depends: [ONB-04, ADM-01]
+    reqs: [F12, HL4]
+    summary: |
+      A queue with tabs (pending, needs info, decided), suggested matches side by side, and actions to link, create
+      new, ask for info or reject (with a reason template, EN/FR). The pending count shows in the nav.
+    ac:
+      - Decisions are reflected immediately and send the correct emails.
+
+  - key: ADM-06
+    title: "Staff management: invite staff, assign owner/admin/reviewer, remove access"
+    epic: EPIC-ADM
+    labels: [type:feature, area:admin, area:auth, P1, launch-blocker]
+    size: M
+    depends: [ADM-01, EML-03]
+    reqs: [F13, S1, S3]
+    summary: |
+      Owner only: invite staff by email (staff invitation template), change roles, revoke access. The last owner
+      can't demote or remove themselves. Staff must set up MFA on first sign-in.
+    ac:
+      - Role changes take effect on the next request and are audited; there's no self-escalation path.
+
+  - key: ADM-07
+    title: "Audit log viewer"
+    epic: EPIC-ADM
+    labels: [type:feature, area:admin, P1, launch-blocker]
+    size: S
+    depends: [FND-12, ADM-01]
+    reqs: [F14, S7]
+    summary: A tenant-scoped, read-only list with filters (actor, action, target, date) and pagination. Platform-admin access events are visible to the school owner.
+    ac:
+      - Only owner, admin and reviewer can see it; there's no edit or delete anywhere.
+
+  - key: ADM-08
+    title: "Institution settings: branding, sender, reply-to, default locale, options"
+    epic: EPIC-ADM
+    labels: [type:feature, area:admin, area:platform, P1, launch-blocker]
+    size: M
+    depends: [ADM-01, FND-02]
+    reqs: [MT6, F8]
+    summary: |
+      Owner only. Logo upload or URL, colours with a contrast check, email display name, reply-to address, default
+      language, and the per-institution career fields and networking options (enable, disable, rename EN/FR).
+    ac:
+      - A change shows on the tenant landing page and in emails without a deploy, and is audited.
+
+  # ---------------------------------------------------------------- import / export (WS2)
+  - key: IMP-01
+    title: "CSV import template and field mapping documentation"
+    epic: EPIC-IMPEXP
+    labels: [type:docs, area:import-export, P0, launch-blocker]
+    size: S
+    depends: [DEC-02, DEC-05]
+    reqs: [F15]
+    summary: |
+      A downloadable CSV template (EN/FR headers accepted), a sample file, and docs/admin/csv-import.md describing
+      the columns, which are required, the formats (grad year, email), the matching policy (DEC-05), and how updates
+      vs creates work.
+    ac:
+      - Herzliah can produce the file from the docs alone (HERZ-03).
+
+  - key: IMP-02
+    title: "Import upload and validation (server-side)"
+    epic: EPIC-IMPEXP
+    labels: [type:feature, area:import-export, P0, launch-blocker]
+    size: L
+    depends: [IMP-01, FND-05]
+    reqs: [F15, S6]
+    class: Refactor
+    summary: |
+      - **Upload:** up to 5 MB and 10k rows. Files are parsed server-side with papaparse, accepting UTF-8 with or
+        without BOM and Windows-1252 fallback.
+      - **Storage:** an import_batch is created and rows go into import_rows with a normalized payload, row-level
+        errors, duplicates within the file, matches against existing records (school id, then email) and ambiguous
+        name + year matches.
+      - **Isolation:** the institution comes from the server, never from the file.
+    ac:
+      - "Bad grad years, invalid emails, missing required fields and duplicate rows are each reported per row; nothing is written to alumni tables yet."
+
+  - key: IMP-03
+    title: "Import preview and review UI"
+    epic: EPIC-IMPEXP
+    labels: [type:feature, area:import-export, area:ui, P0, launch-blocker]
+    size: M
+    depends: [IMP-02, ADM-01]
+    reqs: [F15]
+    summary: |
+      A summary (to create, to update, unchanged, errors, needs review), a filterable row table, decisions on
+      ambiguous matches (match to a record or create new), a downloadable error report, and Cancel, which discards
+      the batch.
+    ac:
+      - Cancelling leaves no trace in alumni tables; the batch is marked cancelled.
+
+  - key: IMP-04
+    title: "Import commit: idempotent, retry-safe, update-vs-create, summary and audit"
+    epic: EPIC-IMPEXP
+    labels: [type:feature, area:import-export, area:db, P0, launch-blocker]
+    size: L
+    depends: [IMP-03, DEC-05]
+    reqs: [F15, S7]
+    summary: |
+      - **Commit:** commit_import(batch_id) processes rows in chunks. Each row is applied once (row outcome
+        recorded), so a retry after a partial failure continues without duplicates.
+      - **Updates:** only fields present in the file change, and alumnus-maintained public fields are never
+        overwritten after a claim.
+      - **Records:** imported records are status imported, not login accounts.
+      - **Audit:** a final summary of created, updated, skipped and failed rows.
+    ac:
+      - Running commit twice gives the same database state.
+      - A concurrent commit of the same batch is refused.
+
+  - key: IMP-05
+    title: "Bulk invite after import"
+    epic: EPIC-IMPEXP
+    labels: [type:feature, area:import-export, area:onboarding, P1, launch-blocker]
+    size: S
+    depends: [IMP-04, ONB-01]
+    reqs: [F12, E2]
+    summary: Select imported records (all from a batch, or filtered) and send invitations through the outbox, throttled per day (e.g. 90/day on the free tier). Shows progress and lets the admin skip records that were already invited.
+    ac:
+      - "Never sends two invitations to the same record; respects suppressions."
+
+  - key: EXP-01
+    title: "Filtered export to CSV and XLSX with field permissions and formula neutralization"
+    epic: EPIC-IMPEXP
+    labels: [type:feature, area:import-export, P1, launch-blocker]
+    size: M
+    depends: [ADM-03]
+    reqs: [F16, S6]
+    summary: |
+      Exports use the roster's current filters and run under the caller's RLS. The field set depends on permission
+      (sensitive contact fields need the export permission). Cells beginning with = + - @ tab or CR are prefixed with
+      an apostrophe. XLSX is generated with exceljs.
+    ac:
+      - Formula injection payloads are neutralized (unit test).
+      - A reviewer can't export.
+
+  - key: EXP-02
+    title: "Export security: private storage, short-lived links, cleanup, audit"
+    epic: EPIC-IMPEXP
+    labels: [type:security, area:import-export, P1, launch-blocker]
+    size: S
+    depends: [EXP-01]
+    reqs: [F16, S6, S7]
+    summary: |
+      Files go to a private bucket at exports/{institution}/{id}. Downloads go through a signed URL valid for 5
+      minutes, issued only to the requester after a permission re-check. A job deletes files after 24 h. Every export
+      is audited with its filters and row count.
+    ac:
+      - "Changing the export id, or using another tenant's id, returns 404 or 403. Expired links fail."
+
+  # ---------------------------------------------------------------- freshness (WS4)
+  - key: FRS-01
+    title: "Freshness data model with provenance"
+    epic: EPIC-FRS
+    labels: [type:feature, area:freshness, area:db, P0, launch-blocker]
+    size: S
+    depends: [FND-04]
+    reqs: [E5, E6]
+    adr: "0008"
+    summary: |
+      last_confirmed_at is kept separate from updated_at. profile_confirmations records the source (alumnus_link,
+      alumnus_app, admin_edit) and the actor. Only alumnus sources move last_confirmed_at.
+    ac:
+      - pgTAP proves staff edits never change last_confirmed_at.
+
+  - key: FRS-02
+    title: "Rolling confirmation scheduler (daily job)"
+    epic: EPIC-FRS
+    labels: [type:feature, area:freshness, area:email, P0, launch-blocker]
+    size: M
+    depends: [FRS-01, EML-01, DEC-06]
+    reqs: [E5, E7, S9]
+    summary: |
+      /api/cron/freshness runs daily. For each profile that is due (12 months after the last confirmation) it creates
+      a confirmation_request and enqueues an email, with reminders at +14 and +30 days, and marks the profile overdue
+      after the last reminder. It skips suppressed recipients and records job_runs. Idempotent per day and per cycle.
+      A test mode compresses the schedule (minutes instead of months) for HL6.
+    ac:
+      - Running the job twice in a day sends nothing extra.
+      - A missed run raises an alert.
+
+  - key: FRS-03
+    title: "Confirmation page /confirm/[token] (scanner-safe)"
+    epic: EPIC-FRS
+    labels: [type:feature, area:freshness, P0, launch-blocker]
+    size: M
+    depends: [FRS-02]
+    reqs: [E5, E6, E3]
+    summary: |
+      GET validates the token and shows a profile summary with "Yes, still accurate" and "Update my profile" (which
+      goes to sign-in and then /me). Only the POST from the button confirms (CSRF-protected). Expired or used tokens
+      show a friendly recovery path.
+    ac:
+      - "A GET or HEAD request (link scanner) never confirms. The POST records source=alumnus_link."
+
+  - key: FRS-04
+    title: "Freshness reporting for admins"
+    epic: EPIC-FRS
+    labels: [type:feature, area:freshness, area:admin, P1, launch-blocker]
+    size: M
+    depends: [FRS-02, ADM-03]
+    reqs: [E8]
+    summary: |
+      Metrics: confirmed within 12 months, due, overdue, never confirmed, and undeliverable (shown separately, never
+      counted as confirmed). The denominator is active claimed profiles. Each metric links to the filtered roster,
+      which can be exported (EXP-01).
+    ac:
+      - The definitions are shown in the UI tooltips; the numbers match the fixtures.
+
+  # ---------------------------------------------------------------- platform (WS4)
+  - key: SA-01
+    title: "Platform console: list, create, configure and suspend institutions"
+    epic: EPIC-SA
+    labels: [type:feature, area:platform, P0, launch-blocker]
+    size: L
+    depends: [FND-13, FND-07]
+    reqs: [MT1, MT6]
+    summary: |
+      /console on the root domain, for platform admins with MFA. Create an institution (name, slug/subdomain,
+      branding, default language, sender name, reply-to), seed its default career fields and options, and
+      suspend/reactivate it (suspended tenants return 404 with a notice). Shows per-tenant counts but no personal
+      data. Audited.
+    ac:
+      - A new institution is reachable at <slug>.<domain> immediately, with no deploy.
+
+  - key: SA-02
+    title: "Appoint the initial institution owner"
+    epic: EPIC-SA
+    labels: [type:feature, area:platform, area:onboarding, P0, launch-blocker]
+    size: S
+    depends: [SA-01, ADM-06]
+    reqs: [MT6]
+    summary: From the console, invite the first owner by email using the staff invitation. They must set up MFA, and can then invite the rest of their staff.
+    ac:
+      - The owner can sign in on the tenant subdomain and reach /admin after enrolling MFA.
+
+  - key: SA-03
+    title: "Provisioning and offboarding runbook + script"
+    epic: EPIC-SA
+    labels: [type:docs, area:platform, P1, launch-blocker]
+    size: S
+    depends: [SA-02]
+    reqs: [MT6]
+    summary: |
+      docs/runbooks/provision-institution.md covers: create → configure → appoint owner → import → invite → isolation
+      check → activate. It also covers suspension, offboarding and data return/deletion per DEC-08.
+    ac:
+      - "Dry run: a third test institution is provisioned end-to-end from the runbook alone."
+
+  - key: SA-04
+    title: "Platform health view"
+    epic: EPIC-SA
+    labels: [type:feature, area:platform, area:ops, P2]
+    size: S
+    depends: [SA-01, FND-17]
+    reqs: [S9]
+    summary: Recent job runs, the email failure rate, invitation backlog and per-tenant counts.
+
+  # ---------------------------------------------------------------- public pages (WS4)
+  - key: PUB-01
+    title: "Tenant landing page (branded, real or no stats)"
+    epic: EPIC-PUB
+    labels: [type:feature, area:public, area:ui, P1, launch-blocker]
+    size: M
+    depends: [FND-02, FND-07]
+    reqs: [F5, F9]
+    class: Refactor
+    summary: |
+      A branded EN/FR landing page with a value proposition, "I received an invitation" / "Request access" / "Sign in"
+      buttons and an FAQ. Stats come from an anon-safe public_stats(slug) (aggregates only, above a minimum
+      threshold) or are hidden. Removes the fake "recently joined" people (F25).
+    ac:
+      - The page shows no personal data; it's indexable, but authenticated routes are not.
+
+  - key: PUB-02
+    title: "Privacy policy and terms pages, footer links, consent at onboarding"
+    epic: EPIC-PUB
+    labels: [type:feature, area:public, area:i18n, P0, launch-blocker]
+    size: S
+    depends: [LEGAL-02]
+    reqs: [S5]
+    summary: Versioned EN/FR pages. Acceptance is recorded in consents during onboarding. When the version changes, users re-accept on their next sign-in.
+    ac:
+      - A consent row exists for every onboarded user with the current versions.
+
+  - key: PUB-03
+    title: "Root site alumni-network.ca ('for schools')"
+    epic: EPIC-PUB
+    labels: [type:feature, area:public, P2]
+    size: S
+    depends: [FND-02]
+    summary: A minimal bilingual page describing the platform for schools, with a contact link. No tenant data.

@@ -1,0 +1,78 @@
+# Outside the launch baseline (§7). Each needs Noah's scope approval with requirements and acceptance criteria before work starts.
+defaults:
+  milestone: FUT
+  epic: EPIC-FUT
+  assignee: castielnoah-art
+  track: Decision
+  labels: [type:feature, P2]
+
+items:
+  - key: FUT-01
+    title: "Student access workflow (restricted, school-mediated)"
+    size: XL
+    reqs: [ST1, ST2]
+    summary: |
+      Options: school-mediated introductions, tightly restricted direct contact, or both. Explicit alumni opt-in with
+      easy withdrawal, safeguards for minors (school oversight, reporting and blocking, contact limits), minimal
+      recorded metadata, and school or specialist input on consent. Requires an approved workflow, a permission matrix,
+      consent wording, an abuse procedure and isolation tests before any release.
+
+  - key: FUT-02
+    title: "Class reunion organizer"
+    size: L
+    summary: Gab's idea. Help a graduating class organize a reunion using the directory (class lists, opt-in RSVP, organizer tools) without exposing contact details beyond what each alumnus allows.
+
+  - key: FUT-03
+    title: "Jobs and opportunities board"
+    size: L
+    summary: Job postings and opportunity boards, distinct from the launch networking preferences.
+
+  - key: FUT-04
+    title: "Events (listings, registration, invitations)"
+    size: L
+    summary: Event listings, registration and invitations per institution.
+
+  - key: FUT-05
+    title: "Class communities, groups and chapters"
+    size: L
+    summary: Graduation-year communities and interest, regional or institutional groups with scoped membership.
+
+  - key: FUT-06
+    title: "Mentorship matching programs"
+    size: L
+    summary: Structured matching and program workflows beyond a mentoring preference.
+
+  - key: FUT-07
+    title: "Alumni businesses directory"
+    size: M
+    summary: Business listings or discovery, with separate publication rules.
+
+  - key: FUT-08
+    title: "Engagement analytics and notifications"
+    size: L
+    summary: Broader engagement analysis and notifications beyond the required contact, freshness and operational metrics.
+
+  - key: FUT-09
+    title: "Native Excel (.xlsx) import"
+    size: S
+    summary: Accept .xlsx in addition to the CSV launch baseline.
+
+  - key: FUT-10
+    title: "Profile photos"
+    size: M
+    summary: Optional photos in Supabase Storage with tenant-scoped RLS, type and size validation, and admin removal.
+
+  - key: FUT-11
+    title: "Relay messaging (message via the network)"
+    size: L
+    summary: A contact form that sends through the platform with Reply-To set to the sender, so no address is exposed. Includes rate limits, reporting and blocking.
+
+  - key: FUT-12
+    title: "School self-service signup and billing"
+    size: L
+    summary: Schools sign up, configure their tenant and pay (e.g. Stripe), within platform-admin guardrails.
+
+  - key: FUT-13
+    title: "Newsletters and marketing campaigns"
+    size: M
+    summary: CASL-compliant campaigns with consent management and unsubscribe. Outside transactional email.

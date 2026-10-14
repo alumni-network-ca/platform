@@ -1,0 +1,152 @@
+# Board configuration consumed by scripts/github/seed-backlog.mjs.
+# The issues themselves live in ./backlog/*.yml.
+
+repo: alumni-network-ca/platform
+
+project:
+  owner: alumni-network-ca
+  title: "Alumni Network: Herzliah launch"
+  shortDescription: "Every task, decision and business step to launch the Herzliah pilot (target 2026-12-01) and beyond."
+  readme: |
+    ## How to use this board
+    - **Board**: drag cards across Status. Open issues start in *Backlog*; move to *Ready* when the Definition of Ready is met.
+    - **Milestones** are the delivery phases from the requirements document (§10):
+      M0 Setup & audit → M1 Platform foundation → M2 Product completion → M3 Production readiness → M4 Herzliah pilot.
+    - **Track** splits Tech (Gab), Business, Legal and Decision (Noah).
+    - `launch-blocker` = must be done (or have a recorded exception from Noah) before the pilot.
+    - `needs-noah` = waiting on a business/product decision or action.
+    - The backlog's source of truth is `.github/project/backlog/*.yml` in the repo; see CONTRIBUTING.md.
+
+labels:
+  # type
+  - { name: "type:epic", color: "3E4B9E", description: "Groups related issues (sub-issues)" }
+  - { name: "type:feature", color: "1D76DB", description: "New or changed user-facing capability" }
+  - { name: "type:bug", color: "D73A4A", description: "Something is broken" }
+  - { name: "type:chore", color: "C5DEF5", description: "Tooling, config, maintenance" }
+  - { name: "type:security", color: "B60205", description: "Security control or vulnerability fix" }
+  - { name: "type:test", color: "0E8A16", description: "Tests and acceptance evidence" }
+  - { name: "type:docs", color: "0075CA", description: "Documentation, runbooks, guides" }
+  - { name: "type:infra", color: "5319E7", description: "Hosting, environments, accounts, DNS" }
+  - { name: "type:decision", color: "FBCA04", description: "Needs a recorded decision (decision register)" }
+  - { name: "type:business", color: "F9D0C4", description: "Business / school coordination task" }
+  - { name: "type:legal", color: "E99695", description: "Legal, privacy or compliance task" }
+  # area
+  - { name: "area:db", color: "BFDADC", description: "Schema, migrations, RLS, RPCs" }
+  - { name: "area:auth", color: "BFDADC", description: "Authentication, sessions, MFA" }
+  - { name: "area:tenancy", color: "BFDADC", description: "Multi-tenant isolation and routing" }
+  - { name: "area:onboarding", color: "BFDADC", description: "Invitations, claims, access requests" }
+  - { name: "area:profile", color: "BFDADC", description: "Alumni profile and preferences" }
+  - { name: "area:directory", color: "BFDADC", description: "Private directory and search" }
+  - { name: "area:contact", color: "BFDADC", description: "Contact channels and Contacts Initiated" }
+  - { name: "area:admin", color: "BFDADC", description: "Institution administration" }
+  - { name: "area:import-export", color: "BFDADC", description: "CSV import, CSV/XLSX export" }
+  - { name: "area:email", color: "BFDADC", description: "Transactional email" }
+  - { name: "area:freshness", color: "BFDADC", description: "Annual confirmation and freshness reporting" }
+  - { name: "area:i18n", color: "BFDADC", description: "English / French" }
+  - { name: "area:ui", color: "BFDADC", description: "Design system, layout, accessibility" }
+  - { name: "area:platform", color: "BFDADC", description: "Super admin / institution provisioning" }
+  - { name: "area:ops", color: "BFDADC", description: "Production operations, backups, monitoring" }
+  - { name: "area:ci", color: "BFDADC", description: "CI/CD and developer tooling" }
+  - { name: "area:process", color: "BFDADC", description: "Project management and workflow" }
+  - { name: "area:public", color: "BFDADC", description: "Public landing and legal pages" }
+  # priority and flags
+  - { name: "P0", color: "B60205", description: "Critical path / launch-critical" }
+  - { name: "P1", color: "D93F0B", description: "Needed for launch, not on critical path" }
+  - { name: "P2", color: "FBCA04", description: "Nice to have / after launch" }
+  - { name: "launch-blocker", color: "000000", description: "Must be done or formally deferred by Noah before the pilot" }
+  - { name: "needs-noah", color: "FEF2C0", description: "Waiting on Noah (decision, approval or action)" }
+  - { name: "pre-existing", color: "D4C5F9", description: "Built before the audit (V1–V4 MVP)" }
+
+deleteLabels: [bug, documentation, enhancement, "good first issue", "help wanted", question]
+
+milestones:
+  - key: V0
+    title: "V0 · Initial MVP (pre-audit)"
+    description: "Work delivered in V1–V4 (Aug–Sep 2026) before the audit. Issues are closed and classified Retain / Refactor per requirements §1."
+    start: 2026-08-26
+    due: 2026-09-06
+    state: closed
+  - key: M0
+    title: "M0 · Setup & audit"
+    description: "Repo/org/board, workflow, audit deliverables, ADRs, decisions, business accounts. (Requirements §10 phase 1)"
+    start: 2026-10-14
+    due: 2026-10-18
+  - key: M1
+    title: "M1 · Platform foundation"
+    description: "Schema v2, RLS, tenancy, auth, MFA, audit log, design system, i18n, CI, environments. Gate: two-tenant isolation tests pass. (§10 phase 2)"
+    start: 2026-10-19
+    due: 2026-11-01
+  - key: M2
+    title: "M2 · Product completion"
+    description: "Onboarding/claims, email, profile, directory, contact, admin, import/export, freshness, platform console. (§10 phase 3)"
+    start: 2026-11-02
+    due: 2026-11-15
+  - key: M3
+    title: "M3 · Production readiness"
+    description: "Full test evidence, security review, production infra, backups/restore drill, runbooks, data-load rehearsal. Staging demo 2026-11-20. (§10 phase 4)"
+    start: 2026-11-16
+    due: 2026-11-22
+  - key: M4
+    title: "M4 · Herzliah pilot launch"
+    description: "Acceptance, training, production release, invitation waves, pilot monitoring. Target 2026-12-01. (§10 phase 5)"
+    start: 2026-11-23
+    due: 2026-12-01
+  - key: FUT
+    title: "Future · Post-launch modules"
+    description: "Outside the launch baseline. Each needs a separate scope decision with requirements and acceptance criteria."
+
+fields:
+  status:
+    name: Status
+    options:
+      - { name: Backlog, color: GRAY, description: "Not ready to start" }
+      - { name: Ready, color: BLUE, description: "Definition of Ready met" }
+      - { name: In progress, color: YELLOW, description: "Being worked on" }
+      - { name: In review, color: PURPLE, description: "PR open / awaiting approval" }
+      - { name: Blocked, color: RED, description: "Waiting on something external" }
+      - { name: Done, color: GREEN, description: "Merged / completed" }
+  singleSelect:
+    - name: Priority
+      options:
+        - { name: P0, color: RED, description: "Critical path" }
+        - { name: P1, color: ORANGE, description: "Launch scope" }
+        - { name: P2, color: YELLOW, description: "Later" }
+    - name: Size
+      options:
+        - { name: XS, color: GRAY, description: "< 2 hours" }
+        - { name: S, color: BLUE, description: "half a day" }
+        - { name: M, color: GREEN, description: "1–2 days" }
+        - { name: L, color: YELLOW, description: "3–4 days" }
+        - { name: XL, color: RED, description: "1 week+ (split it)" }
+    - name: Track
+      options:
+        - { name: Tech, color: BLUE, description: "Engineering (Gab)" }
+        - { name: Business, color: PINK, description: "Business / school (Noah)" }
+        - { name: Legal, color: PURPLE, description: "Legal / privacy (Noah + counsel)" }
+        - { name: Decision, color: YELLOW, description: "Decision register (Noah approves)" }
+    - name: Area
+      options:
+        - { name: db, color: GRAY, description: "" }
+        - { name: auth, color: GRAY, description: "" }
+        - { name: tenancy, color: GRAY, description: "" }
+        - { name: onboarding, color: GRAY, description: "" }
+        - { name: profile, color: GRAY, description: "" }
+        - { name: directory, color: GRAY, description: "" }
+        - { name: contact, color: GRAY, description: "" }
+        - { name: admin, color: GRAY, description: "" }
+        - { name: import-export, color: GRAY, description: "" }
+        - { name: email, color: GRAY, description: "" }
+        - { name: freshness, color: GRAY, description: "" }
+        - { name: i18n, color: GRAY, description: "" }
+        - { name: ui, color: GRAY, description: "" }
+        - { name: platform, color: GRAY, description: "" }
+        - { name: ops, color: GRAY, description: "" }
+        - { name: ci, color: GRAY, description: "" }
+        - { name: process, color: GRAY, description: "" }
+        - { name: public, color: GRAY, description: "" }
+  text:
+    - Requirements
+    - Key
+  date:
+    - Start
+    - Target

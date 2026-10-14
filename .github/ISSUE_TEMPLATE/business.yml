@@ -1,0 +1,22 @@
+name: Business / school task
+description: Non-code work such as accounts, legal, school coordination or approvals.
+labels: ["type:business"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: What needs to happen
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Done when
+      value: |
+        - [ ]
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes / links

@@ -1,0 +1,28 @@
+name: Decision needed
+description: A product, policy or operational decision that needs an owner and a recorded outcome.
+labels: ["type:decision", "needs-noah"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+    validations:
+      required: true
+  - type: textarea
+    id: options
+    attributes:
+      label: Options and trade-offs
+    validations:
+      required: true
+  - type: textarea
+    id: recommendation
+    attributes:
+      label: Recommendation
+  - type: input
+    id: reqs
+    attributes:
+      label: Affected requirement IDs
+  - type: input
+    id: due
+    attributes:
+      label: Needed by (phase or date)

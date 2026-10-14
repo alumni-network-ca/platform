@@ -1,0 +1,143 @@
+# V0: what was built before the audit. All closed; classification per requirements §1.
+defaults:
+  milestone: V0
+  epic: EPIC-V0
+  assignee: castielnoah-art
+  track: Tech
+  state: closed
+  labels: [pre-existing]
+
+items:
+  - key: V0-01
+    title: "Next.js 15 + Supabase scaffold with Vercel auto-deploy"
+    labels: [type:chore, area:ci]
+    class: Refactor
+    summary: |
+      Next.js 15 App Router, React 19, TypeScript and hand-written CSS, using Supabase through @supabase/ssr. Vercel
+      auto-deploys from GitHub main. No middleware session refresh (F11), no tests, lint, CI or generated DB types
+      (F27). Code was shipped by uploading through the GitHub web UI.
+    findings: [F11, F27]
+    related: [FND-01, FND-08, SETUP-06]
+
+  - key: V0-02
+    title: "Initial multi-tenant schema and RLS (migration 001)"
+    labels: [type:feature, area:db, area:tenancy]
+    class: Refactor
+    summary: |
+      Tables institutions, institution_memberships, alumni_profiles, availability_flags, invitations (unused) and
+      audit_log, with RLS and the helpers is_member_of / is_admin_of / is_super_admin. Members can read every column of
+      visible profiles, including claim_email (F3). Child tables leak hidden profiles (F4). Owners can rewrite system
+      columns (F5). The tenant is hard-coded as 'herzliah' (F23).
+    findings: [F3, F4, F5, F23]
+    related: [FND-04, FND-05, FND-06]
+
+  - key: V0-03
+    title: "Herzliah-branded landing page"
+    labels: [type:feature, area:public]
+    class: Refactor
+    summary: The landing page shows hard-coded stats and fictional "recently joined" alumni (F25).
+    findings: [F25]
+    related: [PUB-01]
+
+  - key: V0-04
+    title: "Email/password sign-in and forgot-password"
+    labels: [type:feature, area:auth]
+    class: Refactor
+    summary: |
+      Sign-in works. The `next` parameter is an open redirect (F7). The reset email redirects to /login and nothing
+      ever calls updateUser, so the reset is a dead end (F10).
+    findings: [F7, F10]
+    related: [FND-09]
+
+  - key: V0-05
+    title: "Claim lookup and account creation (/claim)"
+    labels: [type:feature, area:onboarding]
+    class: Refactor
+    summary: |
+      find_claimable_profile(email) is callable anonymously and answers "is this a graduate on file" (F6). The claim
+      relies on Supabase "confirm email" staying ON (F8). PKCE links break across devices and the default SMTP doesn't
+      reach real users (F9).
+    findings: [F6, F8, F9]
+    related: [ONB-02, FND-09, EML-04]
+
+  - key: V0-06
+    title: "Manual verification request (/request-access)"
+    labels: [type:feature, area:onboarding]
+    class: Refactor
+    summary: |
+      Uses the live-only RPC request_alumni_access, which is in no migration (F1). What approval creates is undefined,
+      no emails are sent, and requests may be stored without an institution (F16).
+    findings: [F1, F15, F16]
+    related: [ONB-03, ONB-04, AUDIT-03]
+
+  - key: V0-07
+    title: "Five-step onboarding wizard"
+    labels: [type:feature, area:onboarding, area:profile]
+    class: Refactor
+    summary: |
+      Account match, Herzliah, education, career, network and privacy. The visibility checkbox is pre-ticked (F13).
+      About 6 non-atomic client writes, 5 of them with errors ignored; delete-then-insert can wipe data (F14). Fields
+      don't line up with /me (F22).
+    findings: [F13, F14, F22]
+    related: [ONB-05, PRF-05]
+
+  - key: V0-08
+    title: "My profile editor (/me)"
+    labels: [type:feature, area:profile]
+    class: Refactor
+    summary: Edits a subset of the onboarding fields with non-atomic saves (F14, F22).
+    findings: [F14, F22]
+    related: [PRF-02]
+
+  - key: V0-09
+    title: "Directory with client-side filters"
+    labels: [type:feature, area:directory]
+    class: Refactor
+    summary: |
+      Loads every visible profile and filters in the browser. The university filter reads the legacy array instead of
+      alumni_education (F12). It won't scale beyond a few thousand profiles.
+    findings: [F12]
+    related: [DIR-01, DIR-02]
+
+  - key: V0-10
+    title: "Alumni profile page"
+    labels: [type:feature, area:directory]
+    class: Refactor
+    summary: Shows profile, work history, education and open-to. It doesn't show languages, LinkedIn, website or topics (F22). It inherits the F3/F4 leaks.
+    findings: [F3, F4, F22]
+    related: [DIR-03]
+
+  - key: V0-11
+    title: "Contact alumnus (reveal email)"
+    labels: [type:feature, area:contact]
+    class: Refactor
+    summary: Uses the live-only RPC reveal_contact_email, whose permission checks have never been reviewed (F1). No contact event logging or rate limit.
+    findings: [F1, F3]
+    related: [CON-01, AUDIT-03]
+
+  - key: V0-12
+    title: "Admin dashboard: stats, roster, CSV import, verification requests"
+    labels: [type:feature, area:admin, area:import-export]
+    class: Refactor
+    summary: |
+      Single-admin assumption (.maybeSingle, F20). The 4-column CSV import has no validation or preview, and one
+      duplicate fails the batch (F18). No record actions, roles, audit viewer or export (F19). Approval calls the
+      unreviewed live-only RPC approve_access_request, which runs for anonymous callers (F2).
+    findings: [F2, F18, F19, F20]
+    related: [ADM-02, ADM-03, ADM-04, IMP-02]
+
+  - key: V0-13
+    title: "EN/FR language switcher (partial)"
+    labels: [type:feature, area:i18n]
+    class: Refactor
+    summary: Only Nav and Directory are translated. Other pages are English-only, <html lang> is fixed, and lib/i18n-server.ts is unused (F24).
+    findings: [F24]
+    related: [FND-03]
+
+  - key: V0-14
+    title: "50 fictional demo alumni seed"
+    labels: [type:chore, area:db]
+    class: Retain
+    summary: Useful demo data. It is kept for local and staging seeds only and must be purged from production (F26).
+    findings: [F26]
+    related: [FND-15, OPS-08]

@@ -1,0 +1,7 @@
+# Technical owner reviews everything by default.
+*                     @Gderhy
+
+# Product decisions and releases also involve the product owner.
+/docs/DECISIONS.md    @Gderhy @castielnoah-art
+/docs/adr/            @Gderhy @castielnoah-art
+/.github/project/     @Gderhy @castielnoah-art

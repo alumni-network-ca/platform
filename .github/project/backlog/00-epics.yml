@@ -1,0 +1,177 @@
+# Epics: every other issue is attached to one of these as a sub-issue (field `epic`).
+defaults:
+  assignee: Gderhy
+  track: Tech
+  size: XL
+
+items:
+  - key: EPIC-V0
+    title: "Epic: Initial MVP V1–V4 (pre-audit)"
+    milestone: V0
+    labels: [type:epic, pre-existing]
+    assignee: castielnoah-art
+    state: closed
+    summary: |
+      Everything built before the audit (Aug 26 – Sep 6, 2026) with AI assistance and uploaded through the GitHub web UI.
+      Each child issue records what exists and its classification (Retain / Refactor), with the findings from
+      docs/PRODUCT_ANALYSIS.md and the follow-up issues that replace or harden it.
+
+  - key: EPIC-SETUP
+    title: "Epic: Engineering setup & workflow"
+    milestone: M0
+    labels: [type:epic, area:process]
+    summary: |
+      Business-owned GitHub org and repo, the Project board, contribution workflow, developer tooling, CI and the
+      local development environment.
+
+  - key: EPIC-AUDIT
+    title: "Epic: Audit & architecture (requirements §1, phase 1)"
+    milestone: M0
+    labels: [type:epic, area:process]
+    summary: |
+      Produce the reviewable assessment the requirements ask for: retain/refactor/build/unverified classification per
+      requirement, the security findings and risk registers, ADRs, the target architecture, volume assumptions and a
+      requirements traceability matrix.
+
+  - key: EPIC-BIZ
+    title: "Epic: Business setup & accounts"
+    milestone: M0
+    labels: [type:epic, type:business, needs-noah]
+    assignee: castielnoah-art
+    track: Business
+    summary: |
+      Domain, shared admin mailbox, business-owned service accounts, budget, the Herzliah agreement and the partnership
+      agreement. All accounts are owned by the business, not by one person.
+
+  - key: EPIC-DEC
+    title: "Epic: Decision register (Noah approves)"
+    milestone: M0
+    labels: [type:epic, type:decision, needs-noah]
+    assignee: castielnoah-art
+    track: Decision
+    summary: |
+      The decisions the requirements (§10, §12) say must be resolved before implementation or the relevant launch gate.
+      Each child issue has a recommendation. Noah approves or amends it and the outcome goes into docs/DECISIONS.md.
+
+  - key: EPIC-LEGAL
+    title: "Epic: Legal, privacy & compliance"
+    milestone: M3
+    labels: [type:epic, type:legal, needs-noah]
+    assignee: castielnoah-art
+    track: Legal
+    summary: |
+      Law 25 / PIPEDA / CASL readiness: counsel review of school-imported records, privacy policy and terms, a DPA with
+      the school, a privacy impact assessment and email compliance.
+
+  - key: EPIC-HERZ
+    title: "Epic: Herzliah school-side onboarding"
+    milestone: M4
+    labels: [type:epic, type:business, needs-noah]
+    assignee: castielnoah-art
+    track: Business
+    summary: |
+      What Herzliah must provide or approve: administrators, branding, the alumni CSV, email wording and the
+      announcement to alumni.
+
+  - key: EPIC-FND
+    title: "Epic: Platform foundation (tenancy, schema, RLS, auth)"
+    milestone: M1
+    labels: [type:epic, area:db, launch-blocker]
+    summary: |
+      The critical path everything else depends on: upgraded stack, design system, i18n, the v2 schema, RLS and permission
+      model, tenant resolution, auth flows, MFA, audit logging, seeds, environments and observability.
+      Gate: the two-tenant isolation suite passes for every role.
+
+  - key: EPIC-ONB
+    title: "Epic: Onboarding, invitations & claims"
+    milestone: M2
+    labels: [type:epic, area:onboarding, launch-blocker]
+    summary: Invitations, invitation claims, self-registration, the admin review queue, the onboarding wizard and account states.
+
+  - key: EPIC-EML
+    title: "Epic: Transactional email"
+    milestone: M2
+    labels: [type:epic, area:email, launch-blocker]
+    summary: Outbox and worker, Resend and domain, bilingual templates, the auth email hook, and delivery tracking with suppression.
+
+  - key: EPIC-PRF
+    title: "Epic: Alumni profile & networking preferences"
+    milestone: M2
+    labels: [type:epic, area:profile, launch-blocker]
+    summary: Profile fields, the editor, contact channels, networking preferences, publish/unpublish with consent, and privacy self-service.
+
+  - key: EPIC-DIR
+    title: "Epic: Private directory & search"
+    milestone: M2
+    labels: [type:epic, area:directory, launch-blocker]
+    summary: Server-side search with combined filters, the directory UI, profile pages, visibility rules and private-data guards.
+
+  - key: EPIC-CON
+    title: "Epic: Contact & Contacts Initiated"
+    milestone: M2
+    labels: [type:epic, area:contact, launch-blocker]
+    summary: Rate-limited, logged reveal of contact channels and the Contacts Initiated metric.
+
+  - key: EPIC-ADM
+    title: "Epic: Institution administration"
+    milestone: M2
+    labels: [type:epic, area:admin, launch-blocker]
+    summary: Admin shell, dashboard, roster, record actions, approval queue, staff roles, audit viewer and institution settings.
+
+  - key: EPIC-IMPEXP
+    title: "Epic: CSV import & filtered export"
+    milestone: M2
+    labels: [type:epic, area:import-export, launch-blocker]
+    summary: Documented CSV template, validation and preview, idempotent commit, bulk invite, and secure CSV/XLSX export.
+
+  - key: EPIC-FRS
+    title: "Epic: Annual confirmation & profile freshness"
+    milestone: M2
+    labels: [type:epic, area:freshness, launch-blocker]
+    summary: Freshness data model with provenance, the rolling scheduler, the scanner-safe confirmation page and admin freshness reporting.
+
+  - key: EPIC-SA
+    title: "Epic: Platform admin & institution provisioning"
+    milestone: M2
+    labels: [type:epic, area:platform, launch-blocker]
+    summary: Platform console, institution creation and configuration, appointing the first owner, the provisioning runbook and platform health.
+
+  - key: EPIC-PUB
+    title: "Epic: Public & legal pages"
+    milestone: M2
+    labels: [type:epic, area:public]
+    summary: Branded tenant landing page, privacy policy and terms pages with consent capture, and the root "for schools" site.
+
+  - key: EPIC-QA
+    title: "Epic: Testing & acceptance evidence"
+    milestone: M3
+    labels: [type:epic, type:test, launch-blocker]
+    summary: The QA1–QA4 and HL4–HL7 evidence (end-to-end, isolation, email, accessibility, performance, security review).
+
+  - key: EPIC-OPS
+    title: "Epic: Production operations & hardening"
+    milestone: M3
+    labels: [type:epic, area:ops, launch-blocker]
+    summary: Production Supabase and Vercel, backup and restore, monitoring and alerts, data-load rehearsal, release and rollback, hygiene, decommissioning.
+
+  - key: EPIC-DOC
+    title: "Epic: Documentation & handover"
+    milestone: M3
+    labels: [type:epic, type:docs, launch-blocker]
+    summary: Architecture and RLS docs, runbooks, the admin guide, the requirement-to-evidence checklist and the support model.
+
+  - key: EPIC-LCH
+    title: "Epic: Herzliah pilot launch"
+    milestone: M4
+    labels: [type:epic, launch-blocker]
+    summary: Acceptance, training, the production release, invitation waves, pilot monitoring and the pilot review.
+
+  - key: EPIC-FUT
+    title: "Epic: Future modules (need separate scope approval)"
+    milestone: FUT
+    labels: [type:epic, P2]
+    assignee: castielnoah-art
+    track: Decision
+    summary: |
+      Product direction outside the launch baseline (§7). None of these is built until Noah approves its scope,
+      requirements and acceptance criteria. Architectural preparation that avoids a foreseeable rebuild is recorded in the ADRs.
