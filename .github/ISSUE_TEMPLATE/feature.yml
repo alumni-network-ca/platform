@@ -1,0 +1,32 @@
+name: Feature / task
+description: New capability or technical task.
+labels: ["type:feature"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: The problem and the outcome we want.
+    validations:
+      required: true
+  - type: input
+    id: reqs
+    attributes:
+      label: Requirement IDs
+      placeholder: e.g. F6, S3, HL5
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      value: |
+        - [ ] Given …, when …, then …
+    validations:
+      required: true
+  - type: textarea
+    id: tests
+    attributes:
+      label: Tests / evidence
+  - type: textarea
+    id: deps
+    attributes:
+      label: Dependencies

@@ -1,0 +1,73 @@
+defaults:
+  milestone: M4
+  epic: EPIC-LCH
+  assignee: Gderhy
+  track: Tech
+
+items:
+  - key: LCH-01
+    title: "Staging acceptance demo with Noah and sign-off"
+    labels: [type:test, area:process, P0, launch-blocker, needs-noah]
+    size: S
+    depends: [DOC-04, QA-01, QA-02, QA-03, QA-04]
+    reqs: [HL8, HL9]
+    summary: |
+      Walk the requirement-to-evidence checklist on staging (target 2026-11-20): every user and admin workflow, the
+      access boundaries, the production configuration checklist, recovery, and the assigned responsibilities. Noah
+      records acceptance, or exceptions with dates.
+    ac:
+      - Signed acceptance recorded in DOC-04; any deferrals approved in DECISIONS.md.
+
+  - key: LCH-02
+    title: "Herzliah admin onboarding and training"
+    labels: [type:business, area:admin, P0, launch-blocker, needs-noah]
+    track: Business
+    size: S
+    depends: [SA-02, DOC-03, HERZ-01]
+    summary: A 45-minute session where the school's admins set up MFA, review the imported data and approval queue, and practise inviting test alumni and exporting.
+    ac:
+      - The admins complete the training checklist independently.
+
+  - key: LCH-03
+    title: "Production release v1.0.0 and smoke tests"
+    labels: [type:infra, area:ops, P0, launch-blocker]
+    size: S
+    depends: [LCH-01, OPS-01, OPS-02, OPS-04, OPS-06]
+    reqs: [HL9, D1]
+    summary: |
+      Release PR dev → main approved by Noah, migrations applied, deployment done. Smoke test: tenant routing, auth
+      email, invitation to a test address, directory, export and alerts. Tag v1.0.0 with release notes.
+    ac:
+      - Smoke checklist passes; rollback was rehearsed in OPS-06.
+
+  - key: LCH-04
+    title: "Import Herzliah alumni and send invitation waves (pilot cohort)"
+    labels: [type:infra, area:import-export, area:onboarding, P0, launch-blocker, needs-noah]
+    size: M
+    depends: [LCH-03, OPS-05, HERZ-04, HERZ-05, DEC-11, LEGAL-03]
+    reqs: [HL9]
+    summary: |
+      Production import with the rehearsed file. Invitations go to the pilot cohort (DEC-11) in daily waves within the
+      email limits. Bounces and the claim rate are monitored after each wave.
+    ac:
+      - The cohort is invited; bounce rate under 2 %; no S1/S2 issues open.
+
+  - key: LCH-05
+    title: "Pilot monitoring and triage (first 2 weeks)"
+    labels: [type:chore, area:ops, P0]
+    size: M
+    depends: [LCH-04]
+    summary: Daily check of errors, email failures, the approval queue and support requests. Bugs are triaged through the bug form with severity, with fixes shipped through the normal release process. Weekly summary to Noah and Herzliah.
+    ac:
+      - Daily log kept; every S1/S2 resolved or escalated within targets.
+
+  - key: LCH-06
+    title: "Pilot review and go/no-go for wider rollout"
+    labels: [type:business, area:process, P0, needs-noah]
+    track: Business
+    size: S
+    depends: [LCH-05, DEC-11]
+    reqs: [HL8]
+    summary: Compare the results with the success measures (DEC-11), gather Herzliah's feedback, and decide on a wider rollout and the follow-up backlog (new issues).
+    ac:
+      - The decision is recorded in DECISIONS.md; next-phase issues are created.

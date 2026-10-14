@@ -1,0 +1,289 @@
+defaults:
+  milestone: M3
+  assignee: Gderhy
+  track: Tech
+
+items:
+  # ---------------------------------------------------------------- QA
+  - key: QA-01
+    title: "E2E: complete alumni journey in EN and FR, desktop and mobile"
+    epic: EPIC-QA
+    labels: [type:test, area:onboarding, area:directory, P0, launch-blocker]
+    size: L
+    depends: [ONB-05, DIR-02, CON-02, PRF-02]
+    reqs: [QA1, HL4, HL5]
+    summary: |
+      Playwright with Mailpit: invite → claim → onboarding → publish → search with combined filters → open a profile
+      → reveal contact → edit profile → the change persists. Also self-registration → pending (no directory access) →
+      approved. Rejected users are denied. Runs in both locales and on both viewports.
+    ac:
+      - Green in CI; videos and traces are kept for failures.
+
+  - key: QA-02
+    title: "E2E: admin journeys including limited-admin restrictions"
+    epic: EPIC-QA
+    labels: [type:test, area:admin, area:import-export, P0, launch-blocker]
+    size: L
+    depends: [IMP-04, EXP-02, ADM-05, ADM-06]
+    reqs: [QA1, HL5]
+    summary: |
+      Import with errors, duplicates and ambiguous matches, then preview, cancel, commit, retry after a partial
+      failure, and bulk invite. Also the approval queue, staff role changes, a filtered CSV/XLSX export with a
+      protected download and a formula payload, and record actions. The reviewer role is denied each restricted
+      action in both the UI and the API.
+    ac:
+      - Green in CI.
+
+  - key: QA-03
+    title: "Cross-tenant and role-escalation tests: APIs, files, exports, jobs, links"
+    epic: EPIC-QA
+    labels: [type:test, type:security, area:tenancy, P0, launch-blocker]
+    size: L
+    depends: [FND-06, EXP-02, FRS-02, ONB-02]
+    reqs: [QA2, MT3, MT4, HL7]
+    summary: |
+      Integration tests using supabase-js as each role in tenant A, attacking tenant B:
+      - REST table reads and writes, and every RPC with B's ids
+      - export download links, invitation and confirmation tokens on the wrong host
+      - job outputs and admin pages by URL
+      They also try self-promotion to admin and continued access after suspension.
+    ac:
+      - Every attempt is denied; the suite is part of CI and of the HL7 evidence.
+
+  - key: QA-04
+    title: "Email and freshness tests: every trigger EN/FR plus an accelerated annual cycle"
+    epic: EPIC-QA
+    labels: [type:test, area:email, area:freshness, P0, launch-blocker]
+    size: M
+    depends: [FRS-03, EML-05]
+    reqs: [HL6, E2, E3, E4]
+    summary: |
+      Every transactional email in both languages. An annual cycle on the compressed schedule: due → reminders →
+      confirm via POST. GET and HEAD (link scanner) don't confirm, and an admin edit doesn't confirm. Retry without
+      duplicates, a simulated bounce leads to suppression, and the missed-job alert fires.
+    ac:
+      - The evidence (Mailpit captures, DB timestamps) is attached to DOC-04.
+
+  - key: QA-05
+    title: "Accessibility and responsive pass; supported browsers"
+    epic: EPIC-QA
+    labels: [type:test, area:ui, P1, launch-blocker]
+    size: M
+    depends: [QA-01]
+    reqs: [QA3]
+    summary: |
+      axe on every page (no serious or critical violations). Keyboard-only walkthroughs of the main journeys. Labels,
+      focus order and contrast. 360/768/1440 px layouts. Supported: latest Chrome, Safari, Firefox, Edge, iOS Safari
+      and Android Chrome (to be agreed with Noah). Limitations are documented.
+    ac:
+      - The report is in docs/qa/accessibility.md.
+
+  - key: QA-06
+    title: "Performance test against the volume assumptions"
+    epic: EPIC-QA
+    labels: [type:test, area:db, P1, launch-blocker]
+    size: M
+    depends: [DIR-01, IMP-04, AUDIT-08]
+    reqs: [QA4]
+    summary: |
+      Seed 10k alumni per tenant and measure search_directory p95 with explain analyze, import 5k rows, enqueue 500
+      invitations, and run k6 with 50 concurrent users on staging. Document the results, limits and capacity triggers.
+    ac:
+      - The results meet the targets, or there's a remediation issue and a recorded decision.
+
+  - key: QA-07
+    title: "Security review and closing the findings register"
+    epic: EPIC-QA
+    labels: [type:security, P0, launch-blocker]
+    size: M
+    depends: [QA-03, FND-14]
+    reqs: ["§6", S1, S2, S3, S4, S5, S6, S7, S8, S9, HL7]
+    summary: |
+      Run /security-review across the codebase, the Supabase Security and Performance Advisors and npm audit. Walk an
+      OWASP ASVS L1 checklist, with manual enumeration and abuse tests on public endpoints. Every finding is fixed or
+      gets a recorded exception from Noah (DEC-10).
+    ac:
+      - No open critical or high findings without a recorded exception.
+
+  - key: QA-08
+    title: "i18n completeness and content preservation"
+    epic: EPIC-QA
+    labels: [type:test, area:i18n, P1, launch-blocker]
+    size: S
+    depends: [FND-03, EML-03]
+    reqs: [QA3, F9]
+    summary: Key-parity CI passes. A French native-speaker review of the UI and emails (Noah or the school). User-entered accents, emoji and RTL names are stored and shown unchanged.
+    ac:
+      - Noah signs off on the FR wording.
+
+  # ---------------------------------------------------------------- ops
+  - key: OPS-01
+    title: "Production Supabase (Pro, ca-central-1)"
+    epic: EPIC-OPS
+    labels: [type:infra, area:ops, area:db, P0, launch-blocker]
+    size: M
+    depends: [BIZ-05, FND-16]
+    reqs: [HL3, D3, S1, S9]
+    summary: |
+      Production project on the Pro plan, region ca-central-1. Auth settings: confirm email ON (documented as a
+      security precondition), Site URL and redirect allow-list, the Send Email Hook, MFA and password policy. Daily
+      backups (consider PITR). Network restrictions where possible. Migrations are applied by the release workflow.
+    ac:
+      - A configuration checklist is completed and attached to DOC-02.
+
+  - key: OPS-02
+    title: "Production Vercel (Pro): domains, wildcard subdomains, cron, env"
+    epic: EPIC-OPS
+    labels: [type:infra, area:ops, P0, launch-blocker]
+    size: M
+    depends: [BIZ-02, BIZ-05, FND-16]
+    reqs: [HL3, D1, D3]
+    summary: |
+      Production branch = main. Domains: alumni-network.ca, *.alumni-network.ca, *.staging.alumni-network.ca (dev).
+      Production env vars and the CRON_SECRET, with cron jobs for email, freshness and cleanup. Deployment protection
+      on previews. Spend limits set.
+    ac:
+      - herzliah.alumni-network.ca serves the production app over HTTPS.
+
+  - key: OPS-03
+    title: "Backup and restore drill; document RPO/RTO"
+    epic: EPIC-OPS
+    labels: [type:infra, area:ops, area:db, P0, launch-blocker]
+    size: M
+    depends: [OPS-01, DEC-09]
+    reqs: [S9, HL7, "§9"]
+    summary: |
+      Restore a production backup into a scratch project and verify row counts and that the app works against it.
+      Time the restore. Document provider backup coverage, an extra logical dump (weekly, encrypted, stored in the
+      business account), who performs restores, and the measured RPO/RTO.
+    ac:
+      - The restoration is verified and timed; docs/runbooks/restore.md is written from the drill.
+
+  - key: OPS-04
+    title: "Monitoring and alerting configured and tested"
+    epic: EPIC-OPS
+    labels: [type:infra, area:ops, P0, launch-blocker]
+    size: S
+    depends: [FND-17, OPS-02]
+    reqs: [S9, D3, HL6]
+    summary: Sentry alert rules, the uptime monitor on /api/health, the missed-job and email failure-rate alerts, and routing to both partners. Each alert is triggered once on purpose to prove it arrives.
+    ac:
+      - Evidence of each test alert is attached.
+
+  - key: OPS-05
+    title: "Rehearse the Herzliah data load on staging"
+    epic: EPIC-OPS
+    labels: [type:infra, area:import-export, P0, launch-blocker, needs-noah]
+    size: M
+    depends: [HERZ-03, IMP-04, LEGAL-03]
+    reqs: [D2, HL2]
+    summary: |
+      Import the real Herzliah CSV into staging (allowed once the DPA is signed; staging email is allow-listed).
+      Reconcile the totals against the school's count. Review duplicates and ambiguous matches with the school.
+      Record the timings and any fixes needed. The staging data is wiped afterwards.
+    ac:
+      - The reconciliation report is signed off by Noah; issues are fixed before LCH-04.
+
+  - key: OPS-06
+    title: "Release and rollback procedure"
+    epic: EPIC-OPS
+    labels: [type:docs, area:ops, area:ci, P0, launch-blocker]
+    size: S
+    depends: [SETUP-06, OPS-02]
+    reqs: [D1, D3]
+    summary: |
+      A release workflow: on the release PR merge, apply migrations to production (with approval) and then let Vercel
+      deploy main. App rollback is a Vercel instant rollback. DB recovery is a forward-fix migration or a restore
+      (OPS-03). An app revert doesn't undo a migration, so the procedure covers both separately.
+    ac:
+      - "Dry run on staging: release then roll back."
+
+  - key: OPS-07
+    title: "Dependency, secret and access hygiene"
+    epic: EPIC-OPS
+    labels: [type:security, area:ops, P1, launch-blocker]
+    size: S
+    depends: [SETUP-06]
+    reqs: [S8, S9]
+    summary: |
+      Dependabot is triaged weekly and gitleaks runs in CI. A secret rotation procedure is written, with a test
+      rotation of the Resend key. An access review lists who has access to what (GitHub, Supabase, Vercel, Resend,
+      Sentry, the domain), with least privilege.
+    ac:
+      - docs/runbooks/access-and-secrets.md is complete and reviewed by both partners.
+
+  - key: OPS-08
+    title: "Decommission the legacy Supabase/Vercel project and purge demo data"
+    epic: EPIC-OPS
+    milestone: M4
+    labels: [type:infra, area:ops, P1, needs-noah]
+    size: S
+    depends: [LCH-03]
+    reqs: [F26]
+    summary: |
+      After cutover: redirect the old Vercel URL to the new domain, export the legacy project's schema for the
+      archive (AUDIT-03), then pause or delete the legacy Supabase project (Noah's account) so no personal or demo data
+      lingers. Confirm production holds no fictional seed profiles.
+    ac:
+      - The legacy project is paused or deleted; production has 0 demo profiles.
+
+  # ---------------------------------------------------------------- docs
+  - key: DOC-01
+    title: "Architecture, data model, roles and RLS documentation"
+    epic: EPIC-DOC
+    labels: [type:docs, area:db, P1, launch-blocker]
+    size: M
+    depends: [FND-06]
+    summary: docs/architecture/ holds an overview diagram, the ERD (generated), the role/permission matrix, the RLS policy catalogue, the RPC catalogue and the job catalogue, kept in sync with the migrations.
+    ac:
+      - A new developer can explain the tenant isolation model from the docs alone.
+
+  - key: DOC-02
+    title: "Operations runbooks"
+    epic: EPIC-DOC
+    labels: [type:docs, area:ops, P0, launch-blocker]
+    size: M
+    depends: [OPS-03, OPS-06]
+    reqs: [D3]
+    summary: |
+      Runbooks for deploy, rollback, restore, incident response and escalation (with a breach-notification checklist
+      for Law 25), provisioning another institution (SA-03), rotating secrets, and handling bounce spikes.
+    ac:
+      - Each runbook has been followed at least once (drill or rehearsal).
+
+  - key: DOC-03
+    title: "Admin guide (EN/FR)"
+    epic: EPIC-DOC
+    labels: [type:docs, area:admin, area:i18n, P1, launch-blocker]
+    size: M
+    depends: [ADM-05, IMP-04, FRS-04]
+    summary: A short illustrated guide for school staff covering MFA setup, imports, invitations, the approval queue, record actions, exports, freshness follow-up and staff roles.
+    ac:
+      - Herzliah's admin completes the training tasks using only the guide (LCH-02).
+
+  - key: DOC-04
+    title: "Requirement-to-evidence checklist and remaining-issues register (HL8)"
+    epic: EPIC-DOC
+    labels: [type:docs, area:process, P0, launch-blocker]
+    size: S
+    depends: [AUDIT-07, QA-07]
+    reqs: [HL8, HL9]
+    summary: |
+      The final checklist covering every launch requirement with its evidence link (test run, screenshot, document),
+      the remaining-issues register, and the deviations with Noah's recorded approvals.
+    ac:
+      - Reviewed with Noah at LCH-01.
+
+  - key: DOC-05
+    title: "Support model and ownership roster"
+    epic: EPIC-DOC
+    labels: [type:docs, area:ops, area:process, P1, launch-blocker, needs-noah]
+    size: S
+    depends: [DEC-09]
+    reqs: ["§9", "§12"]
+    summary: |
+      Roles: implementation lead, release approver, production operator, DB/backup owner, security/incident lead,
+      email operator, support contact. Each role has a named owner and a backup, plus support hours, severities,
+      acknowledgement targets, the defect-intake process (GitHub bug form) and absence coverage.
+    ac:
+      - Both partners agree; Herzliah receives the support section.

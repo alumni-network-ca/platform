@@ -1,0 +1,239 @@
+defaults:
+  assignee: castielnoah-art
+  track: Business
+
+items:
+  # ---------------------------------------------------------------- business
+  - key: BIZ-01
+    status: Ready
+    title: "Accept org owner invite, enable 2FA, archive the legacy repo after cutover"
+    epic: EPIC-BIZ
+    milestone: M0
+    labels: [type:business, area:process, P0, needs-noah]
+    size: XS
+    summary: |
+      Noah was invited as an owner of the alumni-network-ca GitHub org. Accept it from the email or
+      github.com/orgs/alumni-network-ca/invitation, and turn on two-factor authentication on your GitHub account.
+      After the production cutover (LCH-03), archive castielnoah-art/herzliah-alumni-network so nobody pushes to it.
+    ac:
+      - Noah is an org owner with 2FA on.
+      - The legacy repo is archived after cutover.
+
+  - key: BIZ-02
+    status: Ready
+    title: "Register alumni-network.ca with DNS on Vercel"
+    epic: EPIC-BIZ
+    milestone: M0
+    labels: [type:infra, area:ops, P0, launch-blocker, needs-noah]
+    size: XS
+    summary: |
+      Buy alumni-network.ca with the shared admin address as registrant contact and auto-renew on.
+      Point the nameservers to Vercel (required for wildcard subdomains such as herzliah.alumni-network.ca, ADR 0001).
+      Fallback names if it's taken: alumninetwork.ca or alumni-network.app.
+    ac:
+      - The domain is owned by the business account, with auto-renew on.
+      - Nameservers are on Vercel.
+
+  - key: BIZ-03
+    status: Ready
+    title: "Shared business admin mailbox / alias"
+    epic: EPIC-BIZ
+    milestone: M0
+    labels: [type:infra, area:ops, P0, needs-noah]
+    size: XS
+    depends: [BIZ-02]
+    summary: |
+      Create admin@alumni-network.ca, forwarding to both partners (free, via Vercel/ImprovMX/Zoho), to own every service
+      account (requirements §8 handover: no dependence on one person's credentials). Also create support@ for alumni
+      and school support.
+    ac:
+      - Both partners receive mail sent to admin@ and support@.
+
+  - key: BIZ-04
+    title: "Create business-owned service accounts (Supabase, Vercel, Resend, Sentry, Turnstile, uptime)"
+    epic: EPIC-BIZ
+    milestone: M0
+    labels: [type:infra, area:ops, P0, launch-blocker]
+    assignee: Gderhy
+    track: Tech
+    size: S
+    depends: [BIZ-03]
+    summary: |
+      Create these under admin@alumni-network.ca:
+      - a Supabase org "Alumni Network" (production, ca-central-1, Pro at launch)
+      - a Supabase org "Alumni Network Staging" (free)
+      - a Vercel team
+      - Resend, Sentry, Cloudflare Turnstile and an uptime monitor
+      Both partners are owners with MFA enabled. Credentials go in a shared password manager vault
+      (e.g. Bitwarden free organization).
+    ac:
+      - Every service lists both partners as owners/admins.
+      - Nothing is owned only by a personal account.
+
+  - key: BIZ-05
+    title: "Approve the launch budget and add a business payment method"
+    epic: EPIC-BIZ
+    milestone: M3
+    labels: [type:business, P1, needs-noah]
+    size: XS
+    summary: |
+      About $47–67/month at launch: Supabase Pro $25, Vercel Pro $20, Resend free then $20, domain about $2/month
+      (ADR 0011). Paid plans start just before the pilot. Decide which card or account pays, and how costs come out of
+      revenue before the split.
+    ac:
+      - The budget is approved and a payment method is on the Supabase and Vercel accounts before OPS-01/OPS-02.
+
+  - key: BIZ-06
+    status: Ready
+    title: "Herzliah quote, scope and service agreement"
+    epic: EPIC-BIZ
+    milestone: M1
+    labels: [type:business, P0, needs-noah]
+    size: M
+    summary: |
+      Send Herzliah a quote using the agreed launch scope (this board's M0–M4), pilot terms, support hours and response
+      targets (DEC-09), data ownership and the DPA (LEGAL-03), and pricing after the pilot.
+    ac:
+      - Herzliah accepts the quote and pilot terms in writing.
+
+  - key: BIZ-07
+    title: "Partnership / shareholders agreement"
+    epic: EPIC-BIZ
+    milestone: M3
+    labels: [type:business, type:legal, P1, needs-noah]
+    size: M
+    summary: |
+      Record what the partners already agreed: 60/40 ownership and profit split after operating costs, Noah leading
+      business and product with a veto, Gab leading technical, and joint major decisions. Also cover what happens if
+      someone leaves (valuation and buy-out), vesting, and IP ownership of code and infrastructure by the entity.
+      Consider incorporating so accounts and contracts belong to the company.
+    ac:
+      - A signed agreement, reviewed by counsel.
+
+  - key: BIZ-08
+    title: "Pricing model for schools"
+    epic: EPIC-BIZ
+    milestone: FUT
+    labels: [type:business, P2]
+    size: S
+    summary: Per-school annual fee vs per-alumnus tiers, onboarding fee and the support tiers. This informs the Herzliah post-pilot price and future sales.
+
+  # ---------------------------------------------------------------- legal
+  - key: LEGAL-01
+    status: Ready
+    title: "Counsel review: liability for school-imported records and accounts created on behalf of alumni"
+    epic: EPIC-LEGAL
+    milestone: M1
+    track: Legal
+    labels: [type:legal, P0, launch-blocker, needs-noah]
+    size: M
+    reqs: [S5]
+    summary: |
+      Questions for a Quebec privacy lawyer:
+      - Is Herzliah the controller (the person in charge of personal information) and we the processor/service provider?
+      - What is the legal basis for importing graduates and emailing them an invitation, and who is liable if a record is wrong?
+      - Law 25 obligations: privacy officer, privacy impact assessment, incident register, consent for directory publication.
+      - PIPEDA, and CASL for invitation and confirmation emails.
+      - The minimum contract terms with the school.
+      Gab supplies the data inventory and the flows (documentation/diagrams).
+    ac:
+      - A written opinion with the required actions, and new issues created for each action.
+
+  - key: LEGAL-02
+    title: "Privacy policy and terms of use (EN/FR), versioned"
+    epic: EPIC-LEGAL
+    milestone: M3
+    track: Legal
+    labels: [type:legal, P0, launch-blocker, needs-noah]
+    size: M
+    depends: [LEGAL-01]
+    reqs: [S5]
+    summary: Drafted with counsel from the data inventory. The version identifiers are used by consent capture (PUB-02), and both languages are approved.
+    ac:
+      - Final EN and FR texts with a version and effective date are delivered to Gab for publishing.
+
+  - key: LEGAL-03
+    title: "Data processing agreement with Herzliah and sub-processor list"
+    epic: EPIC-LEGAL
+    milestone: M3
+    track: Legal
+    labels: [type:legal, P0, launch-blocker, needs-noah]
+    size: M
+    depends: [LEGAL-01]
+    summary: Roles, purposes, retention, security measures, incident notification, sub-processors (Supabase, Vercel, Resend, Sentry, Cloudflare) and the end-of-contract data return/deletion.
+    ac:
+      - The DPA is signed by Herzliah before any real alumni data is imported (OPS-05 / LCH-04).
+
+  - key: LEGAL-04
+    title: "Privacy impact assessment (Law 25) for processing outside Quebec"
+    epic: EPIC-LEGAL
+    milestone: M3
+    track: Legal
+    labels: [type:legal, P1, needs-noah]
+    size: S
+    depends: [LEGAL-01]
+    summary: The database is in Canada (ca-central-1). The app/CDN (Vercel), email (Resend) and error monitoring (Sentry) may process data outside Quebec. Document the assessment that counsel requires.
+
+  - key: LEGAL-05
+    title: "CASL review of invitation, reminder and annual confirmation emails"
+    epic: EPIC-LEGAL
+    milestone: M2
+    track: Legal
+    labels: [type:legal, P1, needs-noah]
+    size: XS
+    depends: [LEGAL-01]
+    summary: Confirm whether these are transactional or need consent, and the required sender identification and unsubscribe mechanism. Feeds the EML-03 templates.
+
+  - key: LEGAL-06
+    title: "Confidentiality and acceptable-use agreement for school administrators"
+    epic: EPIC-LEGAL
+    milestone: M3
+    track: Legal
+    labels: [type:legal, P2, needs-noah]
+    size: S
+    summary: Accepted by school staff when they receive admin access. It covers export handling and appropriate use of alumni data.
+
+  # ---------------------------------------------------------------- Herzliah
+  - key: HERZ-01
+    title: "Herzliah names institution owner/admins and a privacy officer"
+    epic: EPIC-HERZ
+    milestone: M2
+    labels: [type:business, P0, launch-blocker, needs-noah]
+    size: XS
+    reqs: [HL1]
+    summary: Names, emails and roles (owner / admin / reviewer), plus a contact for eligibility questions, data corrections and policy decisions (§12).
+
+  - key: HERZ-02
+    title: "Herzliah provides branding assets and a reply-to address"
+    epic: EPIC-HERZ
+    milestone: M2
+    labels: [type:business, P1, needs-noah]
+    size: XS
+    summary: Logo (SVG or high-res PNG), brand colours, the alumni office reply-to email and the display name for emails.
+
+  - key: HERZ-03
+    title: "Herzliah provides the alumni CSV export"
+    epic: EPIC-HERZ
+    milestone: M3
+    labels: [type:business, P0, launch-blocker, needs-noah]
+    size: S
+    depends: [IMP-01, LEGAL-03]
+    summary: The school exports graduates using our template (IMP-01). The file is shared through a secure channel, never as an email attachment, and only after the DPA is signed.
+
+  - key: HERZ-04
+    title: "Herzliah approves email templates and wording (EN/FR)"
+    epic: EPIC-HERZ
+    milestone: M3
+    labels: [type:business, P0, launch-blocker, needs-noah]
+    size: S
+    depends: [EML-03]
+    reqs: [HL1]
+    summary: Invitation, approval, rejection, welcome, annual confirmation and reminders, reviewed on staging previews.
+
+  - key: HERZ-05
+    title: "Herzliah sends the announcement to alumni before the invitations"
+    epic: EPIC-HERZ
+    milestone: M4
+    labels: [type:business, P1, needs-noah]
+    size: XS
+    summary: A school-branded announcement explaining the network and that an invitation from herzliah@mail.alumni-network.ca is coming. This improves trust and deliverability.

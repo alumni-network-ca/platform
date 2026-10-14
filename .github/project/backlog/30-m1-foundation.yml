@@ -1,0 +1,282 @@
+defaults:
+  milestone: M1
+  epic: EPIC-FND
+  assignee: Gderhy
+  track: Tech
+
+items:
+  - key: FND-01
+    title: "Upgrade Next.js/React/Supabase libs, strict TS and generated DB types"
+    labels: [type:chore, area:ci, P0, launch-blocker]
+    size: M
+    depends: [SETUP-05]
+    class: Refactor
+    reqs: [S9]
+    summary: |
+      Move to the current stable Next.js major (use `proxy.ts` if 16+), React and @supabase/ssr/supabase-js. Generate
+      lib/database.types.ts from the local schema. Type the server/browser clients and remove `any`. Run
+      `npm audit`, which must show no high-severity issues.
+    ac:
+      - "`npm run check` and `npm run build` pass; no `any` in lib/ or app/ except documented escapes."
+      - CI fails if the generated types drift from the migrations.
+
+  - key: FND-02
+    title: "Design system: Tailwind v4 + shadcn/ui + tenant theme tokens"
+    labels: [type:feature, area:ui, P0, launch-blocker]
+    size: L
+    depends: [FND-01]
+    reqs: [F9, QA3]
+    summary: |
+      Port the approved design (DESIGN_REFERENCE_PREVIOUS_PREVIEW.html: ink #0B2159, burgundy #7B1E3D, paper, line,
+      display and body fonts) into Tailwind theme tokens fed by CSS variables from institutions.branding. Build the
+      app shell (header with tenant logo, nav, language toggle, account menu, footer) and the shadcn primitives
+      (button, input, select, dialog, table, toast, badge, tabs, form). Use the ui-ux-pro-max skill for the design review.
+    ac:
+      - Switching an institution's branding changes the logo and colours without a code change.
+      - Contrast ≥ WCAG AA, visible focus states, keyboard-operable menus and dialogs.
+      - The layout works at 360 px and 1440 px.
+    tests:
+      - Playwright screenshot at mobile and desktop; axe has no serious violations on the shell.
+
+  - key: FND-03
+    title: "i18n with next-intl: locale resolution, message namespaces, key parity"
+    labels: [type:feature, area:i18n, P0, launch-blocker]
+    size: M
+    depends: [FND-01]
+    reqs: [F9, QA3]
+    class: Refactor
+    summary: |
+      Replace lib/i18n.ts with next-intl, migrating the existing EN/FR strings. Locale order: profile preference →
+      NEXT_LOCALE cookie → Accept-Language → institution default → en. Set <html lang> from it. Messages live in
+      messages/{en,fr}/<namespace>.json. Validation messages are localized through Zod.
+    ac:
+      - Every visible string on every page comes from messages; the toggle persists across sessions.
+      - User-entered text is never translated.
+    tests:
+      - "Unit: locale resolver. CI script: fails on any key present in one language but not the other."
+
+  - key: FND-04
+    title: "Schema v2 baseline migration"
+    labels: [type:feature, area:db, area:tenancy, P0, launch-blocker]
+    size: L
+    depends: [AUDIT-09, SETUP-07]
+    reqs: [MT1, MT2, MT5, F1, F2, F14, E6, S7]
+    class: Build
+    summary: |
+      A single reviewed baseline implementing AUDIT-09.
+      - **Enums:** role (owner/admin/reviewer/alumni/student), membership status, profile status, visibility,
+        invitation status, request status, channel type, email status, confirmation source.
+      - **Tables:**
+        - tenancy and roles: institutions (+branding, sender, reply_to, default_locale, status), platform_admins,
+          platform_access_grants, institution_memberships, role_permissions
+        - profiles: alumni_profiles, alumni_private, profile_contact_channels, alumni_education, alumni_experience,
+          career_fields, offer_types, profile_offers
+        - onboarding and import: invitations, access_requests, import_batches, import_rows, exports
+        - engagement and email: contact_events, email_outbox, email_events, email_suppressions,
+          confirmation_requests, profile_confirmations
+        - governance and ops: consents, audit_log, rate_limit_counters, job_runs
+      - **Constraints:** check constraints, unique keys (one profile per user per institution; unique open invitation
+        per profile; unique open confirmation per cycle), FKs carrying institution_id, indexes for the
+        tenant-scoped queries, updated_at triggers.
+      - Lookup seeds for career fields and offer types with EN/FR labels (from lib/profile-options.ts).
+    ac:
+      - "`supabase db reset` applies cleanly; the generated types compile."
+      - Every institution-owned table has NOT NULL institution_id and RLS enabled (enforced by a pgTAP test that scans the catalog).
+
+  - key: FND-05
+    title: "RLS v2 and permission model (has_permission, protected columns, function hygiene)"
+    labels: [type:security, area:db, area:tenancy, P0, launch-blocker]
+    size: L
+    depends: [FND-04]
+    reqs: [MT2, MT3, MT4, F5, F7, F13, S2, S3]
+    class: Build
+    summary: |
+      - has_permission() and assert_permission() read live memberships plus role_permissions.
+      - Policies for every table, per the RLS matrix in AUDIT-09.
+      - Child tables use parent-aware policies, sharing the profile's visibility predicate.
+      - alumni_private and the email/phone channel rows are readable only by the owner and permitted staff.
+      - A BEFORE UPDATE trigger blocks non-admin changes to system columns.
+      - Revoke EXECUTE on all functions from public and anon, then grant explicitly.
+      - Every SECURITY DEFINER function sets search_path=''.
+      - Platform-admin access only via an active platform_access_grant.
+    ac:
+      - The fixes for F2–F5 are demonstrated by tests, not just code.
+      - The Supabase Security Advisor reports no errors.
+
+  - key: FND-06
+    title: "pgTAP tenant-isolation and role test suite"
+    labels: [type:test, area:db, area:tenancy, P0, launch-blocker]
+    size: L
+    depends: [FND-05, FND-15]
+    reqs: [QA2, MT3, MT4, HL7]
+    class: Build
+    summary: |
+      Two institutions × {anon, authenticated non-member, pending applicant, alumni (published/hidden), reviewer,
+      admin, owner, suspended member, platform admin with and without a grant}. For every table: select, insert,
+      update and delete. For every RPC: allowed vs denied. Plus protected columns, audit writes, and the catalog
+      scan (RLS on, no anon grants).
+    ac:
+      - The suite runs in CI and fails on any cross-tenant read or write, or on any privilege escalation.
+      - "This is the M1 gate: the foundation is accepted only when it passes."
+
+  - key: FND-07
+    title: "Tenant resolution from subdomain (proxy/middleware)"
+    labels: [type:feature, area:tenancy, P0, launch-blocker]
+    size: M
+    depends: [FND-04]
+    reqs: [MT1, MT3, MT4]
+    adr: "0001"
+    summary: |
+      Map the host to an institution: <slug>.alumni-network.ca, <slug>.staging.alumni-network.ca, <slug>.localhost, and
+      the preview cookie only when VERCEL_ENV=preview. The root domain routes to the marketing site and /console.
+      Unknown or suspended tenants get a 404. The resolved institution is available to server components through a
+      request-scoped helper. It is never accepted from the client.
+    ac:
+      - herzliah.localhost:3000 and test-school.localhost:3000 show their own branding and data.
+      - Forging the cookie in production has no effect.
+    tests:
+      - "Unit: host parser table tests. E2E: two tenants side by side."
+
+  - key: FND-08
+    title: "Supabase SSR session handling and client separation"
+    labels: [type:security, area:auth, P0, launch-blocker]
+    size: S
+    depends: [FND-07]
+    reqs: [S1, S3, S8]
+    class: Refactor
+    summary: |
+      Refresh the session on every request in proxy/middleware (fixes F11). Separate clients: browser (publishable
+      key), server (user session) and service (secret key, in a `server-only` module, used only by jobs, webhooks and
+      invitations). Cookies are scoped to the subdomain. Remove the cookie-write swallowing.
+    ac:
+      - A session survives an access-token expiry mid-use.
+      - Importing the service client from client code fails the build.
+
+  - key: FND-09
+    title: "Auth flows: sign-up, sign-in, sign-out, confirm, reset and change email"
+    labels: [type:feature, area:auth, P0, launch-blocker]
+    size: L
+    depends: [FND-08, FND-03]
+    reqs: [S1, S4, F3, HL4]
+    class: Refactor
+    summary: |
+      Tenant-branded EN/FR pages. /auth/confirm verifies the token_hash with verifyOtp, so links work across devices
+      (F9). Password reset completes with updateUser (F10). Change email requires re-verification. A safeNext()
+      helper accepts only relative paths (F7). Responses never reveal whether an account or record exists (S4).
+      Minimum password length 10, with leaked-password protection when on Pro.
+    ac:
+      - Sign-up email opened on another device works.
+      - "`?next=https://evil.example` redirects to /."
+      - The same response is returned whether or not an email exists.
+    tests:
+      - "Unit: safeNext. E2E (Mailpit): sign-up confirm, reset, change email, EN and FR."
+
+  - key: FND-10
+    title: "Abuse protection: Turnstile on public forms and a Postgres rate limiter"
+    labels: [type:security, area:auth, P0, launch-blocker]
+    size: M
+    depends: [FND-09]
+    reqs: [S4, S6]
+    summary: |
+      Cloudflare Turnstile is verified server-side on sign-up, sign-in, reset and access requests. The
+      check_rate_limit(bucket, key, max, window) function is used by public RPCs and contact reveals. Auth rate
+      limits are reviewed in config.
+    ac:
+      - Requests without a valid token are rejected.
+      - Exceeding a limit returns a localized "try again later" without leaking state.
+
+  - key: FND-11
+    title: "Admin MFA (TOTP) enrollment and aal2 enforcement"
+    labels: [type:security, area:auth, P0, launch-blocker]
+    size: M
+    depends: [FND-09]
+    reqs: [S1]
+    summary: |
+      Owners, admins, reviewers and platform admins must enroll TOTP before reaching admin pages. Admin RPCs check
+      that the JWT has aal = aal2. Recovery is handled by platform-admin reset, which is audited.
+    ac:
+      - An admin without MFA is redirected to enrollment; a direct RPC call at aal1 is denied.
+
+  - key: FND-12
+    title: "Audit logging (append-only)"
+    labels: [type:security, area:db, P0, launch-blocker]
+    size: S
+    depends: [FND-05]
+    reqs: [S7, F14]
+    summary: |
+      A log_audit(action, target_type, target_id, metadata) helper records the actor, institution and time. The audit
+      log is append-only: no update or delete grants. Required coverage: claims, approvals and rejections, role
+      changes, privileged access grants, imports, exports, provisioning, suspensions, record edits by staff. It never
+      stores passwords, secrets, tokens or email content.
+    ac:
+      - pgTAP proves each privileged RPC writes exactly one audit row, and that audit rows can't be modified.
+
+  - key: FND-13
+    title: "Platform admin bootstrap and time-boxed audited tenant access"
+    labels: [type:feature, area:platform, P0, launch-blocker]
+    size: S
+    depends: [FND-05, FND-12]
+    reqs: [MT6, S1, S7]
+    summary: |
+      A script, scripts/admin/bootstrap-platform-admin.ts, adds a user to platform_admins. It is run once per
+      environment using the secret key, with no hand-written SQL. A platform_open_access(institution, reason, minutes
+      ≤ 480) RPC creates an audited grant that RLS honours until it expires.
+    ac:
+      - Without a grant, a platform admin can't read alumni data; with one, they can until it expires.
+
+  - key: FND-14
+    title: "Security headers, noindex, error and not-found pages"
+    labels: [type:security, area:ui, P1, launch-blocker]
+    size: S
+    depends: [FND-02]
+    reqs: [F5, S6]
+    summary: |
+      Headers: CSP (nonces), HSTS, X-Frame-Options DENY, Referrer-Policy, Permissions-Policy. robots.txt and an
+      X-Robots-Tag noindex on all authenticated routes. Cache-Control: private, no-store on personalized pages.
+      Branded EN/FR 404/500 pages.
+    ac:
+      - securityheaders.com grade A on staging; private pages are never cached by the CDN.
+
+  - key: FND-15
+    title: "Seed data: two test institutions, every role, demo alumni and a perf seed"
+    labels: [type:chore, area:db, P0]
+    size: S
+    depends: [FND-04]
+    summary: |
+      supabase/seed.sql: institutions "herzliah" and "test-school", with users for every role in each, 200 fictional
+      alumni (from the V0 demo data), invitations and access requests in each state. A separate scripts/seed-perf.ts
+      generates 10,000 alumni per tenant for QA-06. Seeds are never applied to production.
+    ac:
+      - "`supabase db reset` gives a ready-to-demo local stack; credentials are documented in the README (local only)."
+
+  - key: FND-16
+    title: "Environments: staging and production, env-var scoping, secrets handling"
+    labels: [type:infra, area:ops, P0, launch-blocker]
+    size: M
+    depends: [BIZ-04, FND-07]
+    reqs: [S8, D1]
+    summary: |
+      - **Staging:** Supabase staging project, with the Vercel dev branch serving *.staging.alumni-network.ca.
+      - **Previews:** use staging with the tenant cookie fallback.
+      - **Migrations:** applied by CI to staging on merge to dev.
+      - **Secrets:** each environment has its own (no production secrets in preview). docs/runbooks/secrets.md covers
+        storage, rotation and who has access.
+      - **Email:** staging sends only to an allow-list.
+    ac:
+      - A merge to dev deploys the app and applies migrations to staging automatically.
+      - A production secret never appears in preview/staging env.
+
+  - key: FND-17
+    title: "Observability: Sentry, structured logging, health check and job heartbeats"
+    labels: [type:infra, area:ops, P1, launch-blocker]
+    size: M
+    depends: [FND-16]
+    reqs: [S9, D3]
+    adr: "0012"
+    summary: |
+      Sentry for client and server with PII scrubbing. A JSON logger carries request_id, institution and actor.
+      /api/health checks the DB and the job heartbeats. An uptime monitor pings it every 5 minutes. Alerts go by
+      email to both partners.
+    ac:
+      - A thrown test error appears in Sentry without personal data.
+      - A stopped job turns the health check red within 26 h.

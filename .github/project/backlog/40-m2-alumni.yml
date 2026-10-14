@@ -1,0 +1,447 @@
+defaults:
+  milestone: M2
+  assignee: Gderhy
+  track: Tech
+
+items:
+  # ---------------------------------------------------------------- onboarding (WS1)
+  - key: ONB-01
+    title: "Invitations backend: create, hash, expire, resend, revoke"
+    epic: EPIC-ONB
+    labels: [type:feature, area:onboarding, P0, launch-blocker]
+    size: M
+    depends: [FND-05, FND-12, EML-01]
+    reqs: [F3, E2, E3, F12]
+    class: Build
+    summary: |
+      create_invitations(profile_ids[]) requires the invite permission. It creates single-use tokens: 32 random bytes,
+      only the SHA-256 is stored, 14-day expiry. It snapshots the email, queues the outbox emails and audits.
+      Also resend_invitation (with a cooldown and send_count) and revoke_invitation. Status goes
+      pending → sent → claimed / expired / revoked / bounced. A daily job expires stale invitations.
+    ac:
+      - A token is never stored or logged in plain text.
+      - Resending never creates a second open invitation.
+      - Every action is audited.
+    tests:
+      - "pgTAP: only admin/owner can create; cross-tenant ids are rejected. Unit: token hashing."
+
+  - key: ONB-02
+    title: "Invitation claim flow: /claim/[token] → sign up / sign in → auto-approve"
+    epic: EPIC-ONB
+    labels: [type:feature, area:onboarding, P0, launch-blocker]
+    size: L
+    depends: [ONB-01, FND-09]
+    reqs: [F3, F4, E3, HL4]
+    adr: "0004"
+    class: Refactor
+    summary: |
+      - **GET** shows the institution name and the invited first name, never the email or record data. Expired,
+        revoked or used links show the recovery path.
+      - **Sign-up / sign-in:** the user signs up or in with the invited email and verifies it.
+      - **Claim:** a POST runs claim_with_invitation(token). It checks the token hash, expiry and that the JWT email
+        matches the invitation email. It then links the profile, creates an active alumni membership, marks the
+        invitation claimed and audits. All in one transaction.
+    ac:
+      - A replayed or forwarded link can't attach the record to a different account.
+      - The claim is idempotent for the same user.
+    tests:
+      - "E2E: the happy path in EN and FR. Integration: wrong email, expired, revoked and reused tokens, and a direct RPC call with a guessed token."
+
+  - key: ONB-03
+    title: "Self-registration from the landing page → pending access request"
+    epic: EPIC-ONB
+    labels: [type:feature, area:onboarding, P0, launch-blocker]
+    size: M
+    depends: [FND-09, FND-10]
+    reqs: [F3, F4, S4]
+    class: Refactor
+    summary: |
+      After sign-up and email verification, the applicant gives first and last name, maiden name, graduation year and
+      a note. request_access stores an access_request with the institution taken from the host (fixes F16). The system
+      computes suggested matches for admins, which are never shown to the applicant. The user sees the "pending"
+      state. Turnstile and a rate limit apply.
+    ac:
+      - The applicant never learns whether a record exists.
+      - Duplicate submissions update the existing pending request.
+
+  - key: ONB-04
+    title: "Access request review: approve (link or create), needs-info, reject"
+    epic: EPIC-ONB
+    labels: [type:feature, area:onboarding, area:admin, P0, launch-blocker]
+    size: L
+    depends: [ONB-03, EML-03]
+    reqs: [F4, F12, F14, E1]
+    class: Refactor
+    summary: |
+      - **approve_access_request(id, link_profile_id | create_new):** links to the chosen unclaimed record or creates
+        one, then activates the membership.
+      - **needs_info(id, message)** and **reject(id, reason)**.
+      Each decision sends the matching EN/FR email and is audited. Conflicts are refused with a clear message: the
+      record is already claimed, or another request exists for the same record.
+    ac:
+      - Reviewer, admin and owner can decide; alumni cannot.
+      - A decided request can't be decided again.
+    tests:
+      - "pgTAP permissions; E2E approve, reject and needs-info with Mailpit assertions."
+
+  - key: ONB-05
+    title: "Onboarding wizard v2 with an atomic save_my_profile"
+    epic: EPIC-ONB
+    labels: [type:feature, area:onboarding, area:profile, P0, launch-blocker]
+    size: L
+    depends: [PRF-01, ONB-02]
+    reqs: [F2, F3, F8, F9]
+    class: Refactor
+    summary: |
+      Steps:
+      1. Welcome + language
+      2. About (name, class, location)
+      3. Education
+      4. Career and experience
+      5. Networking preferences
+      6. Contact channels
+      7. Privacy and publish (explicit opt-in, unticked by default, consent recorded)
+      Progress is saved per step through save_my_profile(payload jsonb), a single transaction with server-side
+      validation (fixes F14). Users can resume where they left off.
+    ac:
+      - A failed step never loses data saved earlier.
+      - Publishing requires at least one public channel.
+      - All copy is in EN and FR.
+
+  - key: ONB-06
+    title: "Account state pages: pending, needs info, rejected, suspended"
+    epic: EPIC-ONB
+    labels: [type:feature, area:onboarding, P1, launch-blocker]
+    size: S
+    depends: [ONB-03]
+    reqs: [F3, HL4]
+    summary: |
+      Clear EN/FR pages for each state, with next steps and the support contact. Route guards: no directory or profile
+      pages until the membership is active. Server checks back the guards, not just redirects.
+    ac:
+      - Pending and rejected users get no private-directory data from pages or from direct API requests.
+
+  - key: ONB-07
+    title: "Edge cases: duplicates, conflicting claims, changed emails, expired invitations"
+    epic: EPIC-ONB
+    labels: [type:feature, area:onboarding, P1, launch-blocker]
+    size: M
+    depends: [ONB-02, ONB-04]
+    reqs: [F4, F14]
+    summary: |
+      Admin tools:
+      - mark two records as duplicates (keep one, archive the other, with the history preserved)
+      - transfer a claim when the wrong person claimed (audited)
+      - update the claim email and re-invite
+      Alumni whose school email is outdated use self-registration, and the admin links them to their record.
+    ac:
+      - Every resolution is audited and reversible by an owner.
+      - Nothing is ever merged automatically.
+
+  # ---------------------------------------------------------------- email (WS1)
+  - key: EML-01
+    title: "Email outbox and worker (idempotent, retrying, Mailpit locally)"
+    epic: EPIC-EML
+    labels: [type:feature, area:email, P0, launch-blocker]
+    size: L
+    depends: [FND-04, FND-16]
+    reqs: [E1, E2, E4]
+    adr: "0007"
+    summary: |
+      - **enqueue_email:** inserts an email_outbox row (template, locale, recipient, payload reference) in the
+        caller's transaction.
+      - **Worker:** sends immediately via after(). A cron sweeper (/api/cron/email, CRON_SECRET) retries with
+        exponential backoff (5 attempts).
+      - **No double sends:** Resend's idempotency key is the outbox id. Suppressed recipients are skipped.
+      - **Transport:** Mailpit locally and in CI, Resend in staging and production.
+      - **Logs:** ids and statuses only.
+    ac:
+      - Killing the worker mid-batch and re-running never double-sends.
+      - Failures are visible to admins.
+
+  - key: EML-02
+    title: "Resend domain and per-institution sender identity"
+    epic: EPIC-EML
+    labels: [type:infra, area:email, P0, launch-blocker]
+    size: S
+    depends: [BIZ-02, BIZ-04]
+    reqs: [E1]
+    summary: |
+      Verify mail.alumni-network.ca (SPF, DKIM, DMARC p=quarantine with reporting). The sender is
+      "<Institution> Alumni Network" <slug@mail.alumni-network.ca>, with Reply-To from institutions.reply_to.
+      Production, staging and dev use separate API keys.
+    ac:
+      - mail-tester.com score ≥ 9/10 for an invitation email.
+
+  - key: EML-03
+    title: "Bilingual React Email templates"
+    epic: EPIC-EML
+    labels: [type:feature, area:email, area:i18n, P0, launch-blocker]
+    size: L
+    depends: [EML-01, FND-03]
+    reqs: [E1, F9]
+    summary: |
+      Tenant-branded templates in EN and FR (HTML plus a text part): invitation, invitation reminder, access approved,
+      needs more info, access rejected, welcome, staff invitation, annual confirmation, confirmation reminders 1 and 2.
+      Messages come from the next-intl files. No sensitive data is shown. Links use the tenant host. A preview route
+      on staging lets Noah and Herzliah review them (HERZ-04).
+    ac:
+      - Every template renders in both languages without missing keys and passes a link-check test.
+
+  - key: EML-04
+    title: "Supabase Auth Send Email Hook → branded EN/FR auth emails"
+    epic: EPIC-EML
+    labels: [type:feature, area:email, area:auth, P0, launch-blocker]
+    size: M
+    depends: [EML-03, FND-09]
+    reqs: [E1, F9]
+    summary: |
+      /api/hooks/auth-email verifies the Standard Webhooks signature, picks the tenant and locale (redirect host and
+      user metadata), renders the confirm-signup, reset-password and email-change templates with token_hash links,
+      and sends through the outbox. Configured in config.toml locally and in the dashboard for staging and production.
+    ac:
+      - Real alumni receive the auth emails (fixes F9), branded per school, in their language.
+
+  - key: EML-05
+    title: "Delivery tracking: Resend webhooks, bounces, suppressions, admin recovery"
+    epic: EPIC-EML
+    labels: [type:feature, area:email, P1, launch-blocker]
+    size: M
+    depends: [EML-01]
+    reqs: [E4]
+    summary: |
+      /api/webhooks/resend verifies the Svix signature and records delivered, bounced and complained in email_events.
+      Hard bounces and complaints go to email_suppressions, and invitations are marked bounced. Admins see failures in
+      the roster and can fix the address and resend. A bounce-rate alert is wired to OPS-04.
+    ac:
+      - Replayed or unsigned webhooks are rejected.
+      - A bounced invitation shows on the roster with a "fix and resend" action.
+
+  - key: EML-06
+    title: "Email catalogue documentation"
+    epic: EPIC-EML
+    labels: [type:docs, area:email, P1]
+    size: S
+    depends: [EML-03]
+    reqs: [E2]
+    summary: docs/email-catalogue.md lists, for each email, its trigger, recipient, language rule, sender, link expiry, retry and duplicate behaviour, and the template file.
+
+  # ---------------------------------------------------------------- profile (WS3)
+  - key: PRF-01
+    title: "Profile field schema and validation (Zod, EN/FR errors)"
+    epic: EPIC-PRF
+    labels: [type:feature, area:profile, P0, launch-blocker]
+    size: S
+    depends: [DEC-02, FND-04]
+    reqs: [F1, F2]
+    summary: Shared Zod schemas for profile, education, experience, channels and preferences. The same rules apply in save_my_profile (the SQL checks). Errors are localized.
+    ac:
+      - Invalid input is rejected server-side even when the client is bypassed.
+
+  - key: PRF-02
+    title: "My profile editor v2 (/me)"
+    epic: EPIC-PRF
+    labels: [type:feature, area:profile, P0, launch-blocker]
+    size: L
+    depends: [PRF-01, ONB-05]
+    reqs: [F2, F9]
+    class: Refactor
+    summary: |
+      Sections mirror the onboarding wizard (fixes F22): about, education and experience repeaters (add, reorder,
+      remove), preferences, channels, privacy and language. Saving is atomic, with clear success and error states and
+      an unsaved-changes warning. Private and admin-only fields are shown read-only.
+    ac:
+      - Edits persist, and the directory reflects them immediately.
+      - Admin-only fields can't be changed by the alumnus (enforced by the DB trigger).
+
+  - key: PRF-03
+    title: "Contact channels editor (at least one to publish)"
+    epic: EPIC-PRF
+    labels: [type:feature, area:profile, area:contact, P0, launch-blocker]
+    size: M
+    depends: [PRF-01, DEC-03]
+    reqs: [F10, S5]
+    adr: "0006"
+    summary: |
+      Per-channel value plus a public toggle: email (defaults to the account email, can differ), phone (E.164),
+      LinkedIn, Facebook, Instagram and website (https URLs only, validated per platform).
+    ac:
+      - You can't publish with zero public channels.
+      - Unpublishing the last channel unpublishes the profile, with a warning.
+
+  - key: PRF-04
+    title: "Networking preferences (offer types)"
+    epic: EPIC-PRF
+    labels: [type:feature, area:profile, P1, launch-blocker]
+    size: S
+    depends: [PRF-01]
+    reqs: [F8]
+    summary: |
+      Options from offer_types (per-institution EN/FR labels): mentoring, career advice, jobs and hiring, internships,
+      shadowing, speaking, networking, entrepreneurship, student questions. "Student questions" is stored but grants
+      no student access (ST1). The UI says that selecting a preference isn't a commitment to respond.
+    ac:
+      - The preferences can be used as directory filters (DIR-01).
+
+  - key: PRF-05
+    title: "Publish / unpublish with explicit opt-in and consent record"
+    epic: EPIC-PRF
+    labels: [type:feature, area:profile, P0, launch-blocker]
+    size: S
+    depends: [PRF-03]
+    reqs: [F7, S5]
+    class: Refactor
+    summary: |
+      Profiles start hidden. "Publish my profile" shows what other alumni will see and records a consent
+      (directory_visibility, policy version). Unpublishing removes the profile from the directory immediately.
+      Fixes the pre-ticked opt-in in F13.
+    ac:
+      - A preview of the public card is shown before publishing.
+      - The consent row is stored with its version and timestamp.
+
+  - key: PRF-06
+    title: "Privacy self-service: export my data and delete my account"
+    epic: EPIC-PRF
+    labels: [type:feature, area:profile, P1, launch-blocker]
+    size: M
+    depends: [PRF-02, DEC-08]
+    reqs: [S5]
+    summary: |
+      - **Export:** JSON of the user's profile, channels, preferences, consents and contact events they initiated.
+      - **Delete:** after re-authentication, removes the auth user and the profile per the retention rules (DEC-08).
+        The school's original imported record is handled per policy. Audited, with minimal personal data in the audit.
+    ac:
+      - After deletion, the person can't be found anywhere in the directory, and sign-in fails.
+
+  - key: PRF-07
+    title: "Language preference stored on the profile"
+    epic: EPIC-PRF
+    labels: [type:feature, area:i18n, P1]
+    size: XS
+    depends: [FND-03]
+    reqs: [F9]
+    summary: Saved from the toggle once signed in. It drives the UI and email locale (DEC-07).
+
+  # ---------------------------------------------------------------- directory (WS3)
+  - key: DIR-01
+    title: "search_directory RPC: combined filters, text search, pagination, indexes"
+    epic: EPIC-DIR
+    labels: [type:feature, area:directory, area:db, P0, launch-blocker]
+    size: L
+    depends: [FND-05, PRF-01]
+    reqs: [F5, F6, F7, QA4]
+    class: Refactor
+    summary: |
+      Uses security invoker, so RLS applies. Filters: career field (multi), employer (contains), university (from
+      alumni_education, fixes F12), city/country, graduation year range, networking preferences (any/all), and free
+      text across name, job title and employer. Sorting by relevance, name or class year. Page size 24, with the
+      total count. Indexes: pg_trgm on the text columns, GIN on preferences. Returns directory-safe columns only.
+    ac:
+      - "p95 < 300 ms at 10k alumni per tenant (QA-06)."
+      - It never returns hidden, unclaimed, pending or other-tenant profiles.
+
+  - key: DIR-02
+    title: "Directory UI: filters, chips, reset, empty states, pagination, mobile"
+    epic: EPIC-DIR
+    labels: [type:feature, area:directory, area:ui, P0, launch-blocker]
+    size: L
+    depends: [DIR-01, FND-02]
+    reqs: [F6, F9, QA3]
+    class: Refactor
+    summary: |
+      Filters live in the URL, so they are shareable and the back button works. On mobile they open in a sheet.
+      Active filters show as chips with a "reset all". Result cards show initials, name, class, role, employer, city
+      and preference badges. Helpful empty states, keyboard support, bilingual. Uses the ui-ux-pro-max skill.
+    ac:
+      - Combined filters give correct results (E2E with seeded data).
+      - axe is clean; works at 360 px.
+
+  - key: DIR-03
+    title: "Profile page v2"
+    epic: EPIC-DIR
+    labels: [type:feature, area:directory, P0, launch-blocker]
+    size: M
+    depends: [DIR-01, CON-01]
+    reqs: [F5, F7]
+    class: Refactor
+    summary: |
+      Shows published public fields, education, experience, preferences and the public link channels. Email and phone
+      appear as "Show email" / "Show phone" buttons (CON-01). There's a freshness hint ("profile confirmed Mar 2027").
+      Hidden, unpublished or other-tenant profiles return 404.
+    ac:
+      - Nothing private (claim email, admin notes, unpublished channels) appears in the HTML or the network payloads.
+
+  - key: DIR-04
+    title: "Directory visibility rules"
+    epic: EPIC-DIR
+    labels: [type:test, area:directory, area:db, P0, launch-blocker]
+    size: S
+    depends: [DIR-01]
+    reqs: [F7, HL4]
+    summary: |
+      A profile is listed only when status is active, visibility is published, the membership is active and the
+      institution matches. Pending, rejected, suspended, unclaimed, archived and deceased profiles are withheld. The
+      rules are documented and tested.
+    ac:
+      - A pgTAP and integration test matrix covers each state.
+
+  - key: DIR-05
+    title: "Private-data exposure guard"
+    epic: EPIC-DIR
+    labels: [type:security, area:directory, P0, launch-blocker]
+    size: S
+    depends: [DIR-03, FND-14]
+    reqs: [F5, S6]
+    summary: |
+      No private data on public pages. The landing page only shows aggregates. No personal data in URLs (ids only),
+      page titles, analytics or Sentry. Authenticated pages are noindex and private no-store.
+    ac:
+      - An automated check crawls the public pages as anon and finds no seeded personal data.
+
+  # ---------------------------------------------------------------- contact (WS3)
+  - key: CON-01
+    title: "initiate_contact RPC: checks, reveal, rate limit, dedupe, contact_events"
+    epic: EPIC-CON
+    labels: [type:feature, area:contact, area:db, P0, launch-blocker]
+    size: M
+    depends: [FND-05, FND-10, DEC-03]
+    reqs: [F10, F11, S4, S6]
+    adr: "0006"
+    class: Refactor
+    summary: |
+      initiate_contact(profile_id, channel):
+      - The caller is an active member of the same institution. The target is published and has that channel public.
+      - The value is revealed for one profile only.
+      - 20 reveals per rolling 24 h per user.
+      - Repeat clicks for the same recipient and channel within 24 h return the value without a new event.
+      - Each new reveal inserts a contact_events row.
+    ac:
+      - Bulk harvesting is impossible: no list endpoint returns email or phone, and the limit is enforced in the DB.
+    tests:
+      - "pgTAP and integration: non-member, cross-tenant, hidden channel, limit exceeded, dedupe."
+
+  - key: CON-02
+    title: "Contact UI on profiles"
+    epic: EPIC-CON
+    labels: [type:feature, area:contact, area:ui, P1, launch-blocker]
+    size: S
+    depends: [CON-01, DIR-03]
+    reqs: [F10]
+    summary: |
+      Reveal buttons with copy-to-clipboard, mailto/tel links, link-type channels opening in a new tab
+      (rel=noopener), a note on respectful contact, and a localized message when the limit is reached.
+    ac:
+      - Works with keyboard only; the EN and FR copy is approved.
+
+  - key: CON-03
+    title: "Contacts Initiated metric definition and admin reporting"
+    epic: EPIC-CON
+    labels: [type:feature, area:contact, area:admin, P1, launch-blocker]
+    size: S
+    depends: [CON-01, ADM-02]
+    reqs: [F11, F12]
+    summary: |
+      Admins see counts by date range, channel and graduating class, with no initiator names by default. The label
+      and tooltip explain that a reveal isn't evidence of a sent, delivered or answered message.
+    ac:
+      - The metric matches the contact_events rows (a test asserts it).

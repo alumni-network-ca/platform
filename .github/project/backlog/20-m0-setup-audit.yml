@@ -1,0 +1,213 @@
+defaults:
+  milestone: M0
+  assignee: Gderhy
+  track: Tech
+
+items:
+  # ---------------------------------------------------------------- setup
+  - key: SETUP-01
+    title: "Commit diagrams to gab_test, create dev from main, merge gab_test"
+    epic: EPIC-SETUP
+    labels: [type:chore, area:process, P0]
+    size: XS
+    state: closed
+    summary: |
+      Committed the product analysis, diagram prompts and flow/ERD diagrams to gab_test. Cut `dev` from the latest
+      main and merged gab_test (.gitignore for .env/.next, package-lock.json, next-env.d.ts) into it.
+    ac:
+      - dev = origin/main + a merge of gab_test; the diff vs main contains only hygiene files and docs.
+
+  - key: SETUP-02
+    title: "Create org alumni-network-ca and repo platform with full history"
+    epic: EPIC-SETUP
+    labels: [type:infra, area:process, P0]
+    size: S
+    state: closed
+    summary: |
+      Org alumni-network-ca (free plan) created. Private repo alumni-network-ca/platform created by CLI, with main,
+      dev and gab_test pushed with full history. Merge settings are squash for features and merge commits for
+      releases, with branches deleted on merge. dev is the default branch so `Closes #N` works. Noah is invited as an org owner.
+    ac:
+      - All 35 commits present; branches main, dev, gab_test.
+      - Noah's owner invitation sent (he accepts in BIZ-01).
+    related: [BIZ-01]
+
+  - key: SETUP-03
+    status: In review
+    title: "GitHub Project, labels, milestones and backlog seeding"
+    epic: EPIC-SETUP
+    labels: [type:chore, area:process, P0]
+    size: M
+    summary: |
+      Board configuration and every issue are defined as code in .github/project/*.yml and synced by the idempotent
+      scripts/github/seed-backlog.mjs. Project fields: Status, Priority, Size, Track, Area, Requirements, Key, Start, Target.
+    ac:
+      - Re-running the seeder creates nothing new and changes nothing when the YAML is unchanged.
+      - Every issue is on the board with Priority, Size, Track, Start/Target and Milestone.
+      - Pre-audit (V0) and completed setup issues are closed and shown as Done.
+      - Views exist: Board (by Status), Roadmap (by Target), Launch blockers, Noah, Current milestone.
+    tests:
+      - "`node scripts/github/seed-backlog.mjs --dry-run` reports 0 changes after a full run."
+
+  - key: SETUP-04
+    status: In review
+    title: "Contribution workflow: CONTRIBUTING, PR/issue templates, CODEOWNERS, Dependabot"
+    epic: EPIC-SETUP
+    labels: [type:docs, area:process, P0]
+    size: S
+    summary: Branching, Conventional Commits, Definitions of Ready and Done, release process, PR template, issue forms (feature, bug, decision, business), CODEOWNERS, Dependabot, .gitattributes (LF).
+    ac:
+      - New issues can only be created through the forms; the PR template appears on new PRs.
+    related: [SETUP-03]
+
+  - key: SETUP-05
+    status: Ready
+    title: "Developer tooling: ESLint, Prettier, Vitest, Playwright, git hooks, npm scripts"
+    epic: EPIC-SETUP
+    labels: [type:chore, area:ci, P0]
+    size: M
+    depends: [SETUP-04]
+    summary: |
+      Add ESLint (next config + typescript-eslint), Prettier, Vitest + Testing Library, Playwright + @axe-core/playwright,
+      simple-git-hooks + lint-staged. Scripts: `check` (lint + typecheck + unit), `test`, `test:db`, `test:e2e`, `format`.
+    ac:
+      - "`npm run check` passes on a clean checkout."
+      - Pre-commit formats and lints staged files only.
+      - One sample test exists at each level to prove the wiring.
+
+  - key: SETUP-06
+    title: "CI pipeline (GitHub Actions)"
+    epic: EPIC-SETUP
+    labels: [type:chore, area:ci, P0, launch-blocker]
+    size: M
+    depends: [SETUP-05, SETUP-07]
+    reqs: [D1]
+    summary: |
+      Workflow on PRs to dev/main and pushes to dev:
+      install → lint → typecheck → unit → supabase start + db reset → pgTAP → generated-types drift check → build → Playwright (EN/FR).
+      Also gitleaks secret scan, CodeQL and dependency review. Uses concurrency cancel-in-progress and caches npm/Playwright/Docker
+      layers to stay inside 2,000 free minutes/month.
+    ac:
+      - A failing test, type error, migration error or secret blocks the PR (shown as a red check).
+      - A typical PR run takes under 12 minutes.
+
+  - key: SETUP-07
+    status: Ready
+    title: "Local Supabase development environment"
+    epic: EPIC-SETUP
+    labels: [type:chore, area:db, area:ci, P0, launch-blocker]
+    size: S
+    summary: |
+      Install Docker Desktop (WSL2). Run `supabase init`, configure config.toml (auth redirect URLs for *.localhost,
+      Mailpit, Send Email Hook), set up seed.sql and .env.example, and rewrite the README "Getting started" section.
+      Archive migrations 001–004 to supabase/legacy (ADR 0003).
+    ac:
+      - "A fresh clone runs `npm i && supabase start && supabase db reset && npm run dev` and reaches herzliah.localhost:3000."
+      - No secret values are committed; .env.example lists every variable with a description.
+
+  # ---------------------------------------------------------------- audit
+  - key: AUDIT-01
+    title: "Product analysis and findings register F1–F27"
+    epic: EPIC-AUDIT
+    labels: [type:docs, area:process, P0]
+    size: M
+    state: closed
+    summary: docs/PRODUCT_ANALYSIS.md covers actors, the route map, findings F1–F27 (security, functional, polish), the configuration and implementation backlog, and the target data model.
+
+  - key: AUDIT-02
+    title: "User-flow and ERD diagrams (current and target)"
+    epic: EPIC-AUDIT
+    labels: [type:docs, area:process, P1]
+    size: M
+    state: closed
+    summary: documentation/diagrams holds 12 user flows, the current ERD, the target ERDs (overview, identity, profile, onboarding, engagement), a migration map and an interactive viewer.
+
+  - key: AUDIT-03
+    title: "Capture live legacy schema and review live-only RPCs"
+    epic: EPIC-AUDIT
+    labels: [type:security, area:db, P1, needs-noah]
+    size: S
+    reqs: [S2, F1]
+    summary: |
+      The legacy production database contains objects that are in no migration: columns work_city, work_country,
+      contact_topics, student_contact_allowed and availability_flags.student_questions, plus the RPCs request_alumni_access,
+      approve_access_request and reveal_contact_email. approve_access_request answers anonymous callers (F2). Needs read
+      access from Noah, or a `supabase db dump --schema public` he runs himself.
+    ac:
+      - docs/audit/legacy-live-schema.sql is committed (schema only, no data).
+      - Each live-only RPC has a written review covering its auth checks, its exposure and whether it was exploitable, recorded in SECURITY_FINDINGS.md.
+      - If the anonymous approval path was exploitable, the legacy project's RPC is revoked immediately.
+
+  - key: AUDIT-04
+    status: Ready
+    title: "Implementation assessment: retain / refactor / build / unverified per requirement"
+    epic: EPIC-AUDIT
+    labels: [type:docs, area:process, P0]
+    size: M
+    reqs: [§1]
+    summary: |
+      docs/audit/IMPLEMENTATION_ASSESSMENT.md has one row per requirement ID (MT1–6, F1–16, E1–8, S1–9, QA1–4, D1–3,
+      HL1–9): classification, evidence, gaps, dependencies, risk, acceptance test and unresolved access needs.
+      It records the repository revision, environment and date reviewed, and separates code inspection from runtime tests.
+    ac:
+      - Every launch requirement has a classification and a linked issue.
+
+  - key: AUDIT-05
+    status: Ready
+    title: "Security findings register and initial risk register"
+    epic: EPIC-AUDIT
+    labels: [type:security, area:process, P0]
+    size: S
+    reqs: [§6, §12]
+    summary: docs/audit/SECURITY_FINDINGS.md lists severity, impact, resolution, owner and the issue for each finding. docs/RISK_REGISTER.md holds the §12 initial risks with severity, owner, mitigation and due phase.
+    ac:
+      - Each finding links to the issue that fixes it, or to a recorded exception.
+
+  - key: AUDIT-06
+    status: In review
+    title: "Architecture decision records and decision register"
+    epic: EPIC-AUDIT
+    labels: [type:docs, area:process, P0]
+    size: S
+    summary: docs/adr/0001–0013 plus docs/DECISIONS.md, covering tenancy, accounts, schema baseline, claim policy, authorization, contact, email, annual confirmation, frontend stack, testing, environments, observability and git workflow.
+    related: [DEC-01, DEC-03, DEC-04, DEC-06, DEC-12, DEC-13, DEC-14]
+
+  - key: AUDIT-07
+    title: "Requirements traceability matrix"
+    epic: EPIC-AUDIT
+    labels: [type:docs, area:process, P1]
+    size: S
+    depends: [AUDIT-04]
+    summary: docs/TRACEABILITY.md maps each requirement to its issues, its tests (file/test name) and the evidence location. It is updated by every PR that closes a launch requirement.
+    ac:
+      - Requirements with no test or evidence are visible at a glance; it feeds the HL8 checklist (DOC-04).
+
+  - key: AUDIT-08
+    title: "Volume and capacity assumptions (QA4)"
+    epic: EPIC-AUDIT
+    labels: [type:docs, area:ops, P1, needs-noah]
+    size: XS
+    reqs: [QA4]
+    summary: |
+      Write down planning numbers for Noah to confirm, for example: year 1 = 1–5 institutions, Herzliah about 4,000
+      alumni (to confirm), 30 % claim in the first quarter, 50 concurrent users at peak, imports of 5,000 rows,
+      invitation waves of 500 per day. Define the capacity triggers that would prompt an upgrade.
+    ac:
+      - Assumptions are approved and referenced by the perf tests (QA-06).
+
+  - key: AUDIT-09
+    status: Ready
+    title: "Target architecture and data model v2 design"
+    epic: EPIC-AUDIT
+    labels: [type:docs, area:db, P0]
+    size: M
+    depends: [AUDIT-06]
+    reqs: [MT1, MT2, MT5, MT6]
+    summary: |
+      Update the target model (PRODUCT_ANALYSIS §6 and the diagrams 21–26) with the ADR decisions:
+      - owner/admin/reviewer roles, role_permissions and platform_access_grants
+      - profile_contact_channels, email_outbox/events/suppressions and confirmation_requests/profile_confirmations
+      - import_rows, exports, job_runs and rate_limit_counters
+      Deliver the RLS access matrix and the RPC catalog for implementation in FND-04/FND-05.
+    ac:
+      - The reviewed ERD, RLS matrix and RPC catalog are committed under docs/architecture/.

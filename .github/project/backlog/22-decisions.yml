@@ -1,0 +1,190 @@
+# Decision register items (§10 "Decisions to resolve before implementation", §12).
+# To close one: Noah comments "Approved" (or gives amendments), and Gab updates docs/DECISIONS.md and the ADR status.
+defaults:
+  epic: EPIC-DEC
+  assignee: castielnoah-art
+  track: Decision
+  milestone: M0
+  size: XS
+
+items:
+  - key: DEC-01
+    status: Ready
+    title: "Decision: alumni eligibility and claim policy"
+    labels: [type:decision, area:onboarding, P0, launch-blocker, needs-noah]
+    reqs: [F3, F4, HL1]
+    adr: "0004"
+    summary: |
+      Recommendation: an invitation sent to the school-held email, plus that email verified, is approved automatically.
+      Landing-page self-registration goes to admin review (link a record, create one, ask for info, or reject).
+      Never reveal whether an email or record exists. Never auto-merge.
+    ac:
+      - Noah approves or amends the policy; ADR 0004 is marked Accepted.
+
+  - key: DEC-02
+    status: Ready
+    title: "Decision: profile field list, required fields and visibility"
+    labels: [type:decision, area:profile, P0, launch-blocker, needs-noah]
+    reqs: [F1, F2, F7, S5]
+    summary: |
+      Proposal:
+      - **Required:** first and last name, graduation year, city/country, at least one contact channel to publish.
+      - **Optional:** preferred name, maiden name (admin-only), bio, career field and job title, employer, education
+        entries (school, degree, field, year), experience entries, languages, networking preferences.
+      - **Private / admin-only:** claim email, phone unless chosen as a channel, school student ID, admin notes,
+        verification evidence.
+      - **Visibility:** the profile is hidden until the alumnus publishes it. Directory-visible fields are the public
+        ones above; channels follow the alumnus's per-channel choice.
+    ac:
+      - The field list is approved; PRF-01 implements it.
+
+  - key: DEC-03
+    status: Ready
+    title: "Decision: contact methods and email exposure"
+    labels: [type:decision, area:contact, P0, launch-blocker, needs-noah]
+    reqs: [F10, F11]
+    adr: "0006"
+    summary: |
+      Recommendation: alumni choose which of email, phone, LinkedIn, Facebook, Instagram and website to show, with at
+      least one required. Email and phone are revealed only on click, one profile at a time, logged as "Contact
+      initiated", and limited to 20/day. A relay form is deferred.
+    ac:
+      - Approved; ADR 0006 is Accepted.
+
+  - key: DEC-04
+    status: Ready
+    title: "Decision: administrator roles and permission matrix"
+    labels: [type:decision, area:admin, P0, launch-blocker, needs-noah]
+    reqs: [F13, MT5]
+    adr: "0005"
+    summary: |
+      Recommendation: **owner** (everything, including staff and settings), **admin** (records, invites, import, export,
+      approvals) and **reviewer** (view and approve/reject only, with no export and no role changes). Platform admins
+      get time-boxed, audited access only. See the matrix in ADR 0005.
+    ac:
+      - The matrix is approved; ADR 0005 is Accepted.
+
+  - key: DEC-05
+    title: "Decision: CSV matching and duplicate policy"
+    milestone: M1
+    labels: [type:decision, area:import-export, P0, launch-blocker, needs-noah]
+    reqs: [F15]
+    summary: |
+      Proposal: the match key is school student ID if present, otherwise the email (case-insensitive).
+      An existing match is updated (only fields present in the file; it never overwrites alumnus-edited public fields
+      after a claim). Name + grad year only is flagged as "possible duplicate" for admin review, never merged
+      automatically. Duplicates within a file are row errors.
+    ac:
+      - Approved; IMP-02/IMP-04 implement it.
+
+  - key: DEC-06
+    title: "Decision: annual confirmation schedule and email wording"
+    milestone: M1
+    labels: [type:decision, area:freshness, P1, launch-blocker, needs-noah]
+    reqs: [E5, E6, E7]
+    adr: "0008"
+    summary: |
+      Recommendation: rolling, due 12 months after the last confirmation, with reminders at +14 and +30 days, then
+      "overdue" in admin reports (never hidden or deleted automatically). Confirmation needs a click on the page (POST),
+      so link scanners don't confirm. Noah approves the final EN/FR wording (on staging, with HERZ-04).
+    ac:
+      - Rules approved; ADR 0008 is Accepted. Wording approved at M3.
+
+  - key: DEC-07
+    title: "Decision: language fallback and bilingual wording approval"
+    milestone: M1
+    labels: [type:decision, area:i18n, P1, needs-noah]
+    reqs: [F9, HL1]
+    summary: |
+      Recommendation: saved preference → language toggle cookie → browser language → school default (Herzliah: EN?) → EN.
+      Emails use the recipient's saved language; for imported records not yet claimed, the school default.
+    ac:
+      - Approved, including Herzliah's default language.
+
+  - key: DEC-08
+    title: "Decision: data retention and deletion rules"
+    milestone: M2
+    labels: [type:decision, area:db, P1, launch-blocker, needs-noah]
+    reqs: [S5, S7]
+    summary: |
+      Propose:
+      - Never-claimed imported records: kept while the school contract is active, deleted on school request or at offboarding.
+      - Self-deleted accounts: profile removed immediately, audit entries kept 2 years with personal data minimized.
+      - Rejected access requests: deleted after 90 days.
+      - Exports: files deleted after 24 h.
+      - Logs: 30 days. Audit log: 2 years.
+      - Deceased: hidden, kept until the school requests deletion.
+      Confirm with counsel (LEGAL-01).
+    ac:
+      - Approved and implemented by retention jobs and documented in the privacy policy.
+
+  - key: DEC-09
+    title: "Decision: RPO/RTO, support hours, severity levels, response targets"
+    milestone: M3
+    labels: [type:decision, area:ops, P1, launch-blocker, needs-noah]
+    reqs: ["§9"]
+    summary: |
+      Proposal:
+      - **Recovery:** RPO 24 h (daily backups; PITR later), RTO 8 business hours.
+      - **Support:** Mon–Fri 9:00–18:00 ET by support@ email.
+      - **Severity and response targets:** S1 outage or data exposure: acknowledge within 2 h, any time we're awake.
+        S2 blocked workflow: within 1 business day. S3/S4: within 3 business days.
+      - **Limits:** no 24/7 guarantee. Response targets are not resolution guarantees.
+    ac:
+      - Approved; it goes into the Herzliah agreement (BIZ-06) and the runbooks (DOC-05).
+
+  - key: DEC-10
+    title: "Decision: release-blocking severity criteria"
+    milestone: M3
+    labels: [type:decision, area:process, P1, launch-blocker, needs-noah]
+    reqs: ["§6", HL9]
+    summary: Proposal — critical/high security findings, any failing tenant-isolation test, or any S1/S2 defect blocks release unless Noah records a written exception with a remediation date.
+    ac:
+      - Approved; used at the LCH-01 acceptance.
+
+  - key: DEC-11
+    title: "Decision: pilot cohort, duration, success measures and rollback triggers"
+    milestone: M3
+    labels: [type:decision, area:process, P1, launch-blocker, needs-noah]
+    reqs: [HL8]
+    summary: |
+      Proposal:
+      - **Cohort:** start with about 100–200 alumni (e.g. 3–4 graduating classes), 4 weeks.
+      - **Success:** ≥ 40 % claim rate, ≥ 60 % of claimers publish, < 2 % bounce rate, zero S1 incidents.
+      - **Rollback triggers:** a data-exposure incident, or bounce/complaint rates over the thresholds.
+      - **Wider release:** opens when all success measures are met.
+    ac:
+      - Approved with Herzliah.
+
+  - key: DEC-12
+    status: Ready
+    title: "Decision: email sender identity per institution"
+    labels: [type:decision, area:email, P1, needs-noah]
+    reqs: [E1]
+    adr: "0007"
+    summary: |
+      Recommendation: one verified sending domain, mail.alumni-network.ca, with sender
+      "Herzliah Alumni Network" <herzliah@mail.alumni-network.ca> and Reply-To set to the school's alumni office.
+      There's no per-school DNS, and the free Resend tier covers it.
+    ac:
+      - Approved; ADR 0007 is Accepted.
+
+  - key: DEC-13
+    status: Ready
+    title: "Decision: multi-institution membership model"
+    labels: [type:decision, area:tenancy, P1, needs-noah]
+    reqs: [MT5]
+    adr: "0002"
+    summary: One login per person. A separate membership and profile per school, never shared. A separate sign-in per school subdomain.
+    ac:
+      - Approved; ADR 0002 is Accepted.
+
+  - key: DEC-14
+    status: Ready
+    title: "Decision: tenancy by subdomain and domain naming"
+    labels: [type:decision, area:tenancy, P0, launch-blocker, needs-noah]
+    reqs: [MT1, MT3]
+    adr: "0001"
+    summary: Each school at <slug>.alumni-network.ca. The root domain hosts the "for schools" site and the platform console. Herzliah's slug is "herzliah".
+    ac:
+      - Approved; ADR 0001 is Accepted.
