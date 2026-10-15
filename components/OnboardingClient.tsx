@@ -465,7 +465,7 @@ export function OnboardingClient({
           <h2>Connect your account</h2>
 
           <p className="intro">
-            You're signed in as <strong>{email}</strong>. We'll
+            You&apos;re signed in as <strong>{email}</strong>. We&apos;ll
             securely match your email with the alumni information
             Herzliah has on file.
           </p>
@@ -1006,7 +1006,7 @@ export function OnboardingClient({
 
           <p className="intro">
             Tell alumni what kinds of conversations and
-            opportunities you're open to.
+            opportunities you&apos;re open to.
           </p>
 
           <div className="choiceGrid">

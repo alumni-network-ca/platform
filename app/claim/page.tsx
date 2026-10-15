@@ -127,7 +127,7 @@ export default function ClaimPage() {
             <div>
               <strong>Complete your profile</strong>
               <p>
-                Add career information, privacy settings and what you're open
+                Add career information, privacy settings and what you&apos;re open
                 to.
               </p>
             </div>

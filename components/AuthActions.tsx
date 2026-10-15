@@ -40,6 +40,7 @@ export function AuthActions() {
 
   useEffect(() => {
     const supabase = createClient();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- replaced by the server-side session in FND-09 (#95)
     load();
     const { data: listener } = supabase.auth.onAuthStateChange(() => load());
     return () => listener.subscription.unsubscribe();

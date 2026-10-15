@@ -41,6 +41,7 @@ export function LanguageProvider({
       ) as Locale | null;
 
     if (saved === "en" || saved === "fr") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- replaced by next-intl in FND-03 (#89)
       setLocaleState(saved);
     }
   }, []);
