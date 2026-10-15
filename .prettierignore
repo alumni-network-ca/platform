@@ -1,0 +1,16 @@
+.next/
+node_modules/
+coverage/
+playwright-report/
+test-results/
+package-lock.json
+next-env.d.ts
+
+# Authored docs and generated diagrams keep their own formatting.
+*.md
+*.html
+documentation/
+.github/project/
+
+# SQL is reviewed as written.
+supabase/

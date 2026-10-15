@@ -18,6 +18,19 @@ How we plan, build, review and release the Alumni Network platform. The rules ar
 
 `<type>` is one of `feat`, `fix`, `chore`, `docs`, `test`, `refactor` or `security`. Example: `feat/42-invitation-claim`.
 
+## Commands
+
+| Command | What it does |
+|---|---|
+| `npm run check` | Lint + typecheck + format check + unit tests. Run it before every PR (CI runs the same). |
+| `npm test` / `npm run test:watch` | Vitest unit and component tests (`*.test.ts(x)` next to the code) |
+| `npm run test:e2e` | Playwright end-to-end and axe accessibility tests in `e2e/`, desktop and mobile. Starts `next dev` automatically. First run `npx playwright install chromium`. |
+| `npm run test:db` | pgTAP database tests (`supabase/tests/`); needs the local Supabase stack (Docker) |
+| `npm run lint:fix` / `npm run format` | Auto-fix lint issues / format everything |
+| `npm run backlog:check` / `npm run backlog:seed` | Preview / apply backlog YAML changes to GitHub |
+
+A pre-commit hook (simple-git-hooks + lint-staged) lints and formats staged files. It's installed by `npm install`.
+
 ## Workflow for an issue
 
 1. **Pick:** take an issue in *Ready*, assign yourself, and move it to *In progress*.

@@ -1,3 +1,12 @@
 /node_modules
 /.next
 .env
+.env*.local
+next-env.d.ts
+
+# test output
+/coverage
+/playwright-report
+/test-results
+/blob-report
+*.tsbuildinfo

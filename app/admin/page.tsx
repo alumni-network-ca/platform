@@ -135,27 +135,21 @@ export default async function AdminPage() {
     supabase
       .from("access_requests")
       .select("*", { count: "exact", head: true })
-      .or(
-        `institution_id.eq.${institutionId},institution_id.is.null`
-      )
+      .or(`institution_id.eq.${institutionId},institution_id.is.null`)
       .eq("status", "pending"),
 
     supabase
       .from("alumni_profiles")
       .select(
-        "id,first_name,last_name,grad_year,profession,job_title,current_employer,current_city,claimed_at,is_directory_visible"
+        "id,first_name,last_name,grad_year,profession,job_title,current_employer,current_city,claimed_at,is_directory_visible",
       )
       .eq("institution_id", institutionId)
       .order("last_name"),
 
     supabase
       .from("access_requests")
-      .select(
-        "id,email,first_name,last_name,grad_year,note,status,created_at"
-      )
-      .or(
-        `institution_id.eq.${institutionId},institution_id.is.null`
-      )
+      .select("id,email,first_name,last_name,grad_year,note,status,created_at")
+      .or(`institution_id.eq.${institutionId},institution_id.is.null`)
       .order("created_at", { ascending: false })
       .limit(20),
   ]);
@@ -203,16 +197,12 @@ export default async function AdminPage() {
             </div>
           </div>
 
-          <section
-            id="alumni"
-            className="card"
-            style={{ marginTop: 24 }}
-          >
+          <section id="alumni" className="card" style={{ marginTop: 24 }}>
             <h2 style={{ marginTop: 0 }}>All alumni</h2>
 
             <p className="muted">
-              Search and review the complete Herzliah alumni database,
-              not only recently added records.
+              Search and review the complete Herzliah alumni database, not only recently added
+              records.
             </p>
 
             <AdminAlumniBrowser profiles={profiles || []} />
@@ -222,18 +212,12 @@ export default async function AdminPage() {
             <AdminImport institutionId={institutionId} />
           </section>
 
-          <section
-            id="requests"
-            className="card"
-            style={{ marginTop: 24 }}
-          >
-            <h2 style={{ marginTop: 0 }}>
-              Verification requests
-            </h2>
+          <section id="requests" className="card" style={{ marginTop: 24 }}>
+            <h2 style={{ marginTop: 0 }}>Verification requests</h2>
 
             <p className="muted">
-              Review people who could not automatically match their
-              email to an existing Herzliah alumni record.
+              Review people who could not automatically match their email to an existing Herzliah
+              alumni record.
             </p>
 
             {!access?.length ? (
@@ -255,8 +239,7 @@ export default async function AdminPage() {
                     <tr key={request.id}>
                       <td>
                         <strong>
-                          {request.first_name || ""}{" "}
-                          {request.last_name || ""}
+                          {request.first_name || ""} {request.last_name || ""}
                         </strong>
 
                         <small
@@ -282,9 +265,7 @@ export default async function AdminPage() {
                       <td>
                         <span
                           className={`status ${
-                            request.status === "approved"
-                              ? "claimed"
-                              : "unclaimed"
+                            request.status === "approved" ? "claimed" : "unclaimed"
                           }`}
                         >
                           {request.status}
@@ -301,39 +282,23 @@ export default async function AdminPage() {
                             }}
                           >
                             <form action={approveRequest}>
-                              <input
-                                type="hidden"
-                                name="requestId"
-                                value={request.id}
-                              />
+                              <input type="hidden" name="requestId" value={request.id} />
 
-                              <button
-                                type="submit"
-                                className="btn btnPrimary"
-                              >
+                              <button type="submit" className="btn btnPrimary">
                                 Approve
                               </button>
                             </form>
 
                             <form action={rejectRequest}>
-                              <input
-                                type="hidden"
-                                name="requestId"
-                                value={request.id}
-                              />
+                              <input type="hidden" name="requestId" value={request.id} />
 
-                              <button
-                                type="submit"
-                                className="btn"
-                              >
+                              <button type="submit" className="btn">
                                 Reject
                               </button>
                             </form>
                           </div>
                         ) : (
-                          <span className="muted">
-                            Reviewed
-                          </span>
+                          <span className="muted">Reviewed</span>
                         )}
                       </td>
                     </tr>

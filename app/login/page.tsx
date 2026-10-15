@@ -34,7 +34,7 @@ function LoginContent() {
       setMessage(
         error.message === "Invalid login credentials"
           ? "The email or password is incorrect."
-          : error.message
+          : error.message,
       );
       return;
     }
@@ -55,11 +55,7 @@ function LoginContent() {
       redirectTo: `${window.location.origin}/login`,
     });
 
-    setMessage(
-      error
-        ? error.message
-        : "Password reset email sent. Check your inbox."
-    );
+    setMessage(error ? error.message : "Password reset email sent. Check your inbox.");
   }
 
   return (
@@ -73,8 +69,8 @@ function LoginContent() {
           <h1>Welcome back.</h1>
 
           <p className="muted">
-            Sign in to search the private directory, manage your profile and
-            control how other alumni can contact you.
+            Sign in to search the private directory, manage your profile and control how other
+            alumni can contact you.
           </p>
 
           <form onSubmit={submit} className="authForm">
@@ -102,18 +98,11 @@ function LoginContent() {
               />
             </label>
 
-            <button
-              className="btn btnPrimary btnWide"
-              disabled={loading}
-            >
+            <button className="btn btnPrimary btnWide" disabled={loading}>
               {loading ? "Signing in…" : "Sign in"}
             </button>
 
-            <button
-              type="button"
-              className="textButton"
-              onClick={resetPassword}
-            >
+            <button type="button" className="textButton" onClick={resetPassword}>
               Forgot password?
             </button>
 
