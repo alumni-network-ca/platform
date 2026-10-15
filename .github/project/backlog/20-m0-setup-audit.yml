@@ -83,10 +83,14 @@ items:
     depends: [SETUP-05, SETUP-07]
     reqs: [D1]
     summary: |
-      Workflow on PRs to dev/main and pushes to dev:
-      install → lint → typecheck → unit → supabase start + db reset → pgTAP → generated-types drift check → build → Playwright (EN/FR).
-      Also gitleaks secret scan, CodeQL and dependency review. Uses concurrency cancel-in-progress and caches npm/Playwright/Docker
-      layers to stay inside 2,000 free minutes/month.
+      .github/workflows/ci.yml runs on every PR into dev or main (docs-only changes skipped), as four parallel jobs:
+      - **checks:** lint, typecheck, format, unit tests, npm audit (critical)
+      - **database:** supabase db start (migrations + seed), then pgTAP
+      - **e2e:** local Supabase stack, production build, Playwright (desktop + mobile, axe)
+      - **secrets:** gitleaks over the full git history
+      Concurrency cancels superseded runs, and npm and Playwright browsers are cached, to stay inside 2,000 free minutes/month.
+      CodeQL and dependency review need GitHub Code Security (paid for private repos), so they're deferred to a plan upgrade.
+      The generated-types drift check arrives with FND-01, which introduces the generated types.
     ac:
       - A failing test, type error, migration error or secret blocks the PR (shown as a red check).
       - A typical PR run takes under 12 minutes.

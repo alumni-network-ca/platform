@@ -31,6 +31,19 @@ How we plan, build, review and release the Alumni Network platform. The rules ar
 
 A pre-commit hook (simple-git-hooks + lint-staged) lints and formats staged files. It's installed by `npm install`.
 
+## Continuous integration
+
+`.github/workflows/ci.yml` runs on every PR into `dev` or `main`. Docs-only changes are skipped. Four jobs run in parallel, and all must be green before merging:
+
+| Job | What it runs |
+|---|---|
+| Lint, types, format, unit | `npm run lint`, `typecheck`, `format:check`, `test`, `npm audit --omit=dev --audit-level=critical` |
+| Database | `supabase db start` (migrations + seed), then `supabase test db` (pgTAP) |
+| Build and end-to-end | Local Supabase stack, `npm run build`, then Playwright (desktop + mobile, axe). On failure, the report is uploaded as an artifact. |
+| Secret scan | gitleaks over the full git history |
+
+To reproduce a CI failure locally, run the same commands. The Supabase CLI version is pinned in the workflow (`SUPABASE_CLI_VERSION`).
+
 ## Workflow for an issue
 
 1. **Pick:** take an issue in *Ready*, assign yourself, and move it to *In progress*.
