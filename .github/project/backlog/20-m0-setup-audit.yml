@@ -73,7 +73,7 @@ items:
     ac:
       - "`npm run check` passes on a clean checkout."
       - Pre-commit formats and lints staged files only.
-      - One sample test exists at each level to prove the wiring.
+      - Unit (Vitest) and end-to-end (Playwright + axe) levels each have a sample test; the database level (pgTAP) lands with SETUP-07 because it needs the local Supabase stack.
 
   - key: SETUP-06
     title: "CI pipeline (GitHub Actions)"
@@ -104,6 +104,7 @@ items:
     ac:
       - "A fresh clone runs `npm i && supabase start && supabase db reset && npm run dev` and reaches herzliah.localhost:3000."
       - No secret values are committed; .env.example lists every variable with a description.
+      - "A sample pgTAP test in supabase/tests runs green with `npm run test:db`."
 
   # ---------------------------------------------------------------- audit
   - key: AUDIT-01
