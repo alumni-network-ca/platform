@@ -27,7 +27,8 @@ export default defineConfig({
   webServer: process.env.E2E_BASE_URL
     ? undefined
     : {
-        command: CI ? `npm run build && npm run start -- -p ${PORT}` : `npm run dev -- -p ${PORT}`,
+        // CI runs `npm run build` as its own workflow step, then tests the production server.
+        command: CI ? `npm run start -- -p ${PORT}` : `npm run dev -- -p ${PORT}`,
         url: baseURL,
         reuseExistingServer: !CI,
         timeout: 180_000,

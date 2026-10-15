@@ -1,0 +1,118 @@
+name: CI
+
+# Runs on every PR into dev or main. Docs-only changes are skipped to save Actions minutes
+# (free org plan: 2,000 min/month for private repos).
+on:
+  pull_request:
+    branches: [dev, main]
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
+      - "documentation/**"
+      - ".github/project/**"
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  SUPABASE_CLI_VERSION: 2.121.0
+  GITLEAKS_VERSION: v8.30.1
+
+jobs:
+  checks:
+    name: Lint, types, format, unit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Format
+        run: npm run format:check
+      - name: Unit tests
+        run: npm test
+      - name: Audit production dependencies (critical)
+        run: npm audit --omit=dev --audit-level=critical
+
+  database:
+    name: Database (migrations, seed, pgTAP)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: supabase/setup-cli@v3
+        with:
+          version: ${{ env.SUPABASE_CLI_VERSION }}
+      - name: Start Postgres and apply migrations + seed
+        run: supabase db start
+      - name: pgTAP tests
+        run: supabase test db
+
+  e2e:
+    name: Build and end-to-end
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - uses: supabase/setup-cli@v3
+        with:
+          version: ${{ env.SUPABASE_CLI_VERSION }}
+      - name: Start Supabase (database, auth, API, mail)
+        run: supabase start -x studio,imgproxy,storage-api,postgres-meta,logflare,vector,supavisor,edge-runtime,realtime
+      - name: Point the app at the local stack
+        run: |
+          eval "$(supabase status -o env)"
+          {
+            echo "NEXT_PUBLIC_SUPABASE_URL=$API_URL"
+            echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$PUBLISHABLE_KEY"
+            echo "NEXT_PUBLIC_DEFAULT_INSTITUTION_SLUG=herzliah"
+            echo "NEXT_PUBLIC_SITE_URL=http://herzliah.localhost:3000"
+          } > .env.local
+      - name: Build
+        run: npm run build
+      - name: Cache Playwright browsers
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+      - name: End-to-end tests (desktop + mobile, axe)
+        run: npm run test:e2e
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  secrets:
+    name: Secret scan (gitleaks)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Scan full git history
+        run: docker run --rm -v "$PWD:/repo" "ghcr.io/gitleaks/gitleaks:${GITLEAKS_VERSION}" git /repo --redact --no-banner
