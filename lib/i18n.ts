@@ -196,8 +196,7 @@ export const translations = {
       emailLabel: "Adresse courriel",
       emailPlaceholder: "Entrez votre adresse courriel",
       continue: "Continuer",
-      noMatch:
-        "Nous n’avons trouvé aucun dossier d’ancien correspondant.",
+      noMatch: "Nous n’avons trouvé aucun dossier d’ancien correspondant.",
     },
 
     login: {

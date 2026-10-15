@@ -3,11 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
-export function ContactAlumnusButton({
-  profileId,
-}: {
-  profileId: string;
-}) {
+export function ContactAlumnusButton({ profileId }: { profileId: string }) {
   const [email, setEmail] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -18,12 +14,9 @@ export function ContactAlumnusButton({
 
     const supabase = createClient();
 
-    const { data, error } = await supabase.rpc(
-      "reveal_contact_email",
-      {
-        p_profile_id: profileId,
-      }
-    );
+    const { data, error } = await supabase.rpc("reveal_contact_email", {
+      p_profile_id: profileId,
+    });
 
     setLoading(false);
 
@@ -38,17 +31,11 @@ export function ContactAlumnusButton({
   if (email) {
     return (
       <div>
-        <a
-          className="btn btnPrimary btnWide"
-          href={`mailto:${email}`}
-        >
+        <a className="btn btnPrimary btnWide" href={`mailto:${email}`}>
           Email {email}
         </a>
 
-        <p
-          className="muted"
-          style={{ marginTop: 8, fontSize: 13 }}
-        >
+        <p className="muted" style={{ marginTop: 8, fontSize: 13 }}>
           Contact initiated through the Herzliah Alumni Network.
         </p>
       </div>
@@ -57,11 +44,7 @@ export function ContactAlumnusButton({
 
   return (
     <div>
-      <button
-        className="btn btnPrimary btnWide"
-        onClick={revealEmail}
-        disabled={loading}
-      >
+      <button className="btn btnPrimary btnWide" onClick={revealEmail} disabled={loading}>
         {loading ? "Loading…" : "Contact alumnus"}
       </button>
 

@@ -21,22 +21,12 @@ export function Nav() {
     <header className="topnav">
       <Brand />
 
-      <nav
-        className="navlinks"
-        aria-label="Primary navigation"
-      >
+      <nav className="navlinks" aria-label="Primary navigation">
         {links.map(([href, label]) => {
-          const active =
-            href === "/"
-              ? pathname === "/"
-              : pathname.startsWith(href);
+          const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
 
           return (
-            <Link
-              key={href}
-              className={active ? "active" : ""}
-              href={href}
-            >
+            <Link key={href} className={active ? "active" : ""} href={href}>
               {label}
             </Link>
           );

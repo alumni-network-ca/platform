@@ -90,7 +90,7 @@ export default function ClaimPage() {
     }
 
     setStatus(
-      "Account created. Check your email to verify your address, then you'll continue to onboarding."
+      "Account created. Check your email to verify your address, then you'll continue to onboarding.",
     );
   }
 
@@ -105,9 +105,8 @@ export default function ClaimPage() {
           <h1>Claim your profile.</h1>
 
           <p className="muted">
-            Herzliah can start with a private alumni record. You verify that the
-            email belongs to you, create your account, then decide what appears
-            in the directory.
+            Herzliah can start with a private alumni record. You verify that the email belongs to
+            you, create your account, then decide what appears in the directory.
           </p>
 
           <div className="stepList">
@@ -126,10 +125,7 @@ export default function ClaimPage() {
             <span>3</span>
             <div>
               <strong>Complete your profile</strong>
-              <p>
-                Add career information, privacy settings and what you&apos;re open
-                to.
-              </p>
+              <p>Add career information, privacy settings and what you&apos;re open to.</p>
             </div>
           </div>
         </div>
@@ -141,7 +137,6 @@ export default function ClaimPage() {
             <>
               <label className="fieldLabel">
                 Email address
-
                 <input
                   className="input"
                   type="email"
@@ -170,7 +165,6 @@ export default function ClaimPage() {
 
               <label className="fieldLabel">
                 Create password
-
                 <input
                   className="input"
                   type="password"
@@ -181,7 +175,6 @@ export default function ClaimPage() {
 
               <label className="fieldLabel">
                 Confirm password
-
                 <input
                   className="input"
                   type="password"
@@ -190,11 +183,7 @@ export default function ClaimPage() {
                 />
               </label>
 
-              <button
-                className="btn btnPrimary btnWide"
-                disabled={loading}
-                onClick={createAccount}
-              >
+              <button className="btn btnPrimary btnWide" disabled={loading} onClick={createAccount}>
                 {loading ? "Creating account…" : "Create account & continue"}
               </button>
 
@@ -217,18 +206,14 @@ export default function ClaimPage() {
               <strong>We couldn’t automatically match your email.</strong>
 
               <p>
-                Your email may be different from the one Herzliah has on file,
-                or your alumni record may need to be reviewed.
+                Your email may be different from the one Herzliah has on file, or your alumni record
+                may need to be reviewed.
               </p>
 
               <button
                 type="button"
                 className="btn btnPrimary btnWide"
-                onClick={() =>
-                  router.push(
-                    `/request-access?email=${encodeURIComponent(email)}`
-                  )
-                }
+                onClick={() => router.push(`/request-access?email=${encodeURIComponent(email)}`)}
               >
                 Request verification
               </button>

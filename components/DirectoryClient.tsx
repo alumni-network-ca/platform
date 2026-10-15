@@ -38,11 +38,7 @@ function flagsFor(p: Profile): Availability {
   return p.availability_flags || {};
 }
 
-export function DirectoryClient({
-  profiles,
-}: {
-  profiles: Profile[];
-}) {
+export function DirectoryClient({ profiles }: { profiles: Profile[] }) {
   const { locale } = useLanguage();
 
   const text =
@@ -87,16 +83,14 @@ export function DirectoryClient({
           totalProfiles: "profils au total",
 
           noMatches: "Aucun résultat",
-          tryClearing:
-            "Essayez de supprimer un ou plusieurs filtres.",
+          tryClearing: "Essayez de supprimer un ou plusieurs filtres.",
           clearFilters: "Effacer les filtres",
 
           herzliahAlumnus: "Ancien de Herzliah",
           viewProfile: "Voir le profil",
         }
       : {
-          searchPlaceholder:
-            "Search people, employers, career fields, schools or cities…",
+          searchPlaceholder: "Search people, employers, career fields, schools or cities…",
 
           reset: "Reset",
 
@@ -151,39 +145,21 @@ export function DirectoryClient({
 
   const options = useMemo(
     () => ({
-      careers: [
-        ...new Set(
-          profiles
-            .map((p) => p.profession)
-            .filter(Boolean) as string[]
-        ),
-      ].sort(),
+      careers: [...new Set(profiles.map((p) => p.profession).filter(Boolean) as string[])].sort(),
 
       universities: [
-        ...new Set(
-          profiles
-            .flatMap((p) => p.universities || [])
-            .filter(Boolean)
-        ),
+        ...new Set(profiles.flatMap((p) => p.universities || []).filter(Boolean)),
       ].sort(),
 
       locations: [
-        ...new Set(
-          profiles
-            .map((p) => p.current_city)
-            .filter(Boolean) as string[]
-        ),
+        ...new Set(profiles.map((p) => p.current_city).filter(Boolean) as string[]),
       ].sort(),
 
-      years: [
-        ...new Set(
-          profiles
-            .map((p) => p.grad_year)
-            .filter(Boolean) as number[]
-        ),
-      ].sort((a, b) => b - a),
+      years: [...new Set(profiles.map((p) => p.grad_year).filter(Boolean) as number[])].sort(
+        (a, b) => b - a,
+      ),
     }),
-    [profiles]
+    [profiles],
   );
 
   const shown = useMemo(() => {
@@ -209,37 +185,19 @@ export function DirectoryClient({
       return (
         (!query || hay.includes(query)) &&
         (!career || p.profession === career) &&
-        (!university ||
-          (p.universities || []).includes(university)) &&
+        (!university || (p.universities || []).includes(university)) &&
         (!location || p.current_city === location) &&
-        (!gradYear ||
-          p.grad_year === Number(gradYear)) &&
-        (!availability ||
-          Boolean(
-            flags[
-              availability as keyof Availability
-            ]
-          ))
+        (!gradYear || p.grad_year === Number(gradYear)) &&
+        (!availability || Boolean(flags[availability as keyof Availability]))
       );
     });
 
     return [...filtered].sort((a, b) =>
       sort === "year"
         ? (b.grad_year || 0) - (a.grad_year || 0)
-        : `${a.last_name}${a.first_name}`.localeCompare(
-            `${b.last_name}${b.first_name}`
-          )
+        : `${a.last_name}${a.first_name}`.localeCompare(`${b.last_name}${b.first_name}`),
     );
-  }, [
-    profiles,
-    q,
-    career,
-    university,
-    location,
-    gradYear,
-    availability,
-    sort,
-  ]);
+  }, [profiles, q, career, university, location, gradYear, availability, sort]);
 
   function reset() {
     setQ("");
@@ -280,10 +238,7 @@ export function DirectoryClient({
           />
         </div>
 
-        <button
-          className="btn btnLight"
-          onClick={reset}
-        >
+        <button className="btn btnLight" onClick={reset}>
           {text.reset}
         </button>
       </div>
@@ -292,15 +247,8 @@ export function DirectoryClient({
         <label>
           {text.careerField}
 
-          <select
-            value={career}
-            onChange={(e) =>
-              setCareer(e.target.value)
-            }
-          >
-            <option value="">
-              {text.allCareerFields}
-            </option>
+          <select value={career} onChange={(e) => setCareer(e.target.value)}>
+            <option value="">{text.allCareerFields}</option>
 
             {options.careers.map((x) => (
               <option key={x}>{x}</option>
@@ -311,15 +259,8 @@ export function DirectoryClient({
         <label>
           {text.university}
 
-          <select
-            value={university}
-            onChange={(e) =>
-              setUniversity(e.target.value)
-            }
-          >
-            <option value="">
-              {text.allUniversities}
-            </option>
+          <select value={university} onChange={(e) => setUniversity(e.target.value)}>
+            <option value="">{text.allUniversities}</option>
 
             {options.universities.map((x) => (
               <option key={x}>{x}</option>
@@ -330,15 +271,8 @@ export function DirectoryClient({
         <label>
           {text.location}
 
-          <select
-            value={location}
-            onChange={(e) =>
-              setLocation(e.target.value)
-            }
-          >
-            <option value="">
-              {text.allLocations}
-            </option>
+          <select value={location} onChange={(e) => setLocation(e.target.value)}>
+            <option value="">{text.allLocations}</option>
 
             {options.locations.map((x) => (
               <option key={x}>{x}</option>
@@ -349,15 +283,8 @@ export function DirectoryClient({
         <label>
           {text.herzliahClass}
 
-          <select
-            value={gradYear}
-            onChange={(e) =>
-              setGradYear(e.target.value)
-            }
-          >
-            <option value="">
-              {text.allClasses}
-            </option>
+          <select value={gradYear} onChange={(e) => setGradYear(e.target.value)}>
+            <option value="">{text.allClasses}</option>
 
             {options.years.map((x) => (
               <option key={x} value={x}>
@@ -370,77 +297,42 @@ export function DirectoryClient({
         <label>
           {text.openTo}
 
-          <select
-            value={availability}
-            onChange={(e) =>
-              setAvailability(e.target.value)
-            }
-          >
-            <option value="">
-              {text.anything}
-            </option>
+          <select value={availability} onChange={(e) => setAvailability(e.target.value)}>
+            <option value="">{text.anything}</option>
 
-            <option value="mentoring">
-              {text.mentoring}
-            </option>
+            <option value="mentoring">{text.mentoring}</option>
 
-            <option value="career_advice">
-              {text.careerAdvice}
-            </option>
+            <option value="career_advice">{text.careerAdvice}</option>
 
-            <option value="job_opportunities">
-              {text.jobOpportunities}
-            </option>
+            <option value="job_opportunities">{text.jobOpportunities}</option>
 
-            <option value="offering_jobs">
-              {text.hiring}
-            </option>
+            <option value="offering_jobs">{text.hiring}</option>
 
-            <option value="offering_internships">
-              {text.internships}
-            </option>
+            <option value="offering_internships">{text.internships}</option>
 
-            <option value="shadowing">
-              {text.shadowing}
-            </option>
+            <option value="shadowing">{text.shadowing}</option>
 
-            <option value="speaking">
-              {text.speaking}
-            </option>
+            <option value="speaking">{text.speaking}</option>
 
-            <option value="networking">
-              {text.networking}
-            </option>
+            <option value="networking">{text.networking}</option>
 
-            <option value="entrepreneurship">
-              {text.entrepreneurship}
-            </option>
+            <option value="entrepreneurship">{text.entrepreneurship}</option>
           </select>
         </label>
 
         <label>
           {text.sortBy}
 
-          <select
-            value={sort}
-            onChange={(e) =>
-              setSort(e.target.value)
-            }
-          >
-            <option value="name">
-              {text.lastName}
-            </option>
+          <select value={sort} onChange={(e) => setSort(e.target.value)}>
+            <option value="name">{text.lastName}</option>
 
-            <option value="year">
-              {text.graduationYear}
-            </option>
+            <option value="year">{text.graduationYear}</option>
           </select>
         </label>
       </div>
 
       <div className="directoryMeta">
-        <strong>{shown.length}</strong>{" "}
-        {text.alumniShown}
+        <strong>{shown.length}</strong> {text.alumniShown}
         <span> · </span>
         <span>
           {profiles.length} {text.totalProfiles}
@@ -454,10 +346,7 @@ export function DirectoryClient({
 
             <p>{text.tryClearing}</p>
 
-            <button
-              className="btn btnPrimary"
-              onClick={reset}
-            >
+            <button className="btn btnPrimary" onClick={reset}>
               {text.clearFilters}
             </button>
           </div>
@@ -467,74 +356,48 @@ export function DirectoryClient({
 
             const tagKeys = [
               flags.mentoring && "mentoring",
-              flags.career_advice &&
-                "career_advice",
-              flags.offering_internships &&
-                "offering_internships",
-              flags.offering_jobs &&
-                "offering_jobs",
-              flags.shadowing &&
-                "shadowing",
+              flags.career_advice && "career_advice",
+              flags.offering_internships && "offering_internships",
+              flags.offering_jobs && "offering_jobs",
+              flags.shadowing && "shadowing",
             ].filter(Boolean) as string[];
 
             return (
-              <Link
-                className="profileCard"
-                key={p.id}
-                href={`/profile/${p.id}`}
-              >
+              <Link className="profileCard" key={p.id} href={`/profile/${p.id}`}>
                 <div className="profileCardTop">
                   <div className="avatar avatarInitials">
                     {p.first_name?.[0] || ""}
                     {p.last_name?.[0] || ""}
                   </div>
 
-                  <div className="yearBadge">
-                    {p.grad_year || "—"}
-                  </div>
+                  <div className="yearBadge">{p.grad_year || "—"}</div>
                 </div>
 
                 <h3>
-                  {p.first_name} {p.last_name}{" "}
-                  <span className="verified">
-                    ✓
-                  </span>
+                  {p.first_name} {p.last_name} <span className="verified">✓</span>
                 </h3>
 
                 <div className="profileRole">
-                  {p.job_title ||
-                    p.profession ||
-                    text.herzliahAlumnus}
+                  {p.job_title || p.profession || text.herzliahAlumnus}
                 </div>
 
-                <div className="profileCompany">
-                  {p.current_employer || ""}
-                </div>
+                <div className="profileCompany">{p.current_employer || ""}</div>
 
                 <div className="profileLocation">
                   {p.current_city || ""}
 
-                  {p.current_country
-                    ? `, ${p.current_country}`
-                    : ""}
+                  {p.current_country ? `, ${p.current_country}` : ""}
                 </div>
 
                 <div className="tagRow">
-                  {tagKeys
-                    .slice(0, 3)
-                    .map((tag) => (
-                      <span
-                        key={tag}
-                        className="pill"
-                      >
-                        {availabilityLabel(tag)}
-                      </span>
-                    ))}
+                  {tagKeys.slice(0, 3).map((tag) => (
+                    <span key={tag} className="pill">
+                      {availabilityLabel(tag)}
+                    </span>
+                  ))}
                 </div>
 
-                <div className="viewProfile">
-                  {text.viewProfile} →
-                </div>
+                <div className="viewProfile">{text.viewProfile} →</div>
               </Link>
             );
           })

@@ -58,13 +58,12 @@ function RequestAccessContent() {
               <h1>Request received.</h1>
 
               <p className="muted">
-                Your information has been sent to the Herzliah alumni team for
-                review.
+                Your information has been sent to the Herzliah alumni team for review.
               </p>
 
               <p>
-                Once your alumni record is verified, you can be given access to
-                claim and complete your profile.
+                Once your alumni record is verified, you can be given access to claim and complete
+                your profile.
               </p>
 
               <div className="authFooter">
@@ -77,9 +76,8 @@ function RequestAccessContent() {
               <h1>Request verification.</h1>
 
               <p className="muted">
-                We couldn&apos;t automatically match your email to an alumni
-                record. Give us a few details so the Herzliah alumni team can
-                verify your information.
+                We couldn&apos;t automatically match your email to an alumni record. Give us a few
+                details so the Herzliah alumni team can verify your information.
               </p>
 
               <form onSubmit={submitRequest} className="authForm">
@@ -138,10 +136,7 @@ function RequestAccessContent() {
                   />
                 </label>
 
-                <button
-                  className="btn btnPrimary btnWide"
-                  disabled={loading}
-                >
+                <button className="btn btnPrimary btnWide" disabled={loading}>
                   {loading ? "Sending…" : "Submit verification request"}
                 </button>
 

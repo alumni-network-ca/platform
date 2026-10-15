@@ -121,33 +121,18 @@ export function OnboardingClient({
   const [education, setEducation] = useState<Education[]>([emptyEdu()]);
   const [experience, setExperience] = useState<Experience[]>([]);
 
-  const finalCareer =
-    form.career_field === "Other"
-      ? form.career_field_other
-      : form.career_field;
+  const finalCareer = form.career_field === "Other" ? form.career_field_other : form.career_field;
 
   function updateForm(name: string, value: unknown) {
     setForm((v) => ({ ...v, [name]: value }));
   }
 
-  function updateEdu(
-    i: number,
-    key: keyof Education,
-    value: string
-  ) {
-    setEducation((v) =>
-      v.map((x, n) => (n === i ? { ...x, [key]: value } : x))
-    );
+  function updateEdu(i: number, key: keyof Education, value: string) {
+    setEducation((v) => v.map((x, n) => (n === i ? { ...x, [key]: value } : x)));
   }
 
-  function updateExp(
-    i: number,
-    key: keyof Experience,
-    value: string | boolean
-  ) {
-    setExperience((v) =>
-      v.map((x, n) => (n === i ? { ...x, [key]: value } : x))
-    );
+  function updateExp(i: number, key: keyof Experience, value: string | boolean) {
+    setExperience((v) => v.map((x, n) => (n === i ? { ...x, [key]: value } : x)));
   }
 
   async function matchRecord() {
@@ -187,37 +172,31 @@ export function OnboardingClient({
           bio: p.bio || "",
           linkedin_url: p.linkedin_url || "",
           website_url: p.website_url || "",
-          languages: Array.isArray(p.languages)
-            ? p.languages.join(", ")
-            : "",
+          languages: Array.isArray(p.languages) ? p.languages.join(", ") : "",
           contact_topics: p.contact_topics || "",
         }));
       }
 
       setStep(2);
-      setMessage(
-        "We matched your Herzliah alumni record. Review and complete it below."
-      );
+      setMessage("We matched your Herzliah alumni record. Review and complete it below.");
       return;
     }
 
     if (isAdmin) {
       setStep(2);
       setMessage(
-        "No imported alumni record matched this email. Because you're an administrator, you can create your own profile."
+        "No imported alumni record matched this email. Because you're an administrator, you can create your own profile.",
       );
     } else {
       setMessage(
-        "We couldn't automatically match this email to an imported alumni record. Herzliah staff can verify you manually."
+        "We couldn't automatically match this email to an imported alumni record. Herzliah staff can verify you manually.",
       );
     }
   }
 
   function validateIdentity() {
     if (!form.first_name || !form.last_name || !form.grad_year) {
-      setMessage(
-        "Please enter your first name, last name and Herzliah graduation year."
-      );
+      setMessage("Please enter your first name, last name and Herzliah graduation year.");
       return false;
     }
 
@@ -227,18 +206,14 @@ export function OnboardingClient({
 
   async function finish() {
     if (!institutionId) {
-      setMessage(
-        "Your Herzliah institution membership could not be identified."
-      );
+      setMessage("Your Herzliah institution membership could not be identified.");
       return;
     }
 
     if (!validateIdentity()) return;
 
     if (!finalCareer) {
-      setMessage(
-        "Please choose a career field or select Other and describe it."
-      );
+      setMessage("Please choose a career field or select Other and describe it.");
       setStep(4);
       return;
     }
@@ -299,10 +274,7 @@ export function OnboardingClient({
     };
 
     if (id) {
-      const { error } = await supabase
-        .from("alumni_profiles")
-        .update(payload)
-        .eq("id", id);
+      const { error } = await supabase.from("alumni_profiles").update(payload).eq("id", id);
 
       if (error) {
         setMessage(error.message);
@@ -325,10 +297,7 @@ export function OnboardingClient({
     }
 
     const helpPayload = Object.fromEntries(
-      HELP_OPTIONS.map(([k]) => [
-        k,
-        Boolean(form[k as keyof typeof form]),
-      ])
+      HELP_OPTIONS.map(([k]) => [k, Boolean(form[k as keyof typeof form])]),
     );
 
     await supabase.from("availability_flags").upsert({
@@ -337,24 +306,17 @@ export function OnboardingClient({
       ...helpPayload,
     });
 
-    await supabase
-      .from("alumni_education")
-      .delete()
-      .eq("profile_id", id);
+    await supabase.from("alumni_education").delete().eq("profile_id", id);
 
     const edRows = education
-      .filter(
-        (e) => e.school || e.degree || e.field_of_study
-      )
+      .filter((e) => e.school || e.degree || e.field_of_study)
       .map((e, i) => ({
         profile_id: id,
         institution_id: institutionId,
         school: e.school,
         degree: e.degree || null,
         field_of_study: e.field_of_study || null,
-        graduation_year: e.graduation_year
-          ? Number(e.graduation_year)
-          : null,
+        graduation_year: e.graduation_year ? Number(e.graduation_year) : null,
         sort_order: i,
       }));
 
@@ -362,10 +324,7 @@ export function OnboardingClient({
       await supabase.from("alumni_education").insert(edRows);
     }
 
-    await supabase
-      .from("alumni_experience")
-      .delete()
-      .eq("profile_id", id);
+    await supabase.from("alumni_experience").delete().eq("profile_id", id);
 
     const currentRow =
       form.job_title || form.current_employer
@@ -375,10 +334,7 @@ export function OnboardingClient({
             job_title: form.job_title || "Current role",
             employer: form.current_employer || "",
             career_field: finalCareer,
-            location:
-              [form.work_city, form.work_country]
-                .filter(Boolean)
-                .join(", ") || null,
+            location: [form.work_city, form.work_country].filter(Boolean).join(", ") || null,
             start_year: null,
             end_year: null,
             is_current: true,
@@ -393,24 +349,15 @@ export function OnboardingClient({
         institution_id: institutionId,
         job_title: e.job_title || "",
         employer: e.employer || "",
-        career_field:
-          e.career_field === "Other"
-            ? e.career_field_other
-            : e.career_field || null,
+        career_field: e.career_field === "Other" ? e.career_field_other : e.career_field || null,
         location: e.location || null,
-        start_year: e.start_year
-          ? Number(e.start_year)
-          : null,
-        end_year: e.end_year
-          ? Number(e.end_year)
-          : null,
+        start_year: e.start_year ? Number(e.start_year) : null,
+        end_year: e.end_year ? Number(e.end_year) : null,
         is_current: false,
         sort_order: i + 1,
       }));
 
-    const rows = currentRow
-      ? [currentRow, ...expRows]
-      : expRows;
+    const rows = currentRow ? [currentRow, ...expRows] : expRows;
 
     if (rows.length) {
       await supabase.from("alumni_experience").insert(rows);
@@ -431,30 +378,15 @@ export function OnboardingClient({
           <h1>Complete your Herzliah profile.</h1>
 
           <p className="muted">
-            Build your alumni profile so classmates, alumni and the
-            Herzliah community can find and connect with you.
+            Build your alumni profile so classmates, alumni and the Herzliah community can find and
+            connect with you.
           </p>
         </div>
       </div>
 
       <div className="stepTabs">
-        {[
-          "Account",
-          "Herzliah",
-          "Education",
-          "Career",
-          "Network",
-        ].map((x, i) => (
-          <div
-            key={x}
-            className={`stepTab ${
-              step === i + 1
-                ? "on"
-                : step > i + 1
-                ? "done"
-                : ""
-            }`}
-          >
+        {["Account", "Herzliah", "Education", "Career", "Network"].map((x, i) => (
+          <div key={x} className={`stepTab ${step === i + 1 ? "on" : step > i + 1 ? "done" : ""}`}>
             {i + 1}. {x}
           </div>
         ))}
@@ -465,15 +397,11 @@ export function OnboardingClient({
           <h2>Connect your account</h2>
 
           <p className="intro">
-            You&apos;re signed in as <strong>{email}</strong>. We&apos;ll
-            securely match your email with the alumni information
-            Herzliah has on file.
+            You&apos;re signed in as <strong>{email}</strong>. We&apos;ll securely match your email
+            with the alumni information Herzliah has on file.
           </p>
 
-          <button
-            className="btn btnPrimary"
-            onClick={matchRecord}
-          >
+          <button className="btn btnPrimary" onClick={matchRecord}>
             Match my alumni record
           </button>
         </section>
@@ -484,8 +412,7 @@ export function OnboardingClient({
           <h2>Your Herzliah profile</h2>
 
           <p className="intro">
-            Tell the alumni community who you are and where life has
-            taken you since Herzliah.
+            Tell the alumni community who you are and where life has taken you since Herzliah.
           </p>
 
           <div className="formGrid">
@@ -494,9 +421,7 @@ export function OnboardingClient({
               <input
                 className="input"
                 value={form.first_name}
-                onChange={(e) =>
-                  updateForm("first_name", e.target.value)
-                }
+                onChange={(e) => updateForm("first_name", e.target.value)}
               />
             </label>
 
@@ -505,9 +430,7 @@ export function OnboardingClient({
               <input
                 className="input"
                 value={form.last_name}
-                onChange={(e) =>
-                  updateForm("last_name", e.target.value)
-                }
+                onChange={(e) => updateForm("last_name", e.target.value)}
               />
             </label>
 
@@ -518,9 +441,7 @@ export function OnboardingClient({
                 inputMode="numeric"
                 placeholder="e.g. 2018"
                 value={form.grad_year}
-                onChange={(e) =>
-                  updateForm("grad_year", e.target.value)
-                }
+                onChange={(e) => updateForm("grad_year", e.target.value)}
               />
             </label>
 
@@ -530,9 +451,7 @@ export function OnboardingClient({
                 className="input"
                 placeholder="e.g. Montreal"
                 value={form.current_city}
-                onChange={(e) =>
-                  updateForm("current_city", e.target.value)
-                }
+                onChange={(e) => updateForm("current_city", e.target.value)}
               />
             </label>
 
@@ -541,9 +460,7 @@ export function OnboardingClient({
               <input
                 className="input"
                 value={form.current_country}
-                onChange={(e) =>
-                  updateForm("current_country", e.target.value)
-                }
+                onChange={(e) => updateForm("current_country", e.target.value)}
               />
             </label>
 
@@ -553,9 +470,7 @@ export function OnboardingClient({
                 className="input"
                 placeholder="English, French, Hebrew"
                 value={form.languages}
-                onChange={(e) =>
-                  updateForm("languages", e.target.value)
-                }
+                onChange={(e) => updateForm("languages", e.target.value)}
               />
             </label>
 
@@ -565,9 +480,7 @@ export function OnboardingClient({
                 className="input"
                 placeholder="https://linkedin.com/in/..."
                 value={form.linkedin_url}
-                onChange={(e) =>
-                  updateForm("linkedin_url", e.target.value)
-                }
+                onChange={(e) => updateForm("linkedin_url", e.target.value)}
               />
             </label>
 
@@ -577,9 +490,7 @@ export function OnboardingClient({
                 className="input"
                 placeholder="https://..."
                 value={form.website_url}
-                onChange={(e) =>
-                  updateForm("website_url", e.target.value)
-                }
+                onChange={(e) => updateForm("website_url", e.target.value)}
               />
             </label>
 
@@ -590,9 +501,7 @@ export function OnboardingClient({
                 rows={4}
                 placeholder="A short introduction about yourself, your interests, career or what you've been doing since Herzliah."
                 value={form.bio}
-                onChange={(e) =>
-                  updateForm("bio", e.target.value)
-                }
+                onChange={(e) => updateForm("bio", e.target.value)}
               />
             </label>
           </div>
@@ -617,8 +526,8 @@ export function OnboardingClient({
           <h2>Education after Herzliah</h2>
 
           <p className="intro">
-            Add university, CEGEP, professional school, graduate
-            programs or other education. You can add more than one.
+            Add university, CEGEP, professional school, graduate programs or other education. You
+            can add more than one.
           </p>
 
           {education.map((e, i) => (
@@ -629,11 +538,7 @@ export function OnboardingClient({
                 {education.length > 1 && (
                   <button
                     className="removeBtn"
-                    onClick={() =>
-                      setEducation((v) =>
-                        v.filter((_, n) => n !== i)
-                      )
-                    }
+                    onClick={() => setEducation((v) => v.filter((_, n) => n !== i))}
                   >
                     Remove
                   </button>
@@ -647,9 +552,7 @@ export function OnboardingClient({
                     className="input"
                     placeholder="e.g. McGill University"
                     value={e.school}
-                    onChange={(x) =>
-                      updateEdu(i, "school", x.target.value)
-                    }
+                    onChange={(x) => updateEdu(i, "school", x.target.value)}
                   />
                 </label>
 
@@ -659,9 +562,7 @@ export function OnboardingClient({
                     className="input"
                     placeholder="e.g. BSc, JD, MD"
                     value={e.degree}
-                    onChange={(x) =>
-                      updateEdu(i, "degree", x.target.value)
-                    }
+                    onChange={(x) => updateEdu(i, "degree", x.target.value)}
                   />
                 </label>
 
@@ -671,13 +572,7 @@ export function OnboardingClient({
                     className="input"
                     placeholder="e.g. Finance, Biology"
                     value={e.field_of_study}
-                    onChange={(x) =>
-                      updateEdu(
-                        i,
-                        "field_of_study",
-                        x.target.value
-                      )
-                    }
+                    onChange={(x) => updateEdu(i, "field_of_study", x.target.value)}
                   />
                 </label>
 
@@ -687,40 +582,23 @@ export function OnboardingClient({
                     className="input"
                     inputMode="numeric"
                     value={e.graduation_year}
-                    onChange={(x) =>
-                      updateEdu(
-                        i,
-                        "graduation_year",
-                        x.target.value
-                      )
-                    }
+                    onChange={(x) => updateEdu(i, "graduation_year", x.target.value)}
                   />
                 </label>
               </div>
             </div>
           ))}
 
-          <button
-            className="addRowBtn"
-            onClick={() =>
-              setEducation((v) => [...v, emptyEdu()])
-            }
-          >
+          <button className="addRowBtn" onClick={() => setEducation((v) => [...v, emptyEdu()])}>
             + Add another school
           </button>
 
           <div className="wizardActions">
-            <button
-              className="btn btnLight"
-              onClick={() => setStep(2)}
-            >
+            <button className="btn btnLight" onClick={() => setStep(2)}>
               ← Back
             </button>
 
-            <button
-              className="btn btnPrimary"
-              onClick={() => setStep(4)}
-            >
+            <button className="btn btnPrimary" onClick={() => setStep(4)}>
               Continue →
             </button>
           </div>
@@ -732,9 +610,8 @@ export function OnboardingClient({
           <h2>Your career</h2>
 
           <p className="intro">
-            Choose a broad career field for Directory filtering.
-            Your exact title and employer tell alumni what you
-            actually do.
+            Choose a broad career field for Directory filtering. Your exact title and employer tell
+            alumni what you actually do.
           </p>
 
           <div className="formGrid">
@@ -743,30 +620,20 @@ export function OnboardingClient({
               <select
                 className="input"
                 value={form.career_field}
-                onChange={(e) =>
-                  updateForm("career_field", e.target.value)
-                }
+                onChange={(e) => updateForm("career_field", e.target.value)}
               >
-                <option value="">
-                  Choose a career field
-                </option>
+                <option value="">Choose a career field</option>
 
                 {CAREER_FIELDS.map((x) => (
                   <option key={x}>{x}</option>
                 ))}
               </select>
-
               {form.career_field === "Other" && (
                 <input
                   className="input"
                   placeholder="Describe your career field"
                   value={form.career_field_other}
-                  onChange={(e) =>
-                    updateForm(
-                      "career_field_other",
-                      e.target.value
-                    )
-                  }
+                  onChange={(e) => updateForm("career_field_other", e.target.value)}
                 />
               )}
             </label>
@@ -777,9 +644,7 @@ export function OnboardingClient({
                 className="input"
                 placeholder="e.g. Family Physician"
                 value={form.job_title}
-                onChange={(e) =>
-                  updateForm("job_title", e.target.value)
-                }
+                onChange={(e) => updateForm("job_title", e.target.value)}
               />
             </label>
 
@@ -788,12 +653,7 @@ export function OnboardingClient({
               <input
                 className="input"
                 value={form.current_employer}
-                onChange={(e) =>
-                  updateForm(
-                    "current_employer",
-                    e.target.value
-                  )
-                }
+                onChange={(e) => updateForm("current_employer", e.target.value)}
               />
             </label>
 
@@ -803,9 +663,7 @@ export function OnboardingClient({
                 className="input"
                 placeholder="e.g. Montreal"
                 value={form.work_city}
-                onChange={(e) =>
-                  updateForm("work_city", e.target.value)
-                }
+                onChange={(e) => updateForm("work_city", e.target.value)}
               />
             </label>
 
@@ -815,9 +673,7 @@ export function OnboardingClient({
                 className="input"
                 placeholder="e.g. Canada"
                 value={form.work_country}
-                onChange={(e) =>
-                  updateForm("work_country", e.target.value)
-                }
+                onChange={(e) => updateForm("work_country", e.target.value)}
               />
             </label>
           </div>
@@ -825,9 +681,8 @@ export function OnboardingClient({
           <h3>Previous experience</h3>
 
           <p className="muted">
-            Optional, but useful when alumni are searching for
-            someone with experience at a company or in another
-            industry.
+            Optional, but useful when alumni are searching for someone with experience at a company
+            or in another industry.
           </p>
 
           {experience.map((e, i) => (
@@ -837,11 +692,7 @@ export function OnboardingClient({
 
                 <button
                   className="removeBtn"
-                  onClick={() =>
-                    setExperience((v) =>
-                      v.filter((_, n) => n !== i)
-                    )
-                  }
+                  onClick={() => setExperience((v) => v.filter((_, n) => n !== i))}
                 >
                   Remove
                 </button>
@@ -853,13 +704,7 @@ export function OnboardingClient({
                   <input
                     className="input"
                     value={e.job_title}
-                    onChange={(x) =>
-                      updateExp(
-                        i,
-                        "job_title",
-                        x.target.value
-                      )
-                    }
+                    onChange={(x) => updateExp(i, "job_title", x.target.value)}
                   />
                 </label>
 
@@ -868,13 +713,7 @@ export function OnboardingClient({
                   <input
                     className="input"
                     value={e.employer}
-                    onChange={(x) =>
-                      updateExp(
-                        i,
-                        "employer",
-                        x.target.value
-                      )
-                    }
+                    onChange={(x) => updateExp(i, "employer", x.target.value)}
                   />
                 </label>
 
@@ -883,13 +722,7 @@ export function OnboardingClient({
                   <select
                     className="input"
                     value={e.career_field}
-                    onChange={(x) =>
-                      updateExp(
-                        i,
-                        "career_field",
-                        x.target.value
-                      )
-                    }
+                    onChange={(x) => updateExp(i, "career_field", x.target.value)}
                   >
                     <option value="">Choose</option>
 
@@ -897,19 +730,12 @@ export function OnboardingClient({
                       <option key={x}>{x}</option>
                     ))}
                   </select>
-
                   {e.career_field === "Other" && (
                     <input
                       className="input"
                       placeholder="Other career field"
                       value={e.career_field_other}
-                      onChange={(x) =>
-                        updateExp(
-                          i,
-                          "career_field_other",
-                          x.target.value
-                        )
-                      }
+                      onChange={(x) => updateExp(i, "career_field_other", x.target.value)}
                     />
                   )}
                 </label>
@@ -919,13 +745,7 @@ export function OnboardingClient({
                   <input
                     className="input"
                     value={e.location}
-                    onChange={(x) =>
-                      updateExp(
-                        i,
-                        "location",
-                        x.target.value
-                      )
-                    }
+                    onChange={(x) => updateExp(i, "location", x.target.value)}
                   />
                 </label>
 
@@ -935,13 +755,7 @@ export function OnboardingClient({
                     className="input"
                     inputMode="numeric"
                     value={e.start_year}
-                    onChange={(x) =>
-                      updateExp(
-                        i,
-                        "start_year",
-                        x.target.value
-                      )
-                    }
+                    onChange={(x) => updateExp(i, "start_year", x.target.value)}
                   />
                 </label>
 
@@ -951,33 +765,19 @@ export function OnboardingClient({
                     className="input"
                     inputMode="numeric"
                     value={e.end_year}
-                    onChange={(x) =>
-                      updateExp(
-                        i,
-                        "end_year",
-                        x.target.value
-                      )
-                    }
+                    onChange={(x) => updateExp(i, "end_year", x.target.value)}
                   />
                 </label>
               </div>
             </div>
           ))}
 
-          <button
-            className="addRowBtn"
-            onClick={() =>
-              setExperience((v) => [...v, emptyExp()])
-            }
-          >
+          <button className="addRowBtn" onClick={() => setExperience((v) => [...v, emptyExp()])}>
             + Add previous experience
           </button>
 
           <div className="wizardActions">
-            <button
-              className="btn btnLight"
-              onClick={() => setStep(3)}
-            >
+            <button className="btn btnLight" onClick={() => setStep(3)}>
               ← Back
             </button>
 
@@ -988,9 +788,7 @@ export function OnboardingClient({
                   setMessage("");
                   setStep(5);
                 } else {
-                  setMessage(
-                    "Choose a career field or select Other."
-                  );
+                  setMessage("Choose a career field or select Other.");
                 }
               }}
             >
@@ -1005,8 +803,7 @@ export function OnboardingClient({
           <h2>Connect with the Herzliah community</h2>
 
           <p className="intro">
-            Tell alumni what kinds of conversations and
-            opportunities you&apos;re open to.
+            Tell alumni what kinds of conversations and opportunities you&apos;re open to.
           </p>
 
           <div className="choiceGrid">
@@ -1014,12 +811,8 @@ export function OnboardingClient({
               <label className="choice" key={k}>
                 <input
                   type="checkbox"
-                  checked={Boolean(
-                    form[k as keyof typeof form]
-                  )}
-                  onChange={(e) =>
-                    updateForm(k, e.target.checked)
-                  }
+                  checked={Boolean(form[k as keyof typeof form])}
+                  onChange={(e) => updateForm(k, e.target.checked)}
                 />
 
                 {l}
@@ -1034,9 +827,7 @@ export function OnboardingClient({
             rows={4}
             placeholder="Example: Happy to answer questions about medical school, healthcare careers, entrepreneurship, working in Montreal, or McGill."
             value={form.contact_topics}
-            onChange={(e) =>
-              updateForm("contact_topics", e.target.value)
-            }
+            onChange={(e) => updateForm("contact_topics", e.target.value)}
           />
 
           <h3>Privacy</h3>
@@ -1046,14 +837,8 @@ export function OnboardingClient({
               <input
                 type="checkbox"
                 checked={form.is_directory_visible}
-                onChange={(e) =>
-                  updateForm(
-                    "is_directory_visible",
-                    e.target.checked
-                  )
-                }
+                onChange={(e) => updateForm("is_directory_visible", e.target.checked)}
               />
-
               Show my profile in the verified alumni Directory
             </label>
 
@@ -1061,14 +846,8 @@ export function OnboardingClient({
               <input
                 type="checkbox"
                 checked={form.contact_allowed}
-                onChange={(e) =>
-                  updateForm(
-                    "contact_allowed",
-                    e.target.checked
-                  )
-                }
+                onChange={(e) => updateForm("contact_allowed", e.target.checked)}
               />
-
               Allow verified alumni to contact me
             </label>
 
@@ -1076,14 +855,8 @@ export function OnboardingClient({
               <input
                 type="checkbox"
                 checked={form.student_contact_allowed}
-                onChange={(e) =>
-                  updateForm(
-                    "student_contact_allowed",
-                    e.target.checked
-                  )
-                }
+                onChange={(e) => updateForm("student_contact_allowed", e.target.checked)}
               />
-
               Allow verified Herzliah students to contact me
             </label>
           </div>
@@ -1095,8 +868,7 @@ export function OnboardingClient({
               <h4>Herzliah</h4>
               <p>Class of {form.grad_year || "—"}</p>
               <p>
-                {form.current_city || "—"},{" "}
-                {form.current_country || "—"}
+                {form.current_city || "—"}, {form.current_country || "—"}
               </p>
             </div>
 
@@ -1104,9 +876,7 @@ export function OnboardingClient({
               <h4>Career</h4>
               <p>
                 {form.job_title || "—"}
-                {form.current_employer
-                  ? ` at ${form.current_employer}`
-                  : ""}
+                {form.current_employer ? ` at ${form.current_employer}` : ""}
               </p>
               <p>{finalCareer || "—"}</p>
             </div>
@@ -1128,26 +898,18 @@ export function OnboardingClient({
           </div>
 
           <div className="wizardActions">
-            <button
-              className="btn btnLight"
-              onClick={() => setStep(4)}
-            >
+            <button className="btn btnLight" onClick={() => setStep(4)}>
               ← Back
             </button>
 
-            <button
-              className="btn btnPrimary"
-              onClick={finish}
-            >
+            <button className="btn btnPrimary" onClick={finish}>
               Save & complete my profile
             </button>
           </div>
         </section>
       )}
 
-      {message && (
-        <div className="notice">{message}</div>
-      )}
+      {message && <div className="notice">{message}</div>}
     </div>
   );
 }

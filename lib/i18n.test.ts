@@ -18,7 +18,10 @@ describe("translations", () => {
       const empty = keyPaths(translations[locale]).filter((path) => {
         const value = path
           .split(".")
-          .reduce<unknown>((node, key) => (node as Record<string, unknown>)[key], translations[locale]);
+          .reduce<unknown>(
+            (node, key) => (node as Record<string, unknown>)[key],
+            translations[locale],
+          );
         return typeof value === "string" && value.trim() === "";
       });
       expect(empty, `empty ${locale} strings`).toEqual([]);
