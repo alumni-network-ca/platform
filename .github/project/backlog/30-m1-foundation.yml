@@ -63,7 +63,7 @@ items:
     reqs: [MT1, MT2, MT5, F1, F2, F14, E6, S7]
     class: Build
     summary: |
-      A single reviewed baseline implementing AUDIT-09.
+      A single reviewed baseline implementing AUDIT-09. It replaces the legacy migrations 001/003/004, which move to supabase/legacy/ (ADR 0003).
       - **Enums:** role (owner/admin/reviewer/alumni/student), membership status, profile status, visibility,
         invitation status, request status, channel type, email status, confirmation source.
       - **Tables:**

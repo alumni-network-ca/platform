@@ -1,5 +1,16 @@
--- 50 fictional demo alumni for testing filters and profile pages.
--- Safe to run after 001_initial_schema.sql. Re-running will update the same demo UUIDs.
+-- Local and staging seed data. NEVER applied to production (ADR 0003).
+-- Applied automatically by `supabase start` and `supabase db reset`.
+--
+-- Contents:
+--   1. 50 fictional Herzliah demo alumni (from the V3 demo migration) with availability flags
+--   2. Demo clean-up from migration 004: career fields, education and current-experience rows
+--   3. Local test accounts (.test addresses are reserved and never deliverable):
+--        admin@herzliah.test    super admin of herzliah (platform operator)
+--        alumni@herzliah.test   claimed, onboarded alumnus (owns the "Ari Benaroch" demo profile)
+--        pending@herzliah.test  signed up and verified, but no membership yet
+--      Password for all three (local only): LocalDev-Passw0rd
+
+-- 1. Demo alumni -------------------------------------------------------------------------------
 
 with inst as (select id from public.institutions where slug='herzliah'),
 seed(id,first_name,last_name,grad_year,profession,industry,job_title,current_employer,current_city,current_country,university,bio) as (values
@@ -115,4 +126,90 @@ insert into public.availability_flags(profile_id,institution_id,mentoring,career
 select f.profile_id,i.id,f.mentoring,f.career_advice,f.job_opportunities,f.offering_jobs,f.offering_internships,f.shadowing,f.speaking,f.networking,f.entrepreneurship from flags f cross join inst i
 on conflict (profile_id) do update set mentoring=excluded.mentoring,career_advice=excluded.career_advice,job_opportunities=excluded.job_opportunities,offering_jobs=excluded.offering_jobs,offering_internships=excluded.offering_internships,shadowing=excluded.shadowing,speaking=excluded.speaking,networking=excluded.networking,entrepreneurship=excluded.entrepreneurship;
 
-select count(*) as demo_profiles_ready from public.alumni_profiles where id::text like '00000000-0000-4000-8000-%';
+
+-- 2. Demo clean-up (moved from migration 004, which ran before any demo rows existed) -------------
+update public.alumni_profiles set profession = case
+  when profession = 'Physician' then 'Medicine & Healthcare'
+  when profession = 'Dentist' then 'Dentistry'
+  when profession = 'Lawyer' then 'Law'
+  when profession in ('Software Engineer', 'Product Manager') then 'Technology'
+  when profession in ('Finance', 'Accountant') then 'Finance & Accounting'
+  when profession = 'Entrepreneur' then 'Entrepreneurship'
+  when profession = 'Architect' then 'Architecture & Design'
+  when profession = 'Psychologist' then 'Psychology & Mental Health'
+  when profession = 'Engineer' then 'Engineering'
+  when profession = 'Consultant' then 'Consulting'
+  else profession end,
+  onboarding_completed_at = coalesce(onboarding_completed_at, now())
+where id::text like '00000000-0000-4000-8000-%';
+
+insert into public.alumni_education (profile_id, institution_id, school, sort_order)
+select p.id, p.institution_id, u.school, 0
+from public.alumni_profiles p
+cross join lateral unnest(p.universities) as u(school)
+where p.id::text like '00000000-0000-4000-8000-%'
+  and not exists (select 1 from public.alumni_education e where e.profile_id = p.id);
+
+insert into public.alumni_experience (profile_id, institution_id, job_title, employer, career_field, location, is_current, sort_order)
+select p.id, p.institution_id, coalesce(p.job_title, 'Current role'), coalesce(p.current_employer, ''), p.profession, p.current_city, true, 0
+from public.alumni_profiles p
+where p.id::text like '00000000-0000-4000-8000-%'
+  and not exists (select 1 from public.alumni_experience e where e.profile_id = p.id and e.is_current);
+
+-- 3. Local test accounts ---------------------------------------------------------------------------
+with accounts (id, email) as (values
+  ('11111111-1111-4111-8111-000000000001'::uuid, 'admin@herzliah.test'),
+  ('11111111-1111-4111-8111-000000000002'::uuid, 'alumni@herzliah.test'),
+  ('11111111-1111-4111-8111-000000000003'::uuid, 'pending@herzliah.test')
+)
+insert into auth.users (
+  instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
+  raw_app_meta_data, raw_user_meta_data, created_at, updated_at,
+  confirmation_token, recovery_token, email_change_token_new, email_change
+)
+select '00000000-0000-0000-0000-000000000000', a.id, 'authenticated', 'authenticated', a.email,
+  extensions.crypt('LocalDev-Passw0rd', extensions.gen_salt('bf')), now(),
+  '{"provider":"email","providers":["email"]}', '{"locale":"en"}', now(), now(), '', '', '', ''
+from accounts a
+on conflict (id) do nothing;
+
+insert into auth.identities (provider_id, user_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
+select u.id::text, u.id, jsonb_build_object('sub', u.id::text, 'email', u.email, 'email_verified', true), 'email', now(), now(), now()
+from auth.users u
+where u.email like '%@herzliah.test'
+  and not exists (select 1 from auth.identities i where i.user_id = u.id and i.provider = 'email');
+
+insert into public.institution_memberships (institution_id, user_id, role, status)
+select i.id, m.user_id, m.role::public.member_role, 'active'
+from public.institutions i
+cross join (values
+  ('11111111-1111-4111-8111-000000000001'::uuid, 'super_admin'),
+  ('11111111-1111-4111-8111-000000000002'::uuid, 'alumni')
+) as m(user_id, role)
+where i.slug = 'herzliah'
+on conflict (institution_id, user_id) do nothing;
+
+update public.alumni_profiles
+set user_id = '11111111-1111-4111-8111-000000000002', claim_email = 'alumni@herzliah.test'
+where id = '00000000-0000-4000-8000-000000000001';
+
+-- 4. Edge-case records for access tests (supabase/tests) -------------------------------------------
+-- An imported graduate who never claimed the record, and a claimed member who hid their profile.
+insert into public.alumni_profiles (id, institution_id, first_name, last_name, grad_year, claim_email, is_directory_visible, privacy_preset, claimed_at)
+select v.id, i.id, v.first_name, v.last_name, v.grad_year, v.claim_email, false, 'alumni_only', v.claimed_at
+from public.institutions i
+cross join (values
+  ('22222222-2222-4222-8222-000000000001'::uuid, 'Imported', 'Unclaimed', 2010, 'unclaimed@herzliah.test', null::timestamptz),
+  ('22222222-2222-4222-8222-000000000002'::uuid, 'Hidden', 'Member', 2005, null, now())
+) as v(id, first_name, last_name, grad_year, claim_email, claimed_at)
+where i.slug = 'herzliah'
+on conflict (id) do nothing;
+
+insert into public.alumni_experience (profile_id, institution_id, job_title, employer, is_current)
+select '22222222-2222-4222-8222-000000000002', id, 'Private role', 'Private employer', true
+from public.institutions where slug = 'herzliah'
+  and not exists (select 1 from public.alumni_experience where profile_id = '22222222-2222-4222-8222-000000000002');
+
+-- A visible demo profile with an email on record (used to test finding F3).
+update public.alumni_profiles set claim_email = 'maya.frenkel@herzliah.test'
+where id = '00000000-0000-4000-8000-000000000002';
