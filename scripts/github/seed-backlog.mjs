@@ -745,11 +745,14 @@ const DEFAULT_STATUS_FALLBACK = {
   "In review": "In Progress",
 };
 
+// Closed in the YAML, or closed on GitHub (e.g. by merging a PR with "Closes #N").
+const isClosed = (it) => it.state === "closed" || issuesByKey.get(it.key)?.state === "closed";
+
 function desiredValues(it) {
   const m = milestoneByKey.get(it.milestone);
   const area = it.labels.find((l) => l.startsWith("area:"))?.slice(5);
   return {
-    Status: it.state === "closed" ? "Done" : (it.status ?? "Backlog"),
+    Status: isClosed(it) ? "Done" : (it.status ?? "Backlog"),
     Priority: priorityOf(it),
     Size: it.size,
     Track: it.track,
@@ -789,7 +792,7 @@ async function syncProject() {
       const field = fields.get(name);
       if (!field) continue;
       const current = pi.values.get(name);
-      const closedNotDone = name === "Status" && it.state === "closed" && current !== "Done";
+      const closedNotDone = name === "Status" && isClosed(it) && current !== "Done";
       if (current === want || (current && !FORCE_FIELDS && !closedNotDone)) continue;
       let value;
       if (field.options) {
