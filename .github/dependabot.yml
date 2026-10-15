@@ -11,12 +11,13 @@ updates:
       minor-and-patch:
         update-types: [minor, patch]
     ignore:
-      # Types track the Node runtime we deploy on (22.x).
-      - dependency-name: "@types/node"
+      # Major upgrades (Next, ESLint, TypeScript, @types/node which tracks our Node 22 runtime, ...)
+      # are done deliberately in their own issue, with tests. Security updates still arrive regardless.
+      - dependency-name: "*"
         update-types: ["version-update:semver-major"]
-      # TypeScript majors (e.g. the 7.x native compiler) need a deliberate evaluation.
-      - dependency-name: typescript
-        update-types: ["version-update:semver-major"]
+      # 0.x packages break on "minor" bumps; FND-01 (#87) upgrades @supabase/ssr together with Next.
+      - dependency-name: "@supabase/ssr"
+        update-types: ["version-update:semver-minor"]
     labels: [type:chore, area:ci]
 
   - package-ecosystem: github-actions

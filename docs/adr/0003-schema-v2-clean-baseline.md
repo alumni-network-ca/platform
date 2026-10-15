@@ -10,7 +10,7 @@
 
 ## Decision
 
-- Archive `supabase/migrations/001–004` to `supabase/legacy/` for history.
+- Archive `supabase/migrations/001–004` to `supabase/legacy/` for history when the v2 baseline lands (FND-04). Until then, 001/003/004 remain the local schema so the current app runs against the local stack, and 002's demo data lives in `supabase/seed.sql` (SETUP-07).
 - Start from a single reviewed **v2 baseline migration** implementing the target model in `docs/PRODUCT_ANALYSIS.md` §6, as amended by these ADRs.
 - New migrations use Supabase CLI timestamped names (`supabase migration new`), so parallel branches don't collide.
 - Migrations are forward-only. Seed and demo data live in `supabase/seed.sql`, applied only to local and staging environments.

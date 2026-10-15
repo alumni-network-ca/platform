@@ -100,7 +100,7 @@ items:
     summary: |
       Install Docker Desktop (WSL2). Run `supabase init`, configure config.toml (auth redirect URLs for *.localhost,
       Mailpit, Send Email Hook), set up seed.sql and .env.example, and rewrite the README "Getting started" section.
-      Archive migrations 001–004 to supabase/legacy (ADR 0003).
+      The legacy migrations 001/003/004 stay active locally until FND-04 archives them; demo data moves to seed.sql.
     ac:
       - "A fresh clone runs `npm i && supabase start && supabase db reset && npm run dev` and reaches herzliah.localhost:3000."
       - No secret values are committed; .env.example lists every variable with a description.
