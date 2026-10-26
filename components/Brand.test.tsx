@@ -3,10 +3,10 @@ import { describe, expect, it } from "vitest";
 import { Brand } from "./Brand";
 
 describe("Brand", () => {
-  it("links to the home page with an accessible name", () => {
-    render(<Brand />);
-    const link = screen.getByRole("link", { name: "Herzliah Alumni Network home" });
+  it("links to the home page, named by its visible text", () => {
+    const { container } = render(<Brand />);
+    const link = screen.getByRole("link", { name: /^Herzliah Alumni Network/ });
     expect(link).toHaveAttribute("href", "/");
-    expect(screen.getByAltText("Herzliah logo")).toBeInTheDocument();
+    expect(container.querySelector("img")).toHaveAttribute("alt", "");
   });
 });

@@ -3,10 +3,11 @@ import Link from "next/link";
 
 export function Brand() {
   return (
-    <Link className="brand" href="/" aria-label="Herzliah Alumni Network home">
+    // The visible text is the accessible name (axe label-content-name-mismatch); the logo is decorative.
+    <Link className="brand" href="/">
       <Image
         src="/herzliah-logo.png"
-        alt="Herzliah logo"
+        alt=""
         width={68}
         height={68}
         className="brandLogo brandIcon"
