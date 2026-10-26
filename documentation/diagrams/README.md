@@ -19,6 +19,8 @@ Open [the interactive viewer](index.html) for rendered diagrams and the permissi
 
 ## Data model
 
+> The target ERDs (21–26) predate the 2026-10-26 decisions and are superseded by [docs/architecture/data-model.md](../../docs/architecture/data-model.md).
+
 - [Current schema ERD](20-erd-current.md)
 - [Target schema overview](21-erd-target-overview.md)
 - [Target identity and tenancy](22-erd-target-identity.md)
