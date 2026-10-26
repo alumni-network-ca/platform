@@ -195,8 +195,8 @@ items:
     reqs: [QA4]
     summary: |
       Write down planning numbers for Noah to confirm, for example: year 1 = 1–5 institutions, Herzliah about 4,000
-      alumni (to confirm), 30 % claim in the first quarter, 50 concurrent users at peak, imports of 5,000 rows,
-      invitation waves of 500 per day. Define the capacity triggers that would prompt an upgrade.
+      alumni (to confirm), 30 % claim in the first quarter, 50 concurrent users at peak,
+      sign-up waves of 500 per day after the school's email. Define the capacity triggers that would prompt an upgrade.
     ac:
       - Assumptions are approved and referenced by the perf tests (QA-06).
 
@@ -210,9 +210,9 @@ items:
     reqs: [MT1, MT2, MT5, MT6]
     summary: |
       Update the target model (PRODUCT_ANALYSIS §6 and the diagrams 21–26) with the ADR decisions:
-      - owner/admin/reviewer roles, role_permissions and platform_access_grants
+      - school_admin/reviewer roles, role_permissions and platform_access_grants (system admins)
       - profile_contact_channels, email_outbox/events/suppressions and confirmation_requests/profile_confirmations
-      - import_rows, exports, job_runs and rate_limit_counters
+      - email_templates, access_requests.source (signup now, import later), exports, job_runs and rate_limit_counters
       Deliver the RLS access matrix and the RPC catalog for implementation in FND-04/FND-05.
     ac:
       - The reviewed ERD, RLS matrix and RPC catalog are committed under docs/architecture/.

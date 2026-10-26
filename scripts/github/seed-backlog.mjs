@@ -314,6 +314,9 @@ function renderBody(it) {
     meta.join(" · "),
   ];
   if (meta2.length) parts.push(meta2.join(" · "));
+  if (it.outcome)
+    parts.push(`### Decision
+${reflow(it.outcome)}`);
   parts.push(`### Summary\n${reflow(it.summary)}`);
   if (it.findings?.length)
     parts.push(

@@ -6,9 +6,10 @@ defaults:
 items:
   # ---------------------------------------------------------------- onboarding (WS1)
   - key: ONB-01
-    title: "Invitations backend: create, hash, expire, resend, revoke"
+    milestone: FUT
+    title: "Future (with CSV import): invitations backend: create, hash, expire, resend, revoke"
     epic: EPIC-ONB
-    labels: [type:feature, area:onboarding, P0, launch-blocker]
+    labels: [type:feature, area:onboarding, P2]
     size: M
     depends: [FND-05, FND-12, EML-01]
     reqs: [F3, E2, E3, F12]
@@ -26,9 +27,10 @@ items:
       - "pgTAP: only admin/owner can create; cross-tenant ids are rejected. Unit: token hashing."
 
   - key: ONB-02
-    title: "Invitation claim flow: /claim/[token] → sign up / sign in → auto-approve"
+    milestone: FUT
+    title: "Future (with CSV import): invitation claim flow: /claim/[token] → sign up / sign in → auto-approve"
     epic: EPIC-ONB
-    labels: [type:feature, area:onboarding, P0, launch-blocker]
+    labels: [type:feature, area:onboarding, P2]
     size: L
     depends: [ONB-01, FND-09]
     reqs: [F3, F4, E3, HL4]
@@ -56,10 +58,12 @@ items:
     reqs: [F3, F4, S4]
     class: Refactor
     summary: |
+      The only way in at launch (DEC-01): the school emails its alumni the sign-up link (herzliah.alumninetwork.ca/join).
       After sign-up and email verification, the applicant gives first and last name, maiden name, graduation year and
-      a note. request_access stores an access_request with the institution taken from the host (fixes F16). The system
-      computes suggested matches for admins, which are never shown to the applicant. The user sees the "pending"
-      state. Turnstile and a rate limit apply.
+      a note. request_access stores an access_request (source = signup) with the institution taken from the host
+      (fixes F16). The system computes possible duplicates for admins, which are never shown to the applicant. The
+      user sees the "pending" state. Turnstile and a rate limit apply. The source column lets a future CSV import
+      feed the same queue.
     ac:
       - The applicant never learns whether a record exists.
       - Duplicate submissions update the existing pending request.
@@ -73,13 +77,13 @@ items:
     reqs: [F4, F12, F14, E1]
     class: Refactor
     summary: |
-      - **approve_access_request(id, link_profile_id | create_new):** links to the chosen unclaimed record or creates
-        one, then activates the membership.
+      - **approve_access_request(id, link_profile_id | create_new):** creates the profile (or links to an existing
+        record, kept for the future CSV source), then activates the membership.
       - **needs_info(id, message)** and **reject(id, reason)**.
       Each decision sends the matching EN/FR email and is audited. Conflicts are refused with a clear message: the
       record is already claimed, or another request exists for the same record.
     ac:
-      - Reviewer, admin and owner can decide; alumni cannot.
+      - Reviewers and school admins can decide; alumni cannot.
       - A decided request can't be decided again.
     tests:
       - "pgTAP permissions; E2E approve, reject and needs-info with Mailpit assertions."
@@ -89,7 +93,7 @@ items:
     epic: EPIC-ONB
     labels: [type:feature, area:onboarding, area:profile, P0, launch-blocker]
     size: L
-    depends: [PRF-01, ONB-02]
+    depends: [PRF-01, ONB-04]
     reqs: [F2, F3, F8, F9]
     class: Refactor
     summary: |
@@ -101,11 +105,11 @@ items:
       5. Networking preferences
       6. Contact channels
       7. Privacy and publish (explicit opt-in, unticked by default, consent recorded)
+      Contact channels are optional (DEC-02); with none, the profile shows "No contact details shared".
       Progress is saved per step through save_my_profile(payload jsonb), a single transaction with server-side
       validation (fixes F14). Users can resume where they left off.
     ac:
       - A failed step never loses data saved earlier.
-      - Publishing requires at least one public channel.
       - All copy is in EN and FR.
 
   - key: ONB-06
@@ -122,20 +126,20 @@ items:
       - Pending and rejected users get no private-directory data from pages or from direct API requests.
 
   - key: ONB-07
-    title: "Edge cases: duplicates, conflicting claims, changed emails, expired invitations"
+    title: "Edge cases: duplicate sign-ups, wrong approvals, changed emails"
     epic: EPIC-ONB
     labels: [type:feature, area:onboarding, P1, launch-blocker]
     size: M
-    depends: [ONB-02, ONB-04]
+    depends: [ONB-04]
     reqs: [F4, F14]
     summary: |
       Admin tools:
       - mark two records as duplicates (keep one, archive the other, with the history preserved)
-      - transfer a claim when the wrong person claimed (audited)
-      - update the claim email and re-invite
-      Alumni whose school email is outdated use self-registration, and the admin links them to their record.
+      - undo an approval given to the wrong person (audited)
+      - a duplicate sign-up for someone already approved is flagged in the queue, never merged
+      - an alumnus who lost access to their email asks the school, and an admin updates it (audited)
     ac:
-      - Every resolution is audited and reversible by an owner.
+      - Every resolution is audited and reversible by a school admin.
       - Nothing is ever merged automatically.
 
   # ---------------------------------------------------------------- email (WS1)
@@ -167,26 +171,30 @@ items:
     depends: [BIZ-02, BIZ-04]
     reqs: [E1]
     summary: |
-      Verify mail.alumni-network.ca (SPF, DKIM, DMARC p=quarantine with reporting). The sender is
-      "<Institution> Alumni Network" <slug@mail.alumni-network.ca>, with Reply-To from institutions.reply_to.
+      Verify alumninetwork.ca (SPF, DKIM, DMARC p=quarantine with reporting). The sender is
+      "<Institution> Alumni Network" <noreply@alumninetwork.ca>, with Reply-To from institutions.reply_to (DEC-12).
       Production, staging and dev use separate API keys.
     ac:
-      - mail-tester.com score ≥ 9/10 for an invitation email.
+      - mail-tester.com score ≥ 9/10 for an approval email.
 
   - key: EML-03
-    title: "Bilingual React Email templates"
+    title: "Per-school email templates in the database (EN/FR), with defaults and approval"
     epic: EPIC-EML
     labels: [type:feature, area:email, area:i18n, P0, launch-blocker]
     size: L
     depends: [EML-01, FND-03]
     reqs: [E1, F9]
     summary: |
-      Tenant-branded templates in EN and FR (HTML plus a text part): invitation, invitation reminder, access approved,
-      needs more info, access rejected, welcome, staff invitation, annual confirmation, confirmation reminders 1 and 2.
-      Messages come from the next-intl files. No sensitive data is shown. Links use the tenant host. A preview route
-      on staging lets Noah and Herzliah review them (HERZ-04).
+      DEC-06: subject and body text live in email_templates (institution, template, locale, status draft/approved).
+      Templates: access approved, needs more info, access rejected, welcome, staff invitation, annual confirmation,
+      confirmation reminders 1 and 2. Each school starts from platform defaults in EN and FR. School admins edit the
+      text only (no raw HTML) with a fixed set of placeholders such as {first_name}, {school_name} and
+      {confirm_link}, preview it, and approve it. A branded React Email layout wraps the text and adds a plain-text
+      part. Links always use the tenant host. No sensitive data is shown.
     ac:
-      - Every template renders in both languages without missing keys and passes a link-check test.
+      - An email that has no approved template for the school is not sent, and the admin sees why.
+      - Unknown placeholders and HTML are rejected on save; every edit and approval is audited.
+      - Every default renders in both languages and passes a link-check test.
 
   - key: EML-04
     title: "Supabase Auth Send Email Hook → branded EN/FR auth emails"
@@ -211,11 +219,11 @@ items:
     reqs: [E4]
     summary: |
       /api/webhooks/resend verifies the Svix signature and records delivered, bounced and complained in email_events.
-      Hard bounces and complaints go to email_suppressions, and invitations are marked bounced. Admins see failures in
+      Hard bounces and complaints go to email_suppressions. Admins see failures in
       the roster and can fix the address and resend. A bounce-rate alert is wired to OPS-04.
     ac:
       - Replayed or unsigned webhooks are rejected.
-      - A bounced invitation shows on the roster with a "fix and resend" action.
+      - A bounced address shows on the roster with a "fix and resend" action.
 
   - key: EML-06
     title: "Email catalogue documentation"
@@ -308,8 +316,8 @@ items:
     reqs: [S5]
     summary: |
       - **Export:** JSON of the user's profile, channels, preferences, consents and contact events they initiated.
-      - **Delete:** after re-authentication, removes the auth user and the profile per the retention rules (DEC-08).
-        The school's original imported record is handled per policy. Audited, with minimal personal data in the audit.
+      - **Delete:** after re-authentication, removes this school's profile and membership, and purges it within 30 days
+        (DEC-08). The login itself is removed only when the person has no membership left at another school. Audited, with minimal personal data in the audit.
     ac:
       - After deletion, the person can't be found anywhere in the directory, and sign-in fails.
 
@@ -400,7 +408,7 @@ items:
 
   # ---------------------------------------------------------------- contact (WS3)
   - key: CON-01
-    title: "initiate_contact RPC: checks, reveal, rate limit, dedupe, contact_events"
+    title: "initiate_contact RPC: checks, reveal, dedupe, contact_events"
     epic: EPIC-CON
     labels: [type:feature, area:contact, area:db, P0, launch-blocker]
     size: M
@@ -412,13 +420,13 @@ items:
       initiate_contact(profile_id, channel):
       - The caller is an active member of the same institution. The target is published and has that channel public.
       - The value is revealed for one profile only.
-      - 20 reveals per rolling 24 h per user.
+      - No daily limit (DEC-03); abuse is visible to admins through contact_events.
       - Repeat clicks for the same recipient and channel within 24 h return the value without a new event.
       - Each new reveal inserts a contact_events row.
     ac:
-      - Bulk harvesting is impossible: no list endpoint returns email or phone, and the limit is enforced in the DB.
+      - Bulk harvesting is impossible: no list endpoint returns email or phone; each reveal is one profile and is logged.
     tests:
-      - "pgTAP and integration: non-member, cross-tenant, hidden channel, limit exceeded, dedupe."
+      - "pgTAP and integration: non-member, cross-tenant, hidden channel, dedupe."
 
   - key: CON-02
     title: "Contact UI on profiles"
@@ -429,7 +437,7 @@ items:
     reqs: [F10]
     summary: |
       Reveal buttons with copy-to-clipboard, mailto/tel links, link-type channels opening in a new tab
-      (rel=noopener), a note on respectful contact, and a localized message when the limit is reached.
+      (rel=noopener), a note on respectful contact, and "No contact details shared" when a profile has no channels.
     ac:
       - Works with keyboard only; the EN and FR copy is approved.
 

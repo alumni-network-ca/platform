@@ -1,6 +1,6 @@
 # Alumni Network platform
 
-A private, verified professional network for school alumni. Each school (a *tenant*) gets its own branded space at `<school>.alumni-network.ca`, and graduates can only see and contact their own school's alumni. **Herzliah High School (Montreal)** is the first tenant; the pilot targets 2026-12-01.
+A private, verified professional network for school alumni. Each school (a *tenant*) gets its own branded space at `<school>.alumninetwork.ca`, and graduates can only see and contact their own school's alumni. **Herzliah High School (Montreal)** is the first tenant; the pilot targets 2026-12-01.
 
 **Stack:** Next.js (App Router) · React · TypeScript · Supabase (Postgres, row-level security, Auth) · Vercel.
 

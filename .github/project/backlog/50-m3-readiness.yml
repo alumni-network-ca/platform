@@ -13,9 +13,8 @@ items:
     depends: [ONB-05, DIR-02, CON-02, PRF-02]
     reqs: [QA1, HL4, HL5]
     summary: |
-      Playwright with Mailpit: invite → claim → onboarding → publish → search with combined filters → open a profile
-      → reveal contact → edit profile → the change persists. Also self-registration → pending (no directory access) →
-      approved. Rejected users are denied. Runs in both locales and on both viewports.
+      Playwright with Mailpit: sign up from the join link → pending (no directory access) → approved → onboarding → publish → search with combined filters → open a profile
+      → reveal contact → edit profile → the change persists. Rejected and needs-info users are denied. Runs in both locales and on both viewports.
     ac:
       - Green in CI; videos and traces are kept for failures.
 
@@ -24,11 +23,10 @@ items:
     epic: EPIC-QA
     labels: [type:test, area:admin, area:import-export, P0, launch-blocker]
     size: L
-    depends: [IMP-04, EXP-02, ADM-05, ADM-06]
+    depends: [EML-03, EXP-02, ADM-05, ADM-06]
     reqs: [QA1, HL5]
     summary: |
-      Import with errors, duplicates and ambiguous matches, then preview, cancel, commit, retry after a partial
-      failure, and bulk invite. Also the approval queue, staff role changes, a filtered CSV/XLSX export with a
+      The approval queue (approve, needs info, reject, duplicate flag), editing and approving an email template, staff role changes, a filtered CSV/XLSX export with a
       protected download and a formula payload, and record actions. The reviewer role is denied each restricted
       action in both the UI and the API.
     ac:
@@ -39,12 +37,12 @@ items:
     epic: EPIC-QA
     labels: [type:test, type:security, area:tenancy, P0, launch-blocker]
     size: L
-    depends: [FND-06, EXP-02, FRS-02, ONB-02]
+    depends: [FND-06, EXP-02, FRS-02, ONB-04]
     reqs: [QA2, MT3, MT4, HL7]
     summary: |
       Integration tests using supabase-js as each role in tenant A, attacking tenant B:
       - REST table reads and writes, and every RPC with B's ids
-      - export download links, invitation and confirmation tokens on the wrong host
+      - export download links and confirmation tokens on the wrong host
       - job outputs and admin pages by URL
       They also try self-promotion to admin and continued access after suspension.
     ac:
@@ -83,11 +81,11 @@ items:
     epic: EPIC-QA
     labels: [type:test, area:db, P1, launch-blocker]
     size: M
-    depends: [DIR-01, IMP-04, AUDIT-08]
+    depends: [DIR-01, AUDIT-08]
     reqs: [QA4]
     summary: |
-      Seed 10k alumni per tenant and measure search_directory p95 with explain analyze, import 5k rows, enqueue 500
-      invitations, and run k6 with 50 concurrent users on staging. Document the results, limits and capacity triggers.
+      Seed 10k alumni per tenant and measure search_directory p95 with explain analyze, submit 500 sign-ups in a
+      burst, and run k6 with 50 concurrent users on staging. Document the results, limits and capacity triggers.
     ac:
       - The results meet the targets, or there's a remediation issue and a recorded decision.
 
@@ -139,11 +137,11 @@ items:
     depends: [BIZ-02, BIZ-05, FND-16]
     reqs: [HL3, D1, D3]
     summary: |
-      Production branch = main. Domains: alumni-network.ca, *.alumni-network.ca, *.staging.alumni-network.ca (dev).
+      Production branch = main. Domains: alumninetwork.ca, *.alumninetwork.ca, *.staging.alumninetwork.ca (dev).
       Production env vars and the CRON_SECRET, with cron jobs for email, freshness and cleanup. Deployment protection
       on previews. Spend limits set.
     ac:
-      - herzliah.alumni-network.ca serves the production app over HTTPS.
+      - herzliah.alumninetwork.ca serves the production app over HTTPS.
 
   - key: OPS-03
     title: "Backup and restore drill; document RPO/RTO"
@@ -171,18 +169,18 @@ items:
       - Evidence of each test alert is attached.
 
   - key: OPS-05
-    title: "Rehearse the Herzliah data load on staging"
+    title: "Rehearse the Herzliah sign-up wave on staging"
     epic: EPIC-OPS
-    labels: [type:infra, area:import-export, P0, launch-blocker, needs-noah]
+    labels: [type:infra, area:onboarding, P0, launch-blocker, needs-noah]
     size: M
-    depends: [HERZ-03, IMP-04, LEGAL-03]
+    depends: [HERZ-04, ONB-04, LEGAL-03]
     reqs: [D2, HL2]
     summary: |
-      Import the real Herzliah CSV into staging (allowed once the DPA is signed; staging email is allow-listed).
-      Reconcile the totals against the school's count. Review duplicates and ambiguous matches with the school.
-      Record the timings and any fixes needed. The staging data is wiped afterwards.
+      Herzliah's admins and a few volunteer alumni run the whole flow on staging: sign up from the join link, get
+      approved, onboard, publish, search and reveal a contact (staging email is allow-listed). Time how long approvals
+      take and note every confusing step. The staging data is wiped afterwards.
     ac:
-      - The reconciliation report is signed off by Noah; issues are fixed before LCH-04.
+      - Noah signs off the rehearsal notes; issues are fixed before LCH-04.
 
   - key: OPS-06
     title: "Release and rollback procedure"
@@ -256,8 +254,8 @@ items:
     epic: EPIC-DOC
     labels: [type:docs, area:admin, area:i18n, P1, launch-blocker]
     size: M
-    depends: [ADM-05, IMP-04, FRS-04]
-    summary: A short illustrated guide for school staff covering MFA setup, imports, invitations, the approval queue, record actions, exports, freshness follow-up and staff roles.
+    depends: [ADM-05, EML-03, FRS-04]
+    summary: A short illustrated guide for school staff covering MFA setup, the approval queue, email templates, record actions, exports, freshness follow-up and staff roles.
     ac:
       - Herzliah's admin completes the training tasks using only the guide (LCH-02).
 

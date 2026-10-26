@@ -16,6 +16,7 @@
 
 ### Language
 
+- An **EN | FR toggle** in the header of every page, including public pages and sign-up (DEC-07).
 - **next-intl** without locale-prefixed URLs (the pages are private, so there's no SEO need).
 - Locale resolution order: the user's saved preference, then the `NEXT_LOCALE` cookie, then `Accept-Language`, then the institution's default, then `en`. `<html lang>` follows the result.
 - Messages are split by namespace (`messages/{en,fr}/<area>.json`), and CI fails on missing keys.

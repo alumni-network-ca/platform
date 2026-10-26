@@ -1,32 +1,28 @@
-# 0004: Eligibility and claim policy
+# 0004: Eligibility: the school shares a sign-up link, an admin approves every sign-up
 
-- **Status:** Proposed (DEC-01) · **Date:** 2026-10-14 · **Requirements:** F3, F4, S4, HL1
+- **Status:** Accepted (DEC-01, DEC-05, 2026-10-26) · **Date:** 2026-10-14 · **Requirements:** F3, F4, S4, HL1
 
 ## Context
 
-The PDF says email verification alone must not establish alumni identity (F4). Schools hold authoritative graduate records, including the email they have on file.
+The PDF says email verification alone must not establish alumni identity (F4). The partners chose not to import school records at launch, so the platform holds no alumni data the school hasn't had each person submit themselves.
 
 ## Decision
 
-Two paths:
+1. **The school promotes the link.** Herzliah emails its alumni, from its own mailing list, a link to `herzliah.alumninetwork.ca/join`.
+2. **Sign-up.** The person creates an account, verifies their email, and gives first and last name, maiden name if any, graduation year and an optional note. This creates a pending `access_request` with `source = 'signup'`, for the school taken from the host.
+3. **Approval.** A school admin or reviewer approves the request (which creates the profile and activates the membership), asks for more information, or rejects it with a reason. Each decision is audited and sends an email.
+4. **Possible duplicates** (same name and year, or same email already approved) are flagged to the admin. Nothing is ever merged automatically, and a name alone never links two people (DEC-05).
 
-1. **Invitation (auto-approved).**
-   - An admin imports a record and sends an invitation to the email the school has on file.
-   - The invitation token is single-use, stored hashed, and expires after 14 days.
-   - The alumnus signs up or signs in **with the invited email** and verifies it.
-   - Because the token proves control of the school-held address and the record proves eligibility, the claim is approved automatically and an active membership is created.
-2. **Self-registration (review).**
-   - Someone signs up from the school's landing page with any email.
-   - They give their name, maiden name if any, graduation year and an optional note. This creates a pending `access_request`.
-   - An admin (owner, admin or reviewer) links the request to an existing record, creates a new record, asks for more information, or rejects it with a reason.
+Rules:
 
-Rules for both paths:
+- Responses never reveal whether an email or person exists (S4). The applicant never sees duplicate flags.
+- Pending, needs-info and rejected users get no private-directory access, from pages or from the API.
 
-- Responses never reveal whether an email or record exists (S4).
-- A conflicting claim, a duplicate record or a changed email goes to the review queue. Nothing is ever merged automatically.
-- Pending, needs-info and rejected users get no private-directory access.
+## Future: CSV import
+
+`access_requests.source` and the approval RPCs are written so a later CSV import (IMP-* in Future) creates requests or pre-filled records with `source = 'import'` that flow through the same queue. Per-person invitation links (ONB-01/02) come with it.
 
 ## Consequences
 
-- The Alumni Office's main workload is the self-registration queue, which keeps it small when invitations go to good school data.
-- Invitation tokens must survive email link scanners: the GET request only renders a page and the claim needs an authenticated POST.
+- The school's approval queue is the main workload. Herzliah needs enough admins and reviewers to keep approval time under 2 business days during the launch wave.
+- No school data is loaded before people consent by signing up, which simplifies the legal basis (LEGAL-01).

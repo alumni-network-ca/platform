@@ -14,7 +14,7 @@ items:
     reqs: [F13]
     class: Refactor
     summary: |
-      An /admin layout for owner, admin and reviewer, requiring MFA. The nav shows only the sections the role allows,
+      An /admin layout for school admins and reviewers, requiring MFA. The nav shows only the sections the role allows,
       and the server re-checks every page and action. Handles users with several memberships (fixes F20).
     ac:
       - Each role sees exactly its matrix (ADR 0005); hidden pages return 403 when requested directly.
@@ -27,7 +27,7 @@ items:
     depends: [ADM-01]
     reqs: [F12, E8]
     summary: |
-      Cards: imported, invited (pending, expired, bounced), claimed, pending review, published, overdue confirmation
+      Cards: pending review, needs info, approved, published, overdue confirmation, bounced email
       and contacts initiated, with a date range filter. Each card links to the filtered roster or queue. Counts come
       from tenant-scoped SQL functions.
     ac:
@@ -42,18 +42,18 @@ items:
     reqs: [F12]
     class: Refactor
     summary: |
-      Filters: status, invitation status, class year, published/hidden, freshness state, bounced email, and text.
-      The record detail shows public and private fields (according to permission), invitations, the claim and request
+      Filters: status, class year, published/hidden, freshness state, bounced email, and text.
+      The record detail shows public and private fields (according to permission), the sign-up request
       history and the audit trail. Reviewers see it read-only.
     ac:
       - Works with 10k records (paginated server-side); filters are reflected in the URL and reused by export (EXP-01).
 
   - key: ADM-04
-    title: "Record actions: edit, suspend/reactivate, archive, mark deceased, resend/revoke invitation"
+    title: "Record actions: edit, suspend/reactivate, archive, mark deceased"
     epic: EPIC-ADM
     labels: [type:feature, area:admin, P0, launch-blocker]
     size: L
-    depends: [ADM-03, ONB-01]
+    depends: [ADM-03]
     reqs: [F12, F14, S3, S7]
     summary: |
       Each action is a permission-checked RPC with an audit record, and a reason is required for suspend, archive and
@@ -75,15 +75,15 @@ items:
       - Decisions are reflected immediately and send the correct emails.
 
   - key: ADM-06
-    title: "Staff management: invite staff, assign owner/admin/reviewer, remove access"
+    title: "Staff management: invite staff, assign school admin/reviewer, remove access"
     epic: EPIC-ADM
     labels: [type:feature, area:admin, area:auth, P1, launch-blocker]
     size: M
     depends: [ADM-01, EML-03]
     reqs: [F13, S1, S3]
     summary: |
-      Owner only: invite staff by email (staff invitation template), change roles, revoke access. The last owner
-      can't demote or remove themselves. Staff must set up MFA on first sign-in.
+      School admins only: invite staff by email (staff invitation template), change roles, revoke access. The last
+      school admin can't demote or remove themselves. Staff must set up MFA on first sign-in.
     ac:
       - Role changes take effect on the next request and are audited; there's no self-escalation path.
 
@@ -94,9 +94,9 @@ items:
     size: S
     depends: [FND-12, ADM-01]
     reqs: [F14, S7]
-    summary: A tenant-scoped, read-only list with filters (actor, action, target, date) and pagination. Platform-admin access events are visible to the school owner.
+    summary: A tenant-scoped, read-only list with filters (actor, action, target, date) and pagination. System-admin access events are visible to school admins.
     ac:
-      - Only owner, admin and reviewer can see it; there's no edit or delete anywhere.
+      - Only school admins and reviewers can see it; there's no edit or delete anywhere.
 
   - key: ADM-08
     title: "Institution settings: branding, sender, reply-to, default locale, options"
@@ -106,16 +106,17 @@ items:
     depends: [ADM-01, FND-02]
     reqs: [MT6, F8]
     summary: |
-      Owner only. Logo upload or URL, colours with a contrast check, email display name, reply-to address, default
+      School admins only. Logo upload or URL, colours with a contrast check, email display name, reply-to address, default
       language, and the per-institution career fields and networking options (enable, disable, rename EN/FR).
     ac:
       - A change shows on the tenant landing page and in emails without a deploy, and is audited.
 
   # ---------------------------------------------------------------- import / export (WS2)
   - key: IMP-01
+    milestone: FUT
     title: "CSV import template and field mapping documentation"
     epic: EPIC-IMPEXP
-    labels: [type:docs, area:import-export, P0, launch-blocker]
+    labels: [type:docs, area:import-export, P2]
     size: S
     depends: [DEC-02, DEC-05]
     reqs: [F15]
@@ -127,9 +128,10 @@ items:
       - Herzliah can produce the file from the docs alone (HERZ-03).
 
   - key: IMP-02
+    milestone: FUT
     title: "Import upload and validation (server-side)"
     epic: EPIC-IMPEXP
-    labels: [type:feature, area:import-export, P0, launch-blocker]
+    labels: [type:feature, area:import-export, P2]
     size: L
     depends: [IMP-01, FND-05]
     reqs: [F15, S6]
@@ -145,9 +147,10 @@ items:
       - "Bad grad years, invalid emails, missing required fields and duplicate rows are each reported per row; nothing is written to alumni tables yet."
 
   - key: IMP-03
+    milestone: FUT
     title: "Import preview and review UI"
     epic: EPIC-IMPEXP
-    labels: [type:feature, area:import-export, area:ui, P0, launch-blocker]
+    labels: [type:feature, area:import-export, area:ui, P2]
     size: M
     depends: [IMP-02, ADM-01]
     reqs: [F15]
@@ -159,9 +162,10 @@ items:
       - Cancelling leaves no trace in alumni tables; the batch is marked cancelled.
 
   - key: IMP-04
+    milestone: FUT
     title: "Import commit: idempotent, retry-safe, update-vs-create, summary and audit"
     epic: EPIC-IMPEXP
-    labels: [type:feature, area:import-export, area:db, P0, launch-blocker]
+    labels: [type:feature, area:import-export, area:db, P2]
     size: L
     depends: [IMP-03, DEC-05]
     reqs: [F15, S7]
@@ -177,9 +181,10 @@ items:
       - A concurrent commit of the same batch is refused.
 
   - key: IMP-05
+    milestone: FUT
     title: "Bulk invite after import"
     epic: EPIC-IMPEXP
-    labels: [type:feature, area:import-export, area:onboarding, P1, launch-blocker]
+    labels: [type:feature, area:import-export, area:onboarding, P2]
     size: S
     depends: [IMP-04, ONB-01]
     reqs: [F12, E2]
@@ -292,15 +297,15 @@ items:
       - A new institution is reachable at <slug>.<domain> immediately, with no deploy.
 
   - key: SA-02
-    title: "Appoint the initial institution owner"
+    title: "Appoint the first school admin"
     epic: EPIC-SA
     labels: [type:feature, area:platform, area:onboarding, P0, launch-blocker]
     size: S
     depends: [SA-01, ADM-06]
     reqs: [MT6]
-    summary: From the console, invite the first owner by email using the staff invitation. They must set up MFA, and can then invite the rest of their staff.
+    summary: From the console, invite the first school admin by email using the staff invitation. They must set up MFA, and can then invite the rest of their staff.
     ac:
-      - The owner can sign in on the tenant subdomain and reach /admin after enrolling MFA.
+      - The school admin can sign in on the tenant subdomain and reach /admin after enrolling MFA.
 
   - key: SA-03
     title: "Provisioning and offboarding runbook + script"
@@ -310,7 +315,7 @@ items:
     depends: [SA-02]
     reqs: [MT6]
     summary: |
-      docs/runbooks/provision-institution.md covers: create → configure → appoint owner → import → invite → isolation
+      docs/runbooks/provision-institution.md covers: create → configure → appoint school admin → approve email templates → share the sign-up link → isolation
       check → activate. It also covers suspension, offboarding and data return/deletion per DEC-08.
     ac:
       - "Dry run: a third test institution is provisioned end-to-end from the runbook alone."
@@ -322,7 +327,7 @@ items:
     size: S
     depends: [SA-01, FND-17]
     reqs: [S9]
-    summary: Recent job runs, the email failure rate, invitation backlog and per-tenant counts.
+    summary: Recent job runs, the email failure rate, approval backlog and per-tenant counts.
 
   # ---------------------------------------------------------------- public pages (WS4)
   - key: PUB-01
@@ -334,7 +339,7 @@ items:
     reqs: [F5, F9]
     class: Refactor
     summary: |
-      A branded EN/FR landing page with a value proposition, "I received an invitation" / "Request access" / "Sign in"
+      A branded EN/FR landing page with a value proposition, "Join" (the sign-up link the school shares) / "Sign in"
       buttons and an FAQ. Stats come from an anon-safe public_stats(slug) (aggregates only, above a minimum
       threshold) or are hidden. Removes the fake "recently joined" people (F25).
     ac:
@@ -352,7 +357,7 @@ items:
       - A consent row exists for every onboarded user with the current versions.
 
   - key: PUB-03
-    title: "Root site alumni-network.ca ('for schools')"
+    title: "Root site alumninetwork.ca ('for schools')"
     epic: EPIC-PUB
     labels: [type:feature, area:public, P2]
     size: S
