@@ -26,6 +26,7 @@ How we plan, build, review and release the Alumni Network platform. The rules ar
 | `npm test` / `npm run test:watch` | Vitest unit and component tests (`*.test.ts(x)` next to the code) |
 | `npm run test:e2e` | Playwright end-to-end and axe accessibility tests in `e2e/`, desktop and mobile. Starts `next dev` automatically. First run `npx playwright install chromium`. |
 | `npm run test:db` | pgTAP database tests (`supabase/tests/`); needs the local Supabase stack (Docker) |
+| `npm run db:types` | Regenerates `lib/database.types.ts` from the local database. Run it after every migration and commit the result. |
 | `npm run lint:fix` / `npm run format` | Auto-fix lint issues / format everything |
 | `npm run backlog:check` / `npm run backlog:seed` | Preview / apply backlog YAML changes to GitHub |
 
@@ -38,7 +39,7 @@ A pre-commit hook (simple-git-hooks + lint-staged) lints and formats staged file
 | Job | What it runs |
 |---|---|
 | Lint, types, format, unit | `npm run lint`, `typecheck`, `format:check`, `test`, `npm audit --omit=dev --audit-level=critical` |
-| Database | `supabase db start` (migrations + seed), then `supabase test db` (pgTAP) |
+| Database | `supabase db start` (migrations + seed), `supabase test db` (pgTAP), then `npm run db:types` must leave `lib/database.types.ts` unchanged |
 | Build and end-to-end | Local Supabase stack, `npm run build`, then Playwright (desktop + mobile, axe). On failure, the report is uploaded as an artifact. |
 | Secret scan | gitleaks over the full git history |
 
@@ -86,6 +87,7 @@ To reproduce a CI failure locally, run the same commands. The Supabase CLI versi
 
 - Every schema change is a migration file (`supabase migration new <name>`). **Never** make changes in the dashboard SQL editor.
 - Never edit a migration that has already been applied. Write a new one instead.
+- Query the database through `createClient()` from `lib/supabase/{server,client}.ts`, typed from the generated `lib/database.types.ts`. Where the generator is too loose (jsonb results, nullable function columns), narrow the type in `lib/database.ts`. `createLegacyClient()` exists only for the pages still on the legacy schema, listed in `eslint.config.mjs`.
 - Every table holding institution data has `institution_id`, RLS enabled, and pgTAP tests for each role.
 - Every `security definer` function sets `search_path`, checks permissions in its first statement, and revokes `execute` from `public`/`anon` unless anon access is intended.
 

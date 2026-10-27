@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+// Legacy schema until PRF-02 (#118) rewires it.
+import { createLegacyClient as createClient } from "@/lib/supabase/client";
 import { CAREER_FIELDS, HELP_OPTIONS } from "@/lib/profile-options";
 
 type Exp = {
@@ -21,6 +22,7 @@ type Edu = {
   field_of_study: string | null;
   graduation_year: number | null;
 };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- legacy row shapes; PRF-02 (#118) types them
 type Props = { profile: any; flags: any; experience: Exp[]; education: Edu[] };
 
 export function ProfileEditor({ profile, flags, experience, education }: Props) {
@@ -38,9 +40,9 @@ export function ProfileEditor({ profile, flags, experience, education }: Props) 
   const [msg, setMsg] = useState("");
   const [saving, setSaving] = useState(false);
   const finalCareer = f.career_field === "Other" ? f.career_field_other : f.career_field;
-  const updExp = (i: number, k: keyof Exp, v: any) =>
+  const updExp = (i: number, k: keyof Exp, v: Exp[keyof Exp]) =>
     setExps((x) => x.map((r, n) => (n === i ? { ...r, [k]: v } : r)));
-  const updEdu = (i: number, k: keyof Edu, v: any) =>
+  const updEdu = (i: number, k: keyof Edu, v: Edu[keyof Edu]) =>
     setEdus((x) => x.map((r, n) => (n === i ? { ...r, [k]: v } : r)));
 
   async function save() {

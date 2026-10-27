@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+// Legacy schema until ONB-05 (#108) rewires it.
+import { createLegacyClient as createClient } from "@/lib/supabase/client";
 import { CAREER_FIELDS, HELP_OPTIONS } from "@/lib/profile-options";
 
 type Experience = {

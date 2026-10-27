@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import { Nav } from "@/components/Nav";
 import { OnboardingClient } from "@/components/OnboardingClient";
-import { createClient } from "@/lib/supabase/server";
+// Legacy schema until ONB-05 (#108) rewires it.
+import { createLegacyClient as createClient } from "@/lib/supabase/server";
 
 export default async function OnboardingPage() {
   const supabase = await createClient();

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Nav } from "@/components/Nav";
 
-const recent = [
+const recent: [year: string, name: string, role: string, offer: string][] = [
   ["'08", "Dana Kessler", "Corporate Lawyer · Montreal", "Mentoring"],
   ["'14", "Aaron Segal", "Product Lead · New York", "Open to intros"],
   ["'99", "Rachel Berger", "Family Physician · Toronto", "Career advice"],
