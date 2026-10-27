@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { useSchool } from "./SchoolProvider";
 
 type State = {
   ready: boolean;
@@ -20,38 +21,47 @@ export function AuthActions() {
     isAdmin: false,
   });
   const router = useRouter();
-
-  async function load() {
-    const supabase = createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
-      setState({ ready: true, signedIn: false, hasProfile: false, isAdmin: false });
-      return;
-    }
-
-    const [{ data: profile }, { data: memberships }] = await Promise.all([
-      supabase.from("alumni_profiles").select("id").eq("user_id", user.id).maybeSingle(),
-      supabase.from("institution_memberships").select("role").eq("user_id", user.id),
-    ]);
-
-    const roles = (memberships || []).map((m) => m.role);
-    setState({
-      ready: true,
-      signedIn: true,
-      hasProfile: Boolean(profile),
-      isAdmin: roles.includes("school_admin") || roles.includes("reviewer"),
-    });
-  }
+  const schoolId = useSchool().id;
 
   useEffect(() => {
     const supabase = createClient();
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- replaced by the server-side session in FND-09 (#95)
+    async function load() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        setState({ ready: true, signedIn: false, hasProfile: false, isAdmin: false });
+        return;
+      }
+
+      // Only this school counts: a person can belong to several, each independent (DEC-13).
+      const [{ data: profile }, { data: memberships }] = await Promise.all([
+        supabase
+          .from("alumni_profiles")
+          .select("id")
+          .eq("user_id", user.id)
+          .eq("institution_id", schoolId)
+          .maybeSingle(),
+        supabase
+          .from("institution_memberships")
+          .select("role")
+          .eq("user_id", user.id)
+          .eq("institution_id", schoolId),
+      ]);
+
+      const roles = (memberships || []).map((m) => m.role);
+      setState({
+        ready: true,
+        signedIn: true,
+        hasProfile: Boolean(profile),
+        isAdmin: roles.includes("school_admin") || roles.includes("reviewer"),
+      });
+    }
+
     load();
     const { data: listener } = supabase.auth.onAuthStateChange(() => load());
     return () => listener.subscription.unsubscribe();
-  }, []);
+  }, [schoolId]);
 
   async function signOut() {
     const supabase = createClient();

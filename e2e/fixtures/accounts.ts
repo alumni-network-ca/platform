@@ -5,4 +5,5 @@ export const accounts = {
   admin: "admin@herzliah.test",
   alumni: "alumni@herzliah.test",
   pending: "pending@herzliah.test",
+  testSchoolAlumni: "alumni@test-school.test",
 } as const;

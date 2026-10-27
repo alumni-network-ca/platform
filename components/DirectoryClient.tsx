@@ -2,7 +2,9 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { schoolBranding } from "@/lib/school";
 import { useLanguage } from "./LanguageProvider";
+import { useSchool } from "./SchoolProvider";
 
 type Availability = {
   mentoring?: boolean;
@@ -40,6 +42,7 @@ function flagsFor(p: Profile): Availability {
 
 export function DirectoryClient({ profiles }: { profiles: Profile[] }) {
   const { locale } = useLanguage();
+  const { shortName } = schoolBranding(useSchool());
 
   const text =
     locale === "fr"
@@ -58,7 +61,7 @@ export function DirectoryClient({ profiles }: { profiles: Profile[] }) {
           location: "Lieu",
           allLocations: "Tous les lieux",
 
-          herzliahClass: "Promotion Herzliah",
+          schoolClass: `Promotion ${shortName}`,
           allClasses: "Toutes les promotions",
           classOf: "Promotion",
 
@@ -86,7 +89,7 @@ export function DirectoryClient({ profiles }: { profiles: Profile[] }) {
           tryClearing: "Essayez de supprimer un ou plusieurs filtres.",
           clearFilters: "Effacer les filtres",
 
-          herzliahAlumnus: "Ancien de Herzliah",
+          schoolAlumnus: `Ancien de ${shortName}`,
           viewProfile: "Voir le profil",
         }
       : {
@@ -103,7 +106,7 @@ export function DirectoryClient({ profiles }: { profiles: Profile[] }) {
           location: "Location",
           allLocations: "All locations",
 
-          herzliahClass: "Herzliah class",
+          schoolClass: `${shortName} class`,
           allClasses: "All classes",
           classOf: "Class of",
 
@@ -131,7 +134,7 @@ export function DirectoryClient({ profiles }: { profiles: Profile[] }) {
           tryClearing: "Try clearing one or more filters.",
           clearFilters: "Clear filters",
 
-          herzliahAlumnus: "Herzliah alumnus",
+          schoolAlumnus: `${shortName} alumnus`,
           viewProfile: "View profile",
         };
 
@@ -281,7 +284,7 @@ export function DirectoryClient({ profiles }: { profiles: Profile[] }) {
         </label>
 
         <label>
-          {text.herzliahClass}
+          {text.schoolClass}
 
           <select value={gradYear} onChange={(e) => setGradYear(e.target.value)}>
             <option value="">{text.allClasses}</option>
@@ -378,7 +381,7 @@ export function DirectoryClient({ profiles }: { profiles: Profile[] }) {
                 </h3>
 
                 <div className="profileRole">
-                  {p.job_title || p.profession || text.herzliahAlumnus}
+                  {p.job_title || p.profession || text.schoolAlumnus}
                 </div>
 
                 <div className="profileCompany">{p.current_employer || ""}</div>
