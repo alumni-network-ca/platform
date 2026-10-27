@@ -56,7 +56,18 @@ supabase stop                    # stop the local stack
 
 ## Current state
 
-The code is the V1–V4 MVP, being rebuilt to the requirements on the board. Until FND-04 lands a reviewed v2 baseline, the local schema comes from the legacy migrations `001`, `003` and `004`. The legacy *production* database also holds objects that were never committed (finding F1), so onboarding, contact and access requests can fail locally. That's expected.
+The database runs the **v2 schema** ([data model](docs/architecture/data-model.md)): three migrations in `supabase/migrations/` (schema, access rules, RPCs), with the legacy MVP migrations kept in `supabase/legacy/` for history. The app is the V1–V4 MVP being rebuilt onto it, issue by issue. The directory already reads v2; onboarding, the profile editor, admin pages, claim and request-access still use the old tables and are rewired by their M2 issues, so they fail locally until then.
+
+Local test accounts (password in the `supabase/seed.sql` header, local only):
+
+| Account | Role |
+|---|---|
+| `admin@herzliah.test` | Herzliah school admin |
+| `reviewer@herzliah.test` | Herzliah reviewer |
+| `alumni@herzliah.test` | Herzliah alumnus (published) |
+| `pending@herzliah.test` | Signed up, waiting for approval |
+| `alumni@test-school.test` | Alumnus of a second school (isolation tests) |
+| `system@alumninetwork.test` | System admin |
 
 ## Security
 

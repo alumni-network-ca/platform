@@ -3,20 +3,48 @@ import { Nav } from "@/components/Nav";
 import { DirectoryClient } from "@/components/DirectoryClient";
 import { createClient } from "@/lib/supabase/server";
 
+type DirectoryRow = {
+  id: string;
+  first_name: string;
+  last_name: string;
+  preferred_name: string | null;
+  grad_year: number;
+  city: string | null;
+  country: string | null;
+  job_title: string | null;
+  employer: string | null;
+  career_field_en: string | null;
+  schools: string[];
+  offers: string[];
+};
+
 export default async function DirectoryPage() {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/directory");
-  const { data, error } = await supabase
-    .from("alumni_profiles")
-    .select(
-      "id,first_name,last_name,grad_year,profession,current_employer,job_title,current_city,current_country,universities,availability_flags(*)",
-    )
-    .eq("is_directory_visible", true)
-    .not("claimed_at", "is", null)
-    .order("last_name");
+  // v2 schema: the school comes from its slug (host-based resolution arrives in FND-07) and rows come from
+  // search_directory, which only returns directory-safe columns. Mapped to the shape DirectoryClient still
+  // expects until the directory UI is rebuilt (DIR-02).
+  const slug = process.env.NEXT_PUBLIC_DEFAULT_INSTITUTION_SLUG ?? "herzliah";
+  const { data: school } = await supabase.rpc("public_school", { p_slug: slug });
+  const { data: rows, error } = school
+    ? await supabase.rpc("search_directory", { p_inst: school.id, p_limit: 100 })
+    : { data: [], error: null };
+  const data = (rows ?? []).map((r: DirectoryRow) => ({
+    id: r.id,
+    first_name: r.preferred_name || r.first_name,
+    last_name: r.last_name,
+    grad_year: r.grad_year,
+    profession: r.career_field_en,
+    current_employer: r.employer,
+    job_title: r.job_title,
+    current_city: r.city,
+    current_country: r.country,
+    universities: r.schools,
+    availability_flags: Object.fromEntries(r.offers.map((key) => [key, true])),
+  }));
   return (
     <>
       <Nav />
