@@ -124,7 +124,7 @@ items:
     reqs: [HL3, D3, S1, S9]
     summary: |
       Production project on the Pro plan, region ca-central-1. Auth settings: confirm email ON (documented as a
-      security precondition), Site URL and redirect allow-list, the Send Email Hook, MFA and password policy. Daily
+      security precondition), Site URL and redirect allow-list, the Send Email Hook, MFA, sign-in code length and expiry, and email rate limits. Daily
       backups (consider PITR). Network restrictions where possible. Migrations are applied by the release workflow.
     ac:
       - A configuration checklist is completed and attached to DOC-02.

@@ -20,6 +20,7 @@ Decisions marked **Accepted** were settled by the partners on 2026-10-26. Noah c
 | DEC-12 | Email sender identity | `"Herzliah Alumni Network" <noreply@alumninetwork.ca>`, Reply-To the school's alumni office. | Accepted | E1 | [0007](adr/0007-transactional-email.md) |
 | DEC-13 | Multi-school membership model | Every school is independent: separate sign-up, approval, profile and session per school. | Accepted | MT5 | [0002](adr/0002-accounts-and-memberships.md) |
 | DEC-14 | Tenancy by subdomain | `herzliah.alumninetwork.ca`; the bare `alumninetwork.ca` hosts the page for schools and the system-admin console. | Accepted | MT1, MT3 | [0001](adr/0001-tenancy-by-subdomain.md) |
+| DEC-15 | Sign-in method | A one-time code sent by email; no passwords. After sign-in, each person lands on their home page for their role and state (2026-10-27). | Accepted | S1, S4, F9 | [0014](adr/0014-passwordless-sign-in.md) |
 
 ## Technical decisions (accepted by the technical lead)
 
