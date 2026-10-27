@@ -214,3 +214,16 @@ items:
     summary: Each school at <slug>.alumninetwork.ca. The root domain hosts the "for schools" site and the platform console. Herzliah's slug is "herzliah".
     ac:
       - Approved; ADR 0001 is Accepted.
+
+  - key: DEC-15
+    state: closed
+    status: Ready
+    assignee: Gderhy
+    title: "Decision: passwordless sign-in with an emailed one-time code"
+    labels: [type:decision, area:auth, P0, launch-blocker]
+    reqs: [S1, S4, F9]
+    adr: "0014"
+    outcome: "Decided 2026-10-27 (Gab): people sign in with a one-time code sent to their email; there are no passwords. After sign-in, each person lands on the home page for their role and state at that school. Built in FND-09."
+    summary: Alumni sign in rarely, so passwords mostly create reset requests and support load. A code sent by email removes passwords, reset flows and the cross-device link problem (F9). Staff still add TOTP (FND-11).
+    ac:
+      - ADR 0014 is Accepted and FND-09 describes the code sign-in and the landing routing.

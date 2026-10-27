@@ -122,8 +122,9 @@ items:
     depends: [ONB-03]
     reqs: [F3, HL4]
     summary: |
-      Clear EN/FR pages for each state, with next steps and the support contact. Route guards: no directory or profile
-      pages until the membership is active. Server checks back the guards, not just redirects.
+      Clear EN/FR pages for each state, with next steps and the support contact. FND-09's landing routing sends each
+      state here after sign-in. Route guards: no directory or profile pages until the membership is active. Server
+      checks back the guards, not just redirects.
     ac:
       - Pending and rejected users get no private-directory data from pages or from direct API requests.
 
@@ -207,8 +208,8 @@ items:
     reqs: [E1, F9]
     summary: |
       /api/hooks/auth-email verifies the Standard Webhooks signature, picks the tenant and locale (redirect host and
-      user metadata), renders the confirm-signup, reset-password and email-change templates with token_hash links,
-      and sends through the outbox. Configured in config.toml locally and in the dashboard for staging and production.
+      user metadata), renders the sign-in code and email-change code templates (the code in the subject line and
+      the body; no links, DEC-15), and sends through the outbox. Configured in config.toml locally and in the dashboard for staging and production.
     ac:
       - Real alumni receive the auth emails (fixes F9), branded per school, in their language.
 

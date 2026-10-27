@@ -153,23 +153,38 @@ items:
       - Importing the service client from client code fails the build.
 
   - key: FND-09
-    title: "Auth flows: sign-up, sign-in, sign-out, confirm, reset and change email"
+    title: "Auth: sign-in with an emailed one-time code, and landing on the right home page"
     labels: [type:feature, area:auth, P0, launch-blocker]
     size: L
-    depends: [FND-08, FND-03]
-    reqs: [S1, S4, F3, HL4]
+    depends: [FND-07, FND-08, FND-03]
+    reqs: [S1, S4, F3, F9, HL4]
     class: Refactor
     summary: |
-      Tenant-branded EN/FR pages. /auth/confirm verifies the token_hash with verifyOtp, so links work across devices
-      (F9). Password reset completes with updateUser (F10). Change email requires re-verification. A safeNext()
-      helper accepts only relative paths (F7). Responses never reveal whether an account or record exists (S4).
-      Minimum password length 10, with leaked-password protection when on Pro.
+      Passwordless (DEC-15, ADR 0014). One school-branded EN/FR form for new and returning people: enter an email,
+      receive a 6-digit code (signInWithOtp, creating the login if the email is new), type it in (verifyOtp). The
+      answer is the same whether or not the email is known (S4), and the code works on any device (fixes F9). There
+      is no password field, reset flow or password policy anywhere. Codes last 10 minutes, work once, and can be
+      re-sent after 60 seconds. Changing email sends a code to the new address. Signing out ends the session at that
+      school only (DEC-13).
+
+      After sign-in, homeFor(user, school) sends each person to their home page at the school of the current address.
+      The same function backs the route guards and the "/" redirect for signed-in visitors:
+      - school admin or reviewer: /admin (staff who are also alumni can switch to the directory)
+      - approved alumnus who has not finished onboarding: /onboarding
+      - approved alumnus: /directory
+      - sign-up pending, needs info, or rejected: its account page from ONB-06
+      - suspended record or membership: /account/suspended
+      - nothing at this school, or a withdrawn sign-up: /join
+      - system admin on alumninetwork.ca: the console (SA-01); on a school address they are treated like anyone else
+      A ?next= path wins only when safeNext() accepts it (relative paths only, F7) and the person may open that page.
     ac:
-      - Sign-up email opened on another device works.
-      - "`?next=https://evil.example` redirects to /."
-      - The same response is returned whether or not an email exists.
+      - A code requested on a laptop and typed on a phone signs the person in.
+      - The same answer is shown whether or not an email exists.
+      - Every seeded account lands on its expected page (admin, reviewer, alumni, pending, needs info, rejected, withdrawn, suspended, outsider, system admin).
+      - "`?next=https://evil.example` lands on the home page, not the external site."
+      - The app has no password field and no reset flow.
     tests:
-      - "Unit: safeNext. E2E (Mailpit): sign-up confirm, reset, change email, EN and FR."
+      - "Unit: safeNext, and homeFor for every state. E2E (Mailpit codes): sign-in in EN and FR, a new email lands on /join, change email, and the landing page of each seeded account."
 
   - key: FND-10
     title: "Abuse protection: Turnstile on public forms and a Postgres rate limiter"
@@ -178,9 +193,9 @@ items:
     depends: [FND-09]
     reqs: [S4, S6]
     summary: |
-      Cloudflare Turnstile is verified server-side on sign-up, sign-in, reset and access requests. The
+      Cloudflare Turnstile is verified server-side on the sign-in code request and on access requests. The
       check_rate_limit(bucket, key, max, window) function is used by public RPCs and contact reveals. Auth rate
-      limits are reviewed in config.
+      limits (codes sent per email per hour, code checks per IP) are reviewed in config.
     ac:
       - Requests without a valid token are rejected.
       - Exceeding a limit returns a localized "try again later" without leaking state.

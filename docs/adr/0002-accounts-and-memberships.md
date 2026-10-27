@@ -19,5 +19,5 @@ A person may have attended more than one participating school. The PDF requires 
 ## Consequences
 
 - No query ever joins profiles across institutions, and no page shows that a person belongs to another school.
-- The one thing a person in two schools shares is their password, because it belongs to the email identity. Signing up at a second school with an existing email signs in with that password instead of creating a new one. The page says only "sign in to continue", so it reveals nothing about the other school.
+- The one thing a person in two schools shares is their email identity. Sign-in is by a code sent to that email (ADR 0014), so joining a second school uses the same form as everyone else and reveals nothing about the other school.
 - Deleting a profile removes that school's membership and profile. The login is deleted only when no membership is left.
