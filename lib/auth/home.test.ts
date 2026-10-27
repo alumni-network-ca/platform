@@ -90,6 +90,8 @@ describe("canOpen", () => {
     expect(canOpen(pending, "/account/rejected")).toBe(false);
     expect(canOpen(pending, "/directory")).toBe(false);
     expect(canOpen(pending, "/account/email")).toBe(true);
+    expect(canOpen(pending, "/account/password")).toBe(true);
+    expect(canOpen(none, "/account/password")).toBe(true);
   });
 
   it("does not treat look-alike prefixes as the same page", () => {

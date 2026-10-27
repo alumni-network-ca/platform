@@ -186,6 +186,7 @@ enable_anonymous_sign_ins = false
 # Allow/disallow testing manual linking of accounts
 enable_manual_linking = false
 # Passwords shorter than this value will be rejected as weak. Minimum 6, recommended 8 or more.
+# Passwords are optional (ADR 0015): length only, no composition rules (NIST SP 800-63B).
 minimum_password_length = 10
 # Passwords that do not meet the following requirements will be rejected as weak. Supported values
 # are: `letters_digits`, `lower_upper_letters_digits`, `lower_upper_letters_digits_symbols`
@@ -238,7 +239,7 @@ secure_password_change = true
 # Production waits 60 s (ADR 0014; the sign-in page also waits 60 s before offering a new code). Kept short here so
 # end-to-end tests can re-run immediately.
 max_frequency = "1s"
-# Sign-in is by an emailed code, not a password (DEC-15, ADR 0014): 6 digits, valid 10 minutes.
+# Sign-in codes (ADR 0014): 6 digits, valid 10 minutes. A password is optional (ADR 0015).
 otp_length = 6
 otp_expiry = 600
 

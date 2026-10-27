@@ -35,6 +35,7 @@ items:
       - Switching an institution's branding changes the logo and colours without a code change.
       - Contrast ≥ WCAG AA, visible focus states, keyboard-operable menus and dialogs.
       - The layout works at 360 px and 1440 px.
+      - On a phone, the account menu reaches My profile, Password and the sign-in email (today the header hides those links below 600 px).
     tests:
       - Playwright screenshot at mobile and desktop; axe has no serious violations on the shell.
 
@@ -278,9 +279,15 @@ items:
       - **Secrets:** each environment has its own (no production secrets in preview). docs/runbooks/secrets.md covers
         storage, rotation and who has access.
       - **Email:** staging sends only to an allow-list.
+      - **Auth settings:** each hosted project gets the sign-in settings from supabase/config.toml (6-digit codes valid
+        10 minutes, the code templates in supabase/templates, passwords of at least 10 characters, a recent sign-in to
+        change one) through `supabase config push` with only those properties declared.
+        A free project refuses template changes while it uses Supabase's built-in sender, so custom SMTP (Resend,
+        BIZ-04) comes first; EML-04 later replaces the templates with the branded hook.
     ac:
       - A merge to dev deploys the app and applies migrations to staging automatically.
       - A production secret never appears in preview/staging env.
+      - Signing in on staging emails a 6-digit code, not a link.
 
   - key: FND-17
     title: "Observability: Sentry, structured logging, health check and job heartbeats"
@@ -296,3 +303,43 @@ items:
     ac:
       - A thrown test error appears in Sentry without personal data.
       - A stopped job turns the health check red within 26 h.
+
+  - key: FND-18
+    title: "Sign-in code entered in six boxes"
+    labels: [type:feature, area:auth, area:ui, P1]
+    size: S
+    depends: [FND-09]
+    reqs: [F3, QA3]
+    summary: |
+      The sign-in and email-change forms take the code in six boxes, one digit each, like other services that send
+      codes. One ordinary input lies under the boxes, so paste (including "123 456"), the browser's one-time-code
+      autofill, the keyboard and screen readers work as for any field. The boxes only draw its value and stay
+      outside the label, so the digits never become part of the field's name.
+    ac:
+      - Typing or pasting a code fills one box per digit; letters and spaces are dropped and a seventh digit is ignored.
+      - The field's accessible name is its label alone, and the code step has no serious or critical axe violations.
+      - The boxes fit a 375 px screen without sideways scrolling.
+    tests:
+      - "Unit: CodeInput (digits only, paste, six-digit cap, current box, label). E2E: the six boxes and an axe scan of the code step, desktop and mobile."
+
+  - key: FND-19
+    title: "Password sign-in alongside the emailed code"
+    labels: [type:feature, area:auth, P0, launch-blocker]
+    size: M
+    depends: [FND-09]
+    reqs: [S1, S4, F9]
+    adr: "0015"
+    class: Build
+    summary: |
+      DEC-16, ADR 0015. The sign-in page offers "Send me a code" and "Sign in with a password". A signed-in person sets
+      or changes a password at /account/password (at least 10 characters; a change needs a sign-in within 24 hours),
+      linked from the header and the change-email page. There is no reset link: a forgotten password is replaced
+      after a code sign-in. Every password failure shows the same message (S4). When codes can't be sent (rate
+      limit), the page suggests the password.
+    ac:
+      - A seeded account signs in with its password and lands on its home page.
+      - A wrong password, an unknown email and an account without a password show the same message.
+      - After a code sign-in, a person sets a password and can then sign in with it.
+      - A password shorter than 10 characters is refused.
+    tests:
+      - "Unit: canOpen for /account/password. E2E: password sign-in for a seeded account, one message for every failure, a password set after a code sign-in then used, a short password refused."

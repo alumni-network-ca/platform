@@ -1,6 +1,8 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import Link from "next/link";
+import { CodeInput } from "@/components/CodeInput";
 import { useLanguage } from "@/components/LanguageProvider";
 import { createClient } from "@/lib/supabase/client";
 
@@ -21,6 +23,7 @@ const TEXT = {
     done: (email: string) => `Done. You now sign in with ${email}.`,
     badCode: "A code is wrong or has expired.",
     failed: "We could not start the change. Check the address and try again.",
+    password: "Set or change your password",
   },
   fr: {
     title: "Changer votre adresse de connexion",
@@ -35,21 +38,9 @@ const TEXT = {
     done: (email: string) => `C'est fait. Vous vous connectez maintenant avec ${email}.`,
     badCode: "Un code est erroné ou expiré.",
     failed: "Impossible de lancer le changement. Vérifiez l'adresse et réessayez.",
+    password: "Choisir ou changer votre mot de passe",
   },
 };
-
-const codeInput = (value: string, onChange: (value: string) => void) => (
-  <input
-    className="input"
-    inputMode="numeric"
-    autoComplete="one-time-code"
-    pattern="[0-9]{6}"
-    maxLength={6}
-    value={value}
-    onChange={(e) => onChange(e.target.value.replace(/\D/g, ""))}
-    required
-  />
-);
 
 export function EmailChange({ currentEmail }: { currentEmail: string }) {
   const { locale } = useLanguage();
@@ -118,14 +109,12 @@ export function EmailChange({ currentEmail }: { currentEmail: string }) {
           <p className="notice" role="status">
             {t.sent}
           </p>
-          <label>
-            {t.codeNew(newEmail.trim())}
-            {codeInput(codeNew, setCodeNew)}
-          </label>
-          <label>
-            {t.codeCurrent(currentEmail)}
-            {codeInput(codeCurrent, setCodeCurrent)}
-          </label>
+          <CodeInput label={t.codeNew(newEmail.trim())} value={codeNew} onChange={setCodeNew} />
+          <CodeInput
+            label={t.codeCurrent(currentEmail)}
+            value={codeCurrent}
+            onChange={setCodeCurrent}
+          />
           <button className="btn btnPrimary btnWide" disabled={busy}>
             {busy ? t.working : t.confirm}
           </button>
@@ -141,6 +130,9 @@ export function EmailChange({ currentEmail }: { currentEmail: string }) {
           {message}
         </div>
       )}
+      <div className="authFooter">
+        <Link href="/account/password">{t.password}</Link>
+      </div>
     </>
   );
 }

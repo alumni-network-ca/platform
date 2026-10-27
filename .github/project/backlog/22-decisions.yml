@@ -227,3 +227,16 @@ items:
     summary: Alumni sign in rarely, so passwords mostly create reset requests and support load. A code sent by email removes passwords, reset flows and the cross-device link problem (F9). Staff still add TOTP (FND-11).
     ac:
       - ADR 0014 is Accepted and FND-09 describes the code sign-in and the landing routing.
+
+  - key: DEC-16
+    state: closed
+    status: Ready
+    assignee: Gderhy
+    title: "Decision: optional password alongside the emailed code"
+    labels: [type:decision, area:auth, P0, launch-blocker]
+    reqs: [S1, S4, F9]
+    adr: "0015"
+    outcome: "Decided 2026-10-27 (Gab): people can also sign in with a password, which they set after signing in with a code. There is no reset link; a forgotten password is replaced after a code sign-in. Amends DEC-15. Built in FND-19."
+    summary: With codes only, every sign-in costs an email, and sending is rate-limited (about two auth emails an hour on a free Supabase project with the built-in sender). A password lets returning people and testers sign in without waiting for the inbox.
+    ac:
+      - ADR 0015 is Accepted and FND-19 describes the password option.

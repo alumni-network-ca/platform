@@ -1,6 +1,6 @@
 # 0014: Passwordless sign-in with an emailed one-time code, and landing routing
 
-- **Status:** Accepted (DEC-15, 2026-10-27) · **Date:** 2026-10-27 · **Requirements:** S1, S4, F9 · **Built in:** FND-09
+- **Status:** Accepted (DEC-15, 2026-10-27); amended by [0015](0015-optional-password.md), which adds an optional password · **Date:** 2026-10-27 · **Requirements:** S1, S4, F9 · **Built in:** FND-09
 
 ## Context
 

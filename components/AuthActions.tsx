@@ -99,6 +99,9 @@ export function AuthActions() {
           Admin
         </Link>
       )}
+      <Link className="accountLink" href="/account/password">
+        Password
+      </Link>
       {state.hasProfile && (
         <Link className="btn btnGhost" href="/me">
           My profile

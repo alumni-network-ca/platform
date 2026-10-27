@@ -48,7 +48,8 @@ export function canOpen(state: AccountState, path: string): boolean {
   if (under("/directory") || under("/profile")) return canUseDirectory(state);
   if (under("/admin")) return isStaff(state);
   if (under("/onboarding") || under("/me")) return hasActiveProfile(state);
-  if (pathname === "/account/email") return true;
+  // Sign-in settings are open to anyone signed in, whatever their state at this school.
+  if (pathname === "/account/email" || pathname === "/account/password") return true;
   if (under("/account") || under("/join")) return homeFor(state) === pathname;
   return true;
 }
