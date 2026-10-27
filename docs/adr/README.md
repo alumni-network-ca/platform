@@ -21,4 +21,5 @@ Each ADR records one decision: its context, the decision itself and its conseque
 | [0011](0011-environments-and-hosting.md) | Environments, hosting and cost | Proposed | BIZ-05 |
 | [0012](0012-observability.md) | Observability and alerting | Accepted | — |
 | [0013](0013-git-workflow.md) | Git workflow and releases | Accepted | — |
-| [0014](0014-passwordless-sign-in.md) | Passwordless sign-in with an emailed code, and landing routing | Accepted | DEC-15 |
+| [0014](0014-passwordless-sign-in.md) | Passwordless sign-in with an emailed code, and landing routing | Accepted, amended by 0015 | DEC-15 |
+| [0015](0015-optional-password.md) | Optional password alongside the emailed code | Accepted | DEC-16 |

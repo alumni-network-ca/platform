@@ -532,6 +532,9 @@ textarea:focus {
   font-size: 13px;
   font-weight: 700;
 }
+.authForm .microcopy {
+  margin: 0;
+}
 /* Six-box code entry (components/CodeInput.tsx): the real input lies invisible over the boxes. */
 .codeInput {
   position: relative;

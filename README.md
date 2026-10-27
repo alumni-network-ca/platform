@@ -33,7 +33,7 @@ Open **http://herzliah.localhost:3000**. The subdomain selects the school: `test
 
 `supabase start` applies `supabase/migrations/*` and then `supabase/seed.sql`. The seed contains fictional demo alumni for both schools plus local test accounts, listed below and at the top of [supabase/seed.sql](supabase/seed.sql).
 
-To sign in, enter one of those emails at `/login`: the 6-digit code arrives in Mailpit (http://127.0.0.1:54324). There are no passwords in the app (ADR 0014); the seed accounts keep a local-only password so tests and scripts can sign in through the API.
+To sign in, enter one of those emails at `/login`: the 6-digit code arrives in Mailpit (http://127.0.0.1:54324). Or choose "Sign in with a password": every seed account has the local-only password `LocalDev-Passw0rd` (ADR 0015). Any account can set its own password at `/account/password` after signing in with a code.
 
 ### Local services
 

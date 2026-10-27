@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import { blockingViolations } from "./fixtures/a11y";
-import { accounts } from "./fixtures/accounts";
+import { accounts, LOCAL_PASSWORD } from "./fixtures/accounts";
 import { clearInbox, codeFor, newAddress } from "./fixtures/mailpit";
 import { addressOf } from "./fixtures/session";
 
@@ -120,5 +120,88 @@ test.describe("sign-in with an emailed code", () => {
     await page.getByLabel(`Code sent to ${before}`).fill(await codeFor(before));
     await page.getByRole("button", { name: "Change my email" }).click();
     await expect(page.getByRole("status")).toHaveText(`Done. You now sign in with ${after}.`);
+  });
+});
+
+// The optional password (DEC-16, ADR 0015), set after a code sign-in.
+async function signInWithPassword(page: Page, email: string, password: string) {
+  await page.goto("/login");
+  await page.getByRole("button", { name: "Sign in with a password" }).click();
+  await page.getByLabel("Email address").fill(email);
+  await page.getByLabel("Password", { exact: true }).fill(password);
+  await page.getByRole("button", { name: "Sign in", exact: true }).click();
+}
+
+const badPassword = (page: Page) =>
+  expect(page.locator(".notice[role=alert]")).toHaveText("Wrong email or password.");
+
+test.describe("sign-in with a password", () => {
+  test("a seeded account signs in with its password and lands on its home page", async ({
+    page,
+    baseURL,
+  }) => {
+    await signInWithPassword(page, accounts.alumni, LOCAL_PASSWORD);
+    await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/directory"));
+  });
+
+  test("a wrong password, an unknown email and a code-only account get the same answer", async ({
+    page,
+    baseURL,
+  }) => {
+    await signInWithPassword(page, accounts.alumni, "not-the-password");
+    await badPassword(page);
+    await signInWithPassword(page, newAddress("nobody"), LOCAL_PASSWORD);
+    await badPassword(page);
+
+    const codeOnly = newAddress("code-only");
+    await page.goto("/login");
+    await requestCode(page, codeOnly);
+    await enterCode(page, await codeFor(codeOnly));
+    await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/join"));
+    await page.context().clearCookies();
+    await signInWithPassword(page, codeOnly, LOCAL_PASSWORD);
+    await badPassword(page);
+    await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/login"));
+  });
+
+  test("a password set after a code sign-in works next time", async ({ page, baseURL }) => {
+    const email = newAddress("sets-password");
+    const password = `Long-enough-${Date.now()}`;
+    await page.goto("/login");
+    await requestCode(page, email);
+    await enterCode(page, await codeFor(email));
+    await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/join"));
+
+    await page.goto("/account/password");
+    const field = page.getByLabel("New password");
+    await field.fill("short");
+    await page.getByLabel("Type it again").fill("short");
+    await page.getByRole("button", { name: "Save my password" }).click();
+    expect(await field.evaluate((input: HTMLInputElement) => input.validity.tooShort)).toBe(true);
+
+    await field.fill(password);
+    await page.getByLabel("Type it again").fill(`${password}x`);
+    await page.getByRole("button", { name: "Save my password" }).click();
+    await expect(page.locator(".notice[role=alert]")).toHaveText(
+      "The two passwords are different.",
+    );
+
+    await page.getByLabel("Type it again").fill(password);
+    await page.getByRole("button", { name: "Save my password" }).click();
+    await expect(page.locator(".notice[role=status]")).toContainText("Your password is saved.");
+
+    await page.context().clearCookies();
+    await signInWithPassword(page, email, password);
+    await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/join"));
+  });
+
+  test("the password page asks a signed-out visitor to sign in first", async ({
+    page,
+    baseURL,
+  }) => {
+    await page.goto("/account/password");
+    await expect(page).toHaveURL(
+      addressOf(baseURL!, "herzliah", "/login?next=%2Faccount%2Fpassword"),
+    );
   });
 });
