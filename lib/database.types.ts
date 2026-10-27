@@ -1271,6 +1271,7 @@ export type Database = {
         Returns: string;
       };
       delete_my_profile: { Args: { p_inst: string }; Returns: undefined };
+      directory_profile_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
       enqueue_email: {
         Args: {
           p_inst: string;
@@ -1314,7 +1315,9 @@ export type Database = {
         Returns: undefined;
       };
       mint_token: { Args: { p_id: string; p_kind: string }; Returns: string };
+      my_profile_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
       owns_profile: { Args: { p_profile: string }; Returns: boolean };
+      permitted_institutions: { Args: { p_perm: string }; Returns: string[] };
       platform_add_admin: { Args: { p_email: string }; Returns: string };
       platform_appoint_school_admin: { Args: { p_email: string; p_inst: string }; Returns: string };
       platform_create_school: {
@@ -1331,7 +1334,6 @@ export type Database = {
         Returns: string;
       };
       platform_revoke_grant: { Args: { p_grant: string }; Returns: undefined };
-      profile_is_visible: { Args: { p_profile: string }; Returns: boolean };
       public_school: { Args: { p_slug: string }; Returns: Json };
       record_confirmation: {
         Args: { p_profile: string; p_source: Database["public"]["Enums"]["confirmation_source"] };

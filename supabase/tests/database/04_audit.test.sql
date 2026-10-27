@@ -248,8 +248,9 @@ select set_eq(
     'platform_create_school', 'platform_appoint_school_admin', 'platform_open_grant', 'platform_revoke_grant',
     -- not audited on purpose: reads, preferences, and contact reveals (contact_events)
     'public_school', 'search_directory', 'set_my_locale', 'initiate_contact',
-    -- RLS helpers used inside policies
-    'is_system_admin', 'has_active_grant', 'is_member', 'has_permission', 'owns_profile', 'profile_is_visible'
+    -- RLS helpers used inside policies (and by search_directory, which runs as the caller)
+    'is_system_admin', 'has_active_grant', 'is_member', 'has_permission', 'permitted_institutions', 'my_profile_ids',
+    'directory_profile_ids'
   ],
   'every client-callable function is audited, deliberately unaudited, or an RLS helper'
 );

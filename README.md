@@ -50,6 +50,7 @@ supabase db reset                # rebuild the local DB from migrations + seed
 supabase migration new <name>    # new schema change; never edit applied migrations
 npm run db:types                 # regenerate lib/database.types.ts after a migration
 npm run seed:perf                # add 10,000 alumni per school (local only; db reset removes them)
+npm run bench:directory          # time the directory search (p50/p95) after seed:perf
 npm run check                    # lint + typecheck + format check + unit tests
 npm run test:db                  # pgTAP database tests (stack must be running)
 npm run test:e2e                 # Playwright end-to-end + accessibility tests
