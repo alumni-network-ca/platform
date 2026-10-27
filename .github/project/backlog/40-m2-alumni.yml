@@ -111,6 +111,8 @@ items:
     ac:
       - A failed step never loses data saved earlier.
       - All copy is in EN and FR.
+      - One shared server-side check decides whether onboarding is complete, and /me (PRF-02) reuses it.
+      - /onboarding redirects to /me only when that check succeeds and says complete; a failed query shows an error, never a redirect.
 
   - key: ONB-06
     title: "Account state pages: pending, needs info, rejected, suspended"
@@ -261,6 +263,7 @@ items:
     ac:
       - Edits persist, and the directory reflects them immediately.
       - Admin-only fields can't be changed by the alumnus (enforced by the DB trigger).
+      - /me redirects to /onboarding only when the ONB-05 check succeeds and says incomplete; a failed query shows an error, so the two pages can't redirect to each other in a loop.
 
   - key: PRF-03
     title: "Contact channels editor (at least one to publish)"
