@@ -125,7 +125,11 @@ The duplicate hints admins see come from a view, `access_request_duplicates`: sa
 Helper functions are all `stable`, `security definer`, with `search_path = ''`:
 - `has_permission(inst, perm)`: true when the caller has an `active` membership in `inst` whose role holds `perm`. It also covers a system admin with an active grant for `inst`, but only for `*.read` permissions.
 - `is_system_admin()`.
-- `my_profile_id(inst)`.
+- `permitted_institutions(perm)`: the schools where `has_permission` is true for the caller.
+- `my_profile_ids()`: the caller's own profiles.
+- `directory_profile_ids()`: active, published profiles at the schools whose directory the caller may use.
+
+Policies never call a check once per row: they test `institution_id in (select permitted_institutions('…'))` or `profile_id in (select my_profile_ids())`, and wrap `auth.uid()` and `is_system_admin()` as `(select …)`, so each set is computed once per statement. Per-row calls made a 10k-profile directory search take over 3 s; `00_structure` now fails if a policy calls `has_permission` or `owns_profile` per row.
 
 ## 5. Access matrix (RLS)
 
@@ -207,7 +211,7 @@ Each job writes `job_runs`. A missing run raises an alert (OPS-03).
 - `email_outbox` (`status`, `next_attempt_at`).
 - `audit_log` (`institution_id`, `created_at`).
 
-Targets come from AUDIT-06: `search_directory` p95 under 300 ms at 10k profiles per school (QA-06).
+Targets come from AUDIT-06: `search_directory` p95 under 300 ms at 10k profiles per school (QA-06). Measured locally on 2026-10-27 with `npm run seed:perf` and `npm run bench:directory` (alumnus, through the API, 50 runs): p95 between 59 and 124 ms across the seven benchmark cases, against 3.1–3.6 s (and timeouts on the offer and school filters) before the set-based policies.
 
 ## 9. ERD
 

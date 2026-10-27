@@ -32,6 +32,15 @@ select is(
   'no table has an insert, update or delete policy'
 );
 
+-- Policies test membership in per-statement sets (permitted_institutions, my_profile_ids, directory_profile_ids).
+-- A per-row call to a security definer check made a 10,000-profile directory search take over 3 s (DIR-01).
+select is(
+  (select array_agg(tablename || '.' || policyname order by tablename) from pg_policies
+   where schemaname = 'public' and qual ~ '(has_permission|owns_profile)\('),
+  null,
+  'no policy calls a permission check once per row'
+);
+
 -- Every function sets its search_path, and every non-trigger function in public is security definer,
 -- except search_directory, which runs under the caller's RLS on purpose.
 select is(
