@@ -4,8 +4,10 @@ import { Nav } from "@/components/Nav";
 import { ProfileEditor } from "@/components/ProfileEditor";
 // Legacy schema until PRF-02 (#118) rewires it.
 import { createLegacyClient as createClient } from "@/lib/supabase/server";
+import { requireAccess } from "@/lib/auth/account";
 
 export default async function MyProfilePage() {
+  await requireAccess("/me");
   const supabase = await createClient();
   const {
     data: { user },

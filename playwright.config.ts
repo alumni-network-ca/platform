@@ -15,6 +15,8 @@ export default defineConfig({
   reporter: CI
     ? [["github"], ["html", { open: "never" }]]
     : [["list"], ["html", { open: "never" }]],
+  // Locally the dev server compiles each page on its first visit, which can outlast the default 5 s.
+  expect: { timeout: CI ? 5_000 : 15_000 },
   use: {
     baseURL,
     trace: "retain-on-failure",

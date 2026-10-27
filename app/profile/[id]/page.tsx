@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { Nav } from "@/components/Nav";
+import { requireAccess } from "@/lib/auth/account";
 import { ContactAlumnusButton } from "@/components/ContactAlumnusButton";
 // Legacy schema until DIR-03 (#126) rewires it.
 import { createLegacyClient as createClient } from "@/lib/supabase/server";
@@ -19,6 +20,7 @@ const labels: Record<string, string> = {
 
 export default async function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  await requireAccess(`/profile/${id}`);
 
   const supabase = await createClient();
 

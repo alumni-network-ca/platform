@@ -5,8 +5,8 @@ import type { Database } from "@/lib/database";
 
 export type Target = { url: string; secretKey: string };
 
-/** API URL and keys of the local stack started with `supabase start`. */
-export function localStack(): Target & { publishableKey: string } {
+/** API URL, keys and Mailpit URL of the local stack started with `supabase start`. Also used by e2e tests. */
+export function localStack(): Target & { publishableKey: string; mailpitUrl: string } {
   const output = execFileSync("supabase", ["status", "-o", "env"], { encoding: "utf8" });
   const env = new Map(
     output.split(/\r?\n/).flatMap((line) => {
@@ -17,9 +17,10 @@ export function localStack(): Target & { publishableKey: string } {
   const url = env.get("API_URL");
   const secretKey = env.get("SECRET_KEY") ?? env.get("SERVICE_ROLE_KEY");
   const publishableKey = env.get("PUBLISHABLE_KEY") ?? env.get("ANON_KEY");
+  const mailpitUrl = env.get("MAILPIT_URL") ?? env.get("INBUCKET_URL") ?? "http://127.0.0.1:54324";
   if (!url || !secretKey || !publishableKey)
     throw new Error("The local stack is not running: start it with `supabase start`.");
-  return { url, secretKey, publishableKey };
+  return { url, secretKey, publishableKey, mailpitUrl };
 }
 
 export function isLocal(url: string): boolean {

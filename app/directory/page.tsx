@@ -1,18 +1,11 @@
-import { redirect } from "next/navigation";
 import { Nav } from "@/components/Nav";
 import { DirectoryClient } from "@/components/DirectoryClient";
+import { requireAccess } from "@/lib/auth/account";
 import { schoolBranding } from "@/lib/school";
-import { createClient } from "@/lib/supabase/server";
-import { requireSchool } from "@/lib/tenant/server";
 
 export default async function DirectoryPage() {
-  const school = await requireSchool();
+  const { school, supabase } = await requireAccess("/directory");
   const { shortName } = schoolBranding(school);
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/login?next=/directory");
   // Rows come from search_directory for the school of this address, with directory-safe columns only. Mapped
   // to the shape DirectoryClient still expects until the directory UI is rebuilt (DIR-02).
   const { data: rows, error } = await supabase.rpc("search_directory", {

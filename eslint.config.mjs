@@ -27,11 +27,9 @@ export default defineConfig([
     // remove it from this list in that PR.
     files: [
       "app/admin/page.tsx",
-      "app/claim/page.tsx",
       "app/me/page.tsx",
       "app/onboarding/page.tsx",
       "app/profile/[[]id]/page.tsx",
-      "app/request-access/page.tsx",
       "components/AdminImport.tsx",
       "components/ContactAlumnusButton.tsx",
       "components/OnboardingClient.tsx",
