@@ -27,6 +27,8 @@ How we plan, build, review and release the Alumni Network platform. The rules ar
 | `npm run test:e2e` | Playwright end-to-end and axe accessibility tests in `e2e/`, desktop and mobile. Starts `next dev` automatically. First run `npx playwright install chromium`. |
 | `npm run test:db` | pgTAP database tests (`supabase/tests/`); needs the local Supabase stack (Docker) |
 | `npm run db:types` | Regenerates `lib/database.types.ts` from the local database. Run it after every migration and commit the result. |
+| `npm run seed:perf` | Adds 10,000 alumni per school to the local stack for performance checks (`-- --count N` for fewer). Refuses any non-local database. |
+| `npm run admin:bootstrap -- --email <email>` | Makes a verified account a system admin. Locally it uses the running stack; for staging or production set `SUPABASE_URL` and `SUPABASE_SECRET_KEY`. |
 | `npm run lint:fix` / `npm run format` | Auto-fix lint issues / format everything |
 | `npm run backlog:check` / `npm run backlog:seed` | Preview / apply backlog YAML changes to GitHub |
 
@@ -90,6 +92,7 @@ To reproduce a CI failure locally, run the same commands. The Supabase CLI versi
 - Query the database through `createClient()` from `lib/supabase/{server,client}.ts`, typed from the generated `lib/database.types.ts`. Where the generator is too loose (jsonb results, nullable function columns), narrow the type in `lib/database.ts`. `createLegacyClient()` exists only for the pages still on the legacy schema, listed in `eslint.config.mjs`.
 - Every table holding institution data has `institution_id`, RLS enabled, and pgTAP tests for each role.
 - Every `security definer` function sets `search_path`, checks permissions in its first statement, and revokes `execute` from `public`/`anon` unless anon access is intended.
+- A new client RPC needs three tests: refused across schools and above its role (`03_rpc_matrix`), one audit row when it succeeds (`04_audit`), and its name in the `04_audit` list of client-callable functions, which fails until it is added.
 
 ## Security rules
 

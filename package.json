@@ -17,6 +17,8 @@
     "test:e2e": "playwright test",
     "test:db": "supabase test db",
     "db:types": "supabase gen types typescript --local --schema public > lib/database.types.ts && prettier --write lib/database.types.ts",
+    "seed:perf": "node scripts/seed-perf.ts",
+    "admin:bootstrap": "node scripts/admin/bootstrap-platform-admin.ts",
     "check": "npm run lint && npm run typecheck && npm run format:check && npm run test",
     "backlog:seed": "node scripts/github/seed-backlog.mjs",
     "backlog:check": "node scripts/github/seed-backlog.mjs --dry-run"

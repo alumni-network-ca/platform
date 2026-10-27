@@ -1315,6 +1315,7 @@ export type Database = {
       };
       mint_token: { Args: { p_id: string; p_kind: string }; Returns: string };
       owns_profile: { Args: { p_profile: string }; Returns: boolean };
+      platform_add_admin: { Args: { p_email: string }; Returns: string };
       platform_appoint_school_admin: { Args: { p_email: string; p_inst: string }; Returns: string };
       platform_create_school: {
         Args: {
