@@ -60,7 +60,7 @@ items:
     assignee: castielnoah-art
     track: Legal
     summary: |
-      Law 25 / PIPEDA / CASL readiness: counsel review of school-imported records, privacy policy and terms, a DPA with
+      Law 25 / PIPEDA / CASL readiness: counsel review of the sign-up and approval model, privacy policy and terms, a DPA with
       the school, a privacy impact assessment and email compliance.
 
   - key: EPIC-HERZ
@@ -83,10 +83,10 @@ items:
       Gate: the two-tenant isolation suite passes for every role.
 
   - key: EPIC-ONB
-    title: "Epic: Onboarding, invitations & claims"
+    title: "Epic: Onboarding, sign-up & approval"
     milestone: M2
     labels: [type:epic, area:onboarding, launch-blocker]
-    summary: Invitations, invitation claims, self-registration, the admin review queue, the onboarding wizard and account states.
+    summary: Sign-up from the school's join link, the admin approval queue, the onboarding wizard and account states. Invitations come later with CSV import.
 
   - key: EPIC-EML
     title: "Epic: Transactional email"
@@ -119,10 +119,10 @@ items:
     summary: Admin shell, dashboard, roster, record actions, approval queue, staff roles, audit viewer and institution settings.
 
   - key: EPIC-IMPEXP
-    title: "Epic: CSV import & filtered export"
+    title: "Epic: Filtered export (CSV import later)"
     milestone: M2
     labels: [type:epic, area:import-export, launch-blocker]
-    summary: Documented CSV template, validation and preview, idempotent commit, bulk invite, and secure CSV/XLSX export.
+    summary: Secure, filtered CSV/XLSX export. The CSV import tasks (IMP-*) are in Future (DEC-01).
 
   - key: EPIC-FRS
     title: "Epic: Annual confirmation & profile freshness"
@@ -134,7 +134,7 @@ items:
     title: "Epic: Platform admin & institution provisioning"
     milestone: M2
     labels: [type:epic, area:platform, launch-blocker]
-    summary: Platform console, institution creation and configuration, appointing the first owner, the provisioning runbook and platform health.
+    summary: Platform console, institution creation and configuration, appointing the first school admin, the provisioning runbook and platform health.
 
   - key: EPIC-PUB
     title: "Epic: Public & legal pages"
@@ -164,7 +164,7 @@ items:
     title: "Epic: Herzliah pilot launch"
     milestone: M4
     labels: [type:epic, launch-blocker]
-    summary: Acceptance, training, the production release, invitation waves, pilot monitoring and the pilot review.
+    summary: Acceptance, training, the production release, opening sign-ups, pilot monitoring and the pilot review.
 
   - key: EPIC-FUT
     title: "Epic: Future modules (need separate scope approval)"

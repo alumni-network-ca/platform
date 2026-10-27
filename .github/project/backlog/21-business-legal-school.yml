@@ -21,14 +21,14 @@ items:
 
   - key: BIZ-02
     status: Ready
-    title: "Register alumni-network.ca with DNS on Vercel"
+    title: "Register alumninetwork.ca with DNS on Vercel"
     epic: EPIC-BIZ
     milestone: M0
     labels: [type:infra, area:ops, P0, launch-blocker, needs-noah]
     size: XS
     summary: |
-      Buy alumni-network.ca with the shared admin address as registrant contact and auto-renew on.
-      Point the nameservers to Vercel (required for wildcard subdomains such as herzliah.alumni-network.ca, ADR 0001).
+      Buy alumninetwork.ca with the shared admin address as registrant contact and auto-renew on.
+      Point the nameservers to Vercel (required for wildcard subdomains such as herzliah.alumninetwork.ca, ADR 0001).
       Fallback names if it's taken: alumninetwork.ca or alumni-network.app.
     ac:
       - The domain is owned by the business account, with auto-renew on.
@@ -43,7 +43,7 @@ items:
     size: XS
     depends: [BIZ-02]
     summary: |
-      Create admin@alumni-network.ca, forwarding to both partners (free, via Vercel/ImprovMX/Zoho), to own every service
+      Create admin@alumninetwork.ca, forwarding to both partners (free, via Vercel/ImprovMX/Zoho), to own every service
       account (requirements §8 handover: no dependence on one person's credentials). Also create support@ for alumni
       and school support.
     ac:
@@ -59,7 +59,7 @@ items:
     size: S
     depends: [BIZ-03]
     summary: |
-      Create these under admin@alumni-network.ca:
+      Create these under admin@alumninetwork.ca:
       - a Supabase org "Alumni Network" (production, ca-central-1, Pro at launch)
       - a Supabase org "Alumni Network Staging" (free)
       - a Vercel team
@@ -121,7 +121,7 @@ items:
   # ---------------------------------------------------------------- legal
   - key: LEGAL-01
     status: Ready
-    title: "Counsel review: liability for school-imported records and accounts created on behalf of alumni"
+    title: "Counsel review: roles, legal basis and consent for school-promoted alumni sign-up"
     epic: EPIC-LEGAL
     milestone: M1
     track: Legal
@@ -131,9 +131,10 @@ items:
     summary: |
       Questions for a Quebec privacy lawyer:
       - Is Herzliah the controller (the person in charge of personal information) and we the processor/service provider?
-      - What is the legal basis for importing graduates and emailing them an invitation, and who is liable if a record is wrong?
+      - The school emails its alumni the sign-up link and admins approve each sign-up: what is the legal basis, and who is liable for a wrong approval?
+      - Do the retention rules (DEC-08: purge 30 days after deletion, rejected sign-ups after 90 days, logs 2 years) comply?
       - Law 25 obligations: privacy officer, privacy impact assessment, incident register, consent for directory publication.
-      - PIPEDA, and CASL for invitation and confirmation emails.
+      - PIPEDA, and CASL for approval, reminder and annual confirmation emails.
       - The minimum contract terms with the school.
       Gab supplies the data inventory and the flows (documentation/diagrams).
     ac:
@@ -162,7 +163,7 @@ items:
     depends: [LEGAL-01]
     summary: Roles, purposes, retention, security measures, incident notification, sub-processors (Supabase, Vercel, Resend, Sentry, Cloudflare) and the end-of-contract data return/deletion.
     ac:
-      - The DPA is signed by Herzliah before any real alumni data is imported (OPS-05 / LCH-04).
+      - The DPA is signed by Herzliah before any real alumni sign up (LCH-04).
 
   - key: LEGAL-04
     title: "Privacy impact assessment (Law 25) for processing outside Quebec"
@@ -175,7 +176,7 @@ items:
     summary: The database is in Canada (ca-central-1). The app/CDN (Vercel), email (Resend) and error monitoring (Sentry) may process data outside Quebec. Document the assessment that counsel requires.
 
   - key: LEGAL-05
-    title: "CASL review of invitation, reminder and annual confirmation emails"
+    title: "CASL review of approval, reminder and annual confirmation emails"
     epic: EPIC-LEGAL
     milestone: M2
     track: Legal
@@ -195,13 +196,13 @@ items:
 
   # ---------------------------------------------------------------- Herzliah
   - key: HERZ-01
-    title: "Herzliah names institution owner/admins and a privacy officer"
+    title: "Herzliah names its school admins, reviewers and a privacy officer"
     epic: EPIC-HERZ
     milestone: M2
     labels: [type:business, P0, launch-blocker, needs-noah]
     size: XS
     reqs: [HL1]
-    summary: Names, emails and roles (owner / admin / reviewer), plus a contact for eligibility questions, data corrections and policy decisions (§12).
+    summary: Names, emails and roles (school admin / reviewer), plus a contact for eligibility questions, data corrections and policy decisions (§12).
 
   - key: HERZ-02
     title: "Herzliah provides branding assets and a reply-to address"
@@ -212,28 +213,28 @@ items:
     summary: Logo (SVG or high-res PNG), brand colours, the alumni office reply-to email and the display name for emails.
 
   - key: HERZ-03
-    title: "Herzliah provides the alumni CSV export"
+    milestone: FUT
+    title: "Future (with CSV import): Herzliah provides the alumni CSV export"
     epic: EPIC-HERZ
-    milestone: M3
-    labels: [type:business, P0, launch-blocker, needs-noah]
+    labels: [type:business, P2, needs-noah]
     size: S
     depends: [IMP-01, LEGAL-03]
     summary: The school exports graduates using our template (IMP-01). The file is shared through a secure channel, never as an email attachment, and only after the DPA is signed.
 
   - key: HERZ-04
-    title: "Herzliah approves email templates and wording (EN/FR)"
+    title: "Herzliah approves its email templates in the admin (EN/FR)"
     epic: EPIC-HERZ
     milestone: M3
     labels: [type:business, P0, launch-blocker, needs-noah]
     size: S
     depends: [EML-03]
     reqs: [HL1]
-    summary: Invitation, approval, rejection, welcome, annual confirmation and reminders, reviewed on staging previews.
+    summary: A Herzliah school admin edits and approves each template (approval, needs info, rejection, welcome, annual confirmation and reminders) in the admin settings (EML-03). Nothing is sent before approval.
 
   - key: HERZ-05
-    title: "Herzliah sends the announcement to alumni before the invitations"
+    title: "Herzliah emails its alumni the sign-up link"
     epic: EPIC-HERZ
     milestone: M4
     labels: [type:business, P1, needs-noah]
     size: XS
-    summary: A school-branded announcement explaining the network and that an invitation from herzliah@mail.alumni-network.ca is coming. This improves trust and deliverability.
+    summary: The school emails its alumni from its own mailing list, explaining the network and linking to herzliah.alumninetwork.ca/join (DEC-01). We provide the EN/FR text. Approval emails then come from noreply@alumninetwork.ca.

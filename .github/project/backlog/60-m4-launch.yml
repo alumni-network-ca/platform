@@ -24,7 +24,7 @@ items:
     track: Business
     size: S
     depends: [SA-02, DOC-03, HERZ-01]
-    summary: A 45-minute session where the school's admins set up MFA, review the imported data and approval queue, and practise inviting test alumni and exporting.
+    summary: A 45-minute session where the school's admins set up MFA, edit and approve the email templates, and practise approving test sign-ups and exporting.
     ac:
       - The admins complete the training checklist independently.
 
@@ -36,21 +36,21 @@ items:
     reqs: [HL9, D1]
     summary: |
       Release PR dev → main approved by Noah, migrations applied, deployment done. Smoke test: tenant routing, auth
-      email, invitation to a test address, directory, export and alerts. Tag v1.0.0 with release notes.
+      email, a test sign-up and approval, directory, export and alerts. Tag v1.0.0 with release notes.
     ac:
       - Smoke checklist passes; rollback was rehearsed in OPS-06.
 
   - key: LCH-04
-    title: "Import Herzliah alumni and send invitation waves (pilot cohort)"
-    labels: [type:infra, area:import-export, area:onboarding, P0, launch-blocker, needs-noah]
+    title: "Open sign-ups to the Herzliah pilot cohort"
+    labels: [type:infra, area:onboarding, P0, launch-blocker, needs-noah]
     size: M
     depends: [LCH-03, OPS-05, HERZ-04, HERZ-05, DEC-11, LEGAL-03]
     reqs: [HL9]
     summary: |
-      Production import with the rehearsed file. Invitations go to the pilot cohort (DEC-11) in daily waves within the
-      email limits. Bounces and the claim rate are monitored after each wave.
+      Herzliah emails the join link to the pilot cohort (DEC-11, HERZ-05). Admins work the approval queue daily.
+      Sign-ups, approval time and bounces are monitored.
     ac:
-      - The cohort is invited; bounce rate under 2 %; no S1/S2 issues open.
+      - The cohort has the link; approvals take under 2 business days; bounce rate under 2 %; no S1/S2 issues open.
 
   - key: LCH-05
     title: "Pilot monitoring and triage (first 2 weeks)"

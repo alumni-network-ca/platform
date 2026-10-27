@@ -1,6 +1,6 @@
 # 0011: Environments, hosting and cost
 
-- **Status:** Proposed (BIZ-05 budget approval) · **Date:** 2026-10-14 · **Requirements:** S8, S9, D1, D3, §9
+- **Status:** Proposed (BIZ-05 budget approval; domain decided in DEC-14) · **Date:** 2026-10-14 · **Requirements:** S8, S9, D1, D3, §9
 
 ## Decision
 
@@ -15,8 +15,8 @@
 |---|---|---|---|---|
 | local | `next dev` | Supabase CLI (Docker) | Mailpit | `*.localhost:3000` |
 | preview | Vercel PR previews | staging project | Mailpit / allow-list | `*.vercel.app` + tenant cookie |
-| staging | Vercel, branch `dev` | Supabase staging (free org) | Resend, allow-list only | `*.staging.alumni-network.ca` |
-| production | Vercel, branch `main` | Supabase production (Pro org, **ca-central-1**) | Resend | `*.alumni-network.ca` |
+| staging | Vercel, branch `dev` | Supabase staging (free org) | Resend, allow-list only | `*.staging.alumninetwork.ca` |
+| production | Vercel, branch `main` | Supabase production (Pro org, **ca-central-1**) | Resend | `*.alumninetwork.ca` |
 
 - Hosting the production database in Canada (ca-central-1) simplifies the Law 25 assessment. The privacy assessment still covers Vercel, Resend and Sentry (LEGAL-04).
 - Secrets live only in the Vercel and Supabase dashboards and GitHub Actions secrets, scoped per environment. `.env.example` documents the names.

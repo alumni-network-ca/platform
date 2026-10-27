@@ -1,14 +1,15 @@
 # 0007: Transactional email: Resend, outbox, auth email hook, sender identity
 
-- **Status:** Proposed (DEC-12) · **Date:** 2026-10-14 · **Requirements:** E1–E4, S6, S8
+- **Status:** Accepted (DEC-12, DEC-06, 2026-10-26) · **Date:** 2026-10-14 · **Requirements:** E1–E4, S6, S8
 
 ## Decision
 
 ### Provider and sender
 
 - **Provider:** Resend. The free tier covers the build and the pilot (3,000/month, 100/day). The Pro plan ($20/month) applies when volume requires it.
-- **Sending domain:** one verified domain, `mail.alumni-network.ca` (SPF, DKIM, DMARC).
-- **Sender per institution:** `"<Institution> Alumni Network" <<slug>@mail.alumni-network.ca>`, with `Reply-To` set to the institution's alumni office address. New schools need no DNS changes.
+- **Sending domain:** `alumninetwork.ca`, verified in Resend (SPF, DKIM, DMARC).
+- **Sender:** `"<School> Alumni Network" <noreply@alumninetwork.ca>`. Only the display name changes per school, so new schools need no DNS changes.
+- **Reply-To:** the school's alumni office address (`institutions.reply_to`), so replies reach a person.
 
 ### Outbox
 
@@ -27,7 +28,9 @@ Signed Resend webhooks for delivered, bounced and complained update the outbox a
 
 ### Templates and logs
 
-- Templates are React Email components with messages from the same next-intl files as the app.
+- **The text lives in the database** (`email_templates`: school, template, locale, subject, body, status draft/approved). Each school starts from platform defaults in EN and FR.
+- School admins edit the text only, with a fixed set of placeholders (`{first_name}`, `{school_name}`, `{confirm_link}`…), then preview and approve it. HTML and unknown placeholders are rejected. A template that is not approved is never sent.
+- A branded React Email layout wraps the text and adds a plain-text part.
 - Logs keep ids and statuses only. Never email bodies or tokens.
 
 ### Environments
