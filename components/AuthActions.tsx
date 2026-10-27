@@ -41,7 +41,7 @@ export function AuthActions() {
       ready: true,
       signedIn: true,
       hasProfile: Boolean(profile),
-      isAdmin: roles.includes("institution_admin") || roles.includes("super_admin"),
+      isAdmin: roles.includes("school_admin") || roles.includes("reviewer"),
     });
   }
 

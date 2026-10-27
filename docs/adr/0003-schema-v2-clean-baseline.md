@@ -10,13 +10,13 @@
 
 ## Decision
 
-- Archive `supabase/migrations/001–004` to `supabase/legacy/` for history when the v2 baseline lands (FND-04). Until then, 001/003/004 remain the local schema so the current app runs against the local stack, and 002's demo data lives in `supabase/seed.sql` (SETUP-07).
-- Start from a single reviewed **v2 baseline migration** implementing the target model in `docs/PRODUCT_ANALYSIS.md` §6, as amended by these ADRs.
+- The legacy migrations 001/003/004 are archived in `supabase/legacy/` for history (done in FND-04).
+- The **v2 baseline** implements [docs/architecture/data-model.md](../architecture/data-model.md) as three reviewed migrations: schema, access rules (RLS and grants) and RPCs.
 - New migrations use Supabase CLI timestamped names (`supabase migration new`), so parallel branches don't collide.
 - Migrations are forward-only. Seed and demo data live in `supabase/seed.sql`, applied only to local and staging environments.
 - Generated TypeScript types (`lib/database.types.ts`) are regenerated in CI and must match the committed copy.
 
 ## Consequences
 
-- There is no in-place backfill of real data. The Herzliah "migration" (D2) becomes the rehearsed **CSV import** of the school's records (OPS-05).
+- There is no in-place backfill of real data. Herzliah alumni join through the sign-up link and admin approval (ADR 0004); nothing is imported at launch.
 - The live-only RPCs are still captured and reviewed for the audit record (AUDIT-03), but are not carried forward.
