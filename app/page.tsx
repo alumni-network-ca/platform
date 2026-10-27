@@ -1,7 +1,9 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { Nav } from "@/components/Nav";
+import { getAccount } from "@/lib/auth/account";
+import { homeFor } from "@/lib/auth/home";
 import { schoolBranding } from "@/lib/school";
-import { requireSchool } from "@/lib/tenant/server";
 
 const recent: [year: string, name: string, role: string, offer: string][] = [
   ["'08", "Dana Kessler", "Corporate Lawyer · Montreal", "Mentoring"],
@@ -10,7 +12,10 @@ const recent: [year: string, name: string, role: string, offer: string][] = [
 ];
 
 export default async function Home() {
-  const { shortName, networkName } = schoolBranding(await requireSchool());
+  const { school, user, state } = await getAccount();
+  // Signed-in visitors go straight to their home page at this school (ADR 0014).
+  if (user) redirect(homeFor(state));
+  const { shortName, networkName } = schoolBranding(school);
   return (
     <>
       <Nav />
@@ -28,16 +33,16 @@ export default async function Home() {
               mentorship, advice, internships, introductions and opportunities.
             </p>
             <div className="ctas">
-              <Link className="btn btnPrimary" href="/claim">
-                Claim your profile
+              <Link className="btn btnPrimary" href="/join">
+                Join the network
               </Link>
               <Link className="btn btnLight" href="/directory">
                 Explore the directory →
               </Link>
             </div>
             <div className="microcopy">
-              Alumni control their own information. Unclaimed records remain invisible until
-              verified.
+              Alumni control their own information. The school approves every member before they can
+              see the directory.
             </div>
           </div>
           <div className="ledgerCard">

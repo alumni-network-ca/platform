@@ -2,9 +2,10 @@
 -- Seed ids: schools H = aaaaaaaa-…01 (herzliah), T = aaaaaaaa-…02 (test-school).
 -- Users 11111111-…01 school admin H, …02 alumnus H, …03 pending applicant H, …04 reviewer H, …05 alumnus T,
 -- …06 system admin, …07 school admin T, …08 reviewer T, …09 pending applicant T, …10 suspended alumnus H,
--- …11 verified account with no school, …12/13/14 H requests in needs_info / rejected / withdrawn.
+-- …11 verified account with no school, …12/13/14 H requests in needs_info / rejected / withdrawn,
+-- …15 approved H alumnus who has not finished onboarding.
 -- Profiles 00000000-…001 to …200 demo H (published), …201 to …220 demo T (published), 22222222-…01 unclaimed H,
--- …02 hidden H, …03 published T (owned by …05), …04 suspended H (owned by …10).
+-- …02 hidden H, …03 published T (owned by …05), …04 suspended H (owned by …10), …05 not onboarded H (…15).
 begin;
 create extension if not exists pgtap with schema extensions;
 select no_plan();
@@ -124,10 +125,10 @@ reset role;
 
 -- Reviewer (H) ----------------------------------------------------------------------------------------
 select pg_temp.login('11111111-1111-4111-8111-000000000004');
-select is((select count(*)::int from public.alumni_profiles), 203, 'a reviewer sees every herzliah record, hidden and suspended ones included');
+select is((select count(*)::int from public.alumni_profiles), 204, 'a reviewer sees every herzliah record, hidden and suspended ones included');
 select is((select count(*)::int from public.alumni_private where institution_id = 'aaaaaaaa-0000-4000-8000-000000000002'), 0,
   'a reviewer sees no private data of another school');
-select is((select count(*)::int from public.access_requests), 5, 'a reviewer sees every herzliah request, in every state');
+select is((select count(*)::int from public.access_requests), 6, 'a reviewer sees every herzliah request, in every state');
 select isnt_empty('select id from public.audit_log', 'a reviewer reads the audit log');
 select is(
   (select count(*)::int from public.search_directory('aaaaaaaa-0000-4000-8000-000000000001')),
@@ -146,7 +147,7 @@ reset role;
 
 -- School admin (H) ------------------------------------------------------------------------------------
 select pg_temp.login('11111111-1111-4111-8111-000000000001');
-select is((select count(*)::int from public.alumni_profiles), 203, 'a school admin sees every herzliah record');
+select is((select count(*)::int from public.alumni_profiles), 204, 'a school admin sees every herzliah record');
 select is_empty(
   $$ select id from public.alumni_profiles where institution_id = 'aaaaaaaa-0000-4000-8000-000000000002' $$,
   'a school admin sees nothing of another school'
@@ -248,7 +249,7 @@ select lives_ok(
   $$ select public.platform_open_grant('aaaaaaaa-0000-4000-8000-000000000001', 'Support ticket 12', 1) $$,
   'a system admin opens a 1-hour grant'
 );
-select is((select count(*)::int from public.alumni_profiles), 203, 'with a grant, a system admin reads that school''s records');
+select is((select count(*)::int from public.alumni_profiles), 204, 'with a grant, a system admin reads that school''s records');
 select is_empty(
   $$ select id from public.alumni_profiles where institution_id = 'aaaaaaaa-0000-4000-8000-000000000002' $$,
   'the grant covers only that school'
@@ -277,7 +278,7 @@ select lives_ok(
        public.platform_open_grant('aaaaaaaa-0000-4000-8000-000000000001', 'Support ticket 13', 2)::text, true) $$,
   'a system admin opens a new grant'
 );
-select is((select count(*)::int from public.alumni_profiles), 203, 'the new grant gives access again');
+select is((select count(*)::int from public.alumni_profiles), 204, 'the new grant gives access again');
 select lives_ok($$ select public.platform_revoke_grant(current_setting('test.grant')::uuid) $$, 'and revokes it early');
 select is_empty('select id from public.alumni_profiles', 'a revoked grant gives no access');
 reset role;

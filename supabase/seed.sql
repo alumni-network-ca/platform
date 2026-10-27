@@ -13,6 +13,7 @@
 --        rejected@herzliah.test       access request rejected
 --        withdrawn@herzliah.test      access request withdrawn by the applicant
 --        suspended@herzliah.test      alumnus whose record and membership are suspended
+--        newmember@herzliah.test      approved alumnus who has not finished onboarding
 --        admin@test-school.test       school admin of test-school
 --        reviewer@test-school.test    reviewer of test-school
 --        alumni@test-school.test      approved, published alumnus of test-school
@@ -55,7 +56,8 @@ with accounts (id, email) as (values
   ('11111111-1111-4111-8111-000000000011'::uuid, 'outsider@alumninetwork.test'),
   ('11111111-1111-4111-8111-000000000012'::uuid, 'needsinfo@herzliah.test'),
   ('11111111-1111-4111-8111-000000000013'::uuid, 'rejected@herzliah.test'),
-  ('11111111-1111-4111-8111-000000000014'::uuid, 'withdrawn@herzliah.test')
+  ('11111111-1111-4111-8111-000000000014'::uuid, 'withdrawn@herzliah.test'),
+  ('11111111-1111-4111-8111-000000000015'::uuid, 'newmember@herzliah.test')
 )
 insert into auth.users (
   instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
@@ -79,6 +81,7 @@ insert into public.institution_memberships (institution_id, user_id, role, statu
   ('aaaaaaaa-0000-4000-8000-000000000001', '11111111-1111-4111-8111-000000000004', 'reviewer', 'active', null),
   ('aaaaaaaa-0000-4000-8000-000000000001', '11111111-1111-4111-8111-000000000002', 'alumni', 'active', null),
   ('aaaaaaaa-0000-4000-8000-000000000001', '11111111-1111-4111-8111-000000000010', 'alumni', 'suspended', 'Reported abuse'),
+  ('aaaaaaaa-0000-4000-8000-000000000001', '11111111-1111-4111-8111-000000000015', 'alumni', 'active', null),
   ('aaaaaaaa-0000-4000-8000-000000000002', '11111111-1111-4111-8111-000000000007', 'school_admin', 'active', null),
   ('aaaaaaaa-0000-4000-8000-000000000002', '11111111-1111-4111-8111-000000000008', 'reviewer', 'active', null),
   ('aaaaaaaa-0000-4000-8000-000000000002', '11111111-1111-4111-8111-000000000005', 'alumni', 'active', null);
@@ -106,7 +109,10 @@ insert into public.access_requests (id, institution_id, user_id, email, first_na
    'approved', null, null, '11111111-1111-4111-8111-000000000004', now()),
   ('33333333-3333-4333-8333-000000000007', 'aaaaaaaa-0000-4000-8000-000000000002', '11111111-1111-4111-8111-000000000005',
    'alumni@test-school.test', 'Other', 'School', null, 2015, null,
-   'approved', null, null, '11111111-1111-4111-8111-000000000007', now());
+   'approved', null, null, '11111111-1111-4111-8111-000000000007', now()),
+  ('33333333-3333-4333-8333-000000000008', 'aaaaaaaa-0000-4000-8000-000000000001', '11111111-1111-4111-8111-000000000015',
+   'newmember@herzliah.test', 'Nina', 'Newmember', null, 2019, null,
+   'approved', null, null, '11111111-1111-4111-8111-000000000004', now());
 
 -- 3. Demo alumni ---------------------------------------------------------------------------------------
 
@@ -341,18 +347,24 @@ values
    'active', 'members', 'Other', 'School', 2015, now(), now(), now()),
   -- A published member whose record the school suspended (the membership is suspended too).
   ('22222222-2222-4222-8222-000000000004', 'aaaaaaaa-0000-4000-8000-000000000001', '11111111-1111-4111-8111-000000000010',
-   'suspended', 'members', 'Sam', 'Suspended', 2011, now(), now(), now());
+   'suspended', 'members', 'Sam', 'Suspended', 2011, now(), now(), now()),
+  -- Approved but has not finished onboarding: hidden until they publish.
+  ('22222222-2222-4222-8222-000000000005', 'aaaaaaaa-0000-4000-8000-000000000001', '11111111-1111-4111-8111-000000000015',
+   'active', 'hidden', 'Nina', 'Newmember', 2019, null, null, now());
 
 update public.access_requests set profile_id = '00000000-0000-4000-8000-000000000001'
 where id = '33333333-3333-4333-8333-000000000006';
 update public.access_requests set profile_id = '22222222-2222-4222-8222-000000000003'
 where id = '33333333-3333-4333-8333-000000000007';
+update public.access_requests set profile_id = '22222222-2222-4222-8222-000000000005'
+where id = '33333333-3333-4333-8333-000000000008';
 
 insert into public.alumni_private (profile_id, institution_id, maiden_name, admin_notes) values
   ('22222222-2222-4222-8222-000000000001', 'aaaaaaaa-0000-4000-8000-000000000001', null, 'Record kept for import tests'),
   ('22222222-2222-4222-8222-000000000002', 'aaaaaaaa-0000-4000-8000-000000000001', 'Secretname', null),
   ('22222222-2222-4222-8222-000000000003', 'aaaaaaaa-0000-4000-8000-000000000002', null, 'test-school private note'),
-  ('22222222-2222-4222-8222-000000000004', 'aaaaaaaa-0000-4000-8000-000000000001', null, 'Suspended after a report');
+  ('22222222-2222-4222-8222-000000000004', 'aaaaaaaa-0000-4000-8000-000000000001', null, 'Suspended after a report'),
+  ('22222222-2222-4222-8222-000000000005', 'aaaaaaaa-0000-4000-8000-000000000001', null, null);
 
 insert into public.alumni_experience (profile_id, institution_id, job_title, employer, is_current) values
   ('22222222-2222-4222-8222-000000000002', 'aaaaaaaa-0000-4000-8000-000000000001', 'Private role', 'Private employer', true),

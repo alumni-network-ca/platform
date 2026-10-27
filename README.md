@@ -31,7 +31,9 @@ npm run dev
 
 Open **http://herzliah.localhost:3000**. The subdomain selects the school: `test-school.localhost:3000` is the second school, and plain `localhost:3000` is the root site (the page for schools). A session belongs to one school's address, so signing in at one does not sign you in at the other.
 
-`supabase start` applies `supabase/migrations/*` and then `supabase/seed.sql`. The seed contains fictional demo alumni for both schools plus local test accounts. Their emails and the local-only password are listed at the top of [supabase/seed.sql](supabase/seed.sql).
+`supabase start` applies `supabase/migrations/*` and then `supabase/seed.sql`. The seed contains fictional demo alumni for both schools plus local test accounts, listed below and at the top of [supabase/seed.sql](supabase/seed.sql).
+
+To sign in, enter one of those emails at `/login`: the 6-digit code arrives in Mailpit (http://127.0.0.1:54324). There are no passwords in the app (ADR 0014); the seed accounts keep a local-only password so tests and scripts can sign in through the API.
 
 ### Local services
 
@@ -60,9 +62,9 @@ supabase stop                    # stop the local stack
 
 ## Current state
 
-The database runs the **v2 schema** ([data model](docs/architecture/data-model.md)): three migrations in `supabase/migrations/` (schema, access rules, RPCs), with the legacy MVP migrations kept in `supabase/legacy/` for history. The app is the V1–V4 MVP being rebuilt onto it, issue by issue. The directory already reads v2 through clients typed from the generated `lib/database.types.ts`. Onboarding, the profile editor, admin pages, claim and request-access still use the old tables through an untyped `createLegacyClient()`, and fail locally until their M2 issues rewire them (each file names its issue).
+The database runs the **v2 schema** ([data model](docs/architecture/data-model.md)): three migrations in `supabase/migrations/` (schema, access rules, RPCs), with the legacy MVP migrations kept in `supabase/legacy/` for history. The app is the V1–V4 MVP being rebuilt onto it, issue by issue. The directory already reads v2 through clients typed from the generated `lib/database.types.ts`. Sign-in is by emailed code; new people sign up at `/join` and wait on their account page until the school approves them. Onboarding, the profile editor and the admin pages still use the old tables through an untyped `createLegacyClient()`, and fail locally until their M2 issues rewire them (each file names its issue).
 
-Local test accounts (password in the `supabase/seed.sql` header, local only):
+Local test accounts (sign in with a code from Mailpit). After sign-in each one lands on its own home page:
 
 | Account | Role |
 |---|---|
@@ -74,6 +76,7 @@ Local test accounts (password in the `supabase/seed.sql` header, local only):
 | `rejected@herzliah.test` | Sign-up rejected |
 | `withdrawn@herzliah.test` | Withdrew their sign-up |
 | `suspended@herzliah.test` | Alumnus whose record the school suspended |
+| `newmember@herzliah.test` | Approved, has not finished onboarding |
 | `admin@test-school.test` | School admin of a second school (isolation tests) |
 | `reviewer@test-school.test` | Reviewer of the second school |
 | `alumni@test-school.test` | Alumnus of the second school |

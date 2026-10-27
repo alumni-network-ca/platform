@@ -3,8 +3,10 @@ import { Nav } from "@/components/Nav";
 import { OnboardingClient } from "@/components/OnboardingClient";
 // Legacy schema until ONB-05 (#108) rewires it.
 import { createLegacyClient as createClient } from "@/lib/supabase/server";
+import { requireAccess } from "@/lib/auth/account";
 
 export default async function OnboardingPage() {
+  await requireAccess("/onboarding");
   const supabase = await createClient();
   const {
     data: { user },

@@ -235,11 +235,12 @@ enable_confirmations = true
 # If enabled, users will need to reauthenticate or have logged in recently to change their password.
 secure_password_change = true
 # Controls the minimum amount of time that must pass before sending another signup confirmation or password reset email.
+# Production waits 60 s (ADR 0014; the sign-in page also waits 60 s before offering a new code). Kept short here so
+# end-to-end tests can re-run immediately.
 max_frequency = "1s"
-# Number of characters used in the email OTP.
+# Sign-in is by an emailed code, not a password (DEC-15, ADR 0014): 6 digits, valid 10 minutes.
 otp_length = 6
-# Number of seconds before the email OTP expires (defaults to 1 hour).
-otp_expiry = 3600
+otp_expiry = 600
 
 # Use a production-ready SMTP server
 # [auth.email.smtp]
@@ -250,6 +251,20 @@ otp_expiry = 3600
 # pass = "env(SENDGRID_API_KEY)"
 # admin_email = "admin@email.com"
 # sender_name = "Admin"
+
+# Sign-in and email-change emails carry the code (ADR 0014). New emails get the confirmation template, known ones
+# the magic link template; both show the same code email.
+[auth.email.template.confirmation]
+subject = "Your sign-in code: {{ .Token }}"
+content_path = "./supabase/templates/sign-in-code.html"
+
+[auth.email.template.magic_link]
+subject = "Your sign-in code: {{ .Token }}"
+content_path = "./supabase/templates/sign-in-code.html"
+
+[auth.email.template.email_change]
+subject = "Your code to change your email address: {{ .Token }}"
+content_path = "./supabase/templates/email-change-code.html"
 
 # Uncomment to customize email template
 # [auth.email.template.invite]

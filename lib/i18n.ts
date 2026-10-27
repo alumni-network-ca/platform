@@ -23,7 +23,6 @@ export const translations = {
       submit: "Submit",
       loading: "Loading…",
       email: "Email address",
-      password: "Password",
       search: "Search",
       yes: "Yes",
       no: "No",
@@ -78,9 +77,7 @@ export const translations = {
     login: {
       title: "Sign in",
       email: "Email address",
-      password: "Password",
       signIn: "Sign in",
-      forgotPassword: "Forgot password?",
       claimProfile: "Claim your profile",
     },
 
@@ -147,7 +144,6 @@ export const translations = {
       submit: "Soumettre",
       loading: "Chargement…",
       email: "Adresse courriel",
-      password: "Mot de passe",
       search: "Rechercher",
       yes: "Oui",
       no: "Non",
@@ -202,9 +198,7 @@ export const translations = {
     login: {
       title: "Se connecter",
       email: "Adresse courriel",
-      password: "Mot de passe",
       signIn: "Se connecter",
-      forgotPassword: "Mot de passe oublié ?",
       claimProfile: "Réclamer mon profil",
     },
 

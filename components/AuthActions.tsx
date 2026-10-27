@@ -65,7 +65,8 @@ export function AuthActions() {
 
   async function signOut() {
     const supabase = createClient();
-    await supabase.auth.signOut();
+    // Ends this school's session only: other schools and devices stay signed in (DEC-13).
+    await supabase.auth.signOut({ scope: "local" });
     setState({ ready: true, signedIn: false, hasProfile: false, isAdmin: false });
     router.push("/");
     router.refresh();
@@ -84,8 +85,8 @@ export function AuthActions() {
         <Link className="btn btnGhost" href="/login">
           Sign in
         </Link>
-        <Link className="btn btnPrimary" href="/claim">
-          Claim your profile
+        <Link className="btn btnPrimary" href="/join">
+          Join
         </Link>
       </div>
     );
@@ -98,9 +99,11 @@ export function AuthActions() {
           Admin
         </Link>
       )}
-      <Link className="btn btnGhost" href={state.hasProfile ? "/me" : "/onboarding"}>
-        {state.hasProfile ? "My profile" : "Complete profile"}
-      </Link>
+      {state.hasProfile && (
+        <Link className="btn btnGhost" href="/me">
+          My profile
+        </Link>
+      )}
       <button className="btn btnPrimary" type="button" onClick={signOut}>
         Sign out
       </button>

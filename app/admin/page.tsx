@@ -5,8 +5,10 @@ import { createLegacyClient as createClient } from "@/lib/supabase/server";
 import { AdminImport } from "@/components/AdminImport";
 import { AdminAlumniBrowser } from "@/components/AdminAlumniBrowser";
 import { Nav } from "@/components/Nav";
+import { requireAccess } from "@/lib/auth/account";
 
 export default async function AdminPage() {
+  await requireAccess("/admin");
   const supabase = await createClient();
 
   const {
