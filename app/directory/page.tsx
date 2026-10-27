@@ -1,22 +1,24 @@
 import { redirect } from "next/navigation";
 import { Nav } from "@/components/Nav";
 import { DirectoryClient } from "@/components/DirectoryClient";
+import { schoolBranding } from "@/lib/school";
 import { createClient } from "@/lib/supabase/server";
+import { requireSchool } from "@/lib/tenant/server";
 
 export default async function DirectoryPage() {
+  const school = await requireSchool();
+  const { shortName } = schoolBranding(school);
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/directory");
-  // v2 schema: the school comes from its slug (host-based resolution arrives in FND-07) and rows come from
-  // search_directory, which only returns directory-safe columns. Mapped to the shape DirectoryClient still
-  // expects until the directory UI is rebuilt (DIR-02).
-  const slug = process.env.NEXT_PUBLIC_DEFAULT_INSTITUTION_SLUG ?? "herzliah";
-  const { data: school } = await supabase.rpc("public_school", { p_slug: slug });
-  const { data: rows, error } = school
-    ? await supabase.rpc("search_directory", { p_inst: school.id, p_limit: 100 })
-    : { data: [], error: null };
+  // Rows come from search_directory for the school of this address, with directory-safe columns only. Mapped
+  // to the shape DirectoryClient still expects until the directory UI is rebuilt (DIR-02).
+  const { data: rows, error } = await supabase.rpc("search_directory", {
+    p_inst: school.id,
+    p_limit: 100,
+  });
   const data = (rows ?? []).map((r) => ({
     id: r.id,
     first_name: r.preferred_name || r.first_name,
@@ -36,10 +38,10 @@ export default async function DirectoryPage() {
       <main className="page directoryPage">
         <div className="pageHeader">
           <div>
-            <div className="eyebrow">Verified Herzliah members</div>
+            <div className="eyebrow">Verified {shortName} members</div>
             <h1>Alumni directory</h1>
             <p className="muted">
-              Search by career field, university, city, Herzliah graduating class and what alumni
+              Search by career field, university, city, {shortName} graduating class and what alumni
               are open to.
             </p>
           </div>

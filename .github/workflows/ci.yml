@@ -92,7 +92,7 @@ jobs:
           {
             echo "NEXT_PUBLIC_SUPABASE_URL=$API_URL"
             echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$PUBLISHABLE_KEY"
-            echo "NEXT_PUBLIC_DEFAULT_INSTITUTION_SLUG=herzliah"
+            echo "ROOT_DOMAIN=localhost"
             echo "NEXT_PUBLIC_SITE_URL=http://herzliah.localhost:3000"
           } > .env.local
       - name: Build

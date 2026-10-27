@@ -27,9 +27,12 @@
 
 -- 1. Schools -------------------------------------------------------------------------------------------
 
-insert into public.institutions (id, name, slug, default_locale, reply_to_email, email_display_name) values
-  ('aaaaaaaa-0000-4000-8000-000000000001', 'Herzliah High School', 'herzliah', 'en', 'alumni@herzliah.test', 'Herzliah Alumni Network'),
-  ('aaaaaaaa-0000-4000-8000-000000000002', 'Test School', 'test-school', 'fr', 'office@test-school.test', 'Test School Alumni');
+-- Open each at its own address: http://herzliah.localhost:3000 and http://test-school.localhost:3000.
+insert into public.institutions (id, name, slug, default_locale, reply_to_email, email_display_name, branding) values
+  ('aaaaaaaa-0000-4000-8000-000000000001', 'Herzliah High School', 'herzliah', 'en', 'alumni@herzliah.test',
+   'Herzliah Alumni Network', '{"short_name": "Herzliah", "logo": "/herzliah-logo.png"}'),
+  ('aaaaaaaa-0000-4000-8000-000000000002', 'Test School', 'test-school', 'fr', 'office@test-school.test',
+   'Test School Alumni', '{"short_name": "Test School"}');
 
 -- Herzliah approves the platform defaults as-is, so emails flow in local development.
 insert into public.email_templates (institution_id, key, locale, status, subject, body, approved_at)

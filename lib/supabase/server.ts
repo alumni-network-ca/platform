@@ -22,7 +22,8 @@ export async function createClient() {
               cookieStore.set(name, value, options)
             );
           } catch {
-            // Server Components cannot always write cookies.
+            // Server Components cannot write cookies. That is safe because proxy.ts refreshes the session
+            // and writes the cookies before any page renders; actions and route handlers can write here.
           }
         },
       },

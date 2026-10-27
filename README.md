@@ -29,15 +29,16 @@ cp .env.example .env.local       # then paste the publishable key from `supabase
 npm run dev
 ```
 
-Open **http://herzliah.localhost:3000** (the `herzliah` subdomain selects the tenant).
+Open **http://herzliah.localhost:3000**. The subdomain selects the school: `test-school.localhost:3000` is the second school, and plain `localhost:3000` is the root site (the page for schools). A session belongs to one school's address, so signing in at one does not sign you in at the other.
 
-`supabase start` applies `supabase/migrations/*` and then `supabase/seed.sql`. The seed contains 50 fictional demo alumni plus local test accounts. Their emails and the local-only password are listed at the top of [supabase/seed.sql](supabase/seed.sql).
+`supabase start` applies `supabase/migrations/*` and then `supabase/seed.sql`. The seed contains fictional demo alumni for both schools plus local test accounts. Their emails and the local-only password are listed at the top of [supabase/seed.sql](supabase/seed.sql).
 
 ### Local services
 
 | Service | URL |
 |---|---|
-| App | http://herzliah.localhost:3000 |
+| App (Herzliah) | http://herzliah.localhost:3000 |
+| App (second school) | http://test-school.localhost:3000 |
 | Supabase API | http://127.0.0.1:54321 |
 | Supabase Studio (database browser) | http://127.0.0.1:54323 |
 | Mailpit (catches every email sent locally) | http://127.0.0.1:54324 |

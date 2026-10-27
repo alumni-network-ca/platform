@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { Nav } from "@/components/Nav";
+import { schoolBranding } from "@/lib/school";
+import { requireSchool } from "@/lib/tenant/server";
 
 const recent: [year: string, name: string, role: string, offer: string][] = [
   ["'08", "Dana Kessler", "Corporate Lawyer · Montreal", "Mentoring"],
@@ -7,7 +9,8 @@ const recent: [year: string, name: string, role: string, offer: string][] = [
   ["'99", "Rachel Berger", "Family Physician · Toronto", "Career advice"],
 ];
 
-export default function Home() {
+export default async function Home() {
+  const { shortName, networkName } = schoolBranding(await requireSchool());
   return (
     <>
       <Nav />
@@ -21,8 +24,8 @@ export default function Home() {
               <em>one</em> professional home.
             </h1>
             <p className="lede">
-              Find Herzliah graduates by career, city and expertise — then connect for mentorship,
-              advice, internships, introductions and opportunities.
+              Find {shortName} graduates by career, city and expertise — then connect for
+              mentorship, advice, internships, introductions and opportunities.
             </p>
             <div className="ctas">
               <Link className="btn btnPrimary" href="/claim">
@@ -40,7 +43,7 @@ export default function Home() {
           <div className="ledgerCard">
             <div className="ledgerHead">
               <strong>Recently joined</strong>
-              <span className="muted">Herzliah network</span>
+              <span className="muted">{shortName} network</span>
             </div>
             {recent.map(([year, name, role, flag]) => (
               <div className="ledgerRow" key={name}>
@@ -76,7 +79,7 @@ export default function Home() {
             </div>
             <div>
               <div className="statNum">1</div>
-              <div className="statLbl">Connected Herzliah community</div>
+              <div className="statLbl">Connected {shortName} community</div>
             </div>
           </div>
         </section>
@@ -95,7 +98,7 @@ export default function Home() {
               <h3>Alumni stay in control</h3>
               <p className="muted">
                 Profiles, contact preferences and visibility are managed by the alumnus, while
-                Herzliah manages membership and verification.
+                {shortName} manages membership and verification.
               </p>
             </div>
             <div className="card">
@@ -109,7 +112,7 @@ export default function Home() {
         </section>
         <footer className="footer">
           <div>
-            <strong>Herzliah Alumni Network</strong>
+            <strong>{networkName}</strong>
             <span>Private community for verified graduates.</span>
           </div>
           <div>
