@@ -278,9 +278,14 @@ items:
       - **Secrets:** each environment has its own (no production secrets in preview). docs/runbooks/secrets.md covers
         storage, rotation and who has access.
       - **Email:** staging sends only to an allow-list.
+      - **Auth email:** each hosted project gets the code settings from supabase/config.toml (6 digits, 10 minutes,
+        the code templates in supabase/templates) through `supabase config push` with only those properties declared.
+        A free project refuses template changes while it uses Supabase's built-in sender, so custom SMTP (Resend,
+        BIZ-04) comes first; EML-04 later replaces the templates with the branded hook.
     ac:
       - A merge to dev deploys the app and applies migrations to staging automatically.
       - A production secret never appears in preview/staging env.
+      - Signing in on staging emails a 6-digit code, not a link.
 
   - key: FND-17
     title: "Observability: Sentry, structured logging, health check and job heartbeats"
@@ -296,3 +301,21 @@ items:
     ac:
       - A thrown test error appears in Sentry without personal data.
       - A stopped job turns the health check red within 26 h.
+
+  - key: FND-18
+    title: "Sign-in code entered in six boxes"
+    labels: [type:feature, area:auth, area:ui, P1]
+    size: S
+    depends: [FND-09]
+    reqs: [F3, QA3]
+    summary: |
+      The sign-in and email-change forms take the code in six boxes, one digit each, like other services that send
+      codes. One ordinary input lies under the boxes, so paste (including "123 456"), the browser's one-time-code
+      autofill, the keyboard and screen readers work as for any field. The boxes only draw its value and stay
+      outside the label, so the digits never become part of the field's name.
+    ac:
+      - Typing or pasting a code fills one box per digit; letters and spaces are dropped and a seventh digit is ignored.
+      - The field's accessible name is its label alone, and the code step has no serious or critical axe violations.
+      - The boxes fit a 375 px screen without sideways scrolling.
+    tests:
+      - "Unit: CodeInput (digits only, paste, six-digit cap, current box, label). E2E: the six boxes and an axe scan of the code step, desktop and mobile."

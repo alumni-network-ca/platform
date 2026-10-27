@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { CodeInput } from "@/components/CodeInput";
 import { useLanguage } from "@/components/LanguageProvider";
 import { createClient } from "@/lib/supabase/client";
 
@@ -37,19 +38,6 @@ const TEXT = {
     failed: "Impossible de lancer le changement. Vérifiez l'adresse et réessayez.",
   },
 };
-
-const codeInput = (value: string, onChange: (value: string) => void) => (
-  <input
-    className="input"
-    inputMode="numeric"
-    autoComplete="one-time-code"
-    pattern="[0-9]{6}"
-    maxLength={6}
-    value={value}
-    onChange={(e) => onChange(e.target.value.replace(/\D/g, ""))}
-    required
-  />
-);
 
 export function EmailChange({ currentEmail }: { currentEmail: string }) {
   const { locale } = useLanguage();
@@ -118,14 +106,12 @@ export function EmailChange({ currentEmail }: { currentEmail: string }) {
           <p className="notice" role="status">
             {t.sent}
           </p>
-          <label>
-            {t.codeNew(newEmail.trim())}
-            {codeInput(codeNew, setCodeNew)}
-          </label>
-          <label>
-            {t.codeCurrent(currentEmail)}
-            {codeInput(codeCurrent, setCodeCurrent)}
-          </label>
+          <CodeInput label={t.codeNew(newEmail.trim())} value={codeNew} onChange={setCodeNew} />
+          <CodeInput
+            label={t.codeCurrent(currentEmail)}
+            value={codeCurrent}
+            onChange={setCodeCurrent}
+          />
           <button className="btn btnPrimary btnWide" disabled={busy}>
             {busy ? t.working : t.confirm}
           </button>

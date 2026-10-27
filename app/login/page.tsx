@@ -4,6 +4,7 @@ import { FormEvent, Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useLanguage } from "@/components/LanguageProvider";
+import { CodeInput } from "@/components/CodeInput";
 import { Nav } from "@/components/Nav";
 import { useSchool } from "@/components/SchoolProvider";
 import { safeNext } from "@/lib/auth/next";
@@ -164,19 +165,7 @@ function SignIn() {
               ) : (
                 emailField
               )}
-              <label>
-                {t.code}
-                <input
-                  className="input"
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
-                  pattern="[0-9]{6}"
-                  maxLength={6}
-                  value={code}
-                  onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-                  required
-                />
-              </label>
+              <CodeInput label={t.code} value={code} onChange={setCode} />
               <button className="btn btnPrimary btnWide" disabled={busy}>
                 {busy ? t.checking : t.signIn}
               </button>

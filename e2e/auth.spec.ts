@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { blockingViolations } from "./fixtures/a11y";
 import { accounts } from "./fixtures/accounts";
 import { clearInbox, codeFor, newAddress } from "./fixtures/mailpit";
 import { addressOf } from "./fixtures/session";
@@ -90,6 +91,17 @@ test.describe("sign-in with an emailed code", () => {
       "That code is wrong or has expired.",
     );
     await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/login"));
+  });
+
+  test("the code is entered in six boxes, one digit each", async ({ page }) => {
+    await page.goto("/login");
+    await page.getByRole("button", { name: "I already have a code" }).click();
+    const field = page.getByLabel("6-digit code");
+    await field.click();
+    await page.keyboard.type("12a3");
+    await expect(field).toHaveValue("123");
+    await expect(page.locator(".codeBox")).toHaveText(["1", "2", "3", "", "", ""]);
+    expect(await blockingViolations(page)).toEqual([]);
   });
 
   test("changing email needs a code from both addresses", async ({ page, baseURL }) => {
