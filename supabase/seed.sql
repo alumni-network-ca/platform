@@ -5,14 +5,25 @@
 --   1. Two schools: herzliah (with approved email templates) and test-school (for isolation tests)
 --   2. Local test accounts (.test addresses are reserved and never deliverable). Password for all (local only):
 --      LocalDev-Passw0rd
---        admin@herzliah.test       school admin of herzliah (no alumni profile)
---        reviewer@herzliah.test    reviewer of herzliah (no alumni profile)
---        alumni@herzliah.test      approved, published alumnus (owns the "Ari Benaroch" demo profile)
---        pending@herzliah.test     signed up and verified, access request pending
---        alumni@test-school.test   approved, published alumnus of test-school
---        system@alumninetwork.test system admin (platform level, no school membership)
---   3. 50 fictional Herzliah demo alumni, published, with education, experience, offers and channels
---   4. Edge-case records for access tests: a hidden member and an unclaimed record
+--        admin@herzliah.test          school admin of herzliah (no alumni profile)
+--        reviewer@herzliah.test       reviewer of herzliah (no alumni profile)
+--        alumni@herzliah.test         approved, published alumnus (owns the "Ari Benaroch" demo profile)
+--        pending@herzliah.test        signed up and verified, access request pending
+--        needsinfo@herzliah.test      access request waiting for the applicant's answer
+--        rejected@herzliah.test       access request rejected
+--        withdrawn@herzliah.test      access request withdrawn by the applicant
+--        suspended@herzliah.test      alumnus whose record and membership are suspended
+--        admin@test-school.test       school admin of test-school
+--        reviewer@test-school.test    reviewer of test-school
+--        alumni@test-school.test      approved, published alumnus of test-school
+--        pending@test-school.test     access request pending at test-school
+--        outsider@alumninetwork.test  verified account with no school and no request
+--        system@alumninetwork.test    system admin (platform level, no school membership)
+--   3. 200 fictional Herzliah alumni and 20 test-school alumni, published, with education, experience, offers
+--      and channels. The first 50 are hand-written; the rest are generated deterministically.
+--   4. Edge-case records for access tests: a hidden member, an unclaimed record and a suspended member
+--
+-- The 10,000-alumni-per-school performance seed is separate: `npm run seed:perf` (scripts/seed-perf.ts).
 
 -- 1. Schools -------------------------------------------------------------------------------------------
 
@@ -33,7 +44,15 @@ with accounts (id, email) as (values
   ('11111111-1111-4111-8111-000000000003'::uuid, 'pending@herzliah.test'),
   ('11111111-1111-4111-8111-000000000004'::uuid, 'reviewer@herzliah.test'),
   ('11111111-1111-4111-8111-000000000005'::uuid, 'alumni@test-school.test'),
-  ('11111111-1111-4111-8111-000000000006'::uuid, 'system@alumninetwork.test')
+  ('11111111-1111-4111-8111-000000000006'::uuid, 'system@alumninetwork.test'),
+  ('11111111-1111-4111-8111-000000000007'::uuid, 'admin@test-school.test'),
+  ('11111111-1111-4111-8111-000000000008'::uuid, 'reviewer@test-school.test'),
+  ('11111111-1111-4111-8111-000000000009'::uuid, 'pending@test-school.test'),
+  ('11111111-1111-4111-8111-000000000010'::uuid, 'suspended@herzliah.test'),
+  ('11111111-1111-4111-8111-000000000011'::uuid, 'outsider@alumninetwork.test'),
+  ('11111111-1111-4111-8111-000000000012'::uuid, 'needsinfo@herzliah.test'),
+  ('11111111-1111-4111-8111-000000000013'::uuid, 'rejected@herzliah.test'),
+  ('11111111-1111-4111-8111-000000000014'::uuid, 'withdrawn@herzliah.test')
 )
 insert into auth.users (
   instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
@@ -52,21 +71,46 @@ where u.id::text like '11111111-1111-4111-8111-%';
 
 insert into public.platform_admins (user_id) values ('11111111-1111-4111-8111-000000000006');
 
-insert into public.institution_memberships (institution_id, user_id, role) values
-  ('aaaaaaaa-0000-4000-8000-000000000001', '11111111-1111-4111-8111-000000000001', 'school_admin'),
-  ('aaaaaaaa-0000-4000-8000-000000000001', '11111111-1111-4111-8111-000000000004', 'reviewer'),
-  ('aaaaaaaa-0000-4000-8000-000000000001', '11111111-1111-4111-8111-000000000002', 'alumni'),
-  ('aaaaaaaa-0000-4000-8000-000000000002', '11111111-1111-4111-8111-000000000005', 'alumni');
+insert into public.institution_memberships (institution_id, user_id, role, status, status_reason) values
+  ('aaaaaaaa-0000-4000-8000-000000000001', '11111111-1111-4111-8111-000000000001', 'school_admin', 'active', null),
+  ('aaaaaaaa-0000-4000-8000-000000000001', '11111111-1111-4111-8111-000000000004', 'reviewer', 'active', null),
+  ('aaaaaaaa-0000-4000-8000-000000000001', '11111111-1111-4111-8111-000000000002', 'alumni', 'active', null),
+  ('aaaaaaaa-0000-4000-8000-000000000001', '11111111-1111-4111-8111-000000000010', 'alumni', 'suspended', 'Reported abuse'),
+  ('aaaaaaaa-0000-4000-8000-000000000002', '11111111-1111-4111-8111-000000000007', 'school_admin', 'active', null),
+  ('aaaaaaaa-0000-4000-8000-000000000002', '11111111-1111-4111-8111-000000000008', 'reviewer', 'active', null),
+  ('aaaaaaaa-0000-4000-8000-000000000002', '11111111-1111-4111-8111-000000000005', 'alumni', 'active', null);
 
-insert into public.access_requests (id, institution_id, user_id, email, first_name, last_name, maiden_name, grad_year, note) values
+-- One access request in every state. The approved ones are linked to their profiles in section 4.
+insert into public.access_requests (id, institution_id, user_id, email, first_name, last_name, maiden_name, grad_year, note,
+  status, info_request, decision_reason, decided_by, decided_at) values
   ('33333333-3333-4333-8333-000000000001', 'aaaaaaaa-0000-4000-8000-000000000001', '11111111-1111-4111-8111-000000000003',
-   'pending@herzliah.test', 'Penny', 'Pending', 'Levi', 2012, 'Class of 2012, homeroom with Mrs. Cohen.');
+   'pending@herzliah.test', 'Penny', 'Pending', 'Levi', 2012, 'Class of 2012, homeroom with Mrs. Cohen.',
+   'pending', null, null, null, null),
+  ('33333333-3333-4333-8333-000000000002', 'aaaaaaaa-0000-4000-8000-000000000002', '11111111-1111-4111-8111-000000000009',
+   'pending@test-school.test', 'Paul', 'Pending', null, 2018, null,
+   'pending', null, null, null, null),
+  ('33333333-3333-4333-8333-000000000003', 'aaaaaaaa-0000-4000-8000-000000000001', '11111111-1111-4111-8111-000000000012',
+   'needsinfo@herzliah.test', 'Nora', 'Info', null, 2009, null,
+   'needs_info', 'Which homeroom were you in during your last year?', null, '11111111-1111-4111-8111-000000000004', now()),
+  ('33333333-3333-4333-8333-000000000004', 'aaaaaaaa-0000-4000-8000-000000000001', '11111111-1111-4111-8111-000000000013',
+   'rejected@herzliah.test', 'Rob', 'Rejected', null, 2001, 'I attended one summer camp.',
+   'rejected', null, 'Summer camp attendance does not make you a graduate.', '11111111-1111-4111-8111-000000000001', now()),
+  ('33333333-3333-4333-8333-000000000005', 'aaaaaaaa-0000-4000-8000-000000000001', '11111111-1111-4111-8111-000000000014',
+   'withdrawn@herzliah.test', 'Wendy', 'Withdrawn', null, 2016, null,
+   'withdrawn', null, null, null, null),
+  ('33333333-3333-4333-8333-000000000006', 'aaaaaaaa-0000-4000-8000-000000000001', '11111111-1111-4111-8111-000000000002',
+   'alumni@herzliah.test', 'Ari', 'Benaroch', null, 1988, null,
+   'approved', null, null, '11111111-1111-4111-8111-000000000004', now()),
+  ('33333333-3333-4333-8333-000000000007', 'aaaaaaaa-0000-4000-8000-000000000002', '11111111-1111-4111-8111-000000000005',
+   'alumni@test-school.test', 'Other', 'School', null, 2015, null,
+   'approved', null, null, '11111111-1111-4111-8111-000000000007', now());
 
 -- 3. Demo alumni ---------------------------------------------------------------------------------------
 
 create temporary table demo (
   id uuid, first_name text, last_name text, grad_year int, profession text, industry text, job_title text,
-  employer text, city text, country text, university text, bio text
+  employer text, city text, country text, university text, bio text,
+  institution_id uuid not null default 'aaaaaaaa-0000-4000-8000-000000000001', email text
 );
 
 insert into demo values
@@ -121,10 +165,51 @@ insert into demo values
   ('00000000-0000-4000-8000-000000000049'::uuid,'Alex','Touati',2018,'Physician','Healthcare','Family Physician','Jewish General Hospital','Montreal','Canada','McGill University','Herzliah class of 2018. Interested in connecting with fellow alumni and supporting the next generation through professional introductions and community involvement.'),
   ('00000000-0000-4000-8000-000000000050'::uuid,'Dana','Vidal',2021,'Lawyer','Law','Corporate Lawyer','Fasken','Toronto','Canada','Université de Montréal','Herzliah class of 2021. Interested in connecting with fellow alumni and supporting the next generation through professional introductions and community involvement.');
 
+-- Profiles 51-200 (herzliah) and 201-220 (test-school) are generated from fixed lists, so every reset gives the
+-- same people. Professions reuse the hand-written labels and map to career fields the same way.
+insert into demo (id, institution_id, first_name, last_name, grad_year, profession, job_title, employer, city, country,
+  university, bio, email)
+select ('00000000-0000-4000-8000-' || lpad(g::text, 12, '0'))::uuid,
+  case when g <= 200 then 'aaaaaaaa-0000-4000-8000-000000000001' else 'aaaaaaaa-0000-4000-8000-000000000002' end::uuid,
+  f.first, f.last, f.year, w.profession[i.k], w.title[i.k], w.employer[i.k], c.city[i.m], c.country[i.m],
+  u.university[1 + (g * 3) % array_length(u.university, 1)],
+  case when g <= 200 then 'Herzliah class of ' else 'Test School, class of ' end || f.year || '.',
+  lower(f.first || '.' || f.last) || '.' || g || '@example.test'
+from generate_series(51, 220) g
+cross join (select
+  array['Physician', 'Lawyer', 'Software Engineer', 'Finance', 'Entrepreneur', 'Dentist',
+    'Architect', 'Product Manager', 'Accountant', 'Psychologist', 'Engineer', 'Consultant'] as profession,
+  array['Pediatrician', 'Litigation Lawyer', 'Software Developer', 'Portfolio Manager', 'Co-founder and CEO', 'Orthodontist',
+    'Urban Designer', 'Product Lead', 'Chartered Professional Accountant', 'Psychotherapist', 'Mechanical Engineer',
+    'Management Consultant'] as title,
+  array['Montreal Children''s Hospital', 'Osler', 'Lightspeed', 'Fiera Capital', 'Self-employed', 'Smile Dental',
+    'Lemay', 'Coveo', 'KPMG', 'Private Practice', 'Bombardier', 'Bain & Company'] as employer) w
+cross join (select
+  array['Montreal', 'Toronto', 'Ottawa', 'Vancouver', 'New York', 'Boston', 'Miami', 'Tel Aviv', 'Jerusalem', 'Paris',
+    'London'] as city,
+  array['Canada', 'Canada', 'Canada', 'Canada', 'USA', 'USA', 'USA', 'Israel', 'Israel', 'France',
+    'United Kingdom'] as country) c
+cross join (select
+  array['McGill University', 'Concordia University', 'Université de Montréal', 'University of Toronto',
+    'Queen’s University', 'Western University', 'Université Laval', 'HEC Montréal', 'Technion',
+    'Hebrew University of Jerusalem'] as university) u
+cross join lateral (select 1 + (g * 5) % 12 as k, 1 + (g * 7) % 11 as m) i
+cross join lateral (select
+  (array['Adina', 'Ariel', 'Avi', 'Batya', 'Caleb', 'Chloe', 'Daniela', 'Eitan', 'Elise', 'Ezra', 'Gal', 'Hila',
+    'Ilan', 'Jessica', 'Jordan', 'Karen', 'Lior', 'Maxime', 'Meir', 'Michal', 'Nadav', 'Noa', 'Oren', 'Orly',
+    'Raphael', 'Rivka', 'Ronen', 'Sabrina', 'Shai', 'Sivan', 'Tom', 'Valerie', 'Yonatan', 'Zoe', 'Laurent',
+    'Esther', 'Mathieu', 'Ilana', 'Dov', 'Keren'])[1 + (g * 7) % 40] as first,
+  (array['Abergel', 'Amsellem', 'Assaraf', 'Attias', 'Benchetrit', 'Benhamou', 'Bensoussan', 'Bloom', 'Bouhadana',
+    'Dayan', 'Edery', 'Elkaim', 'Fridman', 'Gold', 'Guedj', 'Hadida', 'Kadoch', 'Knafo', 'Lancry', 'Malka', 'Moyal',
+    'Nahmias', 'Ouaknine', 'Peretz', 'Rabin', 'Sabbah', 'Schwartz', 'Serfaty', 'Shulman', 'Silver', 'Suissa',
+    'Tapiero', 'Uzan', 'Wexler', 'Yahiel', 'Zagury', 'Zilberman', 'Benaim', 'Abecassis', 'Ohana', 'Sebag'])[1 + (g * 13) % 41]
+    as last,
+  1975 + (g * 17) % 51 as year) f;
+
 insert into public.alumni_profiles (id, institution_id, status, visibility, first_name, last_name, grad_year, city, country,
   bio, job_title, employer, career_field_id, languages, onboarding_step, onboarding_completed_at, published_at,
   last_confirmed_at, confirmation_due_at)
-select d.id, 'aaaaaaaa-0000-4000-8000-000000000001', 'active', 'members', d.first_name, d.last_name, d.grad_year, d.city,
+select d.id, d.institution_id, 'active', 'members', d.first_name, d.last_name, d.grad_year, d.city,
   d.country, d.bio, d.job_title, d.employer, cf.id, array['en', 'fr'], 7, now(), now(), now(), now() + interval '12 months'
 from demo d
 left join public.career_fields cf on cf.institution_id is null and cf.key = case d.profession
@@ -138,7 +223,7 @@ insert into public.alumni_private (profile_id, institution_id)
 select id, institution_id from public.alumni_profiles where id::text like '00000000-0000-4000-8000-%';
 
 insert into public.alumni_education (profile_id, institution_id, school, sort_order)
-select d.id, 'aaaaaaaa-0000-4000-8000-000000000001', d.university, 1 from demo d;
+select d.id, d.institution_id, d.university, 1 from demo d;
 
 insert into public.alumni_experience (profile_id, institution_id, job_title, employer, career_field_id, location, is_current, sort_order)
 select p.id, p.institution_id, p.job_title, p.employer, p.career_field_id, p.city, true, 1
@@ -146,12 +231,12 @@ from public.alumni_profiles p where p.id::text like '00000000-0000-4000-8000-%';
 
 -- Every demo alumnus shows LinkedIn (readable by members) and email (revealed per click via initiate_contact).
 insert into public.profile_contact_channels (profile_id, institution_id, type, value, is_public, sort_order)
-select d.id, 'aaaaaaaa-0000-4000-8000-000000000001'::uuid, 'linkedin'::public.channel_type,
+select d.id, d.institution_id, 'linkedin'::public.channel_type,
   'https://www.linkedin.com/in/' || lower(d.first_name || '-' || d.last_name), true, 1
 from demo d
 union all
-select d.id, 'aaaaaaaa-0000-4000-8000-000000000001'::uuid, 'email'::public.channel_type,
-  lower(d.first_name || '.' || d.last_name) || '@example.test', true, 2
+select d.id, d.institution_id, 'email'::public.channel_type,
+  coalesce(d.email, lower(d.first_name || '.' || d.last_name) || '@example.test'), true, 2
 from demo d;
 
 create temporary table demo_flags (
@@ -211,9 +296,15 @@ insert into demo_flags values
   ('00000000-0000-4000-8000-000000000049'::uuid,true,false,false,false,true,true,true,false,false),
   ('00000000-0000-4000-8000-000000000050'::uuid,false,true,true,false,false,false,false,true,false);
 
+insert into demo_flags
+select ('00000000-0000-4000-8000-' || lpad(g::text, 12, '0'))::uuid,
+  g % 3 = 0, g % 2 = 0, g % 5 = 0, g % 7 = 0, g % 6 = 1, g % 8 = 3, g % 9 = 4, g % 4 = 1, g % 10 = 5
+from generate_series(51, 220) g;
+
 insert into public.profile_offers (profile_id, offer_type_id, institution_id)
-select f.profile_id, o.id, 'aaaaaaaa-0000-4000-8000-000000000001'
+select f.profile_id, o.id, d.institution_id
 from demo_flags f
+join demo d on d.id = f.profile_id
 cross join lateral (values
   ('mentoring', f.mentoring), ('career_advice', f.career_advice), ('job_opportunities', f.job_opportunities),
   ('offering_jobs', f.offering_jobs), ('offering_internships', f.offering_internships), ('shadowing', f.shadowing),
@@ -244,12 +335,21 @@ values
    'Hidden', 'Member', 2005, now(), null, now()),
   -- test-school's published alumnus.
   ('22222222-2222-4222-8222-000000000003', 'aaaaaaaa-0000-4000-8000-000000000002', '11111111-1111-4111-8111-000000000005',
-   'active', 'members', 'Other', 'School', 2015, now(), now(), now());
+   'active', 'members', 'Other', 'School', 2015, now(), now(), now()),
+  -- A published member whose record the school suspended (the membership is suspended too).
+  ('22222222-2222-4222-8222-000000000004', 'aaaaaaaa-0000-4000-8000-000000000001', '11111111-1111-4111-8111-000000000010',
+   'suspended', 'members', 'Sam', 'Suspended', 2011, now(), now(), now());
+
+update public.access_requests set profile_id = '00000000-0000-4000-8000-000000000001'
+where id = '33333333-3333-4333-8333-000000000006';
+update public.access_requests set profile_id = '22222222-2222-4222-8222-000000000003'
+where id = '33333333-3333-4333-8333-000000000007';
 
 insert into public.alumni_private (profile_id, institution_id, maiden_name, admin_notes) values
   ('22222222-2222-4222-8222-000000000001', 'aaaaaaaa-0000-4000-8000-000000000001', null, 'Record kept for import tests'),
   ('22222222-2222-4222-8222-000000000002', 'aaaaaaaa-0000-4000-8000-000000000001', 'Secretname', null),
-  ('22222222-2222-4222-8222-000000000003', 'aaaaaaaa-0000-4000-8000-000000000002', null, 'test-school private note');
+  ('22222222-2222-4222-8222-000000000003', 'aaaaaaaa-0000-4000-8000-000000000002', null, 'test-school private note'),
+  ('22222222-2222-4222-8222-000000000004', 'aaaaaaaa-0000-4000-8000-000000000001', null, 'Suspended after a report');
 
 insert into public.alumni_experience (profile_id, institution_id, job_title, employer, is_current) values
   ('22222222-2222-4222-8222-000000000002', 'aaaaaaaa-0000-4000-8000-000000000001', 'Private role', 'Private employer', true),
@@ -258,7 +358,8 @@ insert into public.alumni_experience (profile_id, institution_id, job_title, emp
 insert into public.profile_contact_channels (profile_id, institution_id, type, value, is_public) values
   ('22222222-2222-4222-8222-000000000002', 'aaaaaaaa-0000-4000-8000-000000000001', 'email', 'hidden.member@example.test', true),
   ('22222222-2222-4222-8222-000000000003', 'aaaaaaaa-0000-4000-8000-000000000002', 'email', 'other.school@example.test', true),
-  ('22222222-2222-4222-8222-000000000003', 'aaaaaaaa-0000-4000-8000-000000000002', 'linkedin', 'https://www.linkedin.com/in/other-school', true);
+  ('22222222-2222-4222-8222-000000000003', 'aaaaaaaa-0000-4000-8000-000000000002', 'linkedin', 'https://www.linkedin.com/in/other-school', true),
+  ('22222222-2222-4222-8222-000000000004', 'aaaaaaaa-0000-4000-8000-000000000001', 'email', 'sam.suspended@example.test', true);
 
 drop table demo;
 drop table demo_flags;

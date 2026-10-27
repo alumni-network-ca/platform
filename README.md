@@ -49,6 +49,7 @@ Open **http://herzliah.localhost:3000** (the `herzliah` subdomain selects the te
 supabase db reset                # rebuild the local DB from migrations + seed
 supabase migration new <name>    # new schema change; never edit applied migrations
 npm run db:types                 # regenerate lib/database.types.ts after a migration
+npm run seed:perf                # add 10,000 alumni per school (local only; db reset removes them)
 npm run check                    # lint + typecheck + format check + unit tests
 npm run test:db                  # pgTAP database tests (stack must be running)
 npm run test:e2e                 # Playwright end-to-end + accessibility tests
@@ -67,8 +68,18 @@ Local test accounts (password in the `supabase/seed.sql` header, local only):
 | `reviewer@herzliah.test` | Herzliah reviewer |
 | `alumni@herzliah.test` | Herzliah alumnus (published) |
 | `pending@herzliah.test` | Signed up, waiting for approval |
-| `alumni@test-school.test` | Alumnus of a second school (isolation tests) |
+| `needsinfo@herzliah.test` | Asked for more information, not answered yet |
+| `rejected@herzliah.test` | Sign-up rejected |
+| `withdrawn@herzliah.test` | Withdrew their sign-up |
+| `suspended@herzliah.test` | Alumnus whose record the school suspended |
+| `admin@test-school.test` | School admin of a second school (isolation tests) |
+| `reviewer@test-school.test` | Reviewer of the second school |
+| `alumni@test-school.test` | Alumnus of the second school |
+| `pending@test-school.test` | Waiting for approval at the second school |
+| `outsider@alumninetwork.test` | Verified account with no school |
 | `system@alumninetwork.test` | System admin |
+
+The seed also holds 200 published Herzliah alumni and 20 at the second school (fictional, `@example.test`).
 
 ## Security
 

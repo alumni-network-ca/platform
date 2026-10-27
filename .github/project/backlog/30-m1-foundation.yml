@@ -218,9 +218,10 @@ items:
     depends: [FND-05, FND-12]
     reqs: [MT6, S1, S7]
     summary: |
-      A script, scripts/admin/bootstrap-platform-admin.ts, adds a user to platform_admins. It is run once per
-      environment using the secret key, with no hand-written SQL. A platform_open_access(institution, reason, minutes
-      ≤ 480) RPC creates an audited grant that RLS honours until it expires.
+      A script, scripts/admin/bootstrap-platform-admin.ts (`npm run admin:bootstrap`), makes a verified account a
+      system admin through the service-role-only platform_add_admin RPC. It is run once per environment using the
+      secret key, with no hand-written SQL. A platform_open_grant(institution, reason, hours 1–8) RPC creates an
+      audited, read-only grant that RLS honours until it expires or platform_revoke_grant ends it.
     ac:
       - Without a grant, a platform admin can't read alumni data; with one, they can until it expires.
 
