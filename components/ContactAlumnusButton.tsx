@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+// Legacy schema until CON-02 (#130) moves it to initiate_contact.
+import { createLegacyClient as createClient } from "@/lib/supabase/client";
 
 export function ContactAlumnusButton({ profileId }: { profileId: string }) {
   const [email, setEmail] = useState<string | null>(null);

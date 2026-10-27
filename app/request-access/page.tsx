@@ -4,7 +4,8 @@ import { FormEvent, Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Nav } from "@/components/Nav";
-import { createClient } from "@/lib/supabase/client";
+// Legacy schema until ONB-03 (#106) rewires it.
+import { createLegacyClient as createClient } from "@/lib/supabase/client";
 
 function RequestAccessContent() {
   const params = useSearchParams();

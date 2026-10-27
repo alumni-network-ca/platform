@@ -1,7 +1,8 @@
 "use client";
 import Papa from "papaparse";
 import { useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+// Legacy schema until the CSV import (IMP-02, #141) is rebuilt server-side.
+import { createLegacyClient as createClient } from "@/lib/supabase/client";
 type CsvRow = { first_name?: string; last_name?: string; email?: string; grad_year?: string };
 export function AdminImport({ institutionId }: { institutionId: string }) {
   const [status, setStatus] = useState("");

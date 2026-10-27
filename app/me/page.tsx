@@ -2,7 +2,8 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Nav } from "@/components/Nav";
 import { ProfileEditor } from "@/components/ProfileEditor";
-import { createClient } from "@/lib/supabase/server";
+// Legacy schema until PRF-02 (#118) rewires it.
+import { createLegacyClient as createClient } from "@/lib/supabase/server";
 
 export default async function MyProfilePage() {
   const supabase = await createClient();

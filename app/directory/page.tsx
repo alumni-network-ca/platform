@@ -3,21 +3,6 @@ import { Nav } from "@/components/Nav";
 import { DirectoryClient } from "@/components/DirectoryClient";
 import { createClient } from "@/lib/supabase/server";
 
-type DirectoryRow = {
-  id: string;
-  first_name: string;
-  last_name: string;
-  preferred_name: string | null;
-  grad_year: number;
-  city: string | null;
-  country: string | null;
-  job_title: string | null;
-  employer: string | null;
-  career_field_en: string | null;
-  schools: string[];
-  offers: string[];
-};
-
 export default async function DirectoryPage() {
   const supabase = await createClient();
   const {
@@ -32,7 +17,7 @@ export default async function DirectoryPage() {
   const { data: rows, error } = school
     ? await supabase.rpc("search_directory", { p_inst: school.id, p_limit: 100 })
     : { data: [], error: null };
-  const data = (rows ?? []).map((r: DirectoryRow) => ({
+  const data = (rows ?? []).map((r) => ({
     id: r.id,
     first_name: r.preferred_name || r.first_name,
     last_name: r.last_name,

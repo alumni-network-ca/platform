@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Nav } from "@/components/Nav";
-import { createClient } from "@/lib/supabase/client";
+// Legacy schema until ONB-03 (#106) replaces claiming with sign-up.
+import { createLegacyClient as createClient } from "@/lib/supabase/client";
 
 export default function ClaimPage() {
   const [email, setEmail] = useState("");

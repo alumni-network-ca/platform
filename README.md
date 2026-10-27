@@ -48,6 +48,7 @@ Open **http://herzliah.localhost:3000** (the `herzliah` subdomain selects the te
 ```bash
 supabase db reset                # rebuild the local DB from migrations + seed
 supabase migration new <name>    # new schema change; never edit applied migrations
+npm run db:types                 # regenerate lib/database.types.ts after a migration
 npm run check                    # lint + typecheck + format check + unit tests
 npm run test:db                  # pgTAP database tests (stack must be running)
 npm run test:e2e                 # Playwright end-to-end + accessibility tests
@@ -56,7 +57,7 @@ supabase stop                    # stop the local stack
 
 ## Current state
 
-The database runs the **v2 schema** ([data model](docs/architecture/data-model.md)): three migrations in `supabase/migrations/` (schema, access rules, RPCs), with the legacy MVP migrations kept in `supabase/legacy/` for history. The app is the V1–V4 MVP being rebuilt onto it, issue by issue. The directory already reads v2; onboarding, the profile editor, admin pages, claim and request-access still use the old tables and are rewired by their M2 issues, so they fail locally until then.
+The database runs the **v2 schema** ([data model](docs/architecture/data-model.md)): three migrations in `supabase/migrations/` (schema, access rules, RPCs), with the legacy MVP migrations kept in `supabase/legacy/` for history. The app is the V1–V4 MVP being rebuilt onto it, issue by issue. The directory already reads v2 through clients typed from the generated `lib/database.types.ts`. Onboarding, the profile editor, admin pages, claim and request-access still use the old tables through an untyped `createLegacyClient()`, and fail locally until their M2 issues rewire them (each file names its issue).
 
 Local test accounts (password in the `supabase/seed.sql` header, local only):
 

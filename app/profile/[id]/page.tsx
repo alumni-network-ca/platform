@@ -2,9 +2,10 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { Nav } from "@/components/Nav";
 import { ContactAlumnusButton } from "@/components/ContactAlumnusButton";
-import { createClient } from "@/lib/supabase/server";
+// Legacy schema until DIR-03 (#126) rewires it.
+import { createLegacyClient as createClient } from "@/lib/supabase/server";
 
-const labels: any = {
+const labels: Record<string, string> = {
   mentoring: "Mentoring",
   career_advice: "Career advice",
   job_opportunities: "Open to opportunities",
@@ -116,7 +117,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
 
               <div className="profileTimeline">
                 {experience?.length ? (
-                  experience.map((x: any) => (
+                  experience.map((x) => (
                     <div className="timelineItem" key={x.id}>
                       <div className="timelineYears">
                         {x.is_current ? "Current" : `${x.start_year || "—"} – ${x.end_year || "—"}`}
@@ -146,7 +147,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
 
               <div className="profileTimeline">
                 {education?.length ? (
-                  education.map((x: any) => (
+                  education.map((x) => (
                     <div className="timelineItem" key={x.id}>
                       <div className="timelineYears">{x.graduation_year || ""}</div>
 
@@ -181,7 +182,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
               <h3>Open to</h3>
 
               {active.length ? (
-                active.map(([, label]: any) => (
+                active.map(([, label]) => (
                   <div key={label} style={{ padding: "7px 0" }}>
                     ● {label}
                   </div>

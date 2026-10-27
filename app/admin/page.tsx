@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+// Legacy schema until ONB-04 (#107) and ADM-03 (#134) rewire it.
+import { createLegacyClient as createClient } from "@/lib/supabase/server";
 import { AdminImport } from "@/components/AdminImport";
 import { AdminAlumniBrowser } from "@/components/AdminAlumniBrowser";
 import { Nav } from "@/components/Nav";
