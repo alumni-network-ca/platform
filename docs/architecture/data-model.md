@@ -278,8 +278,8 @@ Production holds only demo and test data, so there is no data migration (ADR 000
 | F21 reconfirmation missing | `confirmation_requests`, `profile_confirmations` and the freshness job. |
 | F23 hard-coded tenant | No school literal anywhere; the school comes from the host. |
 
-## 12. Open questions
+## 12. Resolved questions (2026-10-27)
 
-1. **Staff browsing the directory:** staff only get directory access if they also have an approved alumni profile at that school. Is that right for Herzliah's alumni office staff, who are usually not alumni?
-2. **Platform grants:** read-only at launch. If support needs to fix data, a school admin does it, or we add a write scope later.
-3. **Templates per language:** a school must approve both EN and FR versions before emails go out in each language. Until then, should a recipient whose language isn't approved get the other language, or nothing? Proposed: the other approved language.
+1. **Staff browsing the directory:** staff get directory access only if they also have an approved alumni profile at that school. Admin pages are separate and don't need one.
+2. **Platform grants:** read-only at launch. If support needs to fix data, a school admin does it. A write scope can be added later.
+3. **Templates per language:** if a school hasn't approved the template in the recipient's language, the email goes out in the other approved language. If neither is approved, nothing is sent (`skipped_no_template`) and the admin sees why.
