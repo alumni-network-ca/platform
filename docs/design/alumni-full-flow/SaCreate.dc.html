@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Platform console — New school</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#4b2a8a}a:hover{color:#2f1866}
+button,input,select{font:inherit}
+button:focus-visible,input:focus,select:focus{outline:2px solid #4b2a8a;outline-offset:1px}
+</style>
+</helmet>
+<div style="min-height: 960px; background: #f5f5f7; font-family: Inter, Arial, sans-serif; color: #15172b; display: flex; flex-direction: column">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 28px; background: #15172b; color: #ffffff">
+    <div style="display: flex; align-items: center; gap: 11px">
+      <span aria-hidden="true" style="display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: #4b2a8a; font-size: 13px; font-weight: 800; letter-spacing: 0.04em">AN</span>
+      <span style="display: flex; flex-direction: column; gap: 3px"><span style="font-weight: 700; font-size: 14px">Alumni Network</span><span style="font-size: 9px; letter-spacing: 0.13em; text-transform: uppercase; color: #b8b9d0">Platform console</span></span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px; font-size: 14px">
+      <span style="padding: 5px 10px; border-radius: 999px; background: #4b2a8a; font-size: 12px; font-weight: 700">Platform admin</span>
+      <span aria-label="Gab Derhy" role="img" style="display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #d9cdf3; color: #15172b; font-size: 13px; font-weight: 800">GD</span>
+    </div>
+  </header>
+  <div style="flex: 1; display: flex; flex-wrap: wrap">
+    <nav aria-label="Console" style="flex: 1 1 200px; max-width: 220px; background: #ffffff; border-right: 1px solid #e4e4ec; padding: 20px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px">
+      <sc-for list="{{nav}}" as="n" hint-placeholder-count="3">
+        <a href="{{n.href}}" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: {{n.weight}}; background: {{n.bg}}; color: #15172b; text-decoration: none">{{n.label}}<sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{false}}"><span style="min-width: 22px; padding: 2px 7px; box-sizing: border-box; border-radius: 999px; background: #4b2a8a; color: #ffffff; font-size: 12px; font-weight: 700; text-align: center">{{n.badge}}</span></sc-if></a>
+      </sc-for>
+    </nav>
+    <main style="flex: 999 1 640px; min-width: 0; padding: 28px 36px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px; max-width: 880px">
+      <a href="SaSchools.dc.html" style="align-self: flex-start; font-size: 14px; font-weight: 600">← Schools</a>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <h1 style="margin: 0; font-size: 28px; font-weight: 800">New school</h1>
+        <p style="margin: 0; font-size: 15px; color: #45486a">The school's network goes live at its address right away, but stays closed to sign-ups until you activate it.</p>
+      </div>
+      <section style="background: #ffffff; border: 1px solid #e4e4ec; border-radius: 12px; padding: 22px 24px; display: flex; flex-direction: column; gap: 16px">
+        <h2 style="margin: 0; font-size: 17px; font-weight: 700">Identity</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px">
+          <div style="display: flex; flex-direction: column; gap: 7px"><label for="cs-name" style="font-size: 13px; font-weight: 600">School name</label><input id="cs-name" value="{{name}}" onChange="{{onName}}" style="padding: 10px 12px; border: 1px solid #8b8ca8; border-radius: 7px; color: #15172b; font-size: 14px"></div>
+          <div style="display: flex; flex-direction: column; gap: 7px"><label for="cs-short" style="font-size: 13px; font-weight: 600">Short name</label><input id="cs-short" value="{{shortName}}" style="padding: 10px 12px; border: 1px solid #8b8ca8; border-radius: 7px; color: #15172b; font-size: 14px"><span style="font-size: 12px; color: #55587a">Used in “{{shortName}} Alumni Network”</span></div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 7px">
+          <label for="cs-slug" style="font-size: 13px; font-weight: 600">Web address</label>
+          <div style="display: flex; align-items: center; border: 1px solid #8b8ca8; border-radius: 7px; overflow: hidden; max-width: 460px">
+            <input id="cs-slug" value="{{slug}}" onChange="{{onSlug}}" style="flex: 1; min-width: 0; border: 0; padding: 10px 12px; color: #15172b; font-size: 14px">
+            <span style="padding: 10px 12px; background: #f0f0f5; color: #45486a; font-size: 14px">.alumninetwork.ca</span>
+          </div>
+          <span style="font-size: 12px; color: #1b5e33; font-weight: 600">{{slugNote}}</span>
+        </div>
+      </section>
+      <section style="background: #ffffff; border: 1px solid #e4e4ec; border-radius: 12px; padding: 22px 24px; display: flex; flex-direction: column; gap: 16px">
+        <h2 style="margin: 0; font-size: 17px; font-weight: 700">Branding and email</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px">
+          <div style="display: flex; flex-direction: column; gap: 7px"><span style="font-size: 13px; font-weight: 600">Logo</span><button type="button" style="padding: 10px 12px; border-radius: 7px; border: 1px dashed #8b8ca8; background: #ffffff; color: #15172b; font-size: 14px; font-weight: 600; cursor: pointer">Upload logo</button></div>
+          <div style="display: flex; flex-direction: column; gap: 7px"><label for="cs-color" style="font-size: 13px; font-weight: 600">Primary colour</label><div style="display: flex; align-items: center; gap: 8px"><span aria-hidden="true" style="flex: 0 0 38px; height: 38px; border-radius: 7px; background: #0b2159"></span><input id="cs-color" value="#0B2159" style="flex: 1; min-width: 0; padding: 10px 12px; border: 1px solid #8b8ca8; border-radius: 7px; color: #15172b; font-size: 14px"></div></div>
+          <div style="display: flex; flex-direction: column; gap: 7px"><label for="cs-accent" style="font-size: 13px; font-weight: 600">Accent colour</label><div style="display: flex; align-items: center; gap: 8px"><span aria-hidden="true" style="flex: 0 0 38px; height: 38px; border-radius: 7px; background: #7b1e3d"></span><input id="cs-accent" value="#7B1E3D" style="flex: 1; min-width: 0; padding: 10px 12px; border: 1px solid #8b8ca8; border-radius: 7px; color: #15172b; font-size: 14px"></div><span style="align-self: flex-start; padding: 4px 10px; border-radius: 999px; background: #e3f3e8; color: #1b5e33; font-size: 12px; font-weight: 700">Contrast passes</span></div>
+          <div style="display: flex; flex-direction: column; gap: 7px"><label for="cs-lang" style="font-size: 13px; font-weight: 600">Default language</label><select id="cs-lang" style="padding: 10px 12px; border: 1px solid #8b8ca8; border-radius: 7px; background: #ffffff; color: #15172b; font-size: 14px"><option>English</option><option>Français</option></select></div>
+          <div style="display: flex; flex-direction: column; gap: 7px"><label for="cs-reply" style="font-size: 13px; font-weight: 600">Replies go to</label><input id="cs-reply" value="[school alumni office email]" style="padding: 10px 12px; border: 1px solid #8b8ca8; border-radius: 7px; color: #15172b; font-size: 14px"></div>
+        </div>
+        <label style="display: flex; gap: 10px; align-items: center; font-size: 14px"><input type="checkbox" checked style="accent-color: #4b2a8a; width: 18px; height: 18px; margin: 0">Start with the default career fields, “Open to” options and email templates (EN + FR)</label>
+      </section>
+      <div style="display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px">
+        <a href="SaSchools.dc.html" style="display: inline-flex; padding: 11px 18px; border-radius: 7px; border: 1px solid #8b8ca8; color: #15172b; font-weight: 700; font-size: 14px; text-decoration: none">Cancel</a>
+        <a href="SaSetup.dc.html" style="display: inline-flex; padding: 11px 18px; border-radius: 7px; background: #4b2a8a; color: #ffffff; font-weight: 700; font-size: 14px; text-decoration: none">Create school</a>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":960}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { name: 'Maple Ridge Academy', slug: '', slugEdited: false };
+  }
+  renderVals() {
+    var self = this;
+    var active = 'schools';
+    var items = [['schools', 'Schools', 'SaSchools.dc.html'], ['support', 'Support access', 'SaSupport.dc.html', 1], ['health', 'Platform health', 'SaHealth.dc.html']];
+    var nav = items.map(function (it) {
+      var on = it[0] === active;
+      return { label: it[1], href: it[2], badge: it[3] || 0, hasBadge: !!it[3], weight: on ? '700' : '500', bg: on ? '#efe9fb' : 'transparent' };
+    });
+    var name = this.state.name || '';
+    var auto = name.toLowerCase().replace(/\[|\]/g, '').replace(/\b(high school|school|academy|collège|college)\b/g, '').trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40);
+    var slug = this.state.slugEdited ? this.state.slug : auto;
+    var shortName = name.replace(/\s+(High School|School|Academy)$/i, '') || 'School';
+    return {
+      nav: nav, name: name, slug: slug, shortName: shortName,
+      slugNote: slug ? slug + '.alumninetwork.ca is available' : 'Pick an address',
+      onName: function (e) { self.setState({ name: e.target.value }); },
+      onSlug: function (e) { self.setState({ slug: e.target.value, slugEdited: true }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -17,7 +17,7 @@ export async function getAccount() {
   } = await supabase.auth.getUser();
   if (!user) return { school, supabase, user: null, state: null };
 
-  const [membership, profile, request] = await Promise.all([
+  const [membership, profile, request, platformAdmin] = await Promise.all([
     supabase
       .from("institution_memberships")
       .select("role, status")
@@ -38,8 +38,9 @@ export async function getAccount() {
       .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle(),
+    supabase.rpc("is_system_admin"),
   ]);
-  const error = membership.error ?? profile.error ?? request.error;
+  const error = membership.error ?? profile.error ?? request.error ?? platformAdmin.error;
   if (error) throw new Error(`Could not load the account: ${error.message}`);
 
   const state: AccountState = {
@@ -49,6 +50,7 @@ export async function getAccount() {
       onboardingComplete: profile.data.onboarding_completed_at !== null,
     },
     request: request.data?.status ?? null,
+    platformAdmin: platformAdmin.data === true,
   };
   return { school, supabase, user, state };
 }

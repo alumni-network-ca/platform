@@ -24,6 +24,7 @@ Alumni sign in a few times a year. With passwords, most of them would forget the
 | suspended | `/account/suspended` |
 | not known, or sign-up withdrawn | `/join` |
 | system admin, on `alumninetwork.ca` | the console (SA-01) |
+| system admin with no role at this school | `/account/platform`, which points to the console (ADR 0005: no school data without a support grant) |
 
   The same function backs the route guards and the `/` redirect for signed-in visitors. A `?next=` path wins only when it is relative (F7) and the person may open that page.
 

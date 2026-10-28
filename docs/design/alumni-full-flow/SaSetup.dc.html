@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Platform console — School setup</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#4b2a8a}a:hover{color:#2f1866}
+button,input{font:inherit}
+button:focus-visible,input:focus{outline:2px solid #4b2a8a;outline-offset:1px}
+</style>
+</helmet>
+<div style="min-height: 960px; background: #f5f5f7; font-family: Inter, Arial, sans-serif; color: #15172b; display: flex; flex-direction: column">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 28px; background: #15172b; color: #ffffff">
+    <div style="display: flex; align-items: center; gap: 11px">
+      <span aria-hidden="true" style="display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: #4b2a8a; font-size: 13px; font-weight: 800; letter-spacing: 0.04em">AN</span>
+      <span style="display: flex; flex-direction: column; gap: 3px"><span style="font-weight: 700; font-size: 14px">Alumni Network</span><span style="font-size: 9px; letter-spacing: 0.13em; text-transform: uppercase; color: #b8b9d0">Platform console</span></span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px; font-size: 14px">
+      <span style="padding: 5px 10px; border-radius: 999px; background: #4b2a8a; font-size: 12px; font-weight: 700">Platform admin</span>
+      <span aria-label="Gab Derhy" role="img" style="display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #d9cdf3; color: #15172b; font-size: 13px; font-weight: 800">GD</span>
+    </div>
+  </header>
+  <div style="flex: 1; display: flex; flex-wrap: wrap">
+    <nav aria-label="Console" style="flex: 1 1 200px; max-width: 220px; background: #ffffff; border-right: 1px solid #e4e4ec; padding: 20px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px">
+      <sc-for list="{{nav}}" as="n" hint-placeholder-count="3">
+        <a href="{{n.href}}" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: {{n.weight}}; background: {{n.bg}}; color: #15172b; text-decoration: none">{{n.label}}<sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{false}}"><span style="min-width: 22px; padding: 2px 7px; box-sizing: border-box; border-radius: 999px; background: #4b2a8a; color: #ffffff; font-size: 12px; font-weight: 700; text-align: center">{{n.badge}}</span></sc-if></a>
+      </sc-for>
+    </nav>
+    <main style="flex: 999 1 640px; min-width: 0; padding: 28px 36px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
+      <a href="SaSchools.dc.html" style="align-self: flex-start; font-size: 14px; font-weight: 600">← Schools</a>
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px">
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <h1 style="margin: 0; font-size: 28px; font-weight: 800">Maple Ridge Academy</h1>
+          <span style="font-size: 14px; color: #45486a">maple-ridge.alumninetwork.ca · created Oct 28 by Gab Derhy</span>
+        </div>
+        <span style="padding: 6px 12px; border-radius: 999px; background: {{statusBg}}; color: {{statusFg}}; font-size: 13px; font-weight: 700">{{statusLabel}}</span>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-start">
+        <section style="flex: 999 1 420px; min-width: 0; background: #ffffff; border: 1px solid #e4e4ec; border-radius: 12px; padding: 22px 24px; display: flex; flex-direction: column; gap: 6px">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px"><h2 style="margin: 0; font-size: 17px; font-weight: 700">Launch checklist</h2><span style="font-size: 13px; color: #45486a">{{doneCount}} of 6 done</span></div>
+          <ol style="margin: 8px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column">
+            <sc-for list="{{steps}}" as="s" hint-placeholder-count="6">
+              <li style="display: flex; gap: 14px; align-items: flex-start; padding: 12px 0; border-top: 1px solid #efeff4">
+                <input type="checkbox" aria-label="{{s.label}}" checked="{{s.done}}" onChange="{{s.toggle}}" style="accent-color: #4b2a8a; width: 20px; height: 20px; margin: 1px 0 0 0; flex: 0 0 20px">
+                <span style="display: flex; flex-direction: column; gap: 3px"><span style="font-size: 15px; font-weight: 700">{{s.label}}</span><span style="font-size: 13px; line-height: 1.45; color: #55587a">{{s.hint}}</span></span>
+              </li>
+            </sc-for>
+          </ol>
+          <sc-if value="{{canActivate}}" hint-placeholder-val="{{false}}">
+            <button type="button" onClick="{{activate}}" style="align-self: flex-start; margin-top: 8px; padding: 12px 20px; border-radius: 7px; border: 0; background: #1b6b3f; color: #ffffff; font-weight: 700; font-size: 15px; cursor: pointer">Open sign-ups</button>
+          </sc-if>
+          <sc-if value="{{cannotActivate}}" hint-placeholder-val="{{true}}">
+            <button type="button" disabled style="align-self: flex-start; margin-top: 8px; padding: 12px 20px; border-radius: 7px; border: 0; background: #dcdce6; color: #55587a; font-weight: 700; font-size: 15px">{{activateLabel}}</button>
+          </sc-if>
+        </section>
+        <aside style="flex: 1 1 280px; display: flex; flex-direction: column; gap: 14px">
+          <section style="background: #ffffff; border: 1px solid #e4e4ec; border-radius: 12px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px">
+            <h2 style="margin: 0; font-size: 15px; font-weight: 700">First school admin</h2>
+            <div style="display: flex; flex-direction: column; gap: 7px"><label for="fa-email" style="font-size: 13px; font-weight: 600">Email</label><input id="fa-email" value="[principal or alumni office email]" style="padding: 10px 12px; border: 1px solid #8b8ca8; border-radius: 7px; color: #15172b; font-size: 14px"></div>
+            <button type="button" style="padding: 10px 16px; border-radius: 7px; border: 0; background: #4b2a8a; color: #ffffff; font-weight: 700; font-size: 14px; cursor: pointer">Send staff invitation</button>
+            <span style="font-size: 13px; line-height: 1.45; color: #55587a">They set up two-factor sign-in, then invite the rest of their staff themselves.</span>
+          </section>
+          <section style="background: #ffffff; border: 1px solid #e4e4ec; border-radius: 12px; padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; font-size: 14px">
+            <h2 style="margin: 0; font-size: 15px; font-weight: 700">Counts</h2>
+            <span style="color: #45486a">0 members · 0 pending · 0 staff</span>
+            <a href="SaSupport.dc.html" style="font-weight: 600">Request support access →</a>
+            <a href="SaSuspend.dc.html" style="font-weight: 600; color: #a1173b">Suspend or offboard…</a>
+          </section>
+        </aside>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":960}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { done: { create: true, configure: true, admin: true }, live: false };
+  }
+  renderVals() {
+    var self = this;
+    var active = 'schools';
+    var items = [['schools', 'Schools', 'SaSchools.dc.html'], ['support', 'Support access', 'SaSupport.dc.html', 1], ['health', 'Platform health', 'SaHealth.dc.html']];
+    var nav = items.map(function (it) {
+      var on = it[0] === active;
+      return { label: it[1], href: it[2], badge: it[3] || 0, hasBadge: !!it[3], weight: on ? '700' : '500', bg: on ? '#efe9fb' : 'transparent' };
+    });
+    var done = this.state.done;
+    var defs = [
+      ['create', 'School created', 'Address reserved, defaults copied in.'],
+      ['configure', 'Branding and email set', 'Logo, colours, sender name and reply-to address.'],
+      ['admin', 'First school admin invited', 'Accepted and two-factor sign-in set up.'],
+      ['templates', 'School approves its email templates', 'Done by the school admin, in English and French.'],
+      ['isolation', 'Isolation check passed', 'A test account here can’t see any other school’s data.'],
+      ['link', 'Sign-up link shared with the school', 'maple-ridge.alumninetwork.ca/join, for their alumni email.']
+    ];
+    var count = 0;
+    var steps = defs.map(function (d) {
+      var on = !!done[d[0]];
+      if (on) count++;
+      return { label: d[1], hint: d[2], done: on, toggle: function () { var n = Object.assign({}, self.state.done); n[d[0]] = !n[d[0]]; self.setState({ done: n, live: false }); } };
+    });
+    var live = this.state.live;
+    var all = count === 6;
+    return {
+      nav: nav, steps: steps, doneCount: count,
+      canActivate: all && !live, cannotActivate: !all || live,
+      activateLabel: live ? 'Sign-ups are open' : 'Finish the checklist to open sign-ups',
+      activate: function () { self.setState({ live: true }); },
+      statusLabel: live ? 'Live' : 'In setup — closed to sign-ups',
+      statusBg: live ? '#e3f3e8' : '#fff4dc', statusFg: live ? '#1b5e33' : '#7a4b00'
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -14,3 +14,6 @@ documentation/
 
 # SQL is reviewed as written.
 supabase/
+
+# Design sources, copied as drawn.
+docs/design/

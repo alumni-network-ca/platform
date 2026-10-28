@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Alumni directory</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7b1e3d}a:hover{color:#611630}
+input,select,button{font:inherit}
+input:focus,select:focus,button:focus-visible{outline:2px solid #7b1e3d;outline-offset:1px}
+</style>
+</helmet>
+<div style="min-height: 1100px; background: #f7f7f6; font-family: Inter, Arial, sans-serif; color: #0b2159; display: flex; flex-direction: column">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 40px; background: #0b2159; color: #ffffff">
+    <a href="Main.dc.html" style="display: flex; align-items: center; gap: 11px; color: #ffffff; text-decoration: none">
+      <img src="/_blob/4656ce653b200e07991d58266759ac80" alt="" style="width: 42px; height: 42px; box-sizing: border-box; padding: 4px; border-radius: 10px; background: #ffffff; object-fit: contain">
+      <span style="display: flex; flex-direction: column; gap: 3px"><span style="font-weight: 700; font-size: 14px">Herzliah Alumni Network</span><span style="font-size: 9px; letter-spacing: 0.13em; text-transform: uppercase; color: #b4bdd4">Private · verified · connected</span></span>
+    </a>
+    <nav aria-label="Main" style="display: flex; gap: 6px; font-size: 14px">
+      <a href="#" style="padding: 9px 13px; border-radius: 999px; color: #d2d7e4; text-decoration: none">Home</a>
+      <a href="Directory.dc.html" aria-current="page" style="padding: 9px 13px; border-radius: 999px; color: #ffffff; background: rgba(255,255,255,0.1); text-decoration: none">Directory</a>
+    </nav>
+    <div style="display: flex; align-items: center; gap: 12px">
+      <a href="Me.dc.html" style="padding: 8px 14px; border-radius: 7px; border: 1px solid #6b7a9e; color: #ffffff; font-size: 14px; font-weight: 700; text-decoration: none">My profile</a>
+      <span aria-label="Dana Levy" role="img" style="display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #eab6ce; color: #0b2159; font-size: 13px; font-weight: 800">DL</span>
+    </div>
+  </header>
+  <main style="flex: 1; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 36px 24px 56px; display: flex; flex-direction: column; gap: 24px">
+    <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px">
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #7b1e3d">Private directory</span>
+        <h1 style="margin: 0; font-size: 32px; font-weight: 800">Find Herzliah alumni</h1>
+      </div>
+      <span style="font-size: 14px; color: #4a5575">200 verified members</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 12px; padding: 6px 6px 6px 18px; background: #ffffff; border: 1px solid #8a93ab; border-radius: 10px">
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4a5575" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+      <label for="dir-q" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Search alumni</label>
+      <input id="dir-q" value="{{query}}" onChange="{{onQuery}}" placeholder="Search by name, job title, employer or university" style="flex: 1; min-width: 0; border: 0; padding: 12px 0; font-size: 16px; color: #0b2159; background: transparent; outline: none">
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+      <aside aria-label="Filters" style="flex: 1 1 240px; max-width: 280px; display: flex; flex-direction: column; gap: 20px; background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 22px; box-sizing: border-box">
+        <div style="display: flex; justify-content: space-between; align-items: center"><h2 style="margin: 0; font-size: 15px; font-weight: 700">Filters</h2><button type="button" onClick="{{clearAll}}" style="border: 0; background: transparent; color: #7b1e3d; font-size: 13px; font-weight: 700; cursor: pointer; padding: 4px">Clear</button></div>
+        <div style="display: flex; flex-direction: column; gap: 7px">
+          <label for="f-field" style="font-size: 13px; font-weight: 600">Career field</label>
+          <select id="f-field" style="width: 100%; padding: 10px 12px; border: 1px solid #8a93ab; border-radius: 7px; background: #ffffff; color: #0b2159; font-size: 14px"><option>Any field</option><option>Technology</option><option>Law</option><option>Medicine &amp; Healthcare</option></select>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 7px">
+          <label for="f-uni" style="font-size: 13px; font-weight: 600">University</label>
+          <select id="f-uni" style="width: 100%; padding: 10px 12px; border: 1px solid #8a93ab; border-radius: 7px; background: #ffffff; color: #0b2159; font-size: 14px"><option>Any university</option><option>McGill</option><option>Concordia</option><option>Université de Montréal</option></select>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 7px">
+          <label for="f-city" style="font-size: 13px; font-weight: 600">City</label>
+          <select id="f-city" style="width: 100%; padding: 10px 12px; border: 1px solid #8a93ab; border-radius: 7px; background: #ffffff; color: #0b2159; font-size: 14px"><option>Anywhere</option><option>Montreal</option><option>Toronto</option><option>New York</option><option>Tel Aviv</option></select>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 7px">
+          <label for="f-class" style="font-size: 13px; font-weight: 600">Graduating class</label>
+          <select id="f-class" style="width: 100%; padding: 10px 12px; border: 1px solid #8a93ab; border-radius: 7px; background: #ffffff; color: #0b2159; font-size: 14px"><option>Any year</option><option>2010s</option><option>2000s</option><option>1990s</option></select>
+        </div>
+        <fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 10px">
+          <legend style="font-size: 13px; font-weight: 600; margin-bottom: 10px">Open to</legend>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px">
+            <sc-for list="{{chips}}" as="c" hint-placeholder-count="4">
+              <button type="button" aria-pressed="{{c.pressed}}" onClick="{{c.toggle}}" style="padding: 7px 12px; border-radius: 999px; border: {{c.border}}; background: {{c.bg}}; color: {{c.fg}}; font-size: 13px; font-weight: 700; cursor: pointer">{{c.label}}</button>
+            </sc-for>
+          </div>
+        </fieldset>
+      </aside>
+      <section aria-label="Results" style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+        <span style="font-size: 14px; color: #4a5575">{{resultLabel}}</span>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px">
+          <sc-for list="{{people}}" as="p" hint-placeholder-count="8">
+            <a href="Profile.dc.html" style="display: flex; flex-direction: column; gap: 12px; padding: 18px; background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; color: #0b2159; text-decoration: none">
+              <div style="display: flex; gap: 12px; align-items: center">
+                <span aria-hidden="true" style="display: grid; place-items: center; flex: 0 0 46px; height: 46px; border-radius: 50%; background: {{p.tint}}; color: #0b2159; font-size: 15px; font-weight: 800">{{p.initials}}</span>
+                <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span style="font-weight: 800; font-size: 16px">{{p.name}}</span><span style="font-size: 13px; color: #4a5575">Class of {{p.year}} · {{p.city}}</span></div>
+              </div>
+              <span style="font-size: 14px; line-height: 1.45; color: #3a4a70">{{p.role}}</span>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px">
+                <sc-for list="{{p.open}}" as="t" hint-placeholder-count="2">
+                  <span style="padding: 4px 9px; border-radius: 999px; background: #f1dce3; color: #611630; font-size: 12px; font-weight: 700">{{t}}</span>
+                </sc-for>
+              </div>
+            </a>
+          </sc-for>
+        </div>
+        <sc-if value="{{empty}}" hint-placeholder-val="{{false}}">
+          <div style="padding: 40px; text-align: center; background: #ffffff; border: 1px dashed #8a93ab; border-radius: 12px; font-size: 15px; color: #3a4a70">No alumni match. Try fewer filters.</div>
+        </sc-if>
+      </section>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1100}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { query: '', on: {} };
+  }
+  renderVals() {
+    var self = this;
+    var all = [
+      { name: 'Maya Azoulay', initials: 'MA', year: 2009, city: 'Montreal', role: 'Product Lead · Northline Health', open: ['Mentoring', 'Career advice'], tint: '#eab6ce' },
+      { name: 'Noah Cohen', initials: 'NC', year: 2012, city: 'Toronto', role: 'Litigation Associate · [Law firm]', open: ['Career advice', 'Job shadowing'], tint: '#c9d6f2' },
+      { name: 'Rachel Gold', initials: 'RG', year: 2005, city: 'New York', role: 'Pediatrician · [Hospital]', open: ['Mentoring', 'Speaking at Herzliah'], tint: '#f6dcae' },
+      { name: 'Eli Benchetrit', initials: 'EB', year: 2016, city: 'Montreal', role: 'Founder · early-stage climate startup', open: ['Startup advice', 'Hiring'], tint: '#cfe8d8' },
+      { name: 'Talia Weiss', initials: 'TW', year: 2011, city: 'Tel Aviv', role: 'Data Scientist · [Company]', open: ['Introductions', 'Mentoring'], tint: '#e3d4f2' },
+      { name: 'Samuel Amar', initials: 'SA', year: 1998, city: 'Montreal', role: 'Partner · accounting firm', open: ['Offering internships', 'Career advice'], tint: '#c9d6f2' },
+      { name: 'Leah Bitton', initials: 'LB', year: 2018, city: 'Toronto', role: 'Architect in training · [Studio]', open: ['Helping current students'], tint: '#eab6ce' },
+      { name: 'Jonah Segal', initials: 'JS', year: 2007, city: 'Montreal', role: 'Real estate developer', open: ['Introductions', 'Speaking at Herzliah'], tint: '#f6dcae' }
+    ];
+    var chipNames = ['Mentoring', 'Career advice', 'Hiring', 'Offering internships', 'Introductions', 'Helping current students'];
+    var on = this.state.on;
+    var q = (this.state.query || '').toLowerCase();
+    var active = chipNames.filter(function (c) { return on[c]; });
+    var people = all.filter(function (p) {
+      var hay = (p.name + ' ' + p.role + ' ' + p.city).toLowerCase();
+      if (q && hay.indexOf(q) === -1) return false;
+      for (var i = 0; i < active.length; i++) { if (p.open.indexOf(active[i]) === -1) return false; }
+      return true;
+    });
+    var chips = chipNames.map(function (c) {
+      var isOn = !!on[c];
+      return {
+        label: c, pressed: isOn ? 'true' : 'false',
+        border: isOn ? '1px solid #7b1e3d' : '1px solid #8a93ab',
+        bg: isOn ? '#7b1e3d' : '#ffffff',
+        fg: isOn ? '#ffffff' : '#0b2159',
+        toggle: function () { var n = Object.assign({}, self.state.on); n[c] = !n[c]; self.setState({ on: n }); }
+      };
+    });
+    return {
+      query: this.state.query,
+      onQuery: function (e) { self.setState({ query: e.target.value }); },
+      clearAll: function () { self.setState({ query: '', on: {} }); },
+      chips: chips,
+      people: people,
+      empty: people.length === 0,
+      resultLabel: people.length === all.length ? 'Showing 8 of 200 · sorted by most recently updated' : people.length + ' matching'
+    };
+  }
+}
+</script>
+</body>
+</html>

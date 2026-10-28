@@ -289,12 +289,18 @@ items:
     depends: [FND-13, FND-07]
     reqs: [MT1, MT6]
     summary: |
-      /console on the root domain, for platform admins with MFA. Create an institution (name, slug/subdomain,
-      branding, default language, sender name, reply-to), seed its default career fields and options, and
-      suspend/reactivate it (suspended tenants return 404 with a notice). Shows per-tenant counts but no personal
-      data. Audited.
+      Design S1.1, S1.2, S2.1, S2.2 (docs/design/alumni-full-flow). /console on the root domain, for platform admins
+      (MFA comes with FND-11), with its own sign-in. Lists schools with counts only (members, pending sign-ups,
+      staff, open grants), never personal data. Creates a school (name, address, short name, logo path, colours,
+      default language, sender name, reply-to; the platform's default career fields, options and templates apply).
+      Suspends a school with a reason and the address typed back, and reactivates it: a suspended school's address
+      answers 404 and its staff lose access. Opens and ends time-boxed support grants (FND-13) with their history.
+      On a school's address, a platform admin with no role there lands on /account/platform, which points to the
+      console. On PR previews, ?tenant=root reaches the console. Every change is audited.
     ac:
-      - A new institution is reachable at <slug>.<domain> immediately, with no deploy.
+      - A new school is reachable at <slug>.<domain> immediately, with no deploy.
+      - Any account that is not a platform admin is refused, and the console shows no alumni data.
+      - A suspended school's address answers 404; reactivating it restores access.
 
   - key: SA-02
     title: "Appoint the first school admin"
@@ -303,9 +309,14 @@ items:
     size: S
     depends: [SA-01, ADM-06]
     reqs: [MT6]
-    summary: From the console, invite the first school admin by email using the staff invitation. They must set up MFA, and can then invite the rest of their staff.
+    summary: |
+      Design S1.3. From the school's console page, invite a school admin with a staff invitation. Until emails go out
+      (EML-01), the console shows the invitation link to copy and send; each new link cancels the previous one, and
+      invitations can be revoked. The link leads to /staff/accept on the school's address: the person signs in (with
+      a code if new) and accepts while signed in with the invited email. MFA enrolment comes with FND-11.
     ac:
-      - The school admin can sign in on the tenant subdomain and reach /admin after enrolling MFA.
+      - The invited person signs in on the school's address, accepts, and lands on /admin.
+      - The link works only for the invited email, only once, and stops working when a new link is issued.
 
   - key: SA-03
     title: "Provisioning and offboarding runbook + script"
@@ -327,7 +338,23 @@ items:
     size: S
     depends: [SA-01, FND-17]
     reqs: [S9]
-    summary: Recent job runs, the email failure rate, approval backlog and per-tenant counts.
+    summary: Design S2.3. Recent job runs, the email failure rate, approval backlog and per-tenant counts.
+
+  - key: SA-05
+    title: "School setup status and launch checklist"
+    epic: EPIC-SA
+    labels: [type:feature, area:platform, P1]
+    size: M
+    depends: [SA-01, SA-02]
+    reqs: [MT6]
+    summary: |
+      Design S1.3. A new school starts "in setup": its address works for staff but /join is closed. The console shows
+      a launch checklist (branding and email set, first school admin accepted with MFA, templates approved, isolation
+      check, sign-up link shared) and "Open sign-ups" once it is complete. Offboarding (export, then deletion per
+      DEC-08) comes with the retention job.
+    ac:
+      - request_access is refused while a school is in setup.
+      - Opening sign-ups is available only when the checklist is complete, and is audited.
 
   # ---------------------------------------------------------------- public pages (WS4)
   - key: PUB-01

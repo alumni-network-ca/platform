@@ -35,6 +35,8 @@ Open **http://herzliah.localhost:3000**. The subdomain selects the school: `test
 
 To sign in, enter one of those emails at `/login`: the 6-digit code arrives in Mailpit (http://127.0.0.1:54324). Or choose "Sign in with a password": every seed account has the local-only password `LocalDev-Passw0rd` (ADR 0015). Any account can set its own password at `/account/password` after signing in with a code.
 
+The platform console is at **http://localhost:3000/console** (the root site has its own sign-in): sign in as `system@alumninetwork.test` to list, create and suspend schools, invite their first school admin and open support access. On a PR preview, add `?tenant=root` to reach it.
+
 ### Local services
 
 | Service | URL |

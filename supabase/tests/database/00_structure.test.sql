@@ -52,7 +52,7 @@ select is(
 select is(
   (select array_agg(p.proname::text order by p.proname) from pg_proc p join pg_namespace n on n.oid = p.pronamespace
    where n.nspname = 'public' and not p.prosecdef and p.prorettype <> 'trigger'::regtype
-     and p.proname not in ('search_directory', 'hash_token', 'validate_template_text')),
+     and p.proname not in ('search_directory', 'hash_token', 'validate_template_text', 'clean_branding')),
   null,
   'every public RPC is security definer'
 );

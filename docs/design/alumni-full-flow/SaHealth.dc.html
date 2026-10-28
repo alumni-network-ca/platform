@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Platform console — Health</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#4b2a8a}a:hover{color:#2f1866}
+</style>
+</helmet>
+<div style="min-height: 960px; background: #f5f5f7; font-family: Inter, Arial, sans-serif; color: #15172b; display: flex; flex-direction: column">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 28px; background: #15172b; color: #ffffff">
+    <div style="display: flex; align-items: center; gap: 11px">
+      <span aria-hidden="true" style="display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: #4b2a8a; font-size: 13px; font-weight: 800; letter-spacing: 0.04em">AN</span>
+      <span style="display: flex; flex-direction: column; gap: 3px"><span style="font-weight: 700; font-size: 14px">Alumni Network</span><span style="font-size: 9px; letter-spacing: 0.13em; text-transform: uppercase; color: #b8b9d0">Platform console</span></span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px; font-size: 14px">
+      <span style="padding: 5px 10px; border-radius: 999px; background: #4b2a8a; font-size: 12px; font-weight: 700">Platform admin</span>
+      <span aria-label="Gab Derhy" role="img" style="display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #d9cdf3; color: #15172b; font-size: 13px; font-weight: 800">GD</span>
+    </div>
+  </header>
+  <div style="flex: 1; display: flex; flex-wrap: wrap">
+    <nav aria-label="Console" style="flex: 1 1 200px; max-width: 220px; background: #ffffff; border-right: 1px solid #e4e4ec; padding: 20px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px">
+      <sc-for list="{{nav}}" as="n" hint-placeholder-count="3">
+        <a href="{{n.href}}" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: {{n.weight}}; background: {{n.bg}}; color: #15172b; text-decoration: none">{{n.label}}<sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{false}}"><span style="min-width: 22px; padding: 2px 7px; box-sizing: border-box; border-radius: 999px; background: #4b2a8a; color: #ffffff; font-size: 12px; font-weight: 700; text-align: center">{{n.badge}}</span></sc-if></a>
+      </sc-for>
+    </nav>
+    <main style="flex: 999 1 640px; min-width: 0; padding: 28px 36px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
+      <h1 style="margin: 0; font-size: 28px; font-weight: 800">Platform health</h1>
+      <section style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 14px 18px; border-radius: 12px; background: #fbe9ed; border: 1px solid #efc2cc; font-size: 14px">
+        <strong style="color: #a1173b">1 alert</strong><span>Annual-confirmation job didn't run on Oct 27. It will catch up tonight; nothing was double-sent.</span>
+      </section>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px">
+        <div style="padding: 18px 20px; background: #ffffff; border: 1px solid #e4e4ec; border-radius: 12px; display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 600; color: #45486a">Emails sent · 7 days</span><span style="font-size: 30px; font-weight: 800">312</span></div>
+        <div style="padding: 18px 20px; background: #ffffff; border: 1px solid #e4e4ec; border-radius: 12px; display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 600; color: #45486a">Failed or bounced</span><span style="font-size: 30px; font-weight: 800">1.3%</span><span style="font-size: 12px; color: #55587a">4 emails · retries exhausted on 1</span></div>
+        <div style="padding: 18px 20px; background: #ffffff; border: 1px solid #e4e4ec; border-radius: 12px; display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 600; color: #45486a">Oldest pending sign-up</span><span style="font-size: 30px; font-weight: 800">4 days</span><span style="font-size: 12px; color: #55587a">Herzliah</span></div>
+      </div>
+      <section style="background: #ffffff; border: 1px solid #e4e4ec; border-radius: 12px; overflow-x: auto">
+        <h2 style="margin: 0; padding: 16px 20px 6px; font-size: 15px; font-weight: 700">Scheduled jobs</h2>
+        <table style="width: 100%; min-width: 620px; border-collapse: collapse; font-size: 14px">
+          <thead><tr style="text-align: left; color: #45486a; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em"><th style="padding: 10px 20px; font-weight: 700">Job</th><th style="padding: 10px 20px; font-weight: 700">Last run</th><th style="padding: 10px 20px; font-weight: 700">Result</th></tr></thead>
+          <tbody>
+            <tr style="border-top: 1px solid #efeff4"><td style="padding: 12px 20px; font-weight: 600">Email sender (retries)</td><td style="padding: 12px 20px">4 min ago</td><td style="padding: 12px 20px; color: #1b5e33; font-weight: 600">OK · 3 sent</td></tr>
+            <tr style="border-top: 1px solid #efeff4"><td style="padding: 12px 20px; font-weight: 600">Annual confirmation</td><td style="padding: 12px 20px">Oct 26, 03:00</td><td style="padding: 12px 20px; color: #a1173b; font-weight: 600">Missed Oct 27</td></tr>
+            <tr style="border-top: 1px solid #efeff4"><td style="padding: 12px 20px; font-weight: 600">Export cleanup (24 h)</td><td style="padding: 12px 20px">Today, 02:00</td><td style="padding: 12px 20px; color: #1b5e33; font-weight: 600">OK · 2 files deleted</td></tr>
+            <tr style="border-top: 1px solid #efeff4"><td style="padding: 12px 20px; font-weight: 600">Expire support grants</td><td style="padding: 12px 20px">Every 5 min</td><td style="padding: 12px 20px; color: #1b5e33; font-weight: 600">OK</td></tr>
+          </tbody>
+        </table>
+      </section>
+      <section style="background: #ffffff; border: 1px solid #e4e4ec; border-radius: 12px; overflow-x: auto">
+        <h2 style="margin: 0; padding: 16px 20px 6px; font-size: 15px; font-weight: 700">Platform audit</h2>
+        <table style="width: 100%; min-width: 620px; border-collapse: collapse; font-size: 14px">
+          <tbody>
+            <tr style="border-top: 1px solid #efeff4"><td style="padding: 12px 20px; color: #45486a; white-space: nowrap">Today 09:40</td><td style="padding: 12px 20px; font-weight: 600">Gab</td><td style="padding: 12px 20px">Created school Maple Ridge Academy</td></tr>
+            <tr style="border-top: 1px solid #efeff4"><td style="padding: 12px 20px; color: #45486a; white-space: nowrap">Today 08:10</td><td style="padding: 12px 20px; font-weight: 600">Noah</td><td style="padding: 12px 20px">Opened 4 h support grant · Herzliah</td></tr>
+            <tr style="border-top: 1px solid #efeff4"><td style="padding: 12px 20px; color: #45486a; white-space: nowrap">Oct 22</td><td style="padding: 12px 20px; font-weight: 600">Gab</td><td style="padding: 12px 20px">Invited first school admin · Herzliah</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":960}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var active = 'health';
+    var items = [['schools', 'Schools', 'SaSchools.dc.html'], ['support', 'Support access', 'SaSupport.dc.html', 1], ['health', 'Platform health', 'SaHealth.dc.html']];
+    var nav = items.map(function (it) {
+      var on = it[0] === active;
+      return { label: it[1], href: it[2], badge: it[3] || 0, hasBadge: !!it[3], weight: on ? '700' : '500', bg: on ? '#efe9fb' : 'transparent' };
+    });
+    return { nav: nav };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin — Alumnus record</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7b1e3d}a:hover{color:#611630}
+button{font:inherit}
+button:focus-visible{outline:2px solid #7b1e3d;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 960px; background: #f7f7f6; font-family: Inter, Arial, sans-serif; color: #0b2159; display: flex; flex-direction: column">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 28px; background: #0b2159; color: #ffffff">
+    <div style="display: flex; align-items: center; gap: 11px">
+      <img src="/_blob/4656ce653b200e07991d58266759ac80" alt="" style="width: 42px; height: 42px; box-sizing: border-box; padding: 4px; border-radius: 10px; background: #ffffff; object-fit: contain">
+      <span style="display: flex; flex-direction: column; gap: 3px"><span style="font-weight: 700; font-size: 14px">Herzliah Alumni Network</span><span style="font-size: 9px; letter-spacing: 0.13em; text-transform: uppercase; color: #b4bdd4">School admin</span></span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px; font-size: 14px">
+      <a href="Directory.dc.html" style="color: #d2d7e4; text-decoration: none">View the network</a>
+      <span style="padding: 5px 10px; border-radius: 999px; background: rgba(255,255,255,0.12); font-size: 12px; font-weight: 700">School admin</span>
+      <span aria-label="Ruth Klein" role="img" style="display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #c9d6f2; color: #0b2159; font-size: 13px; font-weight: 800">RK</span>
+    </div>
+  </header>
+  <div style="flex: 1; display: flex; flex-wrap: wrap">
+    <nav aria-label="Admin" style="flex: 1 1 200px; max-width: 232px; background: #ffffff; border-right: 1px solid #e2e5ee; padding: 20px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px">
+      <sc-for list="{{nav}}" as="n" hint-placeholder-count="9">
+        <a href="{{n.href}}" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: {{n.weight}}; background: {{n.bg}}; color: #0b2159; text-decoration: none">{{n.label}}<sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{false}}"><span style="min-width: 22px; padding: 2px 7px; box-sizing: border-box; border-radius: 999px; background: #7b1e3d; color: #ffffff; font-size: 12px; font-weight: 700; text-align: center">{{n.badge}}</span></sc-if></a>
+      </sc-for>
+    </nav>
+    <main style="flex: 999 1 640px; min-width: 0; padding: 28px 36px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
+      <a href="AdmRoster.dc.html" style="align-self: flex-start; font-size: 14px; font-weight: 600">← Alumni</a>
+      <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 22px 24px; display: flex; flex-wrap: wrap; gap: 18px; align-items: center">
+        <span aria-hidden="true" style="display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: #c9d6f2; color: #0b2159; font-size: 22px; font-weight: 800">NC</span>
+        <div style="flex: 1 1 240px; display: flex; flex-direction: column; gap: 4px">
+          <h1 style="margin: 0; font-size: 24px; font-weight: 800">Noah Cohen</h1>
+          <span style="font-size: 14px; color: #3a4a70">Class of 2012 · Litigation Associate · Toronto</span>
+          <span style="display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #2e8b57"></span>Published · member since Sep 2025</span>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px">
+          <button type="button" style="padding: 10px 14px; border-radius: 7px; border: 1px solid #8a93ab; background: #ffffff; color: #0b2159; font-size: 14px; font-weight: 700; cursor: pointer">Edit</button>
+          <button type="button" style="padding: 10px 14px; border-radius: 7px; border: 1px solid #8a93ab; background: #ffffff; color: #0b2159; font-size: 14px; font-weight: 700; cursor: pointer">Change email</button>
+          <a href="AdmSuspend.dc.html" style="padding: 10px 14px; border-radius: 7px; border: 1px solid #a1173b; background: #ffffff; color: #a1173b; font-size: 14px; font-weight: 700; text-decoration: none">Suspend</a>
+          <button type="button" style="padding: 10px 14px; border-radius: 7px; border: 1px solid #8a93ab; background: #ffffff; color: #0b2159; font-size: 14px; font-weight: 700; cursor: pointer">More ▾</button>
+        </div>
+      </section>
+      <div role="tablist" aria-label="Record sections" style="display: flex; gap: 6px; border-bottom: 1px solid #e2e5ee">
+        <sc-for list="{{tabs}}" as="t" hint-placeholder-count="3">
+          <button type="button" role="tab" aria-selected="{{t.selected}}" onClick="{{t.pick}}" style="padding: 12px 16px; border: 0; border-bottom: 3px solid {{t.line}}; background: transparent; color: #0b2159; font-size: 14px; font-weight: {{t.weight}}; cursor: pointer">{{t.label}}</button>
+        </sc-for>
+      </div>
+      <sc-if value="{{isDetails}}" hint-placeholder-val="{{true}}">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px">
+          <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; font-size: 14px">
+            <h2 style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #3a4a70">Shown to members</h2>
+            <div style="display: grid; grid-template-columns: 130px 1fr; row-gap: 8px"><span style="color: #4a5575">Career field</span><span>Law</span><span style="color: #4a5575">Employer</span><span>[Law firm]</span><span style="color: #4a5575">University</span><span>McGill, Osgoode Hall</span><span style="color: #4a5575">Open to</span><span>Career advice, Job shadowing</span></div>
+          </section>
+          <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; font-size: 14px">
+            <h2 style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #3a4a70">Private — staff only</h2>
+            <div style="display: grid; grid-template-columns: 130px 1fr; row-gap: 8px"><span style="color: #4a5575">Sign-in email</span><span>noah.cohen@gmail.com</span><span style="color: #4a5575">Phone</span><span>Not shared</span><span style="color: #4a5575">Last confirmed</span><span>Mar 2026 (by Noah)</span><span style="color: #4a5575">Next due</span><span>Mar 2027</span></div>
+          </section>
+        </div>
+      </sc-if>
+      <sc-if value="{{isHistory}}" hint-placeholder-val="{{false}}">
+        <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 8px 22px">
+          <sc-for list="{{history}}" as="h" hint-placeholder-count="5">
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 12px 0; border-bottom: 1px solid #eef0f4; font-size: 14px"><span>{{h.text}}</span><span style="color: #4a5575">{{h.when}}</span></div>
+          </sc-for>
+        </section>
+      </sc-if>
+      <sc-if value="{{isRequest}}" hint-placeholder-val="{{false}}">
+        <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 20px 22px; font-size: 14px; line-height: 1.6; display: flex; flex-direction: column; gap: 8px">
+          <strong>Signed up Sep 8, 2025 · approved Sep 9 by Ruth Klein</strong>
+          <span style="color: #3a4a70">Linked to the school record “Noah Cohen, 2012”. Applicant's note: “Graduated with Rabbi Azulay's class.”</span>
+        </section>
+      </sc-if>
+      <p style="margin: 0; font-size: 13px; color: #4a5575">Reviewers see this page read-only. Staff edits never count as the alumnus confirming their profile.</p>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":960}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { tab: 'details' };
+  }
+  renderVals() {
+    var self = this;
+    var active = 'roster';
+    var items = [['dashboard', 'Dashboard', 'AdmDashboard.dc.html'], ['queue', 'Approvals', 'AdmQueue.dc.html', 7], ['roster', 'Alumni', 'AdmRoster.dc.html'], ['templates', 'Email templates', 'AdmTemplates.dc.html'], ['freshness', 'Freshness', 'AdmFreshness.dc.html'], ['exports', 'Exports', 'AdmExport.dc.html'], ['staff', 'Staff', 'AdmStaff.dc.html'], ['audit', 'Audit log', 'AdmAudit.dc.html'], ['settings', 'Settings', 'AdmSettings.dc.html']];
+    var nav = items.map(function (it) {
+      var on = it[0] === active;
+      return { label: it[1], href: it[2], badge: it[3] || 0, hasBadge: !!it[3], weight: on ? '700' : '500', bg: on ? '#faeef3' : 'transparent' };
+    });
+    var cur = this.state.tab;
+    var tabs = [['details', 'Details'], ['history', 'History'], ['request', 'Sign-up request']].map(function (t) {
+      var on = t[0] === cur;
+      return { label: t[1], selected: on ? 'true' : 'false', line: on ? '#7b1e3d' : 'transparent', weight: on ? '700' : '500', pick: function () { self.setState({ tab: t[0] }); } };
+    });
+    var history = [
+      { text: 'Noah confirmed his profile is accurate', when: 'Mar 3, 2026' },
+      { text: 'Noah changed visibility to “Verified alumni”', when: 'Sep 10, 2025' },
+      { text: 'Ruth Klein approved the sign-up request', when: 'Sep 9, 2025' },
+      { text: 'Contact details revealed 4 times by members', when: 'Last 30 days' },
+      { text: 'Avi Sasson viewed the record', when: 'Oct 20, 2026' }
+    ];
+    return { nav: nav, tabs: tabs, history: history, isDetails: cur === 'details', isHistory: cur === 'history', isRequest: cur === 'request' };
+  }
+}
+</script>
+</body>
+</html>
