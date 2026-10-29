@@ -257,3 +257,60 @@ test("reviewer is forbidden from templates and school settings", async ({
     ).toBeVisible();
   }
 });
+
+test("roster search uses the sign-in email and retains URL filters", async ({
+  page,
+  context,
+  baseURL,
+}) => {
+  await signInAs(context, baseURL!, accounts.reviewer);
+  await page.goto("/admin/alumni");
+  await page.getByLabel("Search", { exact: true }).fill(accounts.alumni);
+  await page.getByRole("button", { name: "Apply filters", exact: true }).click();
+  await expect(page.getByRole("link", { name: "Ari Benaroch", exact: true })).toBeVisible();
+  await expect(page.getByText("1–1 of 1 records")).toBeVisible();
+  await page.getByRole("link", { name: "Ari Benaroch", exact: true }).click();
+  await expect(page.getByText("alumni@herzliah.test", { exact: true })).toBeVisible();
+});
+test("school console screens pass accessibility and fit the viewport", async ({
+  page,
+  context,
+  baseURL,
+}, info) => {
+  await signInAs(context, baseURL!, accounts.admin);
+  const screens = [
+    { path: "/admin", heading: "Dashboard", image: "dashboard" },
+    { path: "/admin/approvals", heading: "Approvals" },
+    { path: "/admin/alumni", heading: "Alumni", image: "roster" },
+    { path: "/admin/alumni/00000000-0000-4000-8000-000000000001", heading: "Ari Benaroch" },
+    { path: "/admin/staff", heading: "Staff" },
+    { path: "/admin/audit", heading: "Audit log" },
+    { path: "/admin/settings", heading: "School settings" },
+    { path: "/admin/templates", heading: "Email templates", image: "templates" },
+  ];
+  for (const screen of screens) {
+    await page.goto(screen.path);
+    await expect(
+      page.getByRole("heading", { level: 1, name: screen.heading, exact: true }),
+    ).toBeVisible();
+    expect(await blockingViolations(page), screen.path).toEqual([]);
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+      screen.path,
+    ).toBe(true);
+    if (screen.image)
+      await page.screenshot({ path: info.outputPath(screen.image + ".png"), fullPage: true });
+  }
+});
+test("French staff copy renders on the server and in forms", async ({ page, context, baseURL }) => {
+  await context.addCookies([{ name: "herzliah-language", value: "fr", url: baseURL! }]);
+  await signInAs(context, baseURL!, accounts.admin);
+  await page.goto("/admin");
+  await expect(page.getByRole("heading", { name: "Tableau de bord", exact: true })).toBeVisible();
+  await page.goto("/admin/templates");
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Modèles de courriel", exact: true }),
+  ).toBeVisible();
+  await expect(page.getByLabel("Objet", { exact: true })).toBeVisible();
+  expect(await blockingViolations(page)).toEqual([]);
+});

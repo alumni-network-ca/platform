@@ -40,11 +40,11 @@ Signed-out pages (Join, Code) use the `guest` role: FR and Sign in, no avatar.
 
 | Screen | Route | Backlog | Database |
 |---|---|---|---|
-| **Built shell and backed cards** · A1.1 Dashboard (`AdmDashboard`) | `/admin` | ADM-01, ADM-02 | ready (RLS counts). Overdue confirmations need FRS-04, bounces EML-05 |
-| **Built** · A1.2 Approval queue (`AdmQueue`) | `/admin/approvals` | ADM-05 | ready (`access_requests`); match suggestions read unclaimed records |
+| **Built** · A1.1 Dashboard (`AdmDashboard`) | `/admin` | ADM-01, ADM-02 | `admin_dashboard`; period metrics and recent audit activity. Overdue confirmations need FRS-04, bounces EML-05 |
+| **Built** · A1.2 Approval queue (`AdmQueue`) | `/admin/approvals` | ADM-05 | `access_requests`, `access_request_matches`; matches distinguish claimed and unclaimed records |
 | **Built** · A1.3 Review a request (`AdmReview`) | `/admin/approvals/[id]` | ADM-05 | `decide_access_request` (approve and link or create, needs info, reject) |
-| **Built** · A2.1 Alumni roster (`AdmRoster`) | `/admin/alumni` | ADM-03 | ready; the freshness filter needs FRS-04, the email column EML-05 |
-| **Built** · A2.2 Record and history (`AdmRecord`) | `/admin/alumni/[id]` | ADM-03 | ready (`alumni_private`, `audit_log`, `access_requests`) |
+| **Built** · A2.1 Alumni roster (`AdmRoster`) | `/admin/alumni` | ADM-03 | `admin_roster`; the freshness filter needs FRS-04, the email column EML-05 |
+| **Built** · A2.2 Record and history (`AdmRecord`) | `/admin/alumni/[id]` | ADM-03 | `alumni_private`, `admin_profile_email`, `audit_people`, `audit_log`, `access_requests` |
 | **Built** · A2.3 Suspend, archive, deceased (`AdmSuspend`) | `/admin/alumni/[id]/status` | ADM-04 | `set_profile_status` |
 | A2.4 Resolve a duplicate (`AdmDuplicate`) | `/admin/approvals/[id]/duplicate` | ONB-04 | new |
 | **Built** · A3.1 Email templates (`AdmTemplates`) | `/admin/templates` | EML-03 | `save_email_template`, `approve_email_template` |
@@ -71,3 +71,5 @@ Signed-out pages (Join, Code) use the `guest` role: FR and Sign in, no avatar.
 Implementation notes: A2.3 uses a dedicated route with dialog styling. The record edit route was added to cover the fields accepted by `admin_update_profile`; it is not drawn on the canvas. French admin copy and empty states need Noah’s language review.
 
 Template approvals save and approve the submitted version in one database transaction. Preview stays hidden until EML-01 supplies the renderer, including `graduation_year` and `onboarding_link`.
+
+Access follows ADR 0005 and the database policies: reviewers can read maiden names and admin notes through `records.read`. The older DEC-02/data-model wording needs a product decision. Staff MFA remains the single `TODO(FND-11)` hook in `requireStaff`; enrolment is outside this work. Freshness, exports, duplicate resolution, email delivery/preview and logo replacement stay with the backlog items named in the implementation.
