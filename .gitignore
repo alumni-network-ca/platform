@@ -10,3 +10,6 @@ next-env.d.ts
 /test-results
 /blob-report
 *.tsbuildinfo
+
+.vercel
+.env*
