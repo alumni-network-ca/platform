@@ -1281,6 +1281,16 @@ export type Database = {
         };
         Returns: undefined;
       };
+      approve_email_template_version: {
+        Args: {
+          p_body: string;
+          p_inst: string;
+          p_key: Database["public"]["Enums"]["email_template_key"];
+          p_locale: Database["public"]["Enums"]["locale"];
+          p_subject: string;
+        };
+        Returns: undefined;
+      };
       assert_last_school_admin_kept: {
         Args: { p_inst: string; p_user: string };
         Returns: undefined;

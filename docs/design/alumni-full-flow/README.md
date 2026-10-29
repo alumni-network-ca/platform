@@ -47,7 +47,7 @@ Signed-out pages (Join, Code) use the `guest` role: FR and Sign in, no avatar.
 | **Built** · A2.2 Record and history (`AdmRecord`) | `/admin/alumni/[id]` | ADM-03 | ready (`alumni_private`, `audit_log`, `access_requests`) |
 | **Built** · A2.3 Suspend, archive, deceased (`AdmSuspend`) | `/admin/alumni/[id]/status` | ADM-04 | `set_profile_status` |
 | A2.4 Resolve a duplicate (`AdmDuplicate`) | `/admin/approvals/[id]/duplicate` | ONB-04 | new |
-| A3.1 Email templates (`AdmTemplates`) | `/admin/templates` | EML-03 | `save_email_template`, `approve_email_template` |
+| **Built** · A3.1 Email templates (`AdmTemplates`) | `/admin/templates` | EML-03 | `save_email_template`, `approve_email_template` |
 | A3.2 Freshness (`AdmFreshness`) | `/admin/freshness` | FRS-04 | needs FRS-02 |
 | A3.3 Export (`AdmExport`) | `/admin/export` | EXP-01, EXP-02 | new |
 | **Built** · A4.1 Staff and roles (`AdmStaff`) | `/admin/staff` | ADM-06 | `invite_staff`, `change_staff_role`, `remove_staff`; `school_staff`, `issue_staff_invitation_link`, `revoke_staff_invitation` |
@@ -69,3 +69,5 @@ Signed-out pages (Join, Code) use the `guest` role: FR and Sign in, no avatar.
 | 3.4 Relay email (`RecipientEmail`) | email | CON-02 |
 
 Implementation notes: A2.3 uses a dedicated route with dialog styling. The record edit route was added to cover the fields accepted by `admin_update_profile`; it is not drawn on the canvas. French admin copy and empty states need Noah’s language review.
+
+Template approvals save and approve the submitted version in one database transaction. Preview stays hidden until EML-01 supplies the renderer, including `graduation_year` and `onboarding_link`.
