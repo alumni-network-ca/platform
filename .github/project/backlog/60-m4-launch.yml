@@ -9,7 +9,7 @@ items:
     title: "Staging acceptance demo with Noah and sign-off"
     labels: [type:test, area:process, P0, launch-blocker, needs-noah]
     size: S
-    depends: [DOC-04, QA-01, QA-02, QA-03, QA-04]
+    depends: [DOC-04, QA-01, QA-02, QA-03, QA-04, EML-07]
     reqs: [HL8, HL9]
     summary: |
       Walk the requirement-to-evidence checklist on staging (target 2026-11-20): every user and admin workflow, the
@@ -32,11 +32,12 @@ items:
     title: "Production release v1.0.0 and smoke tests"
     labels: [type:infra, area:ops, P0, launch-blocker]
     size: S
-    depends: [LCH-01, OPS-01, OPS-02, OPS-04, OPS-06]
+    depends: [LCH-01, OPS-01, OPS-02, OPS-04, OPS-06, EML-07]
     reqs: [HL9, D1]
     summary: |
-      Release PR dev → main approved by Noah, migrations applied, deployment done. Smoke test: tenant routing, auth
-      email, a test sign-up and approval, directory, export and alerts. Tag v1.0.0 with release notes.
+      Release PR dev → main approved by Noah, migrations applied, deployment done. Smoke test: tenant routing, the
+      sign-in code email (EML-07's checks on production), a test sign-up and approval, directory, export and alerts.
+      Tag v1.0.0 with release notes.
     ac:
       - Smoke checklist passes; rollback was rehearsed in OPS-06.
 

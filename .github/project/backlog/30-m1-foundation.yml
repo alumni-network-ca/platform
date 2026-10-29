@@ -287,7 +287,7 @@ items:
     ac:
       - A merge to dev deploys the app and applies migrations to staging automatically.
       - A production secret never appears in preview/staging env.
-      - Signing in on staging emails a 6-digit code, not a link.
+      - Signing in on staging emails a 6-digit code, not a link (checked in EML-07).
 
   - key: FND-17
     title: "Observability: Sentry, structured logging, health check and job heartbeats"

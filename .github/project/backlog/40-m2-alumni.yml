@@ -212,6 +212,7 @@ items:
       the body; no links, DEC-15), and sends through the outbox. Configured in config.toml locally and in the dashboard for staging and production.
     ac:
       - Real alumni receive the auth emails (fixes F9), branded per school, in their language.
+      - EML-07's checks pass again with the hook in place.
 
   - key: EML-05
     title: "Delivery tracking: Resend webhooks, bounces, suppressions, admin recovery"
@@ -236,6 +237,38 @@ items:
     depends: [EML-03]
     reqs: [E2]
     summary: docs/email-catalogue.md lists, for each email, its trigger, recipient, language rule, sender, link expiry, retry and duplicate behaviour, and the template file.
+
+  - key: EML-07
+    title: "Confirm sign-up and sign-in emails carry the 6-digit code once our domain sends mail"
+    epic: EPIC-EML
+    milestone: M3
+    labels: [type:test, area:email, area:auth, P0, launch-blocker]
+    size: S
+    depends: [BIZ-02, BIZ-04]
+    reqs: [S1, E1, F9]
+    summary: |
+      Today the hosted projects cannot send the code. A free Supabase project that uses Supabase's built-in sender
+      refuses email template changes, so staging still emails a sign-in link instead of the code, and the built-in
+      sender allows about two auth emails an hour for the whole project. Until this is done, testers sign in with a
+      password (ADR 0015). Locally and in CI the code emails work (Mailpit).
+
+      As soon as the domain sends mail (alumninetwork.ca verified in Resend), on staging and then on production:
+      1. In Supabase Auth, use custom SMTP through Resend, sender noreply@alumninetwork.ca (DEC-12), and raise the
+         email rate limit.
+      2. Push the code templates and code settings from supabase/config.toml with `supabase config push`, declaring
+         only those properties (FND-16).
+      3. Run every check below with real inboxes, and attach screenshots of the emails received to this issue.
+      When EML-04's branded hook replaces the templates, run the checks again.
+    ac:
+      - "Sign-up: a new address at /join and at /login gets an email whose subject and body carry a 6-digit code and no sign-in link; the code signs them in."
+      - "Sign-in: a returning member gets a code the same way. A second request within 60 s is refused; the next one works."
+      - "Change of email: both the new and the current address get a code, and both are needed."
+      - A code expires after 10 minutes and works once.
+      - Emails reach Gmail and Outlook inboxes (not spam) within a minute, with SPF, DKIM and DMARC passing.
+      - Ten sign-ins within an hour all get their email.
+      - Checked on staging before LCH-01, and on production before LCH-03.
+    tests:
+      - "Manual, with real inboxes, on staging then production. Mailpit covers the same flows locally and in CI (e2e/auth.spec.ts)."
 
   # ---------------------------------------------------------------- profile (WS3)
   - key: PRF-01
