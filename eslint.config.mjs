@@ -26,7 +26,6 @@ export default defineConfig([
     // Pages and components still on the legacy schema. Each one names the M2 issue that rewires it;
     // remove it from this list in that PR.
     files: [
-      "app/admin/page.tsx",
       "app/me/page.tsx",
       "app/onboarding/page.tsx",
       "app/profile/[[]id]/page.tsx",
