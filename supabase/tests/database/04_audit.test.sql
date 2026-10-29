@@ -240,6 +240,13 @@ select is(
   '{}'::text[], 'contact reveals are logged in contact_events, not the audit log (DEC-03)'
 );
 
+select is(pg_temp.audited($$ select * from public.school_staff('aaaaaaaa-0000-4000-8000-000000000001') $$, '11111111-1111-4111-8111-000000000001'), '{}'::text[], 'console reader 1 does not write an audit row');
+select is(pg_temp.audited($$ select * from public.audit_people('aaaaaaaa-0000-4000-8000-000000000001') $$, '11111111-1111-4111-8111-000000000001'), '{}'::text[], 'console reader 2 does not write an audit row');
+select is(pg_temp.audited($$ select public.admin_dashboard('aaaaaaaa-0000-4000-8000-000000000001') $$, '11111111-1111-4111-8111-000000000001'), '{}'::text[], 'console reader 3 does not write an audit row');
+select is(pg_temp.audited($$ select * from public.admin_roster('aaaaaaaa-0000-4000-8000-000000000001') $$, '11111111-1111-4111-8111-000000000001'), '{}'::text[], 'console reader 4 does not write an audit row');
+select is(pg_temp.audited($$ select public.admin_profile_email('00000000-0000-4000-8000-000000000001') $$, '11111111-1111-4111-8111-000000000001'), '{}'::text[], 'console reader 5 does not write an audit row');
+select is(pg_temp.audited($$ select * from public.access_request_matches(array['33333333-3333-4333-8333-000000000001']::uuid[]) $$, '11111111-1111-4111-8111-000000000001'), '{}'::text[], 'console reader 6 does not write an audit row');
+
 -- Secrets never reach the log ---------------------------------------------------------------------------
 select is_empty(
   format($$ select id from public.audit_log where target_id in (%L, %L) or metadata::text like %L or metadata::text like %L $$,
@@ -266,6 +273,7 @@ select set_eq(
     -- not audited on purpose: reads, preferences, and contact reveals (contact_events)
     'public_school', 'search_directory', 'set_my_locale', 'initiate_contact',
     'platform_school_summaries', 'platform_admin_emails',
+    'school_staff', 'audit_people', 'admin_dashboard', 'admin_roster', 'admin_profile_email', 'access_request_matches',
     -- RLS helpers used inside policies (and by search_directory, which runs as the caller)
     'is_system_admin', 'has_active_grant', 'is_member', 'has_permission', 'permitted_institutions', 'my_profile_ids',
     'directory_profile_ids'
@@ -273,5 +281,12 @@ select set_eq(
   'every client-callable function is audited, deliberately unaudited, or an RLS helper'
 );
 
+select is((select metadata ->> 'reason' from public.audit_log where action = 'profile.status' and target_id = '00000000-0000-4000-8000-000000000004'), 'Asked to be removed', 'unclaimed record status reason is retained');
+select pg_temp.login('11111111-1111-4111-8111-000000000001');
+select set_config('test.demote', public.invite_staff('aaaaaaaa-0000-4000-8000-000000000001', 'admin@herzliah.test', 'reviewer')::text, true);
+select set_config('test.demote_token', public.issue_staff_invitation_link(current_setting('test.demote')::uuid), true);
+select public.accept_staff_invitation(current_setting('test.demote_token'));
+reset role;
+select is((select role::text from public.institution_memberships where institution_id = 'aaaaaaaa-0000-4000-8000-000000000001' and user_id = '11111111-1111-4111-8111-000000000001'), 'school_admin', 'accepting a reviewer invitation never demotes an active school admin');
 select * from finish();
 rollback;

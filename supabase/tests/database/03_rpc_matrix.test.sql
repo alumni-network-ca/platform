@@ -235,5 +235,12 @@ select pg_temp.refused('11111111-1111-4111-8111-000000000001'::uuid, sql, descri
   order by relname, step
 ) as t;
 
+select pg_temp.refused('11111111-1111-4111-8111-000000000002'::uuid, $$ select * from public.school_staff('aaaaaaaa-0000-4000-8000-000000000001') $$, 'alumnus refused console reader 1');
+select pg_temp.refused('11111111-1111-4111-8111-000000000002'::uuid, $$ select * from public.audit_people('aaaaaaaa-0000-4000-8000-000000000001') $$, 'alumnus refused console reader 2');
+select pg_temp.refused('11111111-1111-4111-8111-000000000002'::uuid, $$ select public.admin_dashboard('aaaaaaaa-0000-4000-8000-000000000001') $$, 'alumnus refused console reader 3');
+select pg_temp.refused('11111111-1111-4111-8111-000000000002'::uuid, $$ select * from public.admin_roster('aaaaaaaa-0000-4000-8000-000000000001') $$, 'alumnus refused console reader 4');
+select pg_temp.refused('11111111-1111-4111-8111-000000000002'::uuid, $$ select public.admin_profile_email('00000000-0000-4000-8000-000000000001') $$, 'alumnus refused console reader 5');
+select pg_temp.refused('11111111-1111-4111-8111-000000000002'::uuid, $$ select * from public.access_request_matches(array['33333333-3333-4333-8333-000000000001']::uuid[]) $$, 'alumnus refused console reader 6');
+select pg_temp.refused('11111111-1111-4111-8111-000000000004'::uuid, $$ select * from public.school_staff('aaaaaaaa-0000-4000-8000-000000000001') $$, 'reviewer cannot list staff');
 select * from finish();
 rollback;

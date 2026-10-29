@@ -378,3 +378,7 @@ insert into public.profile_contact_channels (profile_id, institution_id, type, v
 
 drop table demo;
 drop table demo_flags;
+
+-- An unclaimed class-list record suggested to staff for Penny's pending sign-up.
+insert into public.alumni_profiles (id, institution_id, first_name, last_name, grad_year)
+values ('22222222-2222-4222-8222-000000000099', 'aaaaaaaa-0000-4000-8000-000000000001', 'Penny', 'Levi', 2012);
