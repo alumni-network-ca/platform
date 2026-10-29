@@ -187,6 +187,22 @@ select is(
                   '11111111-1111-4111-8111-000000000006'),
   array['platform.grant_revoked'], 'platform_revoke_grant writes one audit row'
 );
+select is(
+  pg_temp.audited($$ select public.platform_set_school_status((select id from public.institutions where slug = 'third-school'), 'suspended', 'Contract paused') $$,
+                  '11111111-1111-4111-8111-000000000006'),
+  array['school.suspended'], 'platform_set_school_status writes one audit row'
+);
+select set_config('test.invitation', (select id::text from public.staff_invitations where email = 'head@third.test'), true);
+select is(
+  pg_temp.audited($$ select public.issue_staff_invitation_link(current_setting('test.invitation')::uuid) $$,
+                  '11111111-1111-4111-8111-000000000006'),
+  array['staff.invitation_link_issued'], 'issue_staff_invitation_link writes one audit row'
+);
+select is(
+  pg_temp.audited($$ select public.revoke_staff_invitation(current_setting('test.invitation')::uuid) $$,
+                  '11111111-1111-4111-8111-000000000006'),
+  array['staff.invitation_revoked'], 'revoke_staff_invitation writes one audit row'
+);
 
 -- Bootstrap (FND-13): service role only, idempotent ----------------------------------------------------
 select is(
@@ -246,8 +262,10 @@ select set_eq(
     'admin_update_profile', 'set_profile_status', 'invite_staff', 'accept_staff_invitation', 'change_staff_role',
     'remove_staff', 'save_email_template', 'approve_email_template', 'update_school_settings',
     'platform_create_school', 'platform_appoint_school_admin', 'platform_open_grant', 'platform_revoke_grant',
+    'platform_set_school_status', 'issue_staff_invitation_link', 'revoke_staff_invitation',
     -- not audited on purpose: reads, preferences, and contact reveals (contact_events)
     'public_school', 'search_directory', 'set_my_locale', 'initiate_contact',
+    'platform_school_summaries', 'platform_admin_emails',
     -- RLS helpers used inside policies (and by search_directory, which runs as the caller)
     'is_system_admin', 'has_active_grant', 'is_member', 'has_permission', 'permitted_institutions', 'my_profile_ids',
     'directory_profile_ids'

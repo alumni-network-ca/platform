@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin — Email templates</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7b1e3d}a:hover{color:#611630}
+button,input,textarea{font:inherit}
+button:focus-visible,input:focus,textarea:focus{outline:2px solid #7b1e3d;outline-offset:1px}
+</style>
+</helmet>
+<div style="min-height: 960px; background: #f7f7f6; font-family: Inter, Arial, sans-serif; color: #0b2159; display: flex; flex-direction: column">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 28px; background: #0b2159; color: #ffffff">
+    <div style="display: flex; align-items: center; gap: 11px">
+      <img src="/_blob/4656ce653b200e07991d58266759ac80" alt="" style="width: 42px; height: 42px; box-sizing: border-box; padding: 4px; border-radius: 10px; background: #ffffff; object-fit: contain">
+      <span style="display: flex; flex-direction: column; gap: 3px"><span style="font-weight: 700; font-size: 14px">Herzliah Alumni Network</span><span style="font-size: 9px; letter-spacing: 0.13em; text-transform: uppercase; color: #b4bdd4">School admin</span></span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px; font-size: 14px">
+      <a href="Directory.dc.html" style="color: #d2d7e4; text-decoration: none">View the network</a>
+      <span style="padding: 5px 10px; border-radius: 999px; background: rgba(255,255,255,0.12); font-size: 12px; font-weight: 700">School admin</span>
+      <span aria-label="Ruth Klein" role="img" style="display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #c9d6f2; color: #0b2159; font-size: 13px; font-weight: 800">RK</span>
+    </div>
+  </header>
+  <div style="flex: 1; display: flex; flex-wrap: wrap">
+    <nav aria-label="Admin" style="flex: 1 1 200px; max-width: 232px; background: #ffffff; border-right: 1px solid #e2e5ee; padding: 20px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px">
+      <sc-for list="{{nav}}" as="n" hint-placeholder-count="9">
+        <a href="{{n.href}}" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: {{n.weight}}; background: {{n.bg}}; color: #0b2159; text-decoration: none">{{n.label}}<sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{false}}"><span style="min-width: 22px; padding: 2px 7px; box-sizing: border-box; border-radius: 999px; background: #7b1e3d; color: #ffffff; font-size: 12px; font-weight: 700; text-align: center">{{n.badge}}</span></sc-if></a>
+      </sc-for>
+    </nav>
+    <main style="flex: 999 1 640px; min-width: 0; padding: 28px 36px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <h1 style="margin: 0; font-size: 28px; font-weight: 800">Email templates</h1>
+        <p style="margin: 0; font-size: 15px; color: #3a4a70">Edit the wording only — the branded layout is added for you. An email without an approved template isn't sent.</p>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-start">
+        <ul style="flex: 1 1 220px; max-width: 260px; margin: 0; padding: 8px; list-style: none; background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; display: flex; flex-direction: column; gap: 2px">
+          <sc-for list="{{templates}}" as="t" hint-placeholder-count="8">
+            <li style="display: flex; flex-direction: column; gap: 3px; padding: 10px 12px; border-radius: 8px; background: {{t.bg}}">
+              <span style="font-size: 14px; font-weight: {{t.weight}}">{{t.name}}</span>
+              <span style="font-size: 12px; color: {{t.statusFg}}">{{t.status}}</span>
+            </li>
+          </sc-for>
+        </ul>
+        <section style="flex: 999 1 420px; min-width: 0; background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; display: flex; flex-direction: column">
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; padding: 16px 22px; border-bottom: 1px solid #e2e5ee">
+            <h2 style="margin: 0; font-size: 17px; font-weight: 700">Access approved</h2>
+            <div role="tablist" aria-label="Language" style="display: flex; padding: 3px; border-radius: 8px; background: #eef0f4">
+              <sc-for list="{{langs}}" as="l" hint-placeholder-count="2">
+                <button type="button" role="tab" aria-selected="{{l.selected}}" onClick="{{l.pick}}" style="padding: 7px 14px; border: 0; border-radius: 6px; background: {{l.bg}}; color: #0b2159; font-size: 13px; font-weight: 700; cursor: pointer">{{l.label}}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="padding: 20px 22px; display: flex; flex-direction: column; gap: 14px">
+            <div style="display: flex; flex-direction: column; gap: 7px">
+              <label for="tp-subject" style="font-size: 13px; font-weight: 600">Subject</label>
+              <input id="tp-subject" value="{{subject}}" style="padding: 10px 12px; border: 1px solid #8a93ab; border-radius: 7px; color: #0b2159; font-size: 14px">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 7px">
+              <label for="tp-body" style="font-size: 13px; font-weight: 600">Message</label>
+              <textarea id="tp-body" rows="7" value="{{body}}" style="width: 100%; box-sizing: border-box; padding: 11px 13px; border: 1px solid #8a93ab; border-radius: 7px; color: #0b2159; font-size: 14px; line-height: 1.55; resize: vertical"></textarea>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px">
+              <span style="color: #3a4a70; font-weight: 600">Insert:</span>
+              <button type="button" style="padding: 5px 10px; border-radius: 999px; border: 1px solid #8a93ab; background: #ffffff; color: #0b2159; font-size: 12px; font-weight: 700; cursor: pointer">{first_name}</button>
+              <button type="button" style="padding: 5px 10px; border-radius: 999px; border: 1px solid #8a93ab; background: #ffffff; color: #0b2159; font-size: 12px; font-weight: 700; cursor: pointer">{school_name}</button>
+              <button type="button" style="padding: 5px 10px; border-radius: 999px; border: 1px solid #8a93ab; background: #ffffff; color: #0b2159; font-size: 12px; font-weight: 700; cursor: pointer">{graduation_year}</button>
+              <button type="button" style="padding: 5px 10px; border-radius: 999px; border: 1px solid #8a93ab; background: #ffffff; color: #0b2159; font-size: 12px; font-weight: 700; cursor: pointer">{onboarding_link}</button>
+            </div>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; padding: 16px 22px; border-top: 1px solid #e2e5ee">
+            <span style="font-size: 13px; color: #7a4b00; font-weight: 600">{{draftNote}}</span>
+            <div style="display: flex; gap: 8px">
+              <a href="Approved.dc.html" style="display: inline-flex; padding: 10px 16px; border-radius: 7px; border: 1px solid #8a93ab; color: #0b2159; font-weight: 700; font-size: 14px; text-decoration: none">Preview email</a>
+              <button type="button" style="padding: 10px 16px; border-radius: 7px; border: 0; background: #7b1e3d; color: #ffffff; font-weight: 700; font-size: 14px; cursor: pointer">Approve this version</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":960}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { lang: 'en' };
+  }
+  renderVals() {
+    var self = this;
+    var active = 'templates';
+    var items = [['dashboard', 'Dashboard', 'AdmDashboard.dc.html'], ['queue', 'Approvals', 'AdmQueue.dc.html', 7], ['roster', 'Alumni', 'AdmRoster.dc.html'], ['templates', 'Email templates', 'AdmTemplates.dc.html'], ['freshness', 'Freshness', 'AdmFreshness.dc.html'], ['exports', 'Exports', 'AdmExport.dc.html'], ['staff', 'Staff', 'AdmStaff.dc.html'], ['audit', 'Audit log', 'AdmAudit.dc.html'], ['settings', 'Settings', 'AdmSettings.dc.html']];
+    var nav = items.map(function (it) {
+      var on = it[0] === active;
+      return { label: it[1], href: it[2], badge: it[3] || 0, hasBadge: !!it[3], weight: on ? '700' : '500', bg: on ? '#faeef3' : 'transparent' };
+    });
+    var ok = '#1b5e33', warn = '#7a4b00';
+    var list = [
+      ['Access approved', 'EN approved · FR draft', warn, true],
+      ['Needs more info', 'EN + FR approved', ok],
+      ['Access rejected', 'EN + FR approved', ok],
+      ['Welcome', 'EN + FR approved', ok],
+      ['Staff invitation', 'Using default', ok],
+      ['Annual confirmation', 'EN + FR approved', ok],
+      ['Confirmation reminder 1', 'EN + FR approved', ok],
+      ['Confirmation reminder 2', 'FR not approved — not sent in French', '#a1173b']
+    ];
+    var templates = list.map(function (t) {
+      return { name: t[0], status: t[1], statusFg: t[2], bg: t[3] ? '#faeef3' : 'transparent', weight: t[3] ? '700' : '500' };
+    });
+    var lang = this.state.lang;
+    var langs = [['en', 'English'], ['fr', 'Français']].map(function (l) {
+      var on = l[0] === lang;
+      return { label: l[1], selected: on ? 'true' : 'false', bg: on ? '#ffffff' : 'transparent', pick: function () { self.setState({ lang: l[0] }); } };
+    });
+    var copy = {
+      en: ['You’re in — welcome to the {school_name} Alumni Network', 'Welcome, {first_name}. You’re approved.\n\nThe alumni office has confirmed you as a member of the class of {graduation_year}. Next, set up your profile — it takes about five minutes.\n\nYour profile starts hidden. You choose who sees it at the last step.\n\n{onboarding_link}', 'Approved Oct 26 by Ruth Klein'],
+      fr: ['Bienvenue au réseau des diplômés de {school_name}', 'Bienvenue, {first_name}. Votre accès est approuvé.\n\nLe bureau des diplômés a confirmé que vous faites partie de la promotion {graduation_year}. Prochaine étape : créez votre profil.\n\nVotre profil reste masqué jusqu’à ce que vous choisissiez qui peut le voir.\n\n{onboarding_link}', 'Draft — not approved yet, French emails won’t send']
+    }[lang];
+    return { nav: nav, templates: templates, langs: langs, subject: copy[0], body: copy[1], draftNote: copy[2] };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin — Review request</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7b1e3d}a:hover{color:#611630}
+button,select,textarea,input{font:inherit}
+button:focus-visible,select:focus,textarea:focus,input:focus-visible{outline:2px solid #7b1e3d;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 960px; background: #f7f7f6; font-family: Inter, Arial, sans-serif; color: #0b2159; display: flex; flex-direction: column">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 28px; background: #0b2159; color: #ffffff">
+    <div style="display: flex; align-items: center; gap: 11px">
+      <img src="/_blob/4656ce653b200e07991d58266759ac80" alt="" style="width: 42px; height: 42px; box-sizing: border-box; padding: 4px; border-radius: 10px; background: #ffffff; object-fit: contain">
+      <span style="display: flex; flex-direction: column; gap: 3px"><span style="font-weight: 700; font-size: 14px">Herzliah Alumni Network</span><span style="font-size: 9px; letter-spacing: 0.13em; text-transform: uppercase; color: #b4bdd4">School admin</span></span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px; font-size: 14px">
+      <a href="Directory.dc.html" style="color: #d2d7e4; text-decoration: none">View the network</a>
+      <span style="padding: 5px 10px; border-radius: 999px; background: rgba(255,255,255,0.12); font-size: 12px; font-weight: 700">School admin</span>
+      <span aria-label="Ruth Klein" role="img" style="display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #c9d6f2; color: #0b2159; font-size: 13px; font-weight: 800">RK</span>
+    </div>
+  </header>
+  <div style="flex: 1; display: flex; flex-wrap: wrap">
+    <nav aria-label="Admin" style="flex: 1 1 200px; max-width: 232px; background: #ffffff; border-right: 1px solid #e2e5ee; padding: 20px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px">
+      <sc-for list="{{nav}}" as="n" hint-placeholder-count="9">
+        <a href="{{n.href}}" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: {{n.weight}}; background: {{n.bg}}; color: #0b2159; text-decoration: none">{{n.label}}<sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{false}}"><span style="min-width: 22px; padding: 2px 7px; box-sizing: border-box; border-radius: 999px; background: #7b1e3d; color: #ffffff; font-size: 12px; font-weight: 700; text-align: center">{{n.badge}}</span></sc-if></a>
+      </sc-for>
+    </nav>
+    <main style="flex: 999 1 640px; min-width: 0; padding: 28px 36px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+      <a href="AdmQueue.dc.html" style="align-self: flex-start; font-size: 14px; font-weight: 600">← Approvals</a>
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px">
+        <h1 style="margin: 0; font-size: 26px; font-weight: 800">Dana Levy · Class of 2014</h1>
+        <span style="font-size: 13px; color: #4a5575">Signed up Oct 27 · email verified · English</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px">
+        <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; font-size: 14px">
+          <h2 style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #3a4a70">What they told us</h2>
+          <div style="display: grid; grid-template-columns: 120px 1fr; row-gap: 8px"><span style="color: #4a5575">Name</span><strong>Dana Levy</strong><span style="color: #4a5575">At Herzliah</span><strong>Dana Benhamou</strong><span style="color: #4a5575">Class</span><strong>2014</strong><span style="color: #4a5575">Email</span><span>dana.levy@gmail.com</span></div>
+          <p style="margin: 0; padding: 12px 14px; border-radius: 8px; background: #f2f4f8; line-height: 1.5">“Homeroom with Mme Tremblay in Sec 5. My brother Ari graduated in 2011.”</p>
+        </section>
+        <section style="background: #ffffff; border: 2px solid #2e8b57; border-radius: 12px; padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; font-size: 14px">
+          <h2 style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1b5e33">Suggested school record</h2>
+          <div style="display: grid; grid-template-columns: 120px 1fr; row-gap: 8px"><span style="color: #4a5575">Name</span><strong>Dana Benhamou</strong><span style="color: #4a5575">Class</span><strong>2014</strong><span style="color: #4a5575">Status</span><span>Not claimed</span><span style="color: #4a5575">Why matched</span><span>Name at school + class year</span></div>
+          <a href="AdmDuplicate.dc.html" style="font-size: 13px; font-weight: 600">See other possible records (1)</a>
+        </section>
+      </div>
+      <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 22px 24px; display: flex; flex-direction: column; gap: 16px">
+        <h2 style="margin: 0; font-size: 17px; font-weight: 700">Decision</h2>
+        <div role="radiogroup" aria-label="Decision" style="display: flex; flex-wrap: wrap; gap: 8px">
+          <sc-for list="{{choices}}" as="c" hint-placeholder-count="3">
+            <button type="button" role="radio" aria-checked="{{c.checked}}" onClick="{{c.pick}}" style="padding: 10px 16px; border-radius: 8px; border: {{c.border}}; background: {{c.bg}}; color: {{c.fg}}; font-size: 14px; font-weight: 700; cursor: pointer">{{c.label}}</button>
+          </sc-for>
+        </div>
+        <sc-if value="{{isApprove}}" hint-placeholder-val="{{true}}">
+          <div style="display: flex; flex-direction: column; gap: 10px; font-size: 14px">
+            <label style="display: flex; gap: 10px; align-items: center"><input type="radio" name="link" checked style="accent-color: #7b1e3d; width: 18px; height: 18px; margin: 0">Link to the record “Dana Benhamou, 2014”</label>
+            <label style="display: flex; gap: 10px; align-items: center"><input type="radio" name="link" style="accent-color: #7b1e3d; width: 18px; height: 18px; margin: 0">Create a new record</label>
+            <span style="color: #4a5575">Sends the “Access approved” email in English. Dana can then set up her profile.</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{isInfo}}" hint-placeholder-val="{{false}}">
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <label for="rv-ask" style="font-size: 13px; font-weight: 600">Question for the applicant</label>
+            <textarea id="rv-ask" rows="3" style="width: 100%; box-sizing: border-box; padding: 11px 13px; border: 1px solid #8a93ab; border-radius: 7px; color: #0b2159; font-size: 14px; line-height: 1.5">We couldn't find you in the class of 2014. Did you graduate under another name, or in a different year?</textarea>
+            <span style="font-size: 13px; color: #4a5575">Sent with the “Needs more info” template. Her reply returns to this queue.</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{isReject}}" hint-placeholder-val="{{false}}">
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <label for="rv-reason" style="font-size: 13px; font-weight: 600">Reason (shown to the applicant)</label>
+            <select id="rv-reason" style="padding: 10px 12px; border: 1px solid #8a93ab; border-radius: 7px; background: #ffffff; color: #0b2159; font-size: 14px"><option>We couldn't confirm you graduated from Herzliah</option><option>Duplicate of an existing account</option><option>Other (write a reason)</option></select>
+            <span style="font-size: 13px; color: #4a5575">Sends the “Access rejected” email. The decision can't be changed later; they can sign up again.</span>
+          </div>
+        </sc-if>
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding-top: 14px; border-top: 1px solid #e2e5ee">
+          <span style="font-size: 13px; color: #4a5575">Logged to the audit trail under your name.</span>
+          <a href="AdmQueue.dc.html" style="display: inline-flex; padding: 12px 22px; border-radius: 7px; background: {{ctaBg}}; color: #ffffff; font-weight: 700; font-size: 15px; text-decoration: none">{{ctaLabel}}</a>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":960}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { decision: 'approve' };
+  }
+  renderVals() {
+    var self = this;
+    var active = 'queue';
+    var items = [['dashboard', 'Dashboard', 'AdmDashboard.dc.html'], ['queue', 'Approvals', 'AdmQueue.dc.html', 7], ['roster', 'Alumni', 'AdmRoster.dc.html'], ['templates', 'Email templates', 'AdmTemplates.dc.html'], ['freshness', 'Freshness', 'AdmFreshness.dc.html'], ['exports', 'Exports', 'AdmExport.dc.html'], ['staff', 'Staff', 'AdmStaff.dc.html'], ['audit', 'Audit log', 'AdmAudit.dc.html'], ['settings', 'Settings', 'AdmSettings.dc.html']];
+    var nav = items.map(function (it) {
+      var on = it[0] === active;
+      return { label: it[1], href: it[2], badge: it[3] || 0, hasBadge: !!it[3], weight: on ? '700' : '500', bg: on ? '#faeef3' : 'transparent' };
+    });
+    var d = this.state.decision;
+    var choices = [['approve', 'Approve'], ['info', 'Ask for more info'], ['reject', 'Reject']].map(function (c) {
+      var on = c[0] === d;
+      return { label: c[1], checked: on ? 'true' : 'false', border: on ? '2px solid #0b2159' : '1px solid #8a93ab', bg: on ? '#0b2159' : '#ffffff', fg: on ? '#ffffff' : '#0b2159', pick: function () { self.setState({ decision: c[0] }); } };
+    });
+    var cta = { approve: ['Approve and send email', '#1b6b3f'], info: ['Send question', '#0b2159'], reject: ['Reject request', '#a1173b'] }[d];
+    return { nav: nav, choices: choices, isApprove: d === 'approve', isInfo: d === 'info', isReject: d === 'reject', ctaLabel: cta[0], ctaBg: cta[1] };
+  }
+}
+</script>
+</body>
+</html>

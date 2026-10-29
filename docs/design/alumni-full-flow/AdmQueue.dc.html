@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin — Approval queue</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7b1e3d}a:hover{color:#611630}
+button{font:inherit}
+button:focus-visible{outline:2px solid #7b1e3d;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 960px; background: #f7f7f6; font-family: Inter, Arial, sans-serif; color: #0b2159; display: flex; flex-direction: column">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 28px; background: #0b2159; color: #ffffff">
+    <div style="display: flex; align-items: center; gap: 11px">
+      <img src="/_blob/4656ce653b200e07991d58266759ac80" alt="" style="width: 42px; height: 42px; box-sizing: border-box; padding: 4px; border-radius: 10px; background: #ffffff; object-fit: contain">
+      <span style="display: flex; flex-direction: column; gap: 3px"><span style="font-weight: 700; font-size: 14px">Herzliah Alumni Network</span><span style="font-size: 9px; letter-spacing: 0.13em; text-transform: uppercase; color: #b4bdd4">School admin</span></span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px; font-size: 14px">
+      <a href="Directory.dc.html" style="color: #d2d7e4; text-decoration: none">View the network</a>
+      <span style="padding: 5px 10px; border-radius: 999px; background: rgba(255,255,255,0.12); font-size: 12px; font-weight: 700">School admin</span>
+      <span aria-label="Ruth Klein" role="img" style="display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #c9d6f2; color: #0b2159; font-size: 13px; font-weight: 800">RK</span>
+    </div>
+  </header>
+  <div style="flex: 1; display: flex; flex-wrap: wrap">
+    <nav aria-label="Admin" style="flex: 1 1 200px; max-width: 232px; background: #ffffff; border-right: 1px solid #e2e5ee; padding: 20px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px">
+      <sc-for list="{{nav}}" as="n" hint-placeholder-count="9">
+        <a href="{{n.href}}" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: {{n.weight}}; background: {{n.bg}}; color: #0b2159; text-decoration: none">{{n.label}}<sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{false}}"><span style="min-width: 22px; padding: 2px 7px; box-sizing: border-box; border-radius: 999px; background: #7b1e3d; color: #ffffff; font-size: 12px; font-weight: 700; text-align: center">{{n.badge}}</span></sc-if></a>
+      </sc-for>
+    </nav>
+    <main style="flex: 999 1 640px; min-width: 0; padding: 32px 36px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <h1 style="margin: 0; font-size: 28px; font-weight: 800">Approvals</h1>
+        <p style="margin: 0; font-size: 15px; color: #3a4a70">People who signed up at herzliah.alumninetwork.ca/join. Oldest first.</p>
+      </div>
+      <div role="tablist" aria-label="Request status" style="display: flex; flex-wrap: wrap; gap: 6px; border-bottom: 1px solid #e2e5ee">
+        <sc-for list="{{tabs}}" as="t" hint-placeholder-count="3">
+          <button type="button" role="tab" aria-selected="{{t.selected}}" onClick="{{t.pick}}" style="padding: 12px 16px; border: 0; border-bottom: 3px solid {{t.line}}; background: transparent; color: #0b2159; font-size: 14px; font-weight: {{t.weight}}; cursor: pointer">{{t.label}} <span style="color: #4a5575; font-weight: 600">{{t.count}}</span></button>
+        </sc-for>
+      </div>
+      <div style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; overflow-x: auto">
+        <table style="width: 100%; min-width: 760px; border-collapse: collapse; font-size: 14px">
+          <thead>
+            <tr style="text-align: left; color: #3a4a70; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em">
+              <th style="padding: 14px 18px; font-weight: 700">Applicant</th>
+              <th style="padding: 14px 18px; font-weight: 700">Class</th>
+              <th style="padding: 14px 18px; font-weight: 700">Possible match</th>
+              <th style="padding: 14px 18px; font-weight: 700">{{whenHeader}}</th>
+              <th style="padding: 14px 18px"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Action</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+              <tr style="border-top: 1px solid #eef0f4">
+                <td style="padding: 14px 18px"><span style="display: flex; flex-direction: column; gap: 2px"><strong>{{r.name}}</strong><span style="font-size: 13px; color: #4a5575">{{r.email}}</span></span></td>
+                <td style="padding: 14px 18px">{{r.year}}</td>
+                <td style="padding: 14px 18px"><span style="padding: 4px 10px; border-radius: 999px; background: {{r.matchBg}}; color: {{r.matchFg}}; font-size: 12px; font-weight: 700">{{r.match}}</span></td>
+                <td style="padding: 14px 18px; color: #3a4a70">{{r.when}}</td>
+                <td style="padding: 14px 18px; text-align: right"><a href="AdmReview.dc.html" style="font-weight: 700">{{r.cta}}</a></td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin: 0; font-size: 13px; color: #4a5575">Matches are suggestions only — the applicant never sees them, and nothing is merged automatically.</p>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":960}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { tab: 'pending' };
+  }
+  renderVals() {
+    var self = this;
+    var active = 'queue';
+    var items = [['dashboard', 'Dashboard', 'AdmDashboard.dc.html'], ['queue', 'Approvals', 'AdmQueue.dc.html', 7], ['roster', 'Alumni', 'AdmRoster.dc.html'], ['templates', 'Email templates', 'AdmTemplates.dc.html'], ['freshness', 'Freshness', 'AdmFreshness.dc.html'], ['exports', 'Exports', 'AdmExport.dc.html'], ['staff', 'Staff', 'AdmStaff.dc.html'], ['audit', 'Audit log', 'AdmAudit.dc.html'], ['settings', 'Settings', 'AdmSettings.dc.html']];
+    var nav = items.map(function (it) {
+      var on = it[0] === active;
+      return { label: it[1], href: it[2], badge: it[3] || 0, hasBadge: !!it[3], weight: on ? '700' : '500', bg: on ? '#faeef3' : 'transparent' };
+    });
+    var none = { matchBg: '#eef0f4', matchFg: '#3a4a70' };
+    var dup = { matchBg: '#fff4dc', matchFg: '#7a4b00' };
+    var hit = { matchBg: '#e3f3e8', matchFg: '#1b5e33' };
+    function row(name, email, year, match, kind, when, cta) { return Object.assign({ name: name, email: email, year: year, match: match, when: when, cta: cta }, kind); }
+    var data = {
+      pending: [
+        row('Dana Levy', 'dana.levy@gmail.com', '2014', 'Dana Benhamou, 2014', hit, '4 days', 'Review'),
+        row('Jacob Ohana', 'j.ohana@outlook.com', '2002', 'No record found', none, '3 days', 'Review'),
+        row('Sarah Elbaz', 'sarah.elbaz@gmail.com', '2017', 'Already a member?', dup, '2 days', 'Review'),
+        row('Ben Toledano', 'bentoledano@icloud.com', '1995', 'No record found', none, '1 day', 'Review'),
+        row('Ilana Peretz', 'ilana.p@gmail.com', '2021', 'Ilana Peretz, 2021', hit, '6 h', 'Review'),
+        row('Marc Dahan', 'mdahan@videotron.ca', '1988', 'No record found', none, '2 h', 'Review'),
+        row('Noa Friedman', 'noa.f@gmail.com', '2010', 'Noa Friedman, 2010', hit, '1 h', 'Review')
+      ],
+      info: [
+        row('Leo Mizrahi', 'leo.mizrahi@gmail.com', '2019', 'No record found', none, 'Asked yesterday', 'Open'),
+        row('Esther Nadler', 'enadler@gmail.com', '1999', 'Two possible records', dup, 'Asked 6 days ago', 'Open')
+      ],
+      decided: [
+        row('Maya Azoulay', 'maya.azoulay@[email]', '2009', 'Approved', hit, 'Sep 14', 'View'),
+        row('Paul Martin', 'p.martin@gmail.com', '—', 'Rejected — not a graduate', none, 'Sep 12', 'View')
+      ]
+    };
+    var cur = this.state.tab;
+    var tabs = [['pending', 'Pending'], ['info', 'Needs info'], ['decided', 'Decided']].map(function (t) {
+      var on = t[0] === cur;
+      return { label: t[1], count: data[t[0]].length, selected: on ? 'true' : 'false', line: on ? '#7b1e3d' : 'transparent', weight: on ? '700' : '500', pick: function () { self.setState({ tab: t[0] }); } };
+    });
+    var whenHeader = cur === 'pending' ? 'Waiting' : (cur === 'info' ? 'Status' : 'Decided');
+    return { nav: nav, tabs: tabs, rows: data[cur], whenHeader: whenHeader };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin — School settings</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7b1e3d}a:hover{color:#611630}
+button,input,select{font:inherit}
+button:focus-visible,input:focus,select:focus{outline:2px solid #7b1e3d;outline-offset:1px}
+</style>
+</helmet>
+<div style="min-height: 960px; background: #f7f7f6; font-family: Inter, Arial, sans-serif; color: #0b2159; display: flex; flex-direction: column">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 28px; background: #0b2159; color: #ffffff">
+    <div style="display: flex; align-items: center; gap: 11px">
+      <img src="/_blob/4656ce653b200e07991d58266759ac80" alt="" style="width: 42px; height: 42px; box-sizing: border-box; padding: 4px; border-radius: 10px; background: #ffffff; object-fit: contain">
+      <span style="display: flex; flex-direction: column; gap: 3px"><span style="font-weight: 700; font-size: 14px">Herzliah Alumni Network</span><span style="font-size: 9px; letter-spacing: 0.13em; text-transform: uppercase; color: #b4bdd4">School admin</span></span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px; font-size: 14px">
+      <a href="Directory.dc.html" style="color: #d2d7e4; text-decoration: none">View the network</a>
+      <span style="padding: 5px 10px; border-radius: 999px; background: rgba(255,255,255,0.12); font-size: 12px; font-weight: 700">School admin</span>
+      <span aria-label="Ruth Klein" role="img" style="display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #c9d6f2; color: #0b2159; font-size: 13px; font-weight: 800">RK</span>
+    </div>
+  </header>
+  <div style="flex: 1; display: flex; flex-wrap: wrap">
+    <nav aria-label="Admin" style="flex: 1 1 200px; max-width: 232px; background: #ffffff; border-right: 1px solid #e2e5ee; padding: 20px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px">
+      <sc-for list="{{nav}}" as="n" hint-placeholder-count="9">
+        <a href="{{n.href}}" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: {{n.weight}}; background: {{n.bg}}; color: #0b2159; text-decoration: none">{{n.label}}<sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{false}}"><span style="min-width: 22px; padding: 2px 7px; box-sizing: border-box; border-radius: 999px; background: #7b1e3d; color: #ffffff; font-size: 12px; font-weight: 700; text-align: center">{{n.badge}}</span></sc-if></a>
+      </sc-for>
+    </nav>
+    <main style="flex: 999 1 640px; min-width: 0; padding: 28px 36px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px; max-width: 900px">
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <h1 style="margin: 0; font-size: 28px; font-weight: 800">School settings</h1>
+        <p style="margin: 0; font-size: 15px; color: #3a4a70">Changes show on herzliah.alumninetwork.ca and in emails right away.</p>
+      </div>
+      <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 22px 24px; display: flex; flex-direction: column; gap: 16px">
+        <h2 style="margin: 0; font-size: 17px; font-weight: 700">Branding</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center">
+          <img src="/_blob/4656ce653b200e07991d58266759ac80" alt="Current Herzliah logo" style="width: 72px; height: 72px; border-radius: 12px; border: 1px solid #e2e5ee; object-fit: contain; padding: 6px; box-sizing: border-box">
+          <button type="button" style="padding: 10px 16px; border-radius: 7px; border: 1px solid #8a93ab; background: #ffffff; color: #0b2159; font-weight: 700; font-size: 14px; cursor: pointer">Replace logo</button>
+          <div style="display: flex; gap: 14px; flex-wrap: wrap">
+            <span style="display: flex; align-items: center; gap: 8px; font-size: 14px"><span aria-hidden="true" style="width: 28px; height: 28px; border-radius: 7px; background: #0b2159"></span>Primary #0B2159</span>
+            <span style="display: flex; align-items: center; gap: 8px; font-size: 14px"><span aria-hidden="true" style="width: 28px; height: 28px; border-radius: 7px; background: #7b1e3d"></span>Accent #7B1E3D</span>
+            <span style="padding: 4px 10px; border-radius: 999px; background: #e3f3e8; color: #1b5e33; font-size: 12px; font-weight: 700">Contrast passes</span>
+          </div>
+        </div>
+      </section>
+      <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px">
+        <h2 style="margin: 0; font-size: 17px; font-weight: 700">Email</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px">
+          <div style="display: flex; flex-direction: column; gap: 7px"><label for="se-name" style="font-size: 13px; font-weight: 600">Sender name</label><input id="se-name" value="Herzliah Alumni Network" style="padding: 10px 12px; border: 1px solid #8a93ab; border-radius: 7px; color: #0b2159; font-size: 14px"><span style="font-size: 12px; color: #4a5575">Sent from noreply@alumninetwork.ca</span></div>
+          <div style="display: flex; flex-direction: column; gap: 7px"><label for="se-reply" style="font-size: 13px; font-weight: 600">Replies go to</label><input id="se-reply" value="[alumni office email]" style="padding: 10px 12px; border: 1px solid #8a93ab; border-radius: 7px; color: #0b2159; font-size: 14px"></div>
+          <div style="display: flex; flex-direction: column; gap: 7px"><label for="se-lang" style="font-size: 13px; font-weight: 600">Default language</label><select id="se-lang" style="padding: 10px 12px; border: 1px solid #8a93ab; border-radius: 7px; background: #ffffff; color: #0b2159; font-size: 14px"><option>English</option><option>Français</option></select></div>
+        </div>
+      </section>
+      <div style="display: flex; justify-content: flex-end"><button type="button" style="padding: 12px 22px; border-radius: 7px; border: 0; background: #7b1e3d; color: #ffffff; font-weight: 700; font-size: 15px; cursor: pointer">Save changes</button></div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":960}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var active = 'settings';
+    var items = [['dashboard', 'Dashboard', 'AdmDashboard.dc.html'], ['queue', 'Approvals', 'AdmQueue.dc.html', 7], ['roster', 'Alumni', 'AdmRoster.dc.html'], ['templates', 'Email templates', 'AdmTemplates.dc.html'], ['freshness', 'Freshness', 'AdmFreshness.dc.html'], ['exports', 'Exports', 'AdmExport.dc.html'], ['staff', 'Staff', 'AdmStaff.dc.html'], ['audit', 'Audit log', 'AdmAudit.dc.html'], ['settings', 'Settings', 'AdmSettings.dc.html']];
+    var nav = items.map(function (it) {
+      var on = it[0] === active;
+      return { label: it[1], href: it[2], badge: it[3] || 0, hasBadge: !!it[3], weight: on ? '700' : '500', bg: on ? '#faeef3' : 'transparent' };
+    });
+    return { nav: nav };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin — Freshness</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7b1e3d}a:hover{color:#611630}
+</style>
+</helmet>
+<div style="min-height: 960px; background: #f7f7f6; font-family: Inter, Arial, sans-serif; color: #0b2159; display: flex; flex-direction: column">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 28px; background: #0b2159; color: #ffffff">
+    <div style="display: flex; align-items: center; gap: 11px">
+      <img src="/_blob/4656ce653b200e07991d58266759ac80" alt="" style="width: 42px; height: 42px; box-sizing: border-box; padding: 4px; border-radius: 10px; background: #ffffff; object-fit: contain">
+      <span style="display: flex; flex-direction: column; gap: 3px"><span style="font-weight: 700; font-size: 14px">Herzliah Alumni Network</span><span style="font-size: 9px; letter-spacing: 0.13em; text-transform: uppercase; color: #b4bdd4">School admin</span></span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px; font-size: 14px">
+      <a href="Directory.dc.html" style="color: #d2d7e4; text-decoration: none">View the network</a>
+      <span style="padding: 5px 10px; border-radius: 999px; background: rgba(255,255,255,0.12); font-size: 12px; font-weight: 700">School admin</span>
+      <span aria-label="Ruth Klein" role="img" style="display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #c9d6f2; color: #0b2159; font-size: 13px; font-weight: 800">RK</span>
+    </div>
+  </header>
+  <div style="flex: 1; display: flex; flex-wrap: wrap">
+    <nav aria-label="Admin" style="flex: 1 1 200px; max-width: 232px; background: #ffffff; border-right: 1px solid #e2e5ee; padding: 20px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px">
+      <sc-for list="{{nav}}" as="n" hint-placeholder-count="9">
+        <a href="{{n.href}}" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: {{n.weight}}; background: {{n.bg}}; color: #0b2159; text-decoration: none">{{n.label}}<sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{false}}"><span style="min-width: 22px; padding: 2px 7px; box-sizing: border-box; border-radius: 999px; background: #7b1e3d; color: #ffffff; font-size: 12px; font-weight: 700; text-align: center">{{n.badge}}</span></sc-if></a>
+      </sc-for>
+    </nav>
+    <main style="flex: 999 1 640px; min-width: 0; padding: 28px 36px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <h1 style="margin: 0; font-size: 28px; font-weight: 800">Freshness</h1>
+        <p style="margin: 0; font-size: 15px; color: #3a4a70">Once a year, each alumnus gets a one-click “still accurate?” email. Only their own confirmation counts — staff edits don't.</p>
+      </div>
+      <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px">
+        <h2 style="margin: 0; font-size: 15px; font-weight: 700">212 profiles with an active account</h2>
+        <div role="img" aria-label="168 up to date, 23 due, 12 reminded, 9 overdue" style="display: flex; height: 18px; border-radius: 6px; overflow: hidden; gap: 2px">
+          <span style="flex: 168; background: #2e8b57"></span><span style="flex: 23; background: #2463c2"></span><span style="flex: 12; background: #c98a00"></span><span style="flex: 9; background: #a1173b"></span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; font-size: 14px">
+          <span style="display: flex; gap: 8px; align-items: baseline"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 3px; background: #2e8b57"></span><strong>168</strong> Up to date</span>
+          <span style="display: flex; gap: 8px; align-items: baseline"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 3px; background: #2463c2"></span><strong>23</strong> Due this month</span>
+          <span style="display: flex; gap: 8px; align-items: baseline"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 3px; background: #c98a00"></span><strong>12</strong> Reminded</span>
+          <span style="display: flex; gap: 8px; align-items: baseline"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 3px; background: #a1173b"></span><strong>9</strong> Overdue</span>
+        </div>
+      </section>
+      <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px">
+        <h2 style="margin: 0; font-size: 15px; font-weight: 700">How each cycle runs</h2>
+        <ol style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px">
+          <li style="display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-radius: 10px; background: #f2f4f8"><strong style="font-size: 14px">12 months</strong><span style="font-size: 13px; color: #3a4a70">after last confirmation: email sent</span></li>
+          <li style="display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-radius: 10px; background: #f2f4f8"><strong style="font-size: 14px">+14 days</strong><span style="font-size: 13px; color: #3a4a70">first reminder</span></li>
+          <li style="display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-radius: 10px; background: #f2f4f8"><strong style="font-size: 14px">+30 days</strong><span style="font-size: 13px; color: #3a4a70">second reminder</span></li>
+          <li style="display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-radius: 10px; background: #fbe6ea"><strong style="font-size: 14px; color: #a1173b">No reply</strong><span style="font-size: 13px; color: #3a4a70">marked overdue — you decide what's next</span></li>
+        </ol>
+      </section>
+      <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; overflow-x: auto">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px"><h2 style="margin: 0; font-size: 15px; font-weight: 700">Overdue</h2><a href="AdmRoster.dc.html" style="font-size: 14px; font-weight: 600">Open in roster →</a></div>
+        <table style="width: 100%; min-width: 620px; border-collapse: collapse; font-size: 14px">
+          <thead><tr style="text-align: left; color: #3a4a70; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em"><th style="padding: 10px 20px; font-weight: 700">Name</th><th style="padding: 10px 20px; font-weight: 700">Class</th><th style="padding: 10px 20px; font-weight: 700">Last confirmed</th><th style="padding: 10px 20px; font-weight: 700">Email</th></tr></thead>
+          <tbody>
+            <tr style="border-top: 1px solid #eef0f4"><td style="padding: 12px 20px"><a href="AdmRecord.dc.html" style="font-weight: 700">Rachel Gold</a></td><td style="padding: 12px 20px">2005</td><td style="padding: 12px 20px">Aug 2025</td><td style="padding: 12px 20px">Delivered, no reply</td></tr>
+            <tr style="border-top: 1px solid #eef0f4"><td style="padding: 12px 20px"><a href="AdmRecord.dc.html" style="font-weight: 700">Daniel Sebag</a></td><td style="padding: 12px 20px">2001</td><td style="padding: 12px 20px">Jul 2025</td><td style="padding: 12px 20px; color: #a1173b">Bounced — needs a new address</td></tr>
+            <tr style="border-top: 1px solid #eef0f4"><td style="padding: 12px 20px"><a href="AdmRecord.dc.html" style="font-weight: 700">Miriam Haddad</a></td><td style="padding: 12px 20px">1996</td><td style="padding: 12px 20px">Jul 2025</td><td style="padding: 12px 20px">Delivered, no reply</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":960}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var active = 'freshness';
+    var items = [['dashboard', 'Dashboard', 'AdmDashboard.dc.html'], ['queue', 'Approvals', 'AdmQueue.dc.html', 7], ['roster', 'Alumni', 'AdmRoster.dc.html'], ['templates', 'Email templates', 'AdmTemplates.dc.html'], ['freshness', 'Freshness', 'AdmFreshness.dc.html'], ['exports', 'Exports', 'AdmExport.dc.html'], ['staff', 'Staff', 'AdmStaff.dc.html'], ['audit', 'Audit log', 'AdmAudit.dc.html'], ['settings', 'Settings', 'AdmSettings.dc.html']];
+    var nav = items.map(function (it) {
+      var on = it[0] === active;
+      return { label: it[1], href: it[2], badge: it[3] || 0, hasBadge: !!it[3], weight: on ? '700' : '500', bg: on ? '#faeef3' : 'transparent' };
+    });
+    return { nav: nav };
+  }
+}
+</script>
+</body>
+</html>

@@ -27,6 +27,12 @@ describe("resolveTenant", () => {
     ["local with a port", local, "herzliah.localhost:3000", school("herzliah")],
     ["plain localhost", local, "localhost:3000", root],
     ["127.0.0.1", local, "127.0.0.1:3000", none],
+    [
+      "a preview switched to the root site",
+      { ...preview, previewCookie: "root" },
+      "pr-1.vercel.app",
+      root,
+    ],
   ])("%s", (_, env, host, expected) => {
     expect(resolveTenant({ ...env, host })).toEqual(expected);
   });

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin — Suspend, archive or mark deceased</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7b1e3d}a:hover{color:#611630}
+button,textarea,input{font:inherit}
+button:focus-visible,textarea:focus,input:focus-visible{outline:2px solid #7b1e3d;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 960px; background: #f7f7f6; font-family: Inter, Arial, sans-serif; color: #0b2159; display: flex; flex-direction: column; position: relative">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 28px; background: #0b2159; color: #ffffff">
+    <div style="display: flex; align-items: center; gap: 11px">
+      <img src="/_blob/4656ce653b200e07991d58266759ac80" alt="" style="width: 42px; height: 42px; box-sizing: border-box; padding: 4px; border-radius: 10px; background: #ffffff; object-fit: contain">
+      <span style="display: flex; flex-direction: column; gap: 3px"><span style="font-weight: 700; font-size: 14px">Herzliah Alumni Network</span><span style="font-size: 9px; letter-spacing: 0.13em; text-transform: uppercase; color: #b4bdd4">School admin</span></span>
+    </div>
+    <span aria-label="Ruth Klein" role="img" style="display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #c9d6f2; color: #0b2159; font-size: 13px; font-weight: 800">RK</span>
+  </header>
+  <div aria-hidden="true" style="flex: 1; display: flex; flex-wrap: wrap">
+    <div style="flex: 1 1 200px; max-width: 232px; background: #ffffff; border-right: 1px solid #e2e5ee"></div>
+    <div style="flex: 999 1 640px; padding: 28px 36px; display: flex; flex-direction: column; gap: 18px">
+      <div style="height: 110px; border-radius: 12px; background: #ffffff; border: 1px solid #e2e5ee"></div>
+      <div style="height: 220px; border-radius: 12px; background: #ffffff; border: 1px solid #e2e5ee"></div>
+    </div>
+  </div>
+  <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: rgba(11,33,89,0.45); display: flex; justify-content: center; align-items: flex-start; padding: 110px 24px 24px">
+    <section role="dialog" aria-modal="true" aria-labelledby="sus-title" style="width: 100%; max-width: 560px; background: #ffffff; border-radius: 14px; box-shadow: 0 30px 70px -20px rgba(5,18,49,0.5); display: flex; flex-direction: column">
+      <div style="padding: 26px 28px 0; display: flex; flex-direction: column; gap: 6px">
+        <h1 id="sus-title" style="margin: 0; font-size: 22px; font-weight: 800">Change Noah Cohen's access</h1>
+        <p style="margin: 0; font-size: 14px; color: #3a4a70">Class of 2012 · Published</p>
+      </div>
+      <div style="padding: 20px 28px; display: flex; flex-direction: column; gap: 16px">
+        <fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 8px">
+          <legend style="font-size: 13px; font-weight: 600; margin-bottom: 8px">Action</legend>
+          <sc-for list="{{actions}}" as="a" hint-placeholder-count="3">
+            <label style="display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border-radius: 10px; border: {{a.border}}; background: {{a.bg}}; cursor: pointer">
+              <input type="radio" name="action" checked="{{a.checked}}" onChange="{{a.pick}}" style="accent-color: #7b1e3d; width: 18px; height: 18px; margin: 1px 0 0 0; flex: 0 0 18px">
+              <span style="display: flex; flex-direction: column; gap: 3px"><span style="font-size: 15px; font-weight: 700">{{a.label}}</span><span style="font-size: 13px; line-height: 1.45; color: #4a5575">{{a.hint}}</span></span>
+            </label>
+          </sc-for>
+        </fieldset>
+        <div style="display: flex; flex-direction: column; gap: 7px">
+          <label for="sus-reason" style="font-size: 13px; font-weight: 600">Reason <span style="font-weight: 400; color: #4a5575">(required, kept in the audit log)</span></label>
+          <textarea id="sus-reason" rows="3" value="{{reason}}" onChange="{{onReason}}" placeholder="e.g. Reported for sending unsolicited sales messages to several members" style="width: 100%; box-sizing: border-box; padding: 11px 13px; border: 1px solid #8a93ab; border-radius: 7px; color: #0b2159; font-size: 14px; line-height: 1.5; resize: vertical"></textarea>
+        </div>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; padding: 16px 28px; border-top: 1px solid #e2e5ee">
+        <a href="AdmRecord.dc.html" style="display: inline-flex; padding: 11px 18px; border-radius: 7px; border: 1px solid #8a93ab; color: #0b2159; font-weight: 700; font-size: 14px; text-decoration: none">Cancel</a>
+        <sc-if value="{{ready}}" hint-placeholder-val="{{false}}">
+          <a href="AdmRecord.dc.html" style="display: inline-flex; padding: 11px 18px; border-radius: 7px; background: #a1173b; color: #ffffff; font-weight: 700; font-size: 14px; text-decoration: none">{{confirm}}</a>
+        </sc-if>
+        <sc-if value="{{notReady}}" hint-placeholder-val="{{true}}">
+          <button type="button" disabled style="padding: 11px 18px; border-radius: 7px; border: 0; background: #d5d9e3; color: #4a5575; font-weight: 700; font-size: 14px">Add a reason to continue</button>
+        </sc-if>
+      </div>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":960}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { action: 'suspend', reason: '' };
+  }
+  renderVals() {
+    var self = this;
+    var cur = this.state.action;
+    var defs = [
+      ['suspend', 'Suspend', 'Signs Noah out and blocks access on his next request. His profile leaves the directory. You can reactivate him later.', 'Suspend Noah'],
+      ['archive', 'Archive', 'Removes the record from the roster and directory, keeping its history. Reversible by a school admin.', 'Archive record'],
+      ['deceased', 'Mark as deceased', 'Hides the profile, stops all emails and confirmation reminders.', 'Mark as deceased']
+    ];
+    var label = '';
+    var actions = defs.map(function (d) {
+      var on = d[0] === cur;
+      if (on) label = d[3];
+      return { label: d[1], hint: d[2], checked: on, border: on ? '2px solid #7b1e3d' : '1px solid #c3c9d6', bg: on ? '#faeef3' : '#ffffff', pick: function () { self.setState({ action: d[0] }); } };
+    });
+    var ready = (this.state.reason || '').trim().length > 0;
+    return {
+      actions: actions, reason: this.state.reason, confirm: label, ready: ready, notReady: !ready,
+      onReason: function (e) { self.setState({ reason: e.target.value }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

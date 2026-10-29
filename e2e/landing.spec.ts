@@ -16,8 +16,8 @@ const homes: [school: string, email: string, home: string][] = [
   ["herzliah", accounts.withdrawn, "/join"],
   ["herzliah", accounts.suspended, "/account/suspended"],
   ["herzliah", accounts.outsider, "/join"],
-  // On a school's address a system admin is treated like anyone else.
-  ["herzliah", accounts.system, "/join"],
+  // A system admin with no role at a school sees no data there and is pointed to the console (ADR 0005).
+  ["herzliah", accounts.system, "/account/platform"],
   ["test-school", accounts.testSchoolAdmin, "/admin"],
   ["test-school", accounts.testSchoolAlumni, "/directory"],
   ["test-school", accounts.testSchoolPending, "/account/pending"],

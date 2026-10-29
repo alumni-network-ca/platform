@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Platform console — Suspend or offboard a school</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#4b2a8a}a:hover{color:#2f1866}
+button,input,textarea{font:inherit}
+button:focus-visible,input:focus,textarea:focus{outline:2px solid #4b2a8a;outline-offset:1px}
+</style>
+</helmet>
+<div style="min-height: 960px; background: #f5f5f7; font-family: Inter, Arial, sans-serif; color: #15172b; display: flex; flex-direction: column">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 28px; background: #15172b; color: #ffffff">
+    <div style="display: flex; align-items: center; gap: 11px">
+      <span aria-hidden="true" style="display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: #4b2a8a; font-size: 13px; font-weight: 800; letter-spacing: 0.04em">AN</span>
+      <span style="display: flex; flex-direction: column; gap: 3px"><span style="font-weight: 700; font-size: 14px">Alumni Network</span><span style="font-size: 9px; letter-spacing: 0.13em; text-transform: uppercase; color: #b8b9d0">Platform console</span></span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px; font-size: 14px">
+      <span style="padding: 5px 10px; border-radius: 999px; background: #4b2a8a; font-size: 12px; font-weight: 700">Platform admin</span>
+      <span aria-label="Gab Derhy" role="img" style="display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #d9cdf3; color: #15172b; font-size: 13px; font-weight: 800">GD</span>
+    </div>
+  </header>
+  <div style="flex: 1; display: flex; flex-wrap: wrap">
+    <nav aria-label="Console" style="flex: 1 1 200px; max-width: 220px; background: #ffffff; border-right: 1px solid #e4e4ec; padding: 20px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px">
+      <sc-for list="{{nav}}" as="n" hint-placeholder-count="3">
+        <a href="{{n.href}}" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: {{n.weight}}; background: {{n.bg}}; color: #15172b; text-decoration: none">{{n.label}}<sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{false}}"><span style="min-width: 22px; padding: 2px 7px; box-sizing: border-box; border-radius: 999px; background: #4b2a8a; color: #ffffff; font-size: 12px; font-weight: 700; text-align: center">{{n.badge}}</span></sc-if></a>
+      </sc-for>
+    </nav>
+    <main style="flex: 999 1 640px; min-width: 0; padding: 28px 36px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px; max-width: 820px">
+      <a href="SaSetup.dc.html" style="align-self: flex-start; font-size: 14px; font-weight: 600">← Maple Ridge Academy</a>
+      <h1 style="margin: 0; font-size: 28px; font-weight: 800">Suspend or offboard Maple Ridge Academy</h1>
+      <fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 10px">
+        <legend style="font-size: 13px; font-weight: 600; margin-bottom: 10px">What do you want to do?</legend>
+        <sc-for list="{{options}}" as="o" hint-placeholder-count="2">
+          <label style="display: flex; gap: 14px; align-items: flex-start; padding: 18px 20px; border-radius: 12px; border: {{o.border}}; background: {{o.bg}}; cursor: pointer">
+            <input type="radio" name="sa-action" checked="{{o.checked}}" onChange="{{o.pick}}" style="accent-color: #a1173b; width: 18px; height: 18px; margin: 2px 0 0 0; flex: 0 0 18px">
+            <span style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 16px; font-weight: 700">{{o.label}}</span><span style="font-size: 14px; line-height: 1.5; color: #45486a">{{o.hint}}</span></span>
+          </label>
+        </sc-for>
+      </fieldset>
+      <div style="display: flex; flex-direction: column; gap: 7px">
+        <label for="ss-reason" style="font-size: 13px; font-weight: 600">Reason</label>
+        <textarea id="ss-reason" rows="2" style="width: 100%; box-sizing: border-box; padding: 11px 13px; border: 1px solid #8b8ca8; border-radius: 7px; color: #15172b; font-size: 14px; resize: vertical">Contract paused while the school renews — [details]</textarea>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 7px; max-width: 420px">
+        <label for="ss-confirm" style="font-size: 13px; font-weight: 600">Type <strong>maple-ridge</strong> to confirm</label>
+        <input id="ss-confirm" value="{{typed}}" onChange="{{onType}}" style="padding: 10px 12px; border: 1px solid #8b8ca8; border-radius: 7px; color: #15172b; font-size: 14px">
+      </div>
+      <div style="display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px">
+        <a href="SaSetup.dc.html" style="display: inline-flex; padding: 11px 18px; border-radius: 7px; border: 1px solid #8b8ca8; color: #15172b; font-weight: 700; font-size: 14px; text-decoration: none">Cancel</a>
+        <sc-if value="{{ready}}" hint-placeholder-val="{{false}}">
+          <a href="SaSchools.dc.html" style="display: inline-flex; padding: 11px 18px; border-radius: 7px; background: #a1173b; color: #ffffff; font-weight: 700; font-size: 14px; text-decoration: none">{{confirmLabel}}</a>
+        </sc-if>
+        <sc-if value="{{notReady}}" hint-placeholder-val="{{true}}">
+          <button type="button" disabled style="padding: 11px 18px; border-radius: 7px; border: 0; background: #dcdce6; color: #55587a; font-weight: 700; font-size: 14px">{{confirmLabel}}</button>
+        </sc-if>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":960}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { action: 'suspend', typed: '' };
+  }
+  renderVals() {
+    var self = this;
+    var active = 'schools';
+    var items = [['schools', 'Schools', 'SaSchools.dc.html'], ['support', 'Support access', 'SaSupport.dc.html', 1], ['health', 'Platform health', 'SaHealth.dc.html']];
+    var nav = items.map(function (it) {
+      var on = it[0] === active;
+      return { label: it[1], href: it[2], badge: it[3] || 0, hasBadge: !!it[3], weight: on ? '700' : '500', bg: on ? '#efe9fb' : 'transparent' };
+    });
+    var cur = this.state.action;
+    var defs = [
+      ['suspend', 'Suspend', 'The school’s address shows a “temporarily unavailable” notice. Nobody can sign in, no emails go out. All data is kept, and you can reactivate at any time.', 'Suspend school'],
+      ['offboard', 'Offboard', 'Suspend now, send the school an export of its data, then delete all alumni data after [N] days (per DEC-08). Deletion can’t be undone.', 'Start offboarding']
+    ];
+    var label = '';
+    var options = defs.map(function (d) {
+      var on = d[0] === cur;
+      if (on) label = d[3];
+      return { label: d[1], hint: d[2], checked: on, border: on ? '2px solid #a1173b' : '1px solid #c8c8d6', bg: on ? '#fbe9ed' : '#ffffff', pick: function () { self.setState({ action: d[0] }); } };
+    });
+    var ready = (this.state.typed || '').trim() === 'maple-ridge';
+    return { nav: nav, options: options, typed: this.state.typed, onType: function (e) { self.setState({ typed: e.target.value }); }, ready: ready, notReady: !ready, confirmLabel: label };
+  }
+}
+</script>
+</body>
+</html>

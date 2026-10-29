@@ -1256,6 +1256,7 @@ export type Database = {
         };
         Returns: undefined;
       };
+      clean_branding: { Args: { p_branding: Json }; Returns: Json };
       confirm_still_accurate: { Args: { p_token: string }; Returns: boolean };
       confirm_still_accurate_in_app: { Args: { p_inst: string }; Returns: undefined };
       create_staff_invitation: {
@@ -1304,6 +1305,7 @@ export type Database = {
       };
       is_member: { Args: { p_inst: string }; Returns: boolean };
       is_system_admin: { Args: Record<PropertyKey, never>; Returns: boolean };
+      issue_staff_invitation_link: { Args: { p_invitation: string }; Returns: string };
       log_audit: {
         Args: {
           p_action: string;
@@ -1319,10 +1321,19 @@ export type Database = {
       owns_profile: { Args: { p_profile: string }; Returns: boolean };
       permitted_institutions: { Args: { p_perm: string }; Returns: string[] };
       platform_add_admin: { Args: { p_email: string }; Returns: string };
+      platform_admin_emails: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          email: string;
+          user_id: string;
+        }[];
+      };
       platform_appoint_school_admin: { Args: { p_email: string; p_inst: string }; Returns: string };
       platform_create_school: {
         Args: {
+          p_branding?: Json;
           p_default_locale?: Database["public"]["Enums"]["locale"];
+          p_email_display_name?: string;
           p_name: string;
           p_reply_to?: string;
           p_slug: string;
@@ -1334,6 +1345,25 @@ export type Database = {
         Returns: string;
       };
       platform_revoke_grant: { Args: { p_grant: string }; Returns: undefined };
+      platform_school_summaries: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          active_grants: number;
+          created_at: string;
+          id: string;
+          members: number;
+          name: string;
+          open_invitations: number;
+          pending_requests: number;
+          slug: string;
+          staff: number;
+          status: string;
+        }[];
+      };
+      platform_set_school_status: {
+        Args: { p_inst: string; p_reason?: string; p_status: string };
+        Returns: undefined;
+      };
       public_school: { Args: { p_slug: string }; Returns: Json };
       record_confirmation: {
         Args: { p_profile: string; p_source: Database["public"]["Enums"]["confirmation_source"] };
@@ -1368,6 +1398,7 @@ export type Database = {
         };
         Returns: Database["public"]["Enums"]["locale"];
       };
+      revoke_staff_invitation: { Args: { p_invitation: string }; Returns: undefined };
       save_email_template: {
         Args: {
           p_body: string;

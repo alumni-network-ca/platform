@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Onboarding — Networking</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7b1e3d}a:hover{color:#611630}
+input,select,textarea,button{font:inherit}
+input:focus-visible{outline:2px solid #7b1e3d;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 1000px; background: #f7f7f6; font-family: Inter, Arial, sans-serif; color: #0b2159; display: flex; flex-direction: column">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 40px; background: #0b2159; color: #ffffff">
+    <a href="Main.dc.html" style="display: flex; align-items: center; gap: 11px; color: #ffffff; text-decoration: none">
+      <img src="/_blob/4656ce653b200e07991d58266759ac80" alt="" style="width: 42px; height: 42px; box-sizing: border-box; padding: 4px; border-radius: 10px; background: #ffffff; object-fit: contain">
+      <span style="display: flex; flex-direction: column; gap: 3px"><span style="font-weight: 700; font-size: 14px">Herzliah Alumni Network</span><span style="font-size: 9px; letter-spacing: 0.13em; text-transform: uppercase; color: #b4bdd4">Private · verified · connected</span></span>
+    </a>
+    <div style="display: flex; align-items: center; gap: 12px">
+      <span style="padding: 8px 14px; border-radius: 7px; background: #7b1e3d; color: #ffffff; font-size: 14px; font-weight: 700">Complete profile</span>
+      <span aria-label="Dana Levy" role="img" style="display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #eab6ce; color: #0b2159; font-size: 13px; font-weight: 800">DL</span>
+    </div>
+  </header>
+  <main style="flex: 1; width: 100%; max-width: 1120px; margin: 0 auto; box-sizing: border-box; padding: 40px 24px 56px; display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start">
+    <nav aria-label="Profile setup steps" style="flex: 1 1 240px; max-width: 280px; display: flex; flex-direction: column; gap: 14px">
+      <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #4a5575">Set up your profile</span>
+      <ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 4px">
+        <sc-for list="{{steps}}" as="s" hint-placeholder-count="7">
+          <li style="display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 8px; background: {{s.rowBg}}">
+            <span aria-hidden="true" style="flex: 0 0 26px; height: 26px; box-sizing: border-box; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; background: {{s.dotBg}}; color: {{s.dotFg}}; border: {{s.dotBorder}}">
+              <sc-if value="{{s.done}}" hint-placeholder-val="{{false}}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"></path></svg></sc-if>
+              <sc-if value="{{s.notDone}}" hint-placeholder-val="{{true}}">{{s.n}}</sc-if>
+            </span>
+            <span style="font-size: 14px; font-weight: {{s.weight}}; color: {{s.fg}}">{{s.label}}</span>
+          </li>
+        </sc-for>
+      </ol>
+      <span style="font-size: 13px; color: #4a5575; padding-left: 12px">Progress is saved after every step.</span>
+    </nav>
+    <section style="flex: 999 1 560px; min-width: 0; background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; box-sizing: border-box; display: flex; flex-direction: column">
+      <div style="height: 4px; background: #e2e5ee; border-radius: 12px 12px 0 0; overflow: hidden"><div style="width: 71%; height: 4px; background: #7b1e3d"></div></div>
+      <div style="padding: 32px 36px; display: flex; flex-direction: column; gap: 24px">
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <span style="font-size: 13px; font-weight: 600; color: #4a5575">Step 5 of 7</span>
+          <h1 style="margin: 0; font-size: 28px; font-weight: 800">How would you like to help?</h1>
+          <p style="margin: 0; font-size: 15px; line-height: 1.55; color: #3a4a70">These show as “Open to” on your profile and power the directory's filters. Pick any — you can change them anytime.</p>
+        </div>
+        <fieldset style="margin: 0; padding: 0; border: 0">
+          <legend style="font-size: 13px; font-weight: 600; margin-bottom: 12px">I'm open to… <span style="font-weight: 400; color: #4a5575">({{count}} selected)</span></legend>
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px">
+            <sc-for list="{{options}}" as="o" hint-placeholder-count="10">
+              <label style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 10px; border: {{o.border}}; background: {{o.bg}}; cursor: pointer">
+                <input type="checkbox" checked="{{o.checked}}" onChange="{{o.toggle}}" style="accent-color: #7b1e3d; width: 18px; height: 18px; margin: 1px 0 0 0; flex: 0 0 18px">
+                <span style="display: flex; flex-direction: column; gap: 3px"><span style="font-size: 15px; font-weight: 700">{{o.label}}</span><span style="font-size: 13px; line-height: 1.45; color: #4a5575">{{o.hint}}</span></span>
+              </label>
+            </sc-for>
+          </div>
+        </fieldset>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 36px; border-top: 1px solid #e2e5ee">
+        <a href="OnbCareer.dc.html" style="display: inline-flex; padding: 11px 18px; border-radius: 7px; border: 1px solid #8a93ab; color: #0b2159; font-weight: 700; font-size: 14px; text-decoration: none">Back</a>
+        <div style="display: flex; align-items: center; gap: 16px">
+          <span style="font-size: 13px; color: #4a5575">Saved just now</span>
+          <a href="OnbPublish.dc.html" style="display: inline-flex; padding: 12px 22px; border-radius: 7px; background: #7b1e3d; color: #ffffff; font-weight: 700; font-size: 15px; text-decoration: none">Save and continue</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { picked: { mentoring: true, career_advice: true, student_questions: true, networking: true } };
+  }
+  renderVals() {
+    var self = this;
+    var current = 5;
+    var labels = ['Welcome', 'About you', 'Education', 'Career', 'Networking', 'Contact', 'Privacy & publish'];
+    var steps = labels.map(function (label, i) {
+      var n = i + 1;
+      var done = n < current;
+      var here = n === current;
+      return {
+        n: n, label: label, done: done, notDone: !done,
+        rowBg: here ? '#faeef3' : 'transparent',
+        dotBg: done ? '#0b2159' : (here ? '#7b1e3d' : '#ffffff'),
+        dotFg: here ? '#ffffff' : '#4a5575',
+        dotBorder: (done || here) ? '0' : '2px solid #8a93ab',
+        weight: here ? '700' : '500',
+        fg: (done || here) ? '#0b2159' : '#4a5575'
+      };
+    });
+    var defs = [
+      ['mentoring', 'Mentoring', 'Ongoing guidance for a younger alum'],
+      ['career_advice', 'Career advice', 'A one-off call or coffee about your field'],
+      ['networking', 'Introductions', 'Connecting people with your network'],
+      ['student_questions', 'Helping current students', 'Answering questions from Herzliah students'],
+      ['speaking', 'Speaking at Herzliah', 'Career days, panels and talks'],
+      ['shadowing', 'Job shadowing', 'Hosting someone for a day at work'],
+      ['offering_internships', 'Offering internships', 'Your team has internship spots'],
+      ['offering_jobs', 'Hiring', 'Your team is recruiting'],
+      ['job_opportunities', 'Open to new roles', 'Visible only as a filter, not a banner'],
+      ['entrepreneurship', 'Startup advice', 'Founders, fundraising and early teams']
+    ];
+    var picked = this.state.picked;
+    var count = 0;
+    var options = defs.map(function (d) {
+      var on = !!picked[d[0]];
+      if (on) count++;
+      return {
+        label: d[1], hint: d[2], checked: on,
+        border: on ? '1px solid #7b1e3d' : '1px solid #c3c9d6',
+        bg: on ? '#faeef3' : '#ffffff',
+        toggle: function () {
+          var next = Object.assign({}, self.state.picked);
+          next[d[0]] = !next[d[0]];
+          self.setState({ picked: next });
+        }
+      };
+    });
+    return { steps: steps, options: options, count: count };
+  }
+}
+</script>
+</body>
+</html>

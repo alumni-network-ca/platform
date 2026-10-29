@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin — Staff and roles</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7b1e3d}a:hover{color:#611630}
+button,input,select{font:inherit}
+button:focus-visible,input:focus,select:focus{outline:2px solid #7b1e3d;outline-offset:1px}
+</style>
+</helmet>
+<div style="min-height: 960px; background: #f7f7f6; font-family: Inter, Arial, sans-serif; color: #0b2159; display: flex; flex-direction: column">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 28px; background: #0b2159; color: #ffffff">
+    <div style="display: flex; align-items: center; gap: 11px">
+      <img src="/_blob/4656ce653b200e07991d58266759ac80" alt="" style="width: 42px; height: 42px; box-sizing: border-box; padding: 4px; border-radius: 10px; background: #ffffff; object-fit: contain">
+      <span style="display: flex; flex-direction: column; gap: 3px"><span style="font-weight: 700; font-size: 14px">Herzliah Alumni Network</span><span style="font-size: 9px; letter-spacing: 0.13em; text-transform: uppercase; color: #b4bdd4">School admin</span></span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px; font-size: 14px">
+      <a href="Directory.dc.html" style="color: #d2d7e4; text-decoration: none">View the network</a>
+      <span style="padding: 5px 10px; border-radius: 999px; background: rgba(255,255,255,0.12); font-size: 12px; font-weight: 700">School admin</span>
+      <span aria-label="Ruth Klein" role="img" style="display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #c9d6f2; color: #0b2159; font-size: 13px; font-weight: 800">RK</span>
+    </div>
+  </header>
+  <div style="flex: 1; display: flex; flex-wrap: wrap">
+    <nav aria-label="Admin" style="flex: 1 1 200px; max-width: 232px; background: #ffffff; border-right: 1px solid #e2e5ee; padding: 20px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px">
+      <sc-for list="{{nav}}" as="n" hint-placeholder-count="9">
+        <a href="{{n.href}}" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: {{n.weight}}; background: {{n.bg}}; color: #0b2159; text-decoration: none">{{n.label}}<sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{false}}"><span style="min-width: 22px; padding: 2px 7px; box-sizing: border-box; border-radius: 999px; background: #7b1e3d; color: #ffffff; font-size: 12px; font-weight: 700; text-align: center">{{n.badge}}</span></sc-if></a>
+      </sc-for>
+    </nav>
+    <main style="flex: 999 1 640px; min-width: 0; padding: 28px 36px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <h1 style="margin: 0; font-size: 28px; font-weight: 800">Staff</h1>
+        <p style="margin: 0; font-size: 15px; color: #3a4a70">People at Herzliah who can manage the network. Staff set up two-factor sign-in the first time they log in.</p>
+      </div>
+      <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 20px 22px; display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end">
+        <div style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 7px">
+          <label for="st-email" style="font-size: 13px; font-weight: 600">Invite by email</label>
+          <input id="st-email" type="email" value="{{email}}" onChange="{{onEmail}}" placeholder="name@herzliah.ca" style="padding: 10px 12px; border: 1px solid #8a93ab; border-radius: 7px; color: #0b2159; font-size: 14px">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 7px">
+          <label for="st-role" style="font-size: 13px; font-weight: 600">Role</label>
+          <select id="st-role" style="padding: 10px 12px; border: 1px solid #8a93ab; border-radius: 7px; background: #ffffff; color: #0b2159; font-size: 14px"><option>Reviewer</option><option>School admin</option></select>
+        </div>
+        <button type="button" onClick="{{invite}}" style="padding: 11px 18px; border-radius: 7px; border: 0; background: #7b1e3d; color: #ffffff; font-weight: 700; font-size: 14px; cursor: pointer">Send invitation</button>
+      </section>
+      <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; overflow-x: auto">
+        <table style="width: 100%; min-width: 640px; border-collapse: collapse; font-size: 14px">
+          <thead><tr style="text-align: left; color: #3a4a70; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em"><th style="padding: 14px 20px; font-weight: 700">Person</th><th style="padding: 14px 20px; font-weight: 700">Role</th><th style="padding: 14px 20px; font-weight: 700">Status</th><th style="padding: 14px 20px"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Actions</span></th></tr></thead>
+          <tbody>
+            <sc-for list="{{staff}}" as="s" hint-placeholder-count="3">
+              <tr style="border-top: 1px solid #eef0f4">
+                <td style="padding: 13px 20px"><span style="display: flex; flex-direction: column; gap: 2px"><strong>{{s.name}}</strong><span style="font-size: 13px; color: #4a5575">{{s.email}}</span></span></td>
+                <td style="padding: 13px 20px">{{s.role}}</td>
+                <td style="padding: 13px 20px; color: #3a4a70">{{s.status}}</td>
+                <td style="padding: 13px 20px; text-align: right; font-size: 13px; color: #4a5575">{{s.actions}}</td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </section>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px">
+        <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 1.5"><strong>School admin</strong><span style="color: #3a4a70">Everything: approvals, record actions, exports, templates, staff and settings.</span></section>
+        <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 1.5"><strong>Reviewer</strong><span style="color: #3a4a70">Decides sign-up requests and can read records and the audit log. Can't change records or export.</span></section>
+      </div>
+      <p style="margin: 0; font-size: 13px; color: #4a5575">The last school admin can't remove or demote themselves. Role changes take effect on the person's next page load.</p>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":960}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { email: '', invited: [] };
+  }
+  renderVals() {
+    var self = this;
+    var active = 'staff';
+    var items = [['dashboard', 'Dashboard', 'AdmDashboard.dc.html'], ['queue', 'Approvals', 'AdmQueue.dc.html', 7], ['roster', 'Alumni', 'AdmRoster.dc.html'], ['templates', 'Email templates', 'AdmTemplates.dc.html'], ['freshness', 'Freshness', 'AdmFreshness.dc.html'], ['exports', 'Exports', 'AdmExport.dc.html'], ['staff', 'Staff', 'AdmStaff.dc.html'], ['audit', 'Audit log', 'AdmAudit.dc.html'], ['settings', 'Settings', 'AdmSettings.dc.html']];
+    var nav = items.map(function (it) {
+      var on = it[0] === active;
+      return { label: it[1], href: it[2], badge: it[3] || 0, hasBadge: !!it[3], weight: on ? '700' : '500', bg: on ? '#faeef3' : 'transparent' };
+    });
+    var staff = [
+      { name: 'Ruth Klein (you)', email: 'rklein@[school domain]', role: 'School admin', status: 'Active · 2FA on', actions: 'Only admin — can’t remove' },
+      { name: 'Avi Sasson', email: 'asasson@[school domain]', role: 'Reviewer', status: 'Active · 2FA on', actions: 'Change role · Remove' },
+      { name: 'Claire Roy', email: 'croy@[school domain]', role: 'Reviewer', status: 'Invited Oct 22 · not accepted', actions: 'Resend · Revoke' }
+    ].concat(this.state.invited.map(function (e) { return { name: e, email: e, role: 'Reviewer', status: 'Invitation sent just now', actions: 'Resend · Revoke' }; }));
+    return {
+      nav: nav, staff: staff, email: this.state.email,
+      onEmail: function (e) { self.setState({ email: e.target.value }); },
+      invite: function () { var v = (self.state.email || '').trim(); if (!v) return; self.setState({ invited: self.state.invited.concat([v]), email: '' }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

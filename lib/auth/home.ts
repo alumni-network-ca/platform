@@ -10,6 +10,8 @@ export type AccountState = {
   profile: { status: Enums<"profile_status">; onboardingComplete: boolean } | null;
   /** Status of the latest access request at this school, if any. */
   request: Enums<"request_status"> | null;
+  /** A platform admin (ADR 0005): no access to a school's data without a support grant. */
+  platformAdmin?: boolean;
 };
 
 const STAFF: Enums<"member_role">[] = ["school_admin", "reviewer"];
@@ -36,8 +38,9 @@ export function homeFor(state: AccountState): string {
     case "rejected":
       return "/account/rejected";
     default:
-      // No relationship yet, a withdrawn request, or a revoked membership (self-deleted, removed staff).
-      return "/join";
+      // No relationship yet, a withdrawn request, or a revoked membership (self-deleted, removed staff). A platform
+      // admin with no role here gets a page about support access and the console, not the sign-up form.
+      return state.platformAdmin ? "/account/platform" : "/join";
   }
 }
 
@@ -50,6 +53,8 @@ export function canOpen(state: AccountState, path: string): boolean {
   if (under("/onboarding") || under("/me")) return hasActiveProfile(state);
   // Sign-in settings are open to anyone signed in, whatever their state at this school.
   if (pathname === "/account/email" || pathname === "/account/password") return true;
+  // A platform admin with no role here may still sign up as a graduate of the school.
+  if (pathname === "/join" && homeFor(state) === "/account/platform") return true;
   if (under("/account") || under("/join")) return homeFor(state) === pathname;
   return true;
 }

@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin — Audit log</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7b1e3d}a:hover{color:#611630}
+button,select{font:inherit}
+button:focus-visible,select:focus{outline:2px solid #7b1e3d;outline-offset:1px}
+</style>
+</helmet>
+<div style="min-height: 960px; background: #f7f7f6; font-family: Inter, Arial, sans-serif; color: #0b2159; display: flex; flex-direction: column">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 28px; background: #0b2159; color: #ffffff">
+    <div style="display: flex; align-items: center; gap: 11px">
+      <img src="/_blob/4656ce653b200e07991d58266759ac80" alt="" style="width: 42px; height: 42px; box-sizing: border-box; padding: 4px; border-radius: 10px; background: #ffffff; object-fit: contain">
+      <span style="display: flex; flex-direction: column; gap: 3px"><span style="font-weight: 700; font-size: 14px">Herzliah Alumni Network</span><span style="font-size: 9px; letter-spacing: 0.13em; text-transform: uppercase; color: #b4bdd4">School admin</span></span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px; font-size: 14px">
+      <a href="Directory.dc.html" style="color: #d2d7e4; text-decoration: none">View the network</a>
+      <span style="padding: 5px 10px; border-radius: 999px; background: rgba(255,255,255,0.12); font-size: 12px; font-weight: 700">School admin</span>
+      <span aria-label="Ruth Klein" role="img" style="display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #c9d6f2; color: #0b2159; font-size: 13px; font-weight: 800">RK</span>
+    </div>
+  </header>
+  <div style="flex: 1; display: flex; flex-wrap: wrap">
+    <nav aria-label="Admin" style="flex: 1 1 200px; max-width: 232px; background: #ffffff; border-right: 1px solid #e2e5ee; padding: 20px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px">
+      <sc-for list="{{nav}}" as="n" hint-placeholder-count="9">
+        <a href="{{n.href}}" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: {{n.weight}}; background: {{n.bg}}; color: #0b2159; text-decoration: none">{{n.label}}<sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{false}}"><span style="min-width: 22px; padding: 2px 7px; box-sizing: border-box; border-radius: 999px; background: #7b1e3d; color: #ffffff; font-size: 12px; font-weight: 700; text-align: center">{{n.badge}}</span></sc-if></a>
+      </sc-for>
+    </nav>
+    <main style="flex: 999 1 640px; min-width: 0; padding: 28px 36px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <h1 style="margin: 0; font-size: 28px; font-weight: 800">Audit log</h1>
+        <p style="margin: 0; font-size: 15px; color: #3a4a70">Every staff decision and security event at Herzliah. Read-only — entries can't be edited or deleted.</p>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end">
+        <div style="display: flex; flex-direction: column; gap: 6px"><label for="au-who" style="font-size: 13px; font-weight: 600">Who</label><select id="au-who" style="padding: 10px 12px; border: 1px solid #8a93ab; border-radius: 7px; background: #ffffff; color: #0b2159; font-size: 14px"><option>Anyone</option><option>Ruth Klein</option><option>Avi Sasson</option><option>Platform support</option></select></div>
+        <div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 600">Type</span>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px">
+            <sc-for list="{{kinds}}" as="k" hint-placeholder-count="5">
+              <button type="button" aria-pressed="{{k.pressed}}" onClick="{{k.pick}}" style="padding: 9px 13px; border-radius: 999px; border: {{k.border}}; background: {{k.bg}}; color: {{k.fg}}; font-size: 13px; font-weight: 700; cursor: pointer">{{k.label}}</button>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+      <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; overflow-x: auto">
+        <table style="width: 100%; min-width: 720px; border-collapse: collapse; font-size: 14px">
+          <thead><tr style="text-align: left; color: #3a4a70; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em"><th style="padding: 14px 20px; font-weight: 700">When</th><th style="padding: 14px 20px; font-weight: 700">Who</th><th style="padding: 14px 20px; font-weight: 700">What</th><th style="padding: 14px 20px; font-weight: 700">Details</th></tr></thead>
+          <tbody>
+            <sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
+              <tr style="border-top: 1px solid #eef0f4; background: {{r.bg}}">
+                <td style="padding: 12px 20px; color: #3a4a70; white-space: nowrap">{{r.when}}</td>
+                <td style="padding: 12px 20px; font-weight: 600">{{r.who}}</td>
+                <td style="padding: 12px 20px">{{r.what}}</td>
+                <td style="padding: 12px 20px; color: #3a4a70">{{r.detail}}</td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </section>
+      <p style="margin: 0; font-size: 13px; color: #4a5575">Highlighted rows are platform-support access to your school's data — always shown here.</p>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":960}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { kind: 'all' };
+  }
+  renderVals() {
+    var self = this;
+    var active = 'audit';
+    var items = [['dashboard', 'Dashboard', 'AdmDashboard.dc.html'], ['queue', 'Approvals', 'AdmQueue.dc.html', 7], ['roster', 'Alumni', 'AdmRoster.dc.html'], ['templates', 'Email templates', 'AdmTemplates.dc.html'], ['freshness', 'Freshness', 'AdmFreshness.dc.html'], ['exports', 'Exports', 'AdmExport.dc.html'], ['staff', 'Staff', 'AdmStaff.dc.html'], ['audit', 'Audit log', 'AdmAudit.dc.html'], ['settings', 'Settings', 'AdmSettings.dc.html']];
+    var nav = items.map(function (it) {
+      var on = it[0] === active;
+      return { label: it[1], href: it[2], badge: it[3] || 0, hasBadge: !!it[3], weight: on ? '700' : '500', bg: on ? '#faeef3' : 'transparent' };
+    });
+    var all = [
+      ['approvals', 'Oct 28, 09:14', 'Ruth Klein', 'Approved sign-up', 'Dana Levy (2014) → linked to “Dana Benhamou, 2014”'],
+      ['exports', 'Oct 28, 08:52', 'Ruth Klein', 'Exported roster', 'XLSX · 84 rows · Published, 2010–2019 · no contact fields'],
+      ['records', 'Oct 27, 16:30', 'Ruth Klein', 'Suspended record', 'Yoni Abergel (2015) — “Reported for spam messages”'],
+      ['approvals', 'Oct 27, 11:05', 'Avi Sasson', 'Asked for more info', 'Leo Mizrahi (2019)'],
+      ['platform', 'Oct 26, 14:20', 'Platform support', 'Viewed record', 'Daniel Sebag (2001) — support ticket [#]'],
+      ['settings', 'Oct 26, 10:02', 'Ruth Klein', 'Approved template', '“Access approved” · English'],
+      ['staff', 'Oct 22, 15:40', 'Ruth Klein', 'Invited staff', 'Claire Roy · Reviewer'],
+      ['records', 'Oct 20, 09:31', 'Ruth Klein', 'Changed sign-in email', 'Sarah Elbaz (2017) · old address bounced']
+    ];
+    var cur = this.state.kind;
+    var kinds = [['all', 'All'], ['approvals', 'Approvals'], ['records', 'Records'], ['exports', 'Exports'], ['staff', 'Staff'], ['settings', 'Settings'], ['platform', 'Platform support']].map(function (k) {
+      var on = k[0] === cur;
+      return { label: k[1], pressed: on ? 'true' : 'false', border: on ? '1px solid #0b2159' : '1px solid #8a93ab', bg: on ? '#0b2159' : '#ffffff', fg: on ? '#ffffff' : '#0b2159', pick: function () { self.setState({ kind: k[0] }); } };
+    });
+    var rows = all.filter(function (r) { return cur === 'all' || r[0] === cur; }).map(function (r) {
+      return { when: r[1], who: r[2], what: r[3], detail: r[4], bg: r[0] === 'platform' ? '#fff8e8' : '#ffffff' };
+    });
+    return { nav: nav, kinds: kinds, rows: rows };
+  }
+}
+</script>
+</body>
+</html>

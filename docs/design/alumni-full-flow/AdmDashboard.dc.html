@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin — Dashboard</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7b1e3d}a:hover{color:#611630}
+select,button{font:inherit}
+</style>
+</helmet>
+<div style="min-height: 960px; background: #f7f7f6; font-family: Inter, Arial, sans-serif; color: #0b2159; display: flex; flex-direction: column">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 28px; background: #0b2159; color: #ffffff">
+    <div style="display: flex; align-items: center; gap: 11px">
+      <img src="/_blob/4656ce653b200e07991d58266759ac80" alt="" style="width: 42px; height: 42px; box-sizing: border-box; padding: 4px; border-radius: 10px; background: #ffffff; object-fit: contain">
+      <span style="display: flex; flex-direction: column; gap: 3px"><span style="font-weight: 700; font-size: 14px">Herzliah Alumni Network</span><span style="font-size: 9px; letter-spacing: 0.13em; text-transform: uppercase; color: #b4bdd4">School admin</span></span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px; font-size: 14px">
+      <a href="Directory.dc.html" style="color: #d2d7e4; text-decoration: none">View the network</a>
+      <span style="padding: 5px 10px; border-radius: 999px; background: rgba(255,255,255,0.12); font-size: 12px; font-weight: 700">School admin</span>
+      <span aria-label="Ruth Klein" role="img" style="display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #c9d6f2; color: #0b2159; font-size: 13px; font-weight: 800">RK</span>
+    </div>
+  </header>
+  <div style="flex: 1; display: flex; flex-wrap: wrap">
+    <nav aria-label="Admin" style="flex: 1 1 200px; max-width: 232px; background: #ffffff; border-right: 1px solid #e2e5ee; padding: 20px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px">
+      <sc-for list="{{nav}}" as="n" hint-placeholder-count="9">
+        <a href="{{n.href}}" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: {{n.weight}}; background: {{n.bg}}; color: #0b2159; text-decoration: none">{{n.label}}<sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{false}}"><span style="min-width: 22px; padding: 2px 7px; box-sizing: border-box; border-radius: 999px; background: #7b1e3d; color: #ffffff; font-size: 12px; font-weight: 700; text-align: center">{{n.badge}}</span></sc-if></a>
+      </sc-for>
+    </nav>
+    <main style="flex: 999 1 640px; min-width: 0; padding: 32px 36px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px">
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <h1 style="margin: 0; font-size: 28px; font-weight: 800">Good morning, Ruth</h1>
+          <p style="margin: 0; font-size: 15px; color: #3a4a70">7 sign-ups are waiting for a decision.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <label for="dash-range" style="font-size: 13px; font-weight: 600">Period</label>
+          <select id="dash-range" style="padding: 9px 12px; border: 1px solid #8a93ab; border-radius: 7px; background: #ffffff; color: #0b2159; font-size: 14px"><option>Last 30 days</option><option>This school year</option><option>All time</option></select>
+        </div>
+      </div>
+      <a href="AdmQueue.dc.html" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 24px; border-radius: 12px; background: #0b2159; color: #ffffff; text-decoration: none">
+        <span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #eab6ce">Needs you</span><span style="font-size: 22px; font-weight: 800">7 pending sign-ups · oldest waiting 4 days</span></span>
+        <span style="padding: 11px 18px; border-radius: 7px; background: #ffffff; color: #0b2159; font-weight: 700; font-size: 14px">Review queue →</span>
+      </a>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px">
+        <sc-for list="{{cards}}" as="c" hint-placeholder-count="7">
+          <a href="{{c.href}}" style="display: flex; flex-direction: column; gap: 8px; padding: 18px 20px; background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; color: #0b2159; text-decoration: none">
+            <span style="font-size: 13px; font-weight: 600; color: #3a4a70">{{c.label}}</span>
+            <span style="font-size: 32px; font-weight: 800; line-height: 1">{{c.value}}</span>
+            <span style="font-size: 12px; color: #4a5575">{{c.note}}</span>
+          </a>
+        </sc-for>
+      </div>
+      <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px">
+        <div style="display: flex; justify-content: space-between; align-items: center"><h2 style="margin: 0; font-size: 17px; font-weight: 700">Recent activity</h2><a href="AdmAudit.dc.html" style="font-size: 14px; font-weight: 600">Audit log →</a></div>
+        <sc-for list="{{activity}}" as="a" hint-placeholder-count="4">
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 10px 0; border-top: 1px solid #eef0f4; font-size: 14px"><span>{{a.text}}</span><span style="color: #4a5575">{{a.when}}</span></div>
+        </sc-for>
+      </section>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":960}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var active = 'dashboard';
+    var items = [['dashboard', 'Dashboard', 'AdmDashboard.dc.html'], ['queue', 'Approvals', 'AdmQueue.dc.html', 7], ['roster', 'Alumni', 'AdmRoster.dc.html'], ['templates', 'Email templates', 'AdmTemplates.dc.html'], ['freshness', 'Freshness', 'AdmFreshness.dc.html'], ['exports', 'Exports', 'AdmExport.dc.html'], ['staff', 'Staff', 'AdmStaff.dc.html'], ['audit', 'Audit log', 'AdmAudit.dc.html'], ['settings', 'Settings', 'AdmSettings.dc.html']];
+    var nav = items.map(function (it) {
+      var on = it[0] === active;
+      return { label: it[1], href: it[2], badge: it[3] || 0, hasBadge: !!it[3], weight: on ? '700' : '500', bg: on ? '#faeef3' : 'transparent' };
+    });
+    var cards = [
+      { label: 'Pending review', value: '7', note: 'Sign-ups waiting for a decision', href: 'AdmQueue.dc.html' },
+      { label: 'Needs info', value: '2', note: 'Waiting on the applicant', href: 'AdmQueue.dc.html' },
+      { label: 'Approved, not published', value: '12', note: 'Haven’t finished onboarding', href: 'AdmRoster.dc.html' },
+      { label: 'Published profiles', value: '200', note: 'Visible to members', href: 'AdmRoster.dc.html' },
+      { label: 'Overdue confirmation', value: '9', note: 'No reply after 2 reminders', href: 'AdmFreshness.dc.html' },
+      { label: 'Bounced email', value: '3', note: 'Address no longer works', href: 'AdmRoster.dc.html' },
+      { label: 'Contacts initiated', value: '46', note: 'Contact details revealed — not messages sent', href: 'AdmAudit.dc.html' }
+    ];
+    var activity = [
+      { text: 'Ruth Klein approved Dana Levy (2014)', when: '2 h ago' },
+      { text: 'Avi Sasson (reviewer) asked Leo Mizrahi (2019) for more info', when: 'Yesterday' },
+      { text: 'Ruth Klein approved the French “Access approved” template', when: 'Oct 26' },
+      { text: 'Annual confirmation emails sent to 18 alumni', when: 'Oct 25' }
+    ];
+    return { nav: nav, cards: cards, activity: activity };
+  }
+}
+</script>
+</body>
+</html>

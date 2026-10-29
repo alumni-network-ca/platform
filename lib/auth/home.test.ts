@@ -53,6 +53,17 @@ describe("homeFor", () => {
     ["rejected", { ...none, request: "rejected" }, "/account/rejected"],
     ["withdrawn", { ...none, request: "withdrawn" }, "/join"],
     ["nothing at this school", none, "/join"],
+    ["platform admin with no role here", { ...none, platformAdmin: true }, "/account/platform"],
+    [
+      "platform admin who is also an alumnus here",
+      {
+        membership: member("alumni"),
+        profile: profile(),
+        request: "approved",
+        platformAdmin: true,
+      },
+      "/directory",
+    ],
     [
       "self-deleted (membership revoked)",
       { membership: member("alumni", "revoked"), profile: null, request: "approved" },
@@ -92,6 +103,9 @@ describe("canOpen", () => {
     expect(canOpen(pending, "/account/email")).toBe(true);
     expect(canOpen(pending, "/account/password")).toBe(true);
     expect(canOpen(none, "/account/password")).toBe(true);
+    expect(canOpen(none, "/account/platform")).toBe(false);
+    expect(canOpen({ ...none, platformAdmin: true }, "/account/platform")).toBe(true);
+    expect(canOpen({ ...none, platformAdmin: true }, "/join")).toBe(true);
   });
 
   it("does not treat look-alike prefixes as the same page", () => {

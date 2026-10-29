@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin — Alumni roster</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7b1e3d}a:hover{color:#611630}
+button,select,input{font:inherit}
+button:focus-visible,select:focus,input:focus{outline:2px solid #7b1e3d;outline-offset:1px}
+</style>
+</helmet>
+<div style="min-height: 960px; background: #f7f7f6; font-family: Inter, Arial, sans-serif; color: #0b2159; display: flex; flex-direction: column">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 28px; background: #0b2159; color: #ffffff">
+    <div style="display: flex; align-items: center; gap: 11px">
+      <img src="/_blob/4656ce653b200e07991d58266759ac80" alt="" style="width: 42px; height: 42px; box-sizing: border-box; padding: 4px; border-radius: 10px; background: #ffffff; object-fit: contain">
+      <span style="display: flex; flex-direction: column; gap: 3px"><span style="font-weight: 700; font-size: 14px">Herzliah Alumni Network</span><span style="font-size: 9px; letter-spacing: 0.13em; text-transform: uppercase; color: #b4bdd4">School admin</span></span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px; font-size: 14px">
+      <a href="Directory.dc.html" style="color: #d2d7e4; text-decoration: none">View the network</a>
+      <span style="padding: 5px 10px; border-radius: 999px; background: rgba(255,255,255,0.12); font-size: 12px; font-weight: 700">School admin</span>
+      <span aria-label="Ruth Klein" role="img" style="display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #c9d6f2; color: #0b2159; font-size: 13px; font-weight: 800">RK</span>
+    </div>
+  </header>
+  <div style="flex: 1; display: flex; flex-wrap: wrap">
+    <nav aria-label="Admin" style="flex: 1 1 200px; max-width: 232px; background: #ffffff; border-right: 1px solid #e2e5ee; padding: 20px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px">
+      <sc-for list="{{nav}}" as="n" hint-placeholder-count="9">
+        <a href="{{n.href}}" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: {{n.weight}}; background: {{n.bg}}; color: #0b2159; text-decoration: none">{{n.label}}<sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{false}}"><span style="min-width: 22px; padding: 2px 7px; box-sizing: border-box; border-radius: 999px; background: #7b1e3d; color: #ffffff; font-size: 12px; font-weight: 700; text-align: center">{{n.badge}}</span></sc-if></a>
+      </sc-for>
+    </nav>
+    <main style="flex: 999 1 640px; min-width: 0; padding: 32px 36px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px">
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <h1 style="margin: 0; font-size: 28px; font-weight: 800">Alumni</h1>
+          <p style="margin: 0; font-size: 15px; color: #3a4a70">Every record the school holds — members, hidden profiles and suspended accounts.</p>
+        </div>
+        <a href="AdmExport.dc.html" style="display: inline-flex; padding: 10px 16px; border-radius: 7px; border: 1px solid #8a93ab; background: #ffffff; color: #0b2159; font-weight: 700; font-size: 14px; text-decoration: none">Export these results</a>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end">
+        <div style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 6px">
+          <label for="ro-q" style="font-size: 13px; font-weight: 600">Search</label>
+          <input id="ro-q" value="{{query}}" onChange="{{onQuery}}" placeholder="Name, name at school or email" style="padding: 10px 12px; border: 1px solid #8a93ab; border-radius: 7px; background: #ffffff; color: #0b2159; font-size: 14px">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <label for="ro-status" style="font-size: 13px; font-weight: 600">Status</label>
+          <select id="ro-status" style="padding: 10px 12px; border: 1px solid #8a93ab; border-radius: 7px; background: #ffffff; color: #0b2159; font-size: 14px"><option>All statuses</option><option>Published</option><option>Hidden</option><option>Approved, onboarding</option><option>Suspended</option><option>Archived</option></select>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <label for="ro-class" style="font-size: 13px; font-weight: 600">Class</label>
+          <select id="ro-class" style="padding: 10px 12px; border: 1px solid #8a93ab; border-radius: 7px; background: #ffffff; color: #0b2159; font-size: 14px"><option>All years</option><option>2010–2019</option><option>2000–2009</option></select>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <label for="ro-fresh" style="font-size: 13px; font-weight: 600">Freshness</label>
+          <select id="ro-fresh" style="padding: 10px 12px; border: 1px solid #8a93ab; border-radius: 7px; background: #ffffff; color: #0b2159; font-size: 14px"><option>Any</option><option>Up to date</option><option>Due</option><option>Overdue</option><option>Email bounced</option></select>
+        </div>
+      </div>
+      <div style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; overflow-x: auto">
+        <table style="width: 100%; min-width: 760px; border-collapse: collapse; font-size: 14px">
+          <thead>
+            <tr style="text-align: left; color: #3a4a70; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em">
+              <th style="padding: 14px 18px; font-weight: 700">Name</th>
+              <th style="padding: 14px 18px; font-weight: 700">Class</th>
+              <th style="padding: 14px 18px; font-weight: 700">Status</th>
+              <th style="padding: 14px 18px; font-weight: 700">Last confirmed</th>
+              <th style="padding: 14px 18px; font-weight: 700">Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
+              <tr style="border-top: 1px solid #eef0f4">
+                <td style="padding: 13px 18px"><a href="AdmRecord.dc.html" style="display: flex; flex-direction: column; gap: 2px; color: #0b2159; text-decoration: none"><strong style="color: #7b1e3d">{{r.name}}</strong><span style="font-size: 13px; color: #4a5575">{{r.school}}</span></a></td>
+                <td style="padding: 13px 18px">{{r.year}}</td>
+                <td style="padding: 13px 18px"><span style="display: inline-flex; align-items: center; gap: 7px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: {{r.dot}}"></span>{{r.status}}</span></td>
+                <td style="padding: 13px 18px; color: {{r.freshFg}}">{{r.fresh}}</td>
+                <td style="padding: 13px 18px; color: {{r.mailFg}}">{{r.mail}}</td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; font-size: 14px; color: #3a4a70">
+        <span>{{countLabel}}</span>
+        <span style="display: flex; gap: 6px"><button type="button" disabled style="padding: 8px 12px; border-radius: 7px; border: 1px solid #c3c9d6; background: #ffffff; color: #4a5575">Previous</button><button type="button" style="padding: 8px 12px; border-radius: 7px; border: 1px solid #8a93ab; background: #ffffff; color: #0b2159; font-weight: 600; cursor: pointer">Next</button></span>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":960}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { query: '' };
+  }
+  renderVals() {
+    var self = this;
+    var active = 'roster';
+    var items = [['dashboard', 'Dashboard', 'AdmDashboard.dc.html'], ['queue', 'Approvals', 'AdmQueue.dc.html', 7], ['roster', 'Alumni', 'AdmRoster.dc.html'], ['templates', 'Email templates', 'AdmTemplates.dc.html'], ['freshness', 'Freshness', 'AdmFreshness.dc.html'], ['exports', 'Exports', 'AdmExport.dc.html'], ['staff', 'Staff', 'AdmStaff.dc.html'], ['audit', 'Audit log', 'AdmAudit.dc.html'], ['settings', 'Settings', 'AdmSettings.dc.html']];
+    var nav = items.map(function (it) {
+      var on = it[0] === active;
+      return { label: it[1], href: it[2], badge: it[3] || 0, hasBadge: !!it[3], weight: on ? '700' : '500', bg: on ? '#faeef3' : 'transparent' };
+    });
+    var S = { pub: ['Published', '#2e8b57'], hid: ['Hidden', '#8a93ab'], onb: ['Approved, onboarding', '#2463c2'], sus: ['Suspended', '#a1173b'] };
+    function r(name, school, year, st, fresh, overdue, mail, bounced) {
+      return { name: name, school: school, year: year, status: S[st][0], dot: S[st][1], fresh: fresh, freshFg: overdue ? '#a1173b' : '#3a4a70', mail: mail, mailFg: bounced ? '#a1173b' : '#3a4a70' };
+    }
+    var all = [
+      r('Dana Levy', 'At school: Dana Benhamou', '2014', 'onb', 'Not yet', false, 'OK', false),
+      r('Maya Azoulay', '—', '2009', 'pub', 'Sep 2026', false, 'OK', false),
+      r('Noah Cohen', '—', '2012', 'pub', 'Mar 2026', false, 'OK', false),
+      r('Rachel Gold', '—', '2005', 'pub', 'Aug 2025 · overdue', true, 'OK', false),
+      r('Eli Benchetrit', '—', '2016', 'hid', 'Jun 2026', false, 'OK', false),
+      r('Daniel Sebag', '—', '2001', 'pub', 'Jul 2025 · overdue', true, 'Bounced', true),
+      r('Talia Weiss', '—', '2011', 'pub', 'Jan 2026', false, 'OK', false),
+      r('Yoni Abergel', '—', '2015', 'sus', 'Feb 2026', false, 'OK', false)
+    ];
+    var q = (this.state.query || '').toLowerCase();
+    var rows = all.filter(function (x) { return !q || (x.name + ' ' + x.school).toLowerCase().indexOf(q) !== -1; });
+    return {
+      nav: nav, rows: rows, query: this.state.query,
+      onQuery: function (e) { self.setState({ query: e.target.value }); },
+      countLabel: q ? rows.length + ' matching' : '1–8 of 231 records'
+    };
+  }
+}
+</script>
+</body>
+</html>
