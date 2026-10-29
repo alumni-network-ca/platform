@@ -45,7 +45,7 @@ Signed-out pages (Join, Code) use the `guest` role: FR and Sign in, no avatar.
 | **Built** · A1.3 Review a request (`AdmReview`) | `/admin/approvals/[id]` | ADM-05 | `decide_access_request` (approve and link or create, needs info, reject) |
 | **Built** · A2.1 Alumni roster (`AdmRoster`) | `/admin/alumni` | ADM-03 | ready; the freshness filter needs FRS-04, the email column EML-05 |
 | **Built** · A2.2 Record and history (`AdmRecord`) | `/admin/alumni/[id]` | ADM-03 | ready (`alumni_private`, `audit_log`, `access_requests`) |
-| A2.3 Suspend, archive, deceased (`AdmSuspend`) | `/admin/alumni/[id]/status` | ADM-04 | `set_profile_status` |
+| **Built** · A2.3 Suspend, archive, deceased (`AdmSuspend`) | `/admin/alumni/[id]/status` | ADM-04 | `set_profile_status` |
 | A2.4 Resolve a duplicate (`AdmDuplicate`) | `/admin/approvals/[id]/duplicate` | ONB-04 | new |
 | A3.1 Email templates (`AdmTemplates`) | `/admin/templates` | EML-03 | `save_email_template`, `approve_email_template` |
 | A3.2 Freshness (`AdmFreshness`) | `/admin/freshness` | FRS-04 | needs FRS-02 |
@@ -67,3 +67,5 @@ Signed-out pages (Join, Code) use the `guest` role: FR and Sign in, no avatar.
 | 3.2 Directory (`Directory`) | `/directory` | DIR-02 |
 | 3.3 Profile and message (`Profile`) | `/profile/[id]` | DIR-03, CON-02 |
 | 3.4 Relay email (`RecipientEmail`) | email | CON-02 |
+
+Implementation notes: A2.3 uses a dedicated route with dialog styling. The record edit route was added to cover the fields accepted by `admin_update_profile`; it is not drawn on the canvas. French admin copy and empty states need Noah’s language review.

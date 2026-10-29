@@ -10,7 +10,7 @@ export default async function Record({
   searchParams: Search;
 }) {
   const { id } = await params;
-  const { profile: p, supabase, school } = await staffRecord(id);
+  const { profile: p, supabase, school, can } = await staffRecord(id);
   const { t, locale } = await adminCopy();
   const query = await searchParams;
   const tab = query.tab === "history" || query.tab === "request" ? query.tab : "details";
@@ -45,7 +45,32 @@ export default async function Record({
           </div>
           <span className="tag">{state === "deleted" ? t.unknown : t[state]}</span>
         </div>
-        {/* Record actions land in ADM-04. TODO(EML-05): change sign-in email. */}
+        {can("records.edit") && (
+          <div className="adminActions">
+            <Link className="btn btnSecondary" href={"/admin/alumni/" + id + "/edit"}>
+              {t.edit}
+            </Link>
+            {p.status === "active" ? (
+              <>
+                <Link href={"/admin/alumni/" + id + "/status?action=suspended"}>{t.suspend}</Link>
+                <details>
+                  <summary>{t.more}</summary>
+                  <div className="adminStack">
+                    <Link href={"/admin/alumni/" + id + "/status?action=archived"}>
+                      {t.archive}
+                    </Link>
+                    <Link href={"/admin/alumni/" + id + "/status?action=deceased"}>
+                      {t.markDeceased}
+                    </Link>
+                  </div>
+                </details>
+              </>
+            ) : (
+              <Link href={"/admin/alumni/" + id + "/status?action=active"}>{t.reactivate}</Link>
+            )}
+          </div>
+        )}
+        {/* TODO(EML-05): change sign-in email. */}
       </section>
       <nav className="adminTabs" aria-label={t.details}>
         {(["details", "history", "request"] as const).map((key) => (
