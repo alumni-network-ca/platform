@@ -15,7 +15,21 @@ Vercel deploys the app at the same time, so a migration must work with the code 
 
 The workflow needs one secret and one variable per database. No database password is stored: the CLI signs in with a temporary role through the Management API.
 
-1. Create a Supabase access token at https://supabase.com/dashboard/account/tokens, named `GitHub Actions: alumni-network-ca/platform`. A personal token reaches every project in its owner's organizations; once the business organization exists (BIZ-04), create it from the shared admin account, and rotate it yearly.
+1. Create a **scoped** access token at https://supabase.com/dashboard/account/tokens, named `GitHub Actions: alumni-network-ca/platform`. Never a classic token (shown as "Legacy"): it carries every right of your account.
+   - **Scope:** the staging project only, not the whole organization.
+   - **Permissions** (everything else off):
+
+     | Permission | Level | Used by |
+     |---|---|---|
+     | Project Settings | Read | `supabase link` |
+     | API Keys | Read | `supabase link` |
+     | API Key Secrets | Read | `supabase link` |
+     | Connection Pooling | Read | `supabase link`, which saves the IPv4 pooler address. GitHub's runners have no IPv6, and the database's direct address is IPv6 only |
+     | Database | Read-write | the temporary login role the CLI uses instead of a password |
+     | Migrations | Read-write | `supabase db push` and `supabase migration list` |
+
+   - **Expiry:** a year at most, with a reminder to rotate it. Once the business organizations exist (BIZ-04), create it from the shared admin account.
+   - **Production** gets its own token, scoped to the production project only, when that project exists (OPS-01). The workflow will then read it from a separate secret.
 2. Store it as a repository secret. The command prompts for the value, so it never appears in your shell history:
 
    ```bash
@@ -33,6 +47,7 @@ When a project moves (the new Supabase organization, BIZ-04), update its variabl
 
 ## Everyday use
 
+- **"IPv6 is not supported on your current network":** the token lacks Connection Pooling: Read, so the link step saved no IPv4 pooler address. Replace the token with one that has it (step 1), then re-run the failed run.
 - **A run failed:** open it in Actions. Fix the cause (a missing secret, a migration that fails on real data), then use Run workflow on `dev` with target `staging` to try again. Never edit a migration that a hosted database has already applied: add a new one.
 - **Check a database by hand:** `supabase migration list --linked` after `supabase link --project-ref <ref>`.
 - **Emergency fix applied by hand:** commit the same SQL as a new migration, then run `supabase migration repair --status applied <version> --linked`, so the history matches again.
