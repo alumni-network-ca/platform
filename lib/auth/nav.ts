@@ -291,8 +291,7 @@ export function navModel(input: NavInput): NavModel {
           can.has("staff.manage") && item("staff", "/admin/staff"),
           // TODO(ADM-08): /admin/settings.
           can.has("settings.manage") && item("schoolSettings", "#"),
-          // TODO(ADM-07): /admin/audit.
-          can.has("audit.read") && item("auditLog", "#"),
+          can.has("audit.read") && item("auditLog", "/admin/audit"),
         ],
         t.adminSection,
       ),
