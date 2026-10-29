@@ -1,6 +1,6 @@
 # Design: Alumni Full Flow
 
-Source: the "Alumni Full Flow" design canvas (claude.ai artifact `K7UANkXdF1Te9sEtciKNKf`), copied here on 2026-10-28 so the implementation can cite it. Each `*.dc.html` file is one screen, as drawn: static mock data, fixed names such as "Ruth Klein", and `/_blob/…` image links that only resolve inside the canvas. `canvas.json` is the canvas index: pages, screen titles and the notes below.
+Source: the "Alumni Full Flow" design canvas (claude.ai artifact `K7UANkXdF1Te9sEtciKNKf`), copied here on 2026-10-29 so the implementation can cite it. Each `*.dc.html` file is one screen, as drawn: static mock data, fixed names such as "Ruth Klein", and `/_blob/…` image links that only resolve inside the canvas. `canvas.json` is the canvas index: pages, screen titles and the notes below.
 
 The canvas is the reference for layout, wording and flow. The database rules (ADR 0005, RLS, the RPCs) stay the authority on who may do what.
 
@@ -10,6 +10,16 @@ The canvas is the reference for layout, wording and flow. The database rules (AD
 - **Platform admins** (Gab, Noah) work at `alumninetwork.ca/console`. The console shows counts per school, never alumni personal data. To see a school's data they open a support grant: a reason and at most 8 hours. The school's admins see it in their audit log, highlighted.
 - All admin and console pages require two-factor sign-in (FND-11).
 - CSV import is not drawn; sign-up through `/join` is the only way in at launch (DEC-01).
+
+## Layout (shared components)
+
+The **Layout** page of the canvas holds components every screen reuses. Screens include them with `<dc-import name="NavBar" role="…">` instead of drawing their own bar.
+
+| Component | Frames | Spec |
+|---|---|---|
+| **Built** · Nav bar with role pill and account menu (`NavBar`) | L0 component; L1–L6 one per role: alumnus, applicant, reviewer, school admin, school admin who is also an alumnus, platform admin | [`../nav-bar.md`](../nav-bar.md) |
+
+Signed-out pages (Join, Code) use the `guest` role: FR and Sign in, no avatar.
 
 ## Screens → routes → backlog
 
