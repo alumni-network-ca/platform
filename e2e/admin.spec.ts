@@ -72,3 +72,50 @@ for (const decision of ["approve", "needs_info", "reject"] as const) {
     }
   });
 }
+
+test("reviewers cannot edit records or change status", async ({ page, context, baseURL }) => {
+  await signInAs(context, baseURL!, accounts.reviewer);
+  const id = "00000000-0000-4000-8000-000000000001";
+  await page.goto("/admin/alumni/" + id);
+  await expect(page.getByRole("link", { name: "Edit record", exact: true })).toHaveCount(0);
+  for (const route of ["edit", "status"]) {
+    await page.goto("/admin/alumni/" + id + "/" + route);
+    await expect(
+      page.getByRole("heading", { name: "You do not have access to this page" }),
+    ).toBeVisible();
+  }
+});
+test("admin suspends an unclaimed record and the reason reaches the audit log", async ({
+  page,
+  context,
+  baseURL,
+}) => {
+  const owner = adminClient(stack);
+  const fixture = await owner
+    .from("alumni_profiles")
+    .insert({ institution_id: school, first_name: "Status", last_name: "Test", grad_year: 2002 })
+    .select("id")
+    .single();
+  if (fixture.error) throw fixture.error;
+  try {
+    await signInAs(context, baseURL!, accounts.admin);
+    await page.goto("/admin/alumni/" + fixture.data.id + "/status");
+    const submit = page.getByRole("button", { name: "Suspend", exact: true });
+    await expect(submit).toBeDisabled();
+    const reason = "Access paused for e2e " + fixture.data.id;
+    await page.getByLabel("Reason (required, kept in the audit log)").fill(reason);
+    await submit.click();
+    await expect(page).toHaveURL(/tab=history/);
+    await expect(page.getByText(reason, { exact: false })).toBeVisible();
+    const audit = await owner
+      .from("audit_log")
+      .select("metadata")
+      .eq("target_id", fixture.data.id)
+      .eq("action", "profile.status")
+      .single();
+    expect(audit.data?.metadata).toMatchObject({ reason });
+    expect(await blockingViolations(page)).toEqual([]);
+  } finally {
+    await owner.from("alumni_profiles").delete().eq("id", fixture.data.id);
+  }
+});
