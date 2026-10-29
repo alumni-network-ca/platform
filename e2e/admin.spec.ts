@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { adminClient } from "../scripts/lib/supabase-admin";
 import { accounts } from "./fixtures/accounts";
-import { signInAs, stack } from "./fixtures/session";
+import { signInAs, stack, addressOf } from "./fixtures/session";
 import { blockingViolations } from "./fixtures/a11y";
 const school = "aaaaaaaa-0000-4000-8000-000000000001";
 for (const role of ["admin", "reviewer"] as const) {
@@ -149,5 +149,51 @@ test("school admin invites and revokes staff", async ({ page, context, baseURL }
   await expect(invitation.getByLabel("Invitation link")).toHaveValue(/token=/);
   await invitation.getByRole("button", { name: "Revoke", exact: true }).click();
   await expect(page.getByText(email, { exact: true })).toHaveCount(0);
+  expect(await blockingViolations(page)).toEqual([]);
+});
+
+test("admin saves school settings without changing branding", async ({
+  page,
+  context,
+  baseURL,
+}) => {
+  const owner = adminClient(stack);
+  const slug = "settings-" + crypto.randomUUID().slice(0, 12);
+  const branding = {
+    short_name: "Settings test",
+    primary_color: "#0B2159",
+    accent_color: "#7B1E3D",
+  };
+  const fixture = await owner
+    .from("institutions")
+    .insert({ name: "Settings test school", slug, branding })
+    .select("id")
+    .single();
+  if (fixture.error) throw fixture.error;
+  const member = await owner.from("institution_memberships").insert({
+    institution_id: fixture.data.id,
+    user_id: "11111111-1111-4111-8111-000000000001",
+    role: "school_admin",
+  });
+  if (member.error) throw member.error;
+  const address = addressOf(baseURL!, slug);
+  await signInAs(context, address, accounts.admin);
+  await page.goto(addressOf(baseURL!, slug, "/admin/settings"));
+  await page.getByLabel("Sender name").fill("The alumni office");
+  await page.getByLabel("Replies go to").fill("office@example.test");
+  await page.getByLabel("Default language").selectOption("fr");
+  await page.getByRole("button", { name: "Save changes", exact: true }).click();
+  await expect(page.getByRole("status")).toContainText("Changes saved.");
+  const result = await owner
+    .from("institutions")
+    .select("email_display_name,reply_to_email,default_locale,branding")
+    .eq("id", fixture.data.id)
+    .single();
+  expect(result.data).toEqual({
+    email_display_name: "The alumni office",
+    reply_to_email: "office@example.test",
+    default_locale: "fr",
+    branding,
+  });
   expect(await blockingViolations(page)).toEqual([]);
 });
