@@ -275,7 +275,8 @@ items:
     summary: |
       - **Staging:** Supabase staging project, with the Vercel dev branch serving *.staging.alumninetwork.ca.
       - **Previews:** use staging with the tenant cookie fallback.
-      - **Migrations:** applied by CI to staging on merge to dev.
+      - **Migrations:** the Migrate databases workflow applies them to staging on every merge to dev, and to production
+        by hand from main (docs/runbooks/database-migrations.md).
       - **Secrets:** each environment has its own (no production secrets in preview). docs/runbooks/secrets.md covers
         storage, rotation and who has access.
       - **Email:** staging sends only to an allow-list.

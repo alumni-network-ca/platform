@@ -1,0 +1,79 @@
+name: Migrate databases
+
+# Applies supabase/migrations to the hosted databases (FND-16, ADR 0011; docs/runbooks/database-migrations.md).
+# - Staging: on every merge into dev that changes a migration.
+# - Production: by hand only, from main, typing "production" to confirm (Actions → Migrate databases → Run
+#   workflow). The free org plan has no approval-gated environments for private repos.
+# CI (ci.yml) already applied every migration to a fresh database before the merge, and `supabase db push`
+# refuses a database whose migration history differs from the repo's.
+on:
+  push:
+    branches: [dev]
+    paths:
+      - "supabase/migrations/**"
+      - ".github/workflows/migrate.yml"
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Database to migrate
+        type: choice
+        options: [staging, production]
+        default: staging
+      confirm:
+        description: For production, type production
+        required: false
+
+# One run per database at a time, never cancelled half-way through a migration.
+concurrency:
+  group: migrate-${{ inputs.target || 'staging' }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  SUPABASE_CLI_VERSION: 2.121.0
+
+jobs:
+  migrate:
+    name: Migrate ${{ inputs.target || 'staging' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TARGET: ${{ inputs.target || 'staging' }}
+      # The CLI signs in to the database with a temporary role through the Management API, so the access token
+      # is the only secret; no database password is stored in GitHub.
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+    steps:
+      - name: Check the target and settings
+        env:
+          CONFIRM: ${{ inputs.confirm }}
+          STAGING_REF: ${{ vars.SUPABASE_STAGING_PROJECT_REF }}
+          PRODUCTION_REF: ${{ vars.SUPABASE_PRODUCTION_PROJECT_REF }}
+        run: |
+          if [ "$TARGET" = production ]; then
+            [ "$GITHUB_REF_NAME" = main ] || { echo "::error::Production is migrated from main only."; exit 1; }
+            [ "$CONFIRM" = production ] || { echo "::error::Type production in the confirm box to migrate production."; exit 1; }
+            ref="$PRODUCTION_REF"
+          else
+            # An unmerged branch's migrations would leave staging with a history dev doesn't have.
+            [ "$GITHUB_REF_NAME" = dev ] || { echo "::error::Staging is migrated from dev only."; exit 1; }
+            ref="$STAGING_REF"
+          fi
+          # Never fall back to the other database's ref.
+          [ -n "$ref" ] || { echo "::error::The project ref variable for $TARGET is missing (docs/runbooks/database-migrations.md)."; exit 1; }
+          [ -n "$SUPABASE_ACCESS_TOKEN" ] || { echo "::error::The SUPABASE_ACCESS_TOKEN secret is missing (docs/runbooks/database-migrations.md)."; exit 1; }
+          echo "PROJECT_REF=$ref" >> "$GITHUB_ENV"
+          echo "Migrating $TARGET ($ref)" >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/checkout@v7
+      - uses: supabase/setup-cli@v3
+        with:
+          version: ${{ env.SUPABASE_CLI_VERSION }}
+      - name: Link the project
+        run: supabase link --project-ref "$PROJECT_REF"
+      - name: Show what will be applied
+        run: supabase db push --dry-run
+      - name: Apply the migrations
+        run: supabase db push --yes
+      - name: The database now matches the repo
+        run: supabase migration list --linked
