@@ -50,9 +50,19 @@ export function describeAudit(
     row.metadata && typeof row.metadata === "object" && !Array.isArray(row.metadata)
       ? row.metadata
       : {};
+  const statuses = {
+    active: t.active,
+    suspended: t.suspended,
+    archived: t.archived,
+    deceased: t.deceased,
+    hidden: t.hidden,
+    members: t.published,
+    deleted: t.unknown,
+  };
+  const statusLabel = (value: string) => statuses[value as keyof typeof statuses] ?? value;
   const details = [
-    typeof metadata.from === "string" ? metadata.from : null,
-    typeof metadata.to === "string" ? "→ " + metadata.to : null,
+    typeof metadata.from === "string" ? statusLabel(metadata.from) : null,
+    typeof metadata.to === "string" ? "→ " + statusLabel(metadata.to) : null,
     typeof metadata.reason === "string" ? metadata.reason : null,
     typeof metadata.locale === "string" ? metadata.locale.toUpperCase() : null,
   ]
