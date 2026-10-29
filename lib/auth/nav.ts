@@ -289,8 +289,7 @@ export function navModel(input: NavInput): NavModel {
               chip: can.has("records.edit") ? undefined : { text: t.readOnly, kind: "info" },
             }),
           can.has("staff.manage") && item("staff", "/admin/staff"),
-          // TODO(ADM-08): /admin/settings.
-          can.has("settings.manage") && item("schoolSettings", "#"),
+          can.has("settings.manage") && item("schoolSettings", "/admin/settings"),
           can.has("audit.read") && item("auditLog", "/admin/audit"),
         ],
         t.adminSection,
