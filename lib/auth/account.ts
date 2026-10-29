@@ -1,5 +1,6 @@
 import "server-only";
 import { redirect } from "next/navigation";
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { requireSchool } from "@/lib/tenant/server";
 import { canOpen, homeFor, type AccountState } from "./home";
@@ -7,9 +8,10 @@ import { canOpen, homeFor, type AccountState } from "./home";
 /**
  * The signed-in person and their state at the school of this address, read through RLS (each person sees
  * only their own membership, profile and requests). A failed query throws instead of guessing a state, so a
- * database error shows an error page rather than sending someone to the wrong page.
+ * database error shows an error page rather than sending someone to the wrong page. Read once per request:
+ * the page's guard and the nav bar share it.
  */
-export async function getAccount() {
+export const getAccount = cache(async () => {
   const school = await requireSchool();
   const supabase = await createClient();
   const {
@@ -53,7 +55,7 @@ export async function getAccount() {
     platformAdmin: platformAdmin.data === true,
   };
   return { school, supabase, user, state };
-}
+});
 
 /**
  * Page guard: a signed-out visitor goes to sign-in and comes back to `path`; a signed-in person who may not

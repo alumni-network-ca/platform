@@ -1,37 +1,12 @@
-import Link from "next/link";
-import { SignOutButton } from "@/components/SignOutButton";
-import { ConsoleNav } from "./ConsoleNav";
+import { Nav } from "@/components/Nav";
 
-// The platform console's frame (design S1–S2): header, menu, page. English only: its users are the platform admins.
-export function ConsoleShell({
-  email,
-  activeGrants,
-  children,
-}: {
-  email: string;
-  activeGrants: number;
-  children: React.ReactNode;
-}) {
+// The platform console's frame (design S1–S2): the shared nav bar, whose links and account menu replace the
+// console's own header and side menu (docs/design/nav-bar.md), then the page.
+export function ConsoleShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="shell">
-      <header className="shellHeader">
-        <Link className="shellBrand" href="/console">
-          <span className="shellBrandMark" aria-hidden="true">
-            AN
-          </span>
-          <span className="shellBrandText">
-            <span className="shellBrandName">Alumni Network</span>
-            <span className="shellBrandSub">Platform console</span>
-          </span>
-        </Link>
-        <div className="shellUser">
-          <span>{email}</span>
-          <span className="shellRole">Platform admin</span>
-          <SignOutButton to="/login" />
-        </div>
-      </header>
+      <Nav />
       <div className="shellBody">
-        <ConsoleNav activeGrants={activeGrants} />
         <main className="shellMain">{children}</main>
       </div>
     </div>

@@ -113,10 +113,12 @@ test("signing out ends this school's session only", async ({ page, context, base
   await signInAs(context, testSchool, accounts.alumni);
 
   const header = page.getByRole("banner");
+  const account = header.getByRole("button", { name: /^Account menu for/ });
   await page.goto(addressOf(baseURL!, "herzliah", "/directory"));
-  await header.getByRole("button", { name: "Sign out" }).click();
-  await expect(header.getByRole("link", { name: "Join" })).toBeVisible();
+  await account.click();
+  await page.getByRole("menuitem", { name: "Sign out" }).click();
+  await expect(header.getByRole("link", { name: "Sign in" })).toBeVisible();
 
   await page.goto(addressOf(baseURL!, "test-school", "/join"));
-  await expect(header.getByRole("button", { name: "Sign out" })).toBeVisible();
+  await expect(account).toBeVisible();
 });
