@@ -1233,6 +1233,45 @@ export type Database = {
     };
     Functions: {
       accept_staff_invitation: { Args: { p_token: string }; Returns: string };
+      access_request_matches: {
+        Args: { p_requests: string[] };
+        Returns: {
+          claimed: boolean;
+          first_name: string;
+          grad_year: number;
+          last_name: string;
+          profile_id: string;
+          request_id: string;
+          score: number;
+        }[];
+      };
+      admin_dashboard: { Args: { p_inst: string; p_since?: string }; Returns: Json };
+      admin_profile_email: { Args: { p_profile: string }; Returns: string };
+      admin_roster: {
+        Args: {
+          p_class_max?: number;
+          p_class_min?: number;
+          p_inst: string;
+          p_limit?: number;
+          p_offset?: number;
+          p_query?: string;
+          p_state?: string;
+        };
+        Returns: {
+          city: string;
+          country: string;
+          employer: string;
+          first_name: string;
+          grad_year: number;
+          id: string;
+          job_title: string;
+          last_confirmed_at: string;
+          last_name: string;
+          preferred_name: string;
+          state: string;
+          total_count: number;
+        }[];
+      };
       admin_update_profile: { Args: { p_patch: Json; p_profile: string }; Returns: undefined };
       approve_email_template: {
         Args: {
@@ -1247,6 +1286,14 @@ export type Database = {
         Returns: undefined;
       };
       assert_permission: { Args: { p_inst: string; p_perm: string }; Returns: undefined };
+      audit_people: {
+        Args: { p_inst: string };
+        Returns: {
+          kind: string;
+          label: string;
+          user_id: string;
+        }[];
+      };
       career_field_allowed: { Args: { p_field: string; p_inst: string }; Returns: boolean };
       change_staff_role: {
         Args: {
@@ -1410,6 +1457,17 @@ export type Database = {
         Returns: undefined;
       };
       save_my_profile: { Args: { p_inst: string; p_payload: Json }; Returns: string };
+      school_staff: {
+        Args: { p_inst: string };
+        Returns: {
+          email: string;
+          joined_at: string;
+          name: string;
+          role: Database["public"]["Enums"]["member_role"];
+          status: Database["public"]["Enums"]["member_status"];
+          user_id: string;
+        }[];
+      };
       search_directory: {
         Args: { p_filters?: Json; p_inst: string; p_limit?: number; p_offset?: number };
         Returns: {

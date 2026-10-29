@@ -125,7 +125,7 @@ reset role;
 
 -- Reviewer (H) ----------------------------------------------------------------------------------------
 select pg_temp.login('11111111-1111-4111-8111-000000000004');
-select is((select count(*)::int from public.alumni_profiles), 204, 'a reviewer sees every herzliah record, hidden and suspended ones included');
+select is((select count(*)::int from public.alumni_profiles), 205, 'a reviewer sees every herzliah record, hidden and suspended ones included');
 select is((select count(*)::int from public.alumni_private where institution_id = 'aaaaaaaa-0000-4000-8000-000000000002'), 0,
   'a reviewer sees no private data of another school');
 select is((select count(*)::int from public.access_requests), 6, 'a reviewer sees every herzliah request, in every state');
@@ -147,7 +147,7 @@ reset role;
 
 -- School admin (H) ------------------------------------------------------------------------------------
 select pg_temp.login('11111111-1111-4111-8111-000000000001');
-select is((select count(*)::int from public.alumni_profiles), 204, 'a school admin sees every herzliah record');
+select is((select count(*)::int from public.alumni_profiles), 205, 'a school admin sees every herzliah record');
 select is_empty(
   $$ select id from public.alumni_profiles where institution_id = 'aaaaaaaa-0000-4000-8000-000000000002' $$,
   'a school admin sees nothing of another school'
@@ -249,7 +249,7 @@ select lives_ok(
   $$ select public.platform_open_grant('aaaaaaaa-0000-4000-8000-000000000001', 'Support ticket 12', 1) $$,
   'a system admin opens a 1-hour grant'
 );
-select is((select count(*)::int from public.alumni_profiles), 204, 'with a grant, a system admin reads that school''s records');
+select is((select count(*)::int from public.alumni_profiles), 205, 'with a grant, a system admin reads that school''s records');
 select is_empty(
   $$ select id from public.alumni_profiles where institution_id = 'aaaaaaaa-0000-4000-8000-000000000002' $$,
   'the grant covers only that school'
@@ -278,10 +278,18 @@ select lives_ok(
        public.platform_open_grant('aaaaaaaa-0000-4000-8000-000000000001', 'Support ticket 13', 2)::text, true) $$,
   'a system admin opens a new grant'
 );
-select is((select count(*)::int from public.alumni_profiles), 204, 'the new grant gives access again');
+select is((select count(*)::int from public.alumni_profiles), 205, 'the new grant gives access again');
 select lives_ok($$ select public.platform_revoke_grant(current_setting('test.grant')::uuid) $$, 'and revokes it early');
 select is_empty('select id from public.alumni_profiles', 'a revoked grant gives no access');
 reset role;
 
+select pg_temp.login('11111111-1111-4111-8111-000000000001');
+select throws_ok($$ select * from public.school_staff('aaaaaaaa-0000-4000-8000-000000000002') $$, '42501', null, 'school console reader 1 refuses the other school');
+select throws_ok($$ select * from public.audit_people('aaaaaaaa-0000-4000-8000-000000000002') $$, '42501', null, 'school console reader 2 refuses the other school');
+select throws_ok($$ select public.admin_dashboard('aaaaaaaa-0000-4000-8000-000000000002') $$, '42501', null, 'school console reader 3 refuses the other school');
+select throws_ok($$ select * from public.admin_roster('aaaaaaaa-0000-4000-8000-000000000002') $$, '42501', null, 'school console reader 4 refuses the other school');
+select throws_ok($$ select public.admin_profile_email('22222222-2222-4222-8222-000000000003') $$, '42501', null, 'school console reader 5 refuses the other school');
+select throws_ok($$ select * from public.access_request_matches(array['33333333-3333-4333-8333-000000000002']::uuid[]) $$, '42501', null, 'school console reader 6 refuses the other school');
+reset role;
 select * from finish();
 rollback;

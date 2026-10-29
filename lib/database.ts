@@ -24,8 +24,35 @@ export type DirectoryRow = {
 };
 
 type Overrides = {
+  admin_dashboard: { Args: Fns["admin_dashboard"]["Args"]; Returns: AdminDashboard };
+  admin_profile_email: { Args: Fns["admin_profile_email"]["Args"]; Returns: string | null };
+  decide_access_request: { Args: Fns["decide_access_request"]["Args"]; Returns: string | null };
+  school_staff: { Args: Fns["school_staff"]["Args"]; Returns: SchoolStaff[] };
+  admin_roster: { Args: Fns["admin_roster"]["Args"]; Returns: AdminRosterRow[] };
   public_school: { Args: Fns["public_school"]["Args"]; Returns: PublicSchool | null };
   search_directory: { Args: Fns["search_directory"]["Args"]; Returns: DirectoryRow[] };
+};
+
+export type AdminDashboard = {
+  pending: number;
+  needs_info: number;
+  approved_not_published: number;
+  published: number;
+  oldest_pending_at: string | null;
+};
+export type SchoolStaff = Omit<Fns["school_staff"]["Returns"][number], "name" | "email"> & {
+  name: string | null;
+  email: string | null;
+};
+export type RosterState =
+  "published" | "hidden" | "onboarding" | "suspended" | "archived" | "deceased";
+export type AdminRosterRow = {
+  [K in keyof Fns["admin_roster"]["Returns"][number]]: K extends
+    "preferred_name" | "city" | "country" | "job_title" | "employer" | "last_confirmed_at"
+    ? Fns["admin_roster"]["Returns"][number][K] | null
+    : K extends "state"
+      ? RosterState
+      : Fns["admin_roster"]["Returns"][number][K];
 };
 
 export type Database = Omit<Generated, "public"> & {
