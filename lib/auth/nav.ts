@@ -280,9 +280,8 @@ export function navModel(input: NavInput): NavModel {
         "admin",
         [
           item("dashboard", "/admin"),
-          // TODO(ADM-05): /admin/approvals.
           can.has("requests.read") &&
-            item("approvals", "#", {
+            item("approvals", "/admin/approvals", {
               chip: pending ? { text: String(pending), kind: "count" } : undefined,
             }),
           // TODO(ADM-03): /admin/alumni.

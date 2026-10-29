@@ -41,8 +41,8 @@ Signed-out pages (Join, Code) use the `guest` role: FR and Sign in, no avatar.
 | Screen | Route | Backlog | Database |
 |---|---|---|---|
 | **Built shell and backed cards** · A1.1 Dashboard (`AdmDashboard`) | `/admin` | ADM-01, ADM-02 | ready (RLS counts). Overdue confirmations need FRS-04, bounces EML-05 |
-| A1.2 Approval queue (`AdmQueue`) | `/admin/approvals` | ADM-05 | ready (`access_requests`); match suggestions read unclaimed records |
-| A1.3 Review a request (`AdmReview`) | `/admin/approvals/[id]` | ADM-05 | `decide_access_request` (approve and link or create, needs info, reject) |
+| **Built** · A1.2 Approval queue (`AdmQueue`) | `/admin/approvals` | ADM-05 | ready (`access_requests`); match suggestions read unclaimed records |
+| **Built** · A1.3 Review a request (`AdmReview`) | `/admin/approvals/[id]` | ADM-05 | `decide_access_request` (approve and link or create, needs info, reject) |
 | A2.1 Alumni roster (`AdmRoster`) | `/admin/alumni` | ADM-03 | ready; the freshness filter needs FRS-04, the email column EML-05 |
 | A2.2 Record and history (`AdmRecord`) | `/admin/alumni/[id]` | ADM-03 | ready (`alumni_private`, `audit_log`, `access_requests`) |
 | A2.3 Suspend, archive, deceased (`AdmSuspend`) | `/admin/alumni/[id]/status` | ADM-04 | `set_profile_status` |
