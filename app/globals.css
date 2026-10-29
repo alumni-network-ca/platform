@@ -1289,7 +1289,7 @@ textarea:focus {
   font-size: 26px;
   display: block;
 }
-.statCard span {
+.statCard > span:not([class]) {
   font-size: 12px;
   color: var(--slate);
   display: block;
@@ -1761,4 +1761,150 @@ textarea:focus {
   margin: 0;
   font-weight: 600;
   overflow-wrap: anywhere;
+}
+
+.adminNav {
+  flex: 0 0 232px;
+  width: 232px;
+  background: #fff;
+  border-right: 1px solid var(--line);
+  padding: 20px 12px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.adminNav a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: none;
+}
+.adminNav a[aria-current="page"] {
+  background: #faeef3;
+  font-weight: 700;
+}
+.adminBadge {
+  min-width: 22px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: #7b1e3d;
+  color: #fff;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+.adminHero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 24px;
+  border-radius: 12px;
+  background: #0b2159;
+  color: #fff;
+  text-decoration: none;
+}
+.adminHero small {
+  display: block;
+  color: #eab6ce;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.adminHero strong {
+  display: block;
+  font-size: 22px;
+}
+.adminTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  border-bottom: 1px solid var(--line);
+}
+.adminTabs a {
+  padding: 12px 16px;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+}
+.adminTabs a[aria-current="page"] {
+  border-color: #7b1e3d;
+  font-weight: 700;
+}
+.adminFilters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 14px;
+}
+.adminDetails {
+  display: grid;
+  grid-template-columns: minmax(100px, 1fr) 2fr;
+  gap: 10px 20px;
+  margin: 0;
+}
+.adminDetails dt {
+  color: var(--ink-soft);
+}
+.adminDetails dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.adminMatch {
+  border-color: #398254;
+}
+.adminSupport {
+  background: #fff8e8;
+}
+.adminDialog {
+  max-width: 640px;
+  width: 100%;
+  align-self: center;
+}
+.adminActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.adminChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.adminChips a {
+  color: var(--ink);
+}
+.adminChips a[aria-current="page"] {
+  background: #faeef3;
+}
+.adminStack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+@media (max-width: 800px) {
+  .adminNav {
+    flex: 1 0 100%;
+    width: 100%;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .adminDetails {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .adminDetails dd {
+    margin-bottom: 10px;
+  }
+  .panelGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

@@ -1,5 +1,6 @@
 import "server-only";
 import type { User } from "@supabase/supabase-js";
+import { rolePermissions } from "@/lib/auth/permissions";
 import { getAccount } from "@/lib/auth/account";
 import { isActiveMember, isStaff } from "@/lib/auth/home";
 import { navModel, type NavInput } from "@/lib/auth/nav";
@@ -79,10 +80,7 @@ async function readSchool(): Promise<Reads> {
       read(
         supabase.from("institutions").select("reply_to_email").eq("id", school.id).maybeSingle(),
       ),
-    staff &&
-      read(
-        supabase.from("role_permissions").select("permission").eq("role", state.membership!.role),
-      ),
+    staff && rolePermissions(state.membership!.role),
     staff &&
       count(
         supabase
@@ -115,7 +113,7 @@ async function readSchool(): Promise<Reads> {
     user: person(user, name),
     state,
     profile: profile ? { gradYear: profile.grad_year, visibility: profile.visibility } : null,
-    permissions: permissions ? permissions.map((row) => row.permission) : [],
+    permissions: permissions || [],
     pendingRequests: pendingRequests || 0,
     platform: grant ? await readPlatform(supabase, user.id, now, true) : null,
   };
