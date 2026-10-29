@@ -41,12 +41,13 @@ test.describe("sessions", () => {
     const header = page.getByRole("banner");
     await signInAs(context, addressOf(baseURL!, "herzliah"), accounts.alumni);
     await page.goto(addressOf(baseURL!, "herzliah", "/directory"));
-    await expect(header.getByRole("button", { name: "Sign out" })).toBeVisible();
+    const account = header.getByRole("button", { name: /^Account menu for/ });
+    await expect(account).toBeVisible();
 
-    // Signed out at the other school: the header offers the sign-up link (the sign-in link is hidden on phones).
+    // Signed out at the other school: the header offers sign-in instead of the account menu.
     await page.goto(addressOf(baseURL!, "test-school"));
-    await expect(header.getByRole("link", { name: "Join" })).toBeVisible();
-    await expect(header.getByRole("button", { name: "Sign out" })).toHaveCount(0);
+    await expect(header.getByRole("link", { name: "Sign in" })).toBeVisible();
+    await expect(account).toHaveCount(0);
   });
 
   test("an expired access token is refreshed on the next request", async ({

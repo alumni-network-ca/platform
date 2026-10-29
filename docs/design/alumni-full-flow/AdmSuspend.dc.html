@@ -17,13 +17,7 @@ button:focus-visible,textarea:focus,input:focus-visible{outline:2px solid #7b1e3
 </style>
 </helmet>
 <div style="min-height: 960px; background: #f7f7f6; font-family: Inter, Arial, sans-serif; color: #0b2159; display: flex; flex-direction: column; position: relative">
-  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 28px; background: #0b2159; color: #ffffff">
-    <div style="display: flex; align-items: center; gap: 11px">
-      <img src="/_blob/4656ce653b200e07991d58266759ac80" alt="" style="width: 42px; height: 42px; box-sizing: border-box; padding: 4px; border-radius: 10px; background: #ffffff; object-fit: contain">
-      <span style="display: flex; flex-direction: column; gap: 3px"><span style="font-weight: 700; font-size: 14px">Herzliah Alumni Network</span><span style="font-size: 9px; letter-spacing: 0.13em; text-transform: uppercase; color: #b4bdd4">School admin</span></span>
-    </div>
-    <span aria-label="Ruth Klein" role="img" style="display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #c9d6f2; color: #0b2159; font-size: 13px; font-weight: 800">RK</span>
-  </header>
+  <dc-import name="NavBar" role="school_admin" active="admin" open="{{ false }}" hint-size="100%,66px"></dc-import>
   <div aria-hidden="true" style="flex: 1; display: flex; flex-wrap: wrap">
     <div style="flex: 1 1 200px; max-width: 232px; background: #ffffff; border-right: 1px solid #e2e5ee"></div>
     <div style="flex: 999 1 640px; padding: 28px 36px; display: flex; flex-direction: column; gap: 18px">
@@ -31,7 +25,7 @@ button:focus-visible,textarea:focus,input:focus-visible{outline:2px solid #7b1e3
       <div style="height: 220px; border-radius: 12px; background: #ffffff; border: 1px solid #e2e5ee"></div>
     </div>
   </div>
-  <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: rgba(11,33,89,0.45); display: flex; justify-content: center; align-items: flex-start; padding: 110px 24px 24px">
+  <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: 100; background: rgba(11,33,89,0.45); display: flex; justify-content: center; align-items: flex-start; padding: 110px 24px 24px">
     <section role="dialog" aria-modal="true" aria-labelledby="sus-title" style="width: 100%; max-width: 560px; background: #ffffff; border-radius: 14px; box-shadow: 0 30px 70px -20px rgba(5,18,49,0.5); display: flex; flex-direction: column">
       <div style="padding: 26px 28px 0; display: flex; flex-direction: column; gap: 6px">
         <h1 id="sus-title" style="margin: 0; font-size: 22px; font-weight: 800">Change Noah Cohen's access</h1>

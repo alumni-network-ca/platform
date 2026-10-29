@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { Nav } from "@/components/Nav";
 import { SignOutButton } from "@/components/SignOutButton";
 import { getPlatformAdmin } from "@/lib/auth/platform";
 import { createClient } from "@/lib/supabase/server";
@@ -11,17 +12,20 @@ export default async function NoAccessPage() {
   } = await (await createClient()).auth.getUser();
   if (!user) redirect("/login?next=%2Fconsole");
   return (
-    <main className="authPage">
-      <section className="authCard">
-        <h1>No access to the console</h1>
-        <p className="muted">
-          {user.email} is not a platform admin. To use a school&apos;s network, go to its own
-          address, such as herzliah.alumninetwork.ca.
-        </p>
-        <div className="authFooter">
-          <SignOutButton to="/login" label="Sign in with another account" />
-        </div>
-      </section>
-    </main>
+    <>
+      <Nav />
+      <main className="authPage">
+        <section className="authCard">
+          <h1>No access to the console</h1>
+          <p className="muted">
+            {user.email} is not a platform admin. To use a school&apos;s network, go to its own
+            address, such as herzliah.alumninetwork.ca.
+          </p>
+          <div className="authFooter">
+            <SignOutButton to="/login" label="Sign in with another account" />
+          </div>
+        </section>
+      </main>
+    </>
   );
 }

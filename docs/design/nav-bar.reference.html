@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Nav bar component</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="position: relative; z-index: 50; font-family: Inter, Arial, sans-serif; color: #0b2159">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 32px; background: {{barBg}}; color: #ffffff; box-shadow: 0 8px 24px rgba(5,18,49,0.12)">
+    <a href="{{homeHref}}" style="display: flex; align-items: center; gap: 11px; color: #ffffff; text-decoration: none">
+      <sc-if value="{{isSchool}}" hint-placeholder-val="{{true}}">
+        <img src="/_blob/4656ce653b200e07991d58266759ac80" alt="" style="width: 42px; height: 42px; box-sizing: border-box; padding: 4px; border-radius: 10px; background: #ffffff; object-fit: contain">
+      </sc-if>
+      <sc-if value="{{isPlatform}}" hint-placeholder-val="{{false}}">
+        <span aria-hidden="true" style="display: grid; place-items: center; width: 42px; height: 42px; border-radius: 10px; background: #4b2a8a; font-size: 13px; font-weight: 800; letter-spacing: 0.04em">AN</span>
+      </sc-if>
+      <span style="display: flex; flex-direction: column; gap: 3px"><span style="font-weight: 700; font-size: 14px">{{brandName}}</span><span style="font-size: 9px; letter-spacing: 0.13em; text-transform: uppercase; color: #b8c0d8">{{brandSub}}</span></span>
+    </a>
+    <nav aria-label="Main" style="display: flex; flex-wrap: wrap; gap: 4px; font-size: 14px">
+      <sc-for list="{{links}}" as="l" hint-placeholder-count="2">
+        <a href="{{l.href}}" style="display: flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 999px; color: {{l.fg}}; background: {{l.bg}}; font-weight: {{l.weight}}; text-decoration: none">{{l.label}}<sc-if value="{{l.hasBadge}}" hint-placeholder-val="{{false}}"><span style="min-width: 20px; padding: 1px 6px; box-sizing: border-box; border-radius: 999px; background: #eab6ce; color: #0b2159; font-size: 11px; font-weight: 800; text-align: center">{{l.badge}}</span></sc-if></a>
+      </sc-for>
+    </nav>
+    <sc-if value="{{isGuest}}" hint-placeholder-val="{{false}}">
+      <div style="display: flex; align-items: center; gap: 10px">
+        <a href="#" style="padding: 8px 12px; border-radius: 999px; color: #d2d7e4; font-size: 14px; text-decoration: none">FR</a>
+        <a href="Code.dc.html" style="padding: 9px 16px; border-radius: 7px; border: 1px solid #6b7a9e; color: #ffffff; font-size: 14px; font-weight: 700; text-decoration: none">Sign in</a>
+      </div>
+    </sc-if>
+    <sc-if value="{{hasAccount}}" hint-placeholder-val="{{true}}">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <sc-if value="{{hasPill}}" hint-placeholder-val="{{true}}">
+        <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: {{pillBg}}; color: {{pillFg}}; border: {{pillBorder}}; font-size: 12px; font-weight: 800; letter-spacing: 0.02em">
+          <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z"></path></svg>{{pillLabel}}</span>
+      </sc-if>
+      <button type="button" aria-haspopup="menu" aria-expanded="{{expanded}}" aria-label="Account menu for {{name}}" onClick="{{toggle}}" style="display: flex; align-items: center; gap: 6px; padding: 3px 8px 3px 3px; border-radius: 999px; border: 1px solid {{avatarRing}}; background: {{avatarBtnBg}}; color: #ffffff; cursor: pointer">
+        <span aria-hidden="true" style="display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: {{avatarBg}}; color: #0b2159; font-size: 13px; font-weight: 800">{{initials}}</span>
+        <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="{{chevron}}"></path></svg>
+      </button>
+    </div>
+    </sc-if>
+  </header>
+  <sc-if value="{{open}}" hint-placeholder-val="{{true}}">
+    <div role="menu" aria-label="Account" style="position: absolute; top: 70px; right: 24px; width: 320px; background: #ffffff; border: 1px solid #e2e5ee; border-radius: 14px; box-shadow: 0 24px 60px -20px rgba(11,33,89,0.4); overflow: hidden">
+      <div style="display: flex; gap: 12px; align-items: center; padding: 18px 18px 16px; background: {{headBg}}">
+        <span aria-hidden="true" style="display: grid; place-items: center; flex: 0 0 46px; height: 46px; border-radius: 50%; background: {{avatarBg}}; color: #0b2159; font-size: 16px; font-weight: 800">{{initials}}</span>
+        <span style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+          <span style="font-size: 15px; font-weight: 800; color: #0b2159">{{name}}</span>
+          <span style="font-size: 13px; color: #4a5575; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{email}}</span>
+          <span style="font-size: 12px; font-weight: 700; color: {{subFg}}">{{subline}}</span>
+        </span>
+      </div>
+      <sc-for list="{{sections}}" as="sec" hint-placeholder-count="3">
+        <div role="group" aria-label="{{sec.title}}" style="display: flex; flex-direction: column; padding: 6px; border-top: 1px solid #eef0f4">
+          <sc-if value="{{sec.hasTitle}}" hint-placeholder-val="{{false}}"><span style="padding: 8px 12px 4px; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #4a5575">{{sec.title}}</span></sc-if>
+          <sc-for list="{{sec.items}}" as="i" hint-placeholder-count="3">
+            <a href="{{i.href}}" role="menuitem" style="display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 40px; padding: 8px 12px; box-sizing: border-box; border-radius: 8px; color: {{i.fg}}; font-size: 14px; font-weight: {{i.weight}}; text-decoration: none">
+              <span>{{i.label}}</span>
+              <sc-if value="{{i.hasMeta}}" hint-placeholder-val="{{false}}"><span style="padding: 2px 8px; border-radius: 999px; background: {{i.metaBg}}; color: {{i.metaFg}}; font-size: 12px; font-weight: 700; white-space: nowrap">{{i.meta}}</span></sc-if>
+            </a>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"role":{"editor":"enum","options":["guest","alumnus","applicant","reviewer","school_admin","platform_admin"],"default":"school_admin"},"active":{"editor":"text","default":""},"alsoAlumnus":{"editor":"boolean","default":false},"open":{"editor":"boolean","default":true},"$preview":{"width":1280,"height":640}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { toggled: null };
+  }
+  renderVals() {
+    var self = this;
+    var role = this.props.role || 'school_admin';
+    var also = !!this.props.alsoAlumnus;
+    var open = this.state.toggled !== null ? this.state.toggled : (this.props.open === undefined ? true : !!this.props.open);
+    var platform = role === 'platform_admin';
+    var staff = role === 'reviewer' || role === 'school_admin';
+
+    function item(label, href, meta, kind) {
+      var danger = kind === 'danger';
+      var metaStyle = { count: ['#7b1e3d', '#ffffff'], info: ['#eef0f4', '#3a4a70'], good: ['#e3f3e8', '#1b5e33'], warn: ['#fff4dc', '#7a4b00'] }[kind] || ['#eef0f4', '#3a4a70'];
+      return { label: label, href: href || '#', meta: meta || '', hasMeta: !!meta, metaBg: metaStyle[0], metaFg: metaStyle[1], fg: danger ? '#a1173b' : '#0b2159', weight: danger ? '700' : '500' };
+    }
+    function sec(title, items) { return { title: title, hasTitle: !!title, items: items }; }
+
+    var langItem = item('Language', '#', 'English · Français', 'info');
+    var signOut = sec('', [item('Sign out', 'Join.dc.html', '', 'danger')]);
+
+    var P = {
+      guest: { name: '', initials: '', email: '', subline: '', subFg: '#3a4a70', avatarBg: '#eab6ce', links: [], sections: [] },
+      alumnus: {
+        name: 'Dana Levy', initials: 'DL', email: 'dana.levy@gmail.com', subline: 'Class of 2014 · Verified graduate', subFg: '#1b5e33', avatarBg: '#eab6ce',
+        links: [['Home', '#'], ['Directory', 'Directory.dc.html', true]],
+        sections: [
+          sec('', [item('My profile', 'Me.dc.html'), item('Edit profile', 'OnbAbout.dc.html'), item('Who can see me', 'OnbPublish.dc.html', 'Verified alumni', 'good')]),
+          sec('Account', [item('Email and sign-in', '#'), langItem, item('Download my data', '#')]),
+          sec('', [item('Contact the alumni office', '#'), item('Privacy policy and terms', '#')]),
+          signOut
+        ]
+      },
+      applicant: {
+        name: 'Dana Levy', initials: 'DL', email: 'dana.levy@gmail.com', subline: 'Request pending with Herzliah', subFg: '#7a4b00', avatarBg: '#eab6ce',
+        links: [],
+        sections: [
+          sec('', [item('My request', 'Pending.dc.html', 'Pending', 'warn'), item('Edit my request', 'Request.dc.html')]),
+          sec('Account', [langItem]),
+          sec('', [item('Contact the alumni office', '#'), item('Withdraw my request', '#', '', 'danger')]),
+          signOut
+        ]
+      },
+      reviewer: {
+        name: 'Avi Sasson', initials: 'AS', email: 'asasson@[school domain]', subline: 'Herzliah High School', subFg: '#3a4a70', avatarBg: '#c9d6f2',
+        links: [['Admin', 'AdmDashboard.dc.html', true, 7], ['Directory', 'Directory.dc.html']],
+        sections: [
+          sec('Admin', [item('Dashboard', 'AdmDashboard.dc.html'), item('Approvals', 'AdmQueue.dc.html', '7', 'count'), item('Alumni', 'AdmRoster.dc.html', 'Read-only', 'info'), item('Audit log', 'AdmAudit.dc.html')]),
+          sec('Account', [item('Two-factor and sign-in', '#', 'On', 'good'), langItem]),
+          signOut
+        ]
+      },
+      school_admin: {
+        name: 'Ruth Klein', initials: 'RK', email: 'rklein@[school domain]', subline: 'Herzliah High School', subFg: '#3a4a70', avatarBg: '#c9d6f2',
+        links: [['Admin', 'AdmDashboard.dc.html', true, 7], ['Directory', 'Directory.dc.html']],
+        sections: [
+          sec('Admin', [item('Dashboard', 'AdmDashboard.dc.html'), item('Approvals', 'AdmQueue.dc.html', '7', 'count'), item('Alumni', 'AdmRoster.dc.html'), item('Staff', 'AdmStaff.dc.html'), item('School settings', 'AdmSettings.dc.html')]),
+          sec('Account', [item('Two-factor and sign-in', '#', 'On', 'good'), langItem]),
+          signOut
+        ]
+      },
+      platform_admin: {
+        name: 'Gab Derhy', initials: 'GD', email: 'gab@alumninetwork.ca', subline: 'All schools', subFg: '#4b2a8a', avatarBg: '#d9cdf3',
+        links: [['Schools', 'SaSchools.dc.html', true], ['Support', 'SaSupport.dc.html', false, 1], ['Health', 'SaHealth.dc.html']],
+        sections: [
+          sec('Console', [item('Schools', 'SaSchools.dc.html', '3', 'info'), item('Support access', 'SaSupport.dc.html', '1 active', 'warn'), item('Platform health', 'SaHealth.dc.html', '1 alert', 'warn')]),
+          sec('Open a school', [item('Herzliah High School', 'AdmDashboard.dc.html', 'Grant · 2 h left', 'good'), item('Maple Ridge Academy', 'SaSupport.dc.html', 'Needs a grant', 'info')]),
+          sec('Account', [item('Two-factor and sign-in', '#', 'On', 'good')]),
+          signOut
+        ]
+      }
+    };
+    var p = P[role] || P.school_admin;
+    var sections = p.sections.slice();
+    if (role === 'school_admin' && also) {
+      p = Object.assign({}, p, { subline: 'Herzliah High School · Class of 1998' });
+      sections.splice(1, 0, sec('You are also an alumnus', [item('My alumni profile', 'Me.dc.html'), item('Browse as an alumnus', 'Directory.dc.html')]));
+    }
+    var pill = { reviewer: ['Reviewer', 'transparent', '#d6e2ff', '1px solid #8fa6d6'], school_admin: ['School admin', '#eab6ce', '#0b2159', '0'], platform_admin: ['Platform admin', '#7b5bc4', '#ffffff', '0'] }[role];
+    var act = (this.props.active || '').toLowerCase();
+    var guest = role === 'guest';
+    if (guest) open = false;
+    var links = (p.links || []).map(function (l) {
+      var on = act ? l[0].toLowerCase() === act : !!l[2];
+      return { label: l[0], href: l[1], bg: on ? 'rgba(255,255,255,0.12)' : 'transparent', fg: on ? '#ffffff' : '#d2d7e4', weight: on ? '700' : '500', badge: l[3] || 0, hasBadge: !!l[3] };
+    });
+    return {
+      isSchool: !platform, isPlatform: platform, isGuest: guest, hasAccount: !guest,
+      barBg: platform ? '#15172b' : '#0b2159',
+      homeHref: platform ? 'SaSchools.dc.html' : (staff ? 'AdmDashboard.dc.html' : 'Main.dc.html'),
+      brandName: platform ? 'Alumni Network' : 'Herzliah Alumni Network',
+      brandSub: platform ? 'Platform console' : 'Private · verified · connected',
+      links: links,
+      hasPill: !!pill, pillLabel: pill ? pill[0] : '', pillBg: pill ? pill[1] : '', pillFg: pill ? pill[2] : '', pillBorder: pill ? pill[3] : '0',
+      name: p.name, initials: p.initials, email: p.email, subline: p.subline, subFg: p.subFg, avatarBg: p.avatarBg,
+      headBg: platform ? '#f4f0fc' : '#f7f7f6',
+      avatarRing: open ? '#ffffff' : 'rgba(255,255,255,0.3)',
+      avatarBtnBg: open ? 'rgba(255,255,255,0.14)' : 'transparent',
+      chevron: open ? 'M6 15l6-6 6 6' : 'M6 9l6 6 6-6',
+      expanded: open ? 'true' : 'false',
+      open: open, sections: sections,
+      toggle: function () { self.setState({ toggled: !open }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

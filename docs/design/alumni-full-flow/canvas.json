@@ -1,75 +1,625 @@
 {
   "v": 3,
-  "createdOnFiles": {"v": 1, "at": "2026-10-28T00:25:00Z"},
-  "title": "Alumni Full Flow",
-  "launch": {"view": "canvas"},
-  "pages": [
-    {"id": "alumni", "name": "Alumni"},
-    {"id": "school-admin", "name": "School admin"},
-    {"id": "super-admin", "name": "Super admin"}
-  ],
+  "attachments": {},
   "boards": {
-    "Main.dc.html": {"x": 0, "y": 0, "w": 1280, "h": 900, "title": "1.1 School's invitation email", "is_interactive": true, "page": "alumni"},
-    "Join.dc.html": {"x": 1360, "y": 0, "w": 1280, "h": 900, "title": "1.2 /join — enter email", "expand": "fill", "is_interactive": true, "page": "alumni"},
-    "Code.dc.html": {"x": 2720, "y": 0, "w": 1280, "h": 900, "title": "1.3 Enter the 6-digit code", "expand": "fill", "is_interactive": true, "page": "alumni"},
-    "Request.dc.html": {"x": 4080, "y": 0, "w": 1280, "h": 900, "title": "1.4 Access request details", "expand": "fill", "is_interactive": true, "page": "alumni"},
-    "Pending.dc.html": {"x": 5440, "y": 0, "w": 1280, "h": 900, "title": "1.5 Account — pending review", "expand": "fill", "page": "alumni"},
-    "NeedsInfo.dc.html": {"x": 6800, "y": 0, "w": 1280, "h": 900, "title": "1.6 Account — school needs more info", "expand": "fill", "is_interactive": true, "page": "alumni"},
-    "Approved.dc.html": {"x": 8160, "y": 0, "w": 1280, "h": 900, "title": "1.7 Approval email", "is_interactive": true, "page": "alumni"},
-    "OnbAbout.dc.html": {"x": 0, "y": 1420, "w": 1280, "h": 1000, "title": "2.1 Onboarding — About you", "expand": "fill", "is_interactive": true, "page": "alumni"},
-    "OnbCareer.dc.html": {"x": 1360, "y": 1420, "w": 1280, "h": 1000, "title": "2.2 Onboarding — Career", "expand": "fill", "is_interactive": true, "page": "alumni"},
-    "OnbNetwork.dc.html": {"x": 2720, "y": 1420, "w": 1280, "h": 1000, "title": "2.3 Onboarding — Networking", "expand": "fill", "is_interactive": true, "page": "alumni"},
-    "OnbPublish.dc.html": {"x": 4080, "y": 1420, "w": 1280, "h": 1000, "title": "2.4 Onboarding — Privacy & publish", "expand": "fill", "is_interactive": true, "page": "alumni"},
-    "Me.dc.html": {"x": 0, "y": 2840, "w": 1280, "h": 1100, "title": "3.1 /me — my profile", "expand": "fill", "is_interactive": true, "page": "alumni"},
-    "Directory.dc.html": {"x": 1360, "y": 2840, "w": 1280, "h": 1100, "title": "3.2 Directory", "expand": "fill", "is_interactive": true, "page": "alumni"},
-    "Profile.dc.html": {"x": 2720, "y": 2840, "w": 1280, "h": 1100, "title": "3.3 Alumnus profile + message", "expand": "fill", "is_interactive": true, "page": "alumni"},
-    "RecipientEmail.dc.html": {"x": 4080, "y": 2840, "w": 1280, "h": 1100, "title": "3.4 What Maya receives (relay email)", "is_interactive": true, "page": "alumni"},
-
-    "AdmDashboard.dc.html": {"x": 0, "y": 0, "w": 1280, "h": 960, "title": "A1.1 Dashboard", "expand": "fill", "is_interactive": true, "page": "school-admin"},
-    "AdmQueue.dc.html": {"x": 1360, "y": 0, "w": 1280, "h": 960, "title": "A1.2 Approval queue", "expand": "fill", "is_interactive": true, "page": "school-admin"},
-    "AdmReview.dc.html": {"x": 2720, "y": 0, "w": 1280, "h": 960, "title": "A1.3 Review a request — approve / ask / reject", "expand": "fill", "is_interactive": true, "page": "school-admin"},
-    "AdmRoster.dc.html": {"x": 0, "y": 1380, "w": 1280, "h": 960, "title": "A2.1 Alumni roster", "expand": "fill", "is_interactive": true, "page": "school-admin"},
-    "AdmRecord.dc.html": {"x": 1360, "y": 1380, "w": 1280, "h": 960, "title": "A2.2 Alumnus record + history", "expand": "fill", "is_interactive": true, "page": "school-admin"},
-    "AdmSuspend.dc.html": {"x": 2720, "y": 1380, "w": 1280, "h": 960, "title": "A2.3 Record action — suspend (reason required)", "expand": "fill", "is_interactive": true, "page": "school-admin"},
-    "AdmDuplicate.dc.html": {"x": 4080, "y": 1380, "w": 1280, "h": 960, "title": "A2.4 Resolve a duplicate", "expand": "fill", "is_interactive": true, "page": "school-admin"},
-    "AdmTemplates.dc.html": {"x": 0, "y": 2760, "w": 1280, "h": 960, "title": "A3.1 Email templates (EN/FR, approve)", "expand": "fill", "is_interactive": true, "page": "school-admin"},
-    "AdmFreshness.dc.html": {"x": 1360, "y": 2760, "w": 1280, "h": 960, "title": "A3.2 Freshness — annual confirmation", "expand": "fill", "is_interactive": true, "page": "school-admin"},
-    "AdmExport.dc.html": {"x": 2720, "y": 2760, "w": 1280, "h": 960, "title": "A3.3 Export roster", "expand": "fill", "is_interactive": true, "page": "school-admin"},
-    "AdmStaff.dc.html": {"x": 0, "y": 4140, "w": 1280, "h": 960, "title": "A4.1 Staff and roles", "expand": "fill", "is_interactive": true, "page": "school-admin"},
-    "AdmSettings.dc.html": {"x": 1360, "y": 4140, "w": 1280, "h": 960, "title": "A4.2 School settings", "expand": "fill", "is_interactive": true, "page": "school-admin"},
-    "AdmAudit.dc.html": {"x": 2720, "y": 4140, "w": 1280, "h": 960, "title": "A4.3 Audit log", "expand": "fill", "is_interactive": true, "page": "school-admin"},
-
-    "SaSchools.dc.html": {"x": 0, "y": 0, "w": 1280, "h": 960, "title": "S1.1 Console — all schools", "expand": "fill", "is_interactive": true, "page": "super-admin"},
-    "SaCreate.dc.html": {"x": 1360, "y": 0, "w": 1280, "h": 960, "title": "S1.2 Create a school", "expand": "fill", "is_interactive": true, "page": "super-admin"},
-    "SaSetup.dc.html": {"x": 2720, "y": 0, "w": 1280, "h": 960, "title": "S1.3 School setup — first admin, launch checklist", "expand": "fill", "is_interactive": true, "page": "super-admin"},
-    "SaSupport.dc.html": {"x": 0, "y": 1380, "w": 1280, "h": 960, "title": "S2.1 Support access — time-boxed grant", "expand": "fill", "is_interactive": true, "page": "super-admin"},
-    "SaSuspend.dc.html": {"x": 1360, "y": 1380, "w": 1280, "h": 960, "title": "S2.2 Suspend or offboard a school", "expand": "fill", "is_interactive": true, "page": "super-admin"},
-    "SaHealth.dc.html": {"x": 2720, "y": 1380, "w": 1280, "h": 960, "title": "S2.3 Platform health", "expand": "fill", "is_interactive": true, "page": "super-admin"}
+    "AdmAudit.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A4.3 Audit log",
+      "w": 1280,
+      "x": 2720,
+      "y": 4140
+    },
+    "AdmDashboard.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A1.1 Dashboard",
+      "w": 1280,
+      "x": 0,
+      "y": 0
+    },
+    "AdmDuplicate.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A2.4 Resolve a duplicate",
+      "w": 1280,
+      "x": 4080,
+      "y": 1380
+    },
+    "AdmExport.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A3.3 Export roster",
+      "w": 1280,
+      "x": 2720,
+      "y": 2760
+    },
+    "AdmFreshness.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A3.2 Freshness — annual confirmation",
+      "w": 1280,
+      "x": 1360,
+      "y": 2760
+    },
+    "AdmQueue.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A1.2 Approval queue",
+      "w": 1280,
+      "x": 1360,
+      "y": 0
+    },
+    "AdmRecord.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A2.2 Alumnus record + history",
+      "w": 1280,
+      "x": 1360,
+      "y": 1380
+    },
+    "AdmReview.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A1.3 Review a request — approve / ask / reject",
+      "w": 1280,
+      "x": 2720,
+      "y": 0
+    },
+    "AdmRoster.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A2.1 Alumni roster",
+      "w": 1280,
+      "x": 0,
+      "y": 1380
+    },
+    "AdmSettings.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A4.2 School settings",
+      "w": 1280,
+      "x": 1360,
+      "y": 4140
+    },
+    "AdmStaff.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A4.1 Staff and roles",
+      "w": 1280,
+      "x": 0,
+      "y": 4140
+    },
+    "AdmSuspend.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A2.3 Record action — suspend (reason required)",
+      "w": 1280,
+      "x": 2720,
+      "y": 1380
+    },
+    "AdmTemplates.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A3.1 Email templates (EN/FR, approve)",
+      "w": 1280,
+      "x": 0,
+      "y": 2760
+    },
+    "Approved.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "alumni",
+      "title": "1.7 Approval email",
+      "w": 1280,
+      "x": 8160,
+      "y": 0
+    },
+    "Code.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "is_interactive": true,
+      "page": "alumni",
+      "title": "1.3 Enter the 6-digit code",
+      "w": 1280,
+      "x": 2720,
+      "y": 0
+    },
+    "Directory.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "is_interactive": true,
+      "page": "alumni",
+      "title": "3.2 Directory",
+      "w": 1280,
+      "x": 1360,
+      "y": 2840
+    },
+    "Join.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "is_interactive": true,
+      "page": "alumni",
+      "title": "1.2 /join — enter email",
+      "w": 1280,
+      "x": 1360,
+      "y": 0
+    },
+    "Main.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "page": "alumni",
+      "title": "1.1 School's invitation email",
+      "w": 1280,
+      "x": 0,
+      "y": 0
+    },
+    "Me.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "is_interactive": true,
+      "page": "alumni",
+      "title": "3.1 /me — my profile",
+      "w": 1280,
+      "x": 0,
+      "y": 2840
+    },
+    "NavAlumnus.dc.html": {
+      "h": 640,
+      "is_interactive": true,
+      "page": "layout",
+      "title": "L1 Alumnus — no role pill",
+      "w": 1280,
+      "x": 0,
+      "y": 1060
+    },
+    "NavApplicant.dc.html": {
+      "h": 640,
+      "is_interactive": true,
+      "page": "layout",
+      "title": "L2 Applicant — waiting for approval",
+      "w": 1280,
+      "x": 1360,
+      "y": 1060
+    },
+    "NavBar.dc.html": {
+      "h": 640,
+      "is_interactive": true,
+      "page": "layout",
+      "title": "L0 NavBar component (tweak: role, menu open)",
+      "w": 1280,
+      "x": 0,
+      "y": 0
+    },
+    "NavPlatform.dc.html": {
+      "h": 640,
+      "is_interactive": true,
+      "page": "layout",
+      "title": "L6 Platform admin",
+      "w": 1280,
+      "x": 2720,
+      "y": 1820
+    },
+    "NavReviewer.dc.html": {
+      "h": 640,
+      "is_interactive": true,
+      "page": "layout",
+      "title": "L3 Reviewer",
+      "w": 1280,
+      "x": 2720,
+      "y": 1060
+    },
+    "NavSchoolAdmin.dc.html": {
+      "h": 640,
+      "is_interactive": true,
+      "page": "layout",
+      "title": "L4 School admin",
+      "w": 1280,
+      "x": 0,
+      "y": 1820
+    },
+    "NavStaffAlumnus.dc.html": {
+      "h": 640,
+      "is_interactive": true,
+      "page": "layout",
+      "title": "L5 School admin who is also an alumnus",
+      "w": 1280,
+      "x": 1360,
+      "y": 1820
+    },
+    "NeedsInfo.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "is_interactive": true,
+      "page": "alumni",
+      "title": "1.6 Account — school needs more info",
+      "w": 1280,
+      "x": 6800,
+      "y": 0
+    },
+    "OnbAbout.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "alumni",
+      "title": "2.1 Onboarding — About you",
+      "w": 1280,
+      "x": 0,
+      "y": 1420
+    },
+    "OnbCareer.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "alumni",
+      "title": "2.2 Onboarding — Career",
+      "w": 1280,
+      "x": 1360,
+      "y": 1420
+    },
+    "OnbNetwork.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "alumni",
+      "title": "2.3 Onboarding — Networking",
+      "w": 1280,
+      "x": 2720,
+      "y": 1420
+    },
+    "OnbPublish.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "alumni",
+      "title": "2.4 Onboarding — Privacy & publish",
+      "w": 1280,
+      "x": 4080,
+      "y": 1420
+    },
+    "Pending.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "page": "alumni",
+      "title": "1.5 Account — pending review",
+      "w": 1280,
+      "x": 5440,
+      "y": 0
+    },
+    "Profile.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "is_interactive": true,
+      "page": "alumni",
+      "title": "3.3 Alumnus profile + message",
+      "w": 1280,
+      "x": 2720,
+      "y": 2840
+    },
+    "RecipientEmail.dc.html": {
+      "h": 1100,
+      "is_interactive": true,
+      "page": "alumni",
+      "title": "3.4 What Maya receives (relay email)",
+      "w": 1280,
+      "x": 4080,
+      "y": 2840
+    },
+    "Request.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "is_interactive": true,
+      "page": "alumni",
+      "title": "1.4 Access request details",
+      "w": 1280,
+      "x": 4080,
+      "y": 0
+    },
+    "SaCreate.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "page": "super-admin",
+      "title": "S1.2 Create a school",
+      "w": 1280,
+      "x": 1360,
+      "y": 0
+    },
+    "SaHealth.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "page": "super-admin",
+      "title": "S2.3 Platform health",
+      "w": 1280,
+      "x": 2720,
+      "y": 1380
+    },
+    "SaSchools.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "page": "super-admin",
+      "title": "S1.1 Console — all schools",
+      "w": 1280,
+      "x": 0,
+      "y": 0
+    },
+    "SaSetup.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "page": "super-admin",
+      "title": "S1.3 School setup — first admin, launch checklist",
+      "w": 1280,
+      "x": 2720,
+      "y": 0
+    },
+    "SaSupport.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "page": "super-admin",
+      "title": "S2.1 Support access — time-boxed grant",
+      "w": 1280,
+      "x": 0,
+      "y": 1380
+    },
+    "SaSuspend.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "page": "super-admin",
+      "title": "S2.2 Suspend or offboard a school",
+      "w": 1280,
+      "x": 1360,
+      "y": 1380
+    }
   },
-  "order": [
-    "Main.dc.html", "Join.dc.html", "Code.dc.html", "Request.dc.html", "Pending.dc.html", "NeedsInfo.dc.html", "Approved.dc.html",
-    "OnbAbout.dc.html", "OnbCareer.dc.html", "OnbNetwork.dc.html", "OnbPublish.dc.html",
-    "Me.dc.html", "Directory.dc.html", "Profile.dc.html", "RecipientEmail.dc.html",
-    "AdmDashboard.dc.html", "AdmQueue.dc.html", "AdmReview.dc.html",
-    "AdmRoster.dc.html", "AdmRecord.dc.html", "AdmSuspend.dc.html", "AdmDuplicate.dc.html",
-    "AdmTemplates.dc.html", "AdmFreshness.dc.html", "AdmExport.dc.html",
-    "AdmStaff.dc.html", "AdmSettings.dc.html", "AdmAudit.dc.html",
-    "SaSchools.dc.html", "SaCreate.dc.html", "SaSetup.dc.html",
-    "SaSupport.dc.html", "SaSuspend.dc.html", "SaHealth.dc.html"
+  "createdOnFiles": {
+    "at": "2026-10-28T00:25:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "noteOrder": [
+    "row1",
+    "row2",
+    "row3",
+    "adm1",
+    "adm2",
+    "adm3",
+    "adm4",
+    "admRoles",
+    "admFuture",
+    "sa1",
+    "sa2",
+    "saRules",
+    "lay1",
+    "lay2",
+    "layRules"
   ],
   "notes": {
-    "row1": {"x": 0, "y": -300, "text": "1 · Getting in — invite, sign-up, school review", "kind": "title1", "maxW": 9440, "page": "alumni"},
-    "row2": {"x": 0, "y": 1120, "text": "2 · Onboarding — build the profile, choose visibility", "kind": "title1", "maxW": 5360, "page": "alumni"},
-    "row3": {"x": 0, "y": 2540, "text": "3 · Using the network — profile, directory, contact", "kind": "title1", "maxW": 5360, "page": "alumni"},
-    "adm1": {"x": 0, "y": -300, "text": "A1 · Approvals — let the right graduates in", "kind": "title1", "maxW": 4000, "page": "school-admin"},
-    "adm2": {"x": 0, "y": 1080, "text": "A2 · Alumni records — find, fix, suspend, de-duplicate", "kind": "title1", "maxW": 5360, "page": "school-admin"},
-    "adm3": {"x": 0, "y": 2460, "text": "A3 · Email, freshness and exports", "kind": "title1", "maxW": 4000, "page": "school-admin"},
-    "adm4": {"x": 0, "y": 3840, "text": "A4 · School setup and accountability", "kind": "title1", "maxW": 4000, "page": "school-admin"},
-    "admRoles": {"x": 4160, "y": 0, "w": 420, "text": "Roles (ADR 0005)\n\nSchool admin: everything on this page.\n\nReviewer: dashboard, approval queue (can decide requests), roster and records read-only, audit log. No record actions, exports, templates, staff or settings.\n\nAll admin pages require MFA.", "fill": "blue", "page": "school-admin"},
-    "admFuture": {"x": 4160, "y": 2760, "w": 420, "text": "Later (FUT): CSV import → preview → commit → bulk invitations. Not drawn yet — sign-up via /join is the only way in at launch (DEC-01).", "fill": "gray", "page": "school-admin"},
-    "sa1": {"x": 0, "y": -300, "text": "S1 · Bringing a school onto the platform", "kind": "title1", "maxW": 4000, "page": "super-admin"},
-    "sa2": {"x": 0, "y": 1080, "text": "S2 · Supporting and running the platform", "kind": "title1", "maxW": 4000, "page": "super-admin"},
-    "saRules": {"x": 4160, "y": 0, "w": 420, "text": "Platform admins (Gab, Noah)\n\nWork at alumninetwork.ca/console, with MFA.\n\nThe console shows counts per school, never alumni personal data.\n\nTo see a school's data, open a support grant: reason + max 8 h. The school's admins see it in their audit log.", "fill": "purple", "page": "super-admin"}
+    "adm1": {
+      "kind": "title1",
+      "maxW": 4000,
+      "page": "school-admin",
+      "text": "A1 · Approvals — let the right graduates in",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "adm2": {
+      "kind": "title1",
+      "maxW": 5360,
+      "page": "school-admin",
+      "text": "A2 · Alumni records — find, fix, suspend, de-duplicate",
+      "w": 240,
+      "x": 0,
+      "y": 1080
+    },
+    "adm3": {
+      "kind": "title1",
+      "maxW": 4000,
+      "page": "school-admin",
+      "text": "A3 · Email, freshness and exports",
+      "w": 240,
+      "x": 0,
+      "y": 2460
+    },
+    "adm4": {
+      "kind": "title1",
+      "maxW": 4000,
+      "page": "school-admin",
+      "text": "A4 · School setup and accountability",
+      "w": 240,
+      "x": 0,
+      "y": 3840
+    },
+    "admFuture": {
+      "fill": "gray",
+      "page": "school-admin",
+      "text": "Later (FUT): CSV import → preview → commit → bulk invitations. Not drawn yet — sign-up via /join is the only way in at launch (DEC-01).",
+      "w": 420,
+      "x": 4160,
+      "y": 2760
+    },
+    "admRoles": {
+      "fill": "blue",
+      "page": "school-admin",
+      "text": "Roles (ADR 0005)\n\nSchool admin: everything on this page.\n\nReviewer: dashboard, approval queue (can decide requests), roster and records read-only, audit log. No record actions, exports, templates, staff or settings.\n\nAll admin pages require MFA.",
+      "w": 420,
+      "x": 4160,
+      "y": 0
+    },
+    "lay1": {
+      "kind": "title1",
+      "maxW": 4000,
+      "page": "layout",
+      "text": "Nav bar — one component for every page",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "lay2": {
+      "kind": "title1",
+      "maxW": 4000,
+      "page": "layout",
+      "text": "Every menu, by role (menus shown open)",
+      "w": 240,
+      "x": 0,
+      "y": 760
+    },
+    "layRules": {
+      "fill": "blue",
+      "page": "layout",
+      "text": "Role pill rules\n\nAlumni and applicants: no pill.\nReviewer · School admin · Platform admin: pill beside the avatar.\n\nSomeone with two roles (e.g. staff who graduated) sees their highest role, plus a switch in the menu.\n\nClick the avatar to open/close the menu (in Play).",
+      "w": 460,
+      "x": 1360,
+      "y": 0
+    },
+    "row1": {
+      "kind": "title1",
+      "maxW": 8000,
+      "page": "alumni",
+      "text": "1 · Getting in — invite, sign-up, school review",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "row2": {
+      "kind": "title1",
+      "maxW": 5360,
+      "page": "alumni",
+      "text": "2 · Onboarding — build the profile, choose visibility",
+      "w": 240,
+      "x": 0,
+      "y": 1120
+    },
+    "row3": {
+      "kind": "title1",
+      "maxW": 5360,
+      "page": "alumni",
+      "text": "3 · Using the network — profile, directory, contact",
+      "w": 240,
+      "x": 0,
+      "y": 2540
+    },
+    "sa1": {
+      "kind": "title1",
+      "maxW": 4000,
+      "page": "super-admin",
+      "text": "S1 · Bringing a school onto the platform",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "sa2": {
+      "kind": "title1",
+      "maxW": 4000,
+      "page": "super-admin",
+      "text": "S2 · Supporting and running the platform",
+      "w": 240,
+      "x": 0,
+      "y": 1080
+    },
+    "saRules": {
+      "fill": "purple",
+      "page": "super-admin",
+      "text": "Platform admins (Gab, Noah)\n\nWork at alumninetwork.ca/console, with MFA.\n\nThe console shows counts per school, never alumni personal data.\n\nTo see a school's data, open a support grant: reason + max 8 h. The school's admins see it in their audit log.",
+      "w": 420,
+      "x": 4160,
+      "y": 0
+    }
   },
-  "designSystems": []
+  "order": [
+    "Main.dc.html",
+    "Join.dc.html",
+    "Code.dc.html",
+    "Request.dc.html",
+    "Pending.dc.html",
+    "NeedsInfo.dc.html",
+    "Approved.dc.html",
+    "OnbAbout.dc.html",
+    "OnbCareer.dc.html",
+    "OnbNetwork.dc.html",
+    "OnbPublish.dc.html",
+    "Me.dc.html",
+    "Directory.dc.html",
+    "Profile.dc.html",
+    "RecipientEmail.dc.html",
+    "AdmDashboard.dc.html",
+    "AdmQueue.dc.html",
+    "AdmReview.dc.html",
+    "AdmRoster.dc.html",
+    "AdmRecord.dc.html",
+    "AdmSuspend.dc.html",
+    "AdmDuplicate.dc.html",
+    "AdmTemplates.dc.html",
+    "AdmFreshness.dc.html",
+    "AdmExport.dc.html",
+    "AdmStaff.dc.html",
+    "AdmSettings.dc.html",
+    "AdmAudit.dc.html",
+    "SaSchools.dc.html",
+    "SaCreate.dc.html",
+    "SaSetup.dc.html",
+    "SaSupport.dc.html",
+    "SaSuspend.dc.html",
+    "SaHealth.dc.html",
+    "NavBar.dc.html",
+    "NavAlumnus.dc.html",
+    "NavApplicant.dc.html",
+    "NavReviewer.dc.html",
+    "NavSchoolAdmin.dc.html",
+    "NavStaffAlumnus.dc.html",
+    "NavPlatform.dc.html"
+  ],
+  "pages": [
+    {
+      "id": "alumni",
+      "name": "Alumni"
+    },
+    {
+      "id": "school-admin",
+      "name": "School admin"
+    },
+    {
+      "id": "super-admin",
+      "name": "Super admin"
+    },
+    {
+      "id": "layout",
+      "name": "Layout"
+    }
+  ],
+  "title": "Alumni Full Flow"
 }

@@ -41,85 +41,349 @@ a {
   text-decoration: none;
   color: inherit;
 }
+/* Nav bar (docs/design/nav-bar.md): one bar on every page, drawn by components/NavBar.tsx. */
 .topnav {
   position: sticky;
   top: 0;
   z-index: 100;
-  display: grid;
-  grid-template-columns: minmax(220px, 1fr) auto minmax(220px, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  padding: 12px 42px;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 66px;
+  box-sizing: border-box;
+  padding: 12px 32px;
   background: var(--ink);
   color: #fff;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 8px 24px rgba(5, 18, 49, 0.12);
 }
-.brand {
+.topnavPlatform {
+  background: #15172b;
+}
+/* On the dark bar only: the menu below it has its own focus style. */
+.navBrand:focus-visible,
+.navLinks a:focus-visible,
+.navLang:focus-visible,
+.navSignIn:focus-visible,
+.avatarButton:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+.navBrand {
   display: flex;
   align-items: center;
   gap: 11px;
-  justify-self: start;
+  color: #fff;
 }
-.brandLogo {
-  height: 46px;
-  width: auto;
-  object-fit: contain;
-}
-.brandMonogram {
+.navBrandTile {
   display: grid;
   place-items: center;
   flex: 0 0 42px;
   width: 42px;
   height: 42px;
+  box-sizing: border-box;
+  padding: 4px;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  font-size: 14px;
+  background: #fff;
+  color: var(--ink);
+  object-fit: contain;
+  font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.04em;
 }
-.brandText {
-  padding-left: 2px;
+.navBrandMark {
+  background: #4b2a8a;
+  color: #fff;
 }
-.brandName {
-  font-weight: 750;
-  letter-spacing: 0.01em;
+.navBrandText {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.navBrandName {
   font-size: 14px;
+  font-weight: 700;
 }
-.brandSub {
+.navBrandSub {
   font-size: 9px;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: #9ca8c5;
-  margin-top: 3px;
+  color: #b8c0d8;
 }
-.navlinks {
+.navLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-size: 14px;
+}
+.navLinks a {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 14px;
-  color: #d2d7e4;
-}
-.navlinks a {
-  padding: 9px 13px;
+  gap: 8px;
+  padding: 9px 14px;
   border-radius: 999px;
-  transition: 0.15s;
+  color: #d2d7e4;
+  font-weight: 500;
 }
-.navlinks a:hover,
-.navlinks a.active {
+.navLinks a:hover {
   color: #fff;
   background: rgba(255, 255, 255, 0.08);
 }
-.navcta {
-  display: flex;
-  gap: 9px;
-  align-items: center;
-  justify-self: end;
+.navLinks a[aria-current="page"] {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  font-weight: 700;
 }
-.navSkeleton {
-  width: 150px;
-  height: 38px;
+.navBadge {
+  min-width: 20px;
+  box-sizing: border-box;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: #eab6ce;
+  color: #0b2159;
+  font-size: 11px;
+  font-weight: 800;
+  text-align: center;
+}
+.navRight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.navLang {
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #d2d7e4;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+.navLang:hover {
+  color: #fff;
+}
+.navSignIn {
+  padding: 9px 16px;
+  border: 1px solid #6b7a9e;
   border-radius: 7px;
-  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+}
+.rolePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.rolePill-reviewer {
+  border: 1px solid #8fa6d6;
+  color: #d6e2ff;
+}
+.rolePill-school_admin {
+  background: #eab6ce;
+  color: #0b2159;
+}
+.rolePill-platform_admin {
+  background: #7b5bc4;
+  color: #fff;
+}
+.avatarButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px 3px 3px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+.avatarButton[aria-expanded="true"] {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+}
+.navAvatar {
+  display: grid;
+  place-items: center;
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  color: #0b2159;
+  font-size: 13px;
+  font-weight: 800;
+}
+.navAvatarLarge {
+  flex-basis: 46px;
+  width: 46px;
+  height: 46px;
+  font-size: 16px;
+}
+.navAvatar-alumni {
+  background: #eab6ce;
+}
+.navAvatar-staff {
+  background: #c9d6f2;
+}
+.navAvatar-platform {
+  background: #d9cdf3;
+}
+/* Anchored to the bar (the sticky header is its containing block), under the avatar. */
+.acctPanel {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 24px;
+  width: 320px;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 90px);
+  overflow-y: auto;
+  box-sizing: border-box;
+  background: #fff;
+  border: 1px solid #e2e5ee;
+  border-radius: 14px;
+  box-shadow: 0 24px 60px -20px rgba(11, 33, 89, 0.4);
+  color: #0b2159;
+}
+.acctHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 18px 16px;
+  background: #f7f7f6;
+}
+.acctPanelPlatform .acctHead {
+  background: #f4f0fc;
+}
+.acctWho {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.acctName {
+  font-size: 15px;
+  font-weight: 800;
+}
+.acctEmail {
+  overflow: hidden;
+  color: #4a5575;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.acctStatus {
+  font-size: 12px;
+  font-weight: 700;
+}
+.acctStatus-good {
+  color: #1b5e33;
+}
+.acctStatus-warn {
+  color: #7a4b00;
+}
+.acctStatus-neutral {
+  color: #3a4a70;
+}
+.acctStatus-platform {
+  color: #4b2a8a;
+}
+.menuGroup {
+  display: flex;
+  flex-direction: column;
+  padding: 6px;
+  border-top: 1px solid #eef0f4;
+}
+.menuTitle {
+  padding: 8px 12px 4px;
+  color: #4a5575;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.menuItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 40px;
+  box-sizing: border-box;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #0b2159;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+}
+.menuItem:hover,
+.menuItem:focus {
+  background: #f1f3f8;
+  outline: none;
+}
+.menuItem:focus-visible {
+  outline: 2px solid #0b2159;
+  outline-offset: -2px;
+}
+.menuItemDanger {
+  color: #a1173b;
+  font-weight: 700;
+}
+.menuChip {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.menuChip-count {
+  background: #7b1e3d;
+  color: #fff;
+}
+.menuChip-info {
+  background: #eef0f4;
+  color: #3a4a70;
+}
+.menuChip-good {
+  background: #e3f3e8;
+  color: #1b5e33;
+}
+.menuChip-warn {
+  background: #fff4dc;
+  color: #7a4b00;
+}
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+@media (max-width: 720px) {
+  .topnav {
+    padding: 12px 16px;
+  }
+  /* The links take their own row under the brand and the account button. */
+  .navLinks {
+    order: 3;
+    width: 100%;
+  }
+  .acctPanel {
+    right: 16px;
+  }
 }
 .btn {
   display: inline-flex;
@@ -701,15 +965,6 @@ textarea:focus {
   font-size: 13px;
 }
 @media (max-width: 1100px) {
-  .topnav {
-    grid-template-columns: 1fr auto;
-  }
-  .navlinks {
-    order: 3;
-    grid-column: 1/-1;
-    justify-content: center;
-    margin-top: 8px;
-  }
   .profileGrid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -718,12 +973,6 @@ textarea:focus {
   }
 }
 @media (max-width: 850px) {
-  .topnav {
-    padding: 12px 20px;
-  }
-  .brandText {
-    display: none;
-  }
   .hero {
     grid-template-columns: 1fr;
     padding: 55px 20px;
@@ -768,21 +1017,6 @@ textarea:focus {
   }
 }
 @media (max-width: 600px) {
-  .topnav {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  .brand {
-    flex: 1;
-  }
-  .navcta .btnGhost {
-    display: none;
-  }
-  .navlinks {
-    width: 100%;
-    overflow-x: auto;
-    justify-content: flex-start;
-  }
   .grid3,
   .filterPanel,
   .statCards,
@@ -814,20 +1048,6 @@ textarea:focus {
 }
 
 /* Product V3 */
-.brandIcon {
-  width: 42px !important;
-  height: 42px !important;
-  object-fit: contain;
-  background: transparent;
-}
-.accountLink {
-  font-size: 13px;
-  color: #d2d7e4;
-  padding: 8px 8px;
-}
-.accountLink:hover {
-  color: #fff;
-}
 .textButton {
   border: 0;
   background: transparent;
@@ -1105,38 +1325,9 @@ textarea:focus {
   .onboardingCard {
     padding: 24px;
   }
-  .accountLink {
-    display: none;
-  }
 }
 
 /* V4 polish */
-.brand {
-  align-items: center !important;
-}
-.brandLogo.brandIcon {
-  width: 46px !important;
-  height: 46px !important;
-  border-radius: 0 !important;
-  object-fit: contain !important;
-  object-position: center center !important;
-  display: block !important;
-  flex: 0 0 46px !important;
-  transform: translateY(0) !important;
-}
-.brandText {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 46px;
-}
-.brandName {
-  line-height: 1.05;
-}
-.brandSub {
-  line-height: 1;
-  margin-top: 6px;
-}
 .wizardShell {
   max-width: 1020px;
   margin: 0 auto;
@@ -1332,109 +1523,10 @@ textarea:focus {
   background: var(--paper);
   color: var(--ink);
 }
-.shellHeader {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 12px 28px;
-  background: var(--ink);
-  color: #fff;
-}
-.shellBrand {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  color: #fff;
-}
-.shellBrandMark {
-  display: grid;
-  place-items: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
-  background: #fff;
-  color: var(--ink);
-  font-size: 14px;
-  font-weight: 800;
-}
-.shellBrandText {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-.shellBrandName {
-  font-size: 14px;
-  font-weight: 700;
-}
-.shellBrandSub {
-  font-size: 9px;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  color: #b4bdd4;
-}
-.shellUser {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 14px;
-  font-size: 14px;
-  color: #d2d7e4;
-}
-.shellRole {
-  padding: 5px 10px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-}
-.shellUser .textButton {
-  color: #fff;
-  font-size: 14px;
-}
 .shellBody {
   flex: 1;
   display: flex;
   flex-wrap: wrap;
-}
-.shellNav {
-  flex: 1 1 200px;
-  max-width: 232px;
-  box-sizing: border-box;
-  padding: 20px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  background: #fff;
-  border-right: 1px solid var(--line);
-}
-.shellNav a {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  color: var(--ink);
-  font-size: 14px;
-  font-weight: 500;
-}
-.shellNav a[aria-current="page"] {
-  background: var(--pink-pale);
-  font-weight: 700;
-}
-.shellBadge {
-  min-width: 22px;
-  box-sizing: border-box;
-  padding: 2px 7px;
-  border-radius: 999px;
-  background: var(--burgundy);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-  text-align: center;
 }
 .shellMain {
   flex: 999 1 640px;
@@ -1646,19 +1738,8 @@ textarea:focus {
   font-size: 13px;
 }
 @media (max-width: 700px) {
-  .shellNav {
-    max-width: none;
-    flex-direction: row;
-    overflow-x: auto;
-    padding: 8px 12px;
-    border-right: 0;
-    border-bottom: 1px solid var(--line);
-  }
   .shellMain {
     padding: 20px 16px;
-  }
-  .shellHeader {
-    padding: 12px 16px;
   }
 }
 .formStack {

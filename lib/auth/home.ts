@@ -16,9 +16,11 @@ export type AccountState = {
 
 const STAFF: Enums<"member_role">[] = ["school_admin", "reviewer"];
 
-const isActiveMember = (s: AccountState) => s.membership?.status === "active";
-const isStaff = (s: AccountState) => isActiveMember(s) && STAFF.includes(s.membership!.role);
-const hasActiveProfile = (s: AccountState) => isActiveMember(s) && s.profile?.status === "active";
+// Shared with the nav bar (lib/auth/nav.ts), so it offers exactly the pages these rules open.
+export const isActiveMember = (s: AccountState) => s.membership?.status === "active";
+export const isStaff = (s: AccountState) => isActiveMember(s) && STAFF.includes(s.membership!.role);
+export const hasActiveProfile = (s: AccountState) =>
+  isActiveMember(s) && s.profile?.status === "active";
 const canUseDirectory = (s: AccountState) => hasActiveProfile(s) && s.profile!.onboardingComplete;
 
 /** The page a signed-in person lands on at this school. */

@@ -405,7 +405,8 @@ export function ProfileEditor({ profile, flags, experience, education }: Props) 
         </section>
       </div>
       <aside>
-        <div className="sideCard stickyCard">
+        {/* The nav bar's "Who can see me" links here. */}
+        <div className="sideCard stickyCard" id="visibility">
           <h3>Privacy</h3>
           <label className="switchRow">
             <span>
