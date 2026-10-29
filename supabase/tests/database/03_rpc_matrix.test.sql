@@ -242,5 +242,7 @@ select pg_temp.refused('11111111-1111-4111-8111-000000000002'::uuid, $$ select *
 select pg_temp.refused('11111111-1111-4111-8111-000000000002'::uuid, $$ select public.admin_profile_email('00000000-0000-4000-8000-000000000001') $$, 'alumnus refused console reader 5');
 select pg_temp.refused('11111111-1111-4111-8111-000000000002'::uuid, $$ select * from public.access_request_matches(array['33333333-3333-4333-8333-000000000001']::uuid[]) $$, 'alumnus refused console reader 6');
 select pg_temp.refused('11111111-1111-4111-8111-000000000004'::uuid, $$ select * from public.school_staff('aaaaaaaa-0000-4000-8000-000000000001') $$, 'reviewer cannot list staff');
+select pg_temp.refused('11111111-1111-4111-8111-000000000004'::uuid, $$ select public.approve_email_template_version('aaaaaaaa-0000-4000-8000-000000000001','welcome','en','X','Y') $$, 'reviewer cannot approve a template version');
+select pg_temp.refused('11111111-1111-4111-8111-000000000001'::uuid, $$ select public.approve_email_template_version('aaaaaaaa-0000-4000-8000-000000000002','welcome','en','X','Y') $$, 'template version approval refuses another school');
 select * from finish();
 rollback;

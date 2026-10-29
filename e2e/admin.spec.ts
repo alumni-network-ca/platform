@@ -197,3 +197,63 @@ test("admin saves school settings without changing branding", async ({
   });
   expect(await blockingViolations(page)).toEqual([]);
 });
+
+test("school admin approves the submitted template in both languages", async ({
+  page,
+  context,
+  baseURL,
+}) => {
+  const owner = adminClient(stack);
+  const slug = "templates-" + crypto.randomUUID().slice(0, 12);
+  const fixture = await owner
+    .from("institutions")
+    .insert({ name: "Templates test school", slug })
+    .select("id")
+    .single();
+  if (fixture.error) throw fixture.error;
+  const member = await owner.from("institution_memberships").insert({
+    institution_id: fixture.data.id,
+    user_id: "11111111-1111-4111-8111-000000000001",
+    role: "school_admin",
+  });
+  if (member.error) throw member.error;
+  const address = addressOf(baseURL!, slug);
+  await signInAs(context, address, accounts.admin);
+  for (const locale of ["en", "fr"] as const) {
+    await page.goto(
+      addressOf(baseURL!, slug, "/admin/templates?key=access_approved&locale=" + locale),
+    );
+    await page.getByLabel("Subject", { exact: true }).fill("Class {graduation_year}");
+    await page.getByLabel("Message", { exact: true }).fill("Hello {first_name} ");
+    await page.getByRole("button", { name: "{onboarding_link}", exact: true }).click();
+    await page.getByRole("button", { name: "Approve this version", exact: true }).click();
+    await expect(page.getByRole("status")).toContainText("Changes saved.");
+    const result = await owner
+      .from("email_templates")
+      .select("subject,body,status")
+      .eq("institution_id", fixture.data.id)
+      .eq("key", "access_approved")
+      .eq("locale", locale)
+      .single();
+    expect(result.data).toEqual({
+      subject: "Class {graduation_year}",
+      body: "Hello {first_name} {onboarding_link}",
+      status: "approved",
+    });
+    expect(await blockingViolations(page)).toEqual([]);
+  }
+});
+test("reviewer is forbidden from templates and school settings", async ({
+  page,
+  context,
+  baseURL,
+}) => {
+  await signInAs(context, baseURL!, accounts.reviewer);
+  for (const path of ["/admin/templates", "/admin/settings"]) {
+    const response = await page.goto(path);
+    expect(response?.status()).toBe(403);
+    await expect(
+      page.getByRole("heading", { name: "You do not have access to this page" }),
+    ).toBeVisible();
+  }
+});

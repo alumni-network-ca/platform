@@ -267,7 +267,7 @@ select set_eq(
     'save_my_profile', 'record_consent', 'confirm_still_accurate_in_app', 'export_my_data', 'set_my_visibility',
     'withdraw_consent', 'delete_my_profile', 'confirm_still_accurate',
     'admin_update_profile', 'set_profile_status', 'invite_staff', 'accept_staff_invitation', 'change_staff_role',
-    'remove_staff', 'save_email_template', 'approve_email_template', 'update_school_settings',
+    'remove_staff', 'approve_email_template_version', 'save_email_template', 'approve_email_template', 'update_school_settings',
     'platform_create_school', 'platform_appoint_school_admin', 'platform_open_grant', 'platform_revoke_grant',
     'platform_set_school_status', 'issue_staff_invitation_link', 'revoke_staff_invitation',
     -- not audited on purpose: reads, preferences, and contact reveals (contact_events)
@@ -288,5 +288,6 @@ select set_config('test.demote_token', public.issue_staff_invitation_link(curren
 select public.accept_staff_invitation(current_setting('test.demote_token'));
 reset role;
 select is((select role::text from public.institution_memberships where institution_id = 'aaaaaaaa-0000-4000-8000-000000000001' and user_id = '11111111-1111-4111-8111-000000000001'), 'school_admin', 'accepting a reviewer invitation never demotes an active school admin');
+select is(pg_temp.audited($$ select public.approve_email_template_version('aaaaaaaa-0000-4000-8000-000000000001','welcome','en','Atomic approval','Hello {first_name}') $$, '11111111-1111-4111-8111-000000000001'), array['template.saved','template.approved'], 'version approval audits both operations in one transaction');
 select * from finish();
 rollback;
