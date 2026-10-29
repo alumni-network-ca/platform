@@ -69,6 +69,7 @@ items:
     ac:
       - Every service lists both partners as owners/admins.
       - Nothing is owned only by a personal account.
+      - Resend has alumninetwork.ca verified (SPF, DKIM, DMARC), which unblocks EML-07.
 
   - key: BIZ-05
     title: "Approve the launch budget and add a business payment method"
