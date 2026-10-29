@@ -119,3 +119,35 @@ test("admin suspends an unclaimed record and the reason reaches the audit log", 
     await owner.from("alumni_profiles").delete().eq("id", fixture.data.id);
   }
 });
+
+test("reviewer receives 403 on staff management", async ({ page, context, baseURL }) => {
+  await signInAs(context, baseURL!, accounts.reviewer);
+  const response = await page.goto("/admin/staff");
+  expect(response?.status()).toBe(403);
+  await expect(
+    page.getByRole("heading", { name: "You do not have access to this page" }),
+  ).toBeVisible();
+});
+
+test("school admin invites and revokes staff", async ({ page, context, baseURL }) => {
+  await signInAs(context, baseURL!, accounts.admin);
+  await page.goto("/admin/staff");
+  const email = "staff-e2e-" + crypto.randomUUID() + "@example.test";
+  await page.getByLabel("Invite by email").fill(email);
+  await page.getByRole("button", { name: "Send invitation", exact: true }).click();
+  const inviteForm = page
+    .getByRole("button", { name: "Send invitation", exact: true })
+    .locator("..")
+    .locator("..");
+  await expect(inviteForm.getByLabel("Invitation link")).toHaveValue(/\/staff\/accept\?token=/);
+  const invitation = page
+    .getByRole("heading", { name: "Open invitations" })
+    .locator("..")
+    .getByText(email, { exact: true })
+    .locator("..");
+  await invitation.getByRole("button", { name: "Resend invitation", exact: true }).click();
+  await expect(invitation.getByLabel("Invitation link")).toHaveValue(/token=/);
+  await invitation.getByRole("button", { name: "Revoke", exact: true }).click();
+  await expect(page.getByText(email, { exact: true })).toHaveCount(0);
+  expect(await blockingViolations(page)).toEqual([]);
+});

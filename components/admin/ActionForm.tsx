@@ -8,6 +8,7 @@ export function ActionForm({
   t,
   confirm,
   danger = false,
+  disabled = false,
 }: {
   action: (state: ActionResult, form: FormData) => Promise<ActionResult>;
   children?: React.ReactNode;
@@ -15,6 +16,7 @@ export function ActionForm({
   t: AdminCopy;
   confirm?: string;
   danger?: boolean;
+  disabled?: boolean;
 }) {
   const [state, formAction, pending] = useActionState(action, { error: null });
   return (
@@ -43,7 +45,10 @@ export function ActionForm({
         </label>
       )}
       <div className="formActions">
-        <button className={danger ? "btn btnDanger" : "btn btnPrimary"} disabled={pending}>
+        <button
+          className={danger ? "btn btnDanger" : "btn btnPrimary"}
+          disabled={pending || disabled}
+        >
           {label}
         </button>
       </div>

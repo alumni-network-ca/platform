@@ -50,7 +50,7 @@ Signed-out pages (Join, Code) use the `guest` role: FR and Sign in, no avatar.
 | A3.1 Email templates (`AdmTemplates`) | `/admin/templates` | EML-03 | `save_email_template`, `approve_email_template` |
 | A3.2 Freshness (`AdmFreshness`) | `/admin/freshness` | FRS-04 | needs FRS-02 |
 | A3.3 Export (`AdmExport`) | `/admin/export` | EXP-01, EXP-02 | new |
-| A4.1 Staff and roles (`AdmStaff`) | `/admin/staff` | ADM-06 | `invite_staff`, `change_staff_role`, `remove_staff`; new: staff names and emails, revoking an invitation |
+| **Built** · A4.1 Staff and roles (`AdmStaff`) | `/admin/staff` | ADM-06 | `invite_staff`, `change_staff_role`, `remove_staff`; `school_staff`, `issue_staff_invitation_link`, `revoke_staff_invitation` |
 | A4.2 School settings (`AdmSettings`) | `/admin/settings` | ADM-08 | `update_school_settings`; logo upload needs storage |
 | A4.3 Audit log (`AdmAudit`) | `/admin/audit` | ADM-07 | ready; new: actor names |
 
