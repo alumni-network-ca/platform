@@ -284,9 +284,8 @@ export function navModel(input: NavInput): NavModel {
             item("approvals", "/admin/approvals", {
               chip: pending ? { text: String(pending), kind: "count" } : undefined,
             }),
-          // TODO(ADM-03): /admin/alumni.
           can.has("records.read") &&
-            item("alumni", "#", {
+            item("alumni", "/admin/alumni", {
               chip: can.has("records.edit") ? undefined : { text: t.readOnly, kind: "info" },
             }),
           // TODO(ADM-06): /admin/staff.
