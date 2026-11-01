@@ -28,7 +28,7 @@ export default async function JoinPage({
   return (
     <>
       <Nav />
-      <main className="joinPage">
+      <main className={`joinPage${user ? "" : " joinSignupPage"}`}>
         {destination === "/join" && <JoinProgress step={user ? 1 : 0} locale={locale} />}
         {user ? (
           <div className="joinRequestLayout">
