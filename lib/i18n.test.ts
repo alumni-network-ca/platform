@@ -31,10 +31,15 @@ describe("translations", () => {
   it("uses the same {placeholders} in both languages", () => {
     const placeholders = (locale: "en" | "fr") =>
       Object.fromEntries(
-        Object.entries(translations[locale].nav).map(([key, text]) => [
-          key,
-          [...text.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort(),
-        ]),
+        keyPaths(translations[locale]).map((path) => {
+          const text = path
+            .split(".")
+            .reduce<unknown>(
+              (node, key) => (node as Record<string, unknown>)[key],
+              translations[locale],
+            );
+          return [path, [...String(text).matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort()];
+        }),
       );
     expect(placeholders("fr")).toEqual(placeholders("en"));
   });

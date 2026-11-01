@@ -9,7 +9,8 @@ const homes: [school: string, email: string, home: string][] = [
   ["herzliah", accounts.admin, "/admin"],
   ["herzliah", accounts.reviewer, "/admin"],
   ["herzliah", accounts.alumni, "/directory"],
-  ["herzliah", accounts.newMember, "/onboarding"],
+  // homeFor() says /onboarding, which resumes at the first step not saved yet.
+  ["herzliah", accounts.newMember, "/onboarding/welcome"],
   ["herzliah", accounts.pending, "/account/pending"],
   ["herzliah", accounts.needsInfo, "/account/needs-info"],
   ["herzliah", accounts.rejected, "/account/rejected"],
