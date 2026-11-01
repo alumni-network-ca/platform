@@ -261,10 +261,11 @@ describe("navModel", () => {
     it("Home and Directory, no pill, the profile and account menu", () => {
       const model = at(alumnus);
       expect(links(model)).toEqual([
-        ["home", "/directory"],
+        ["home", "/home"],
         ["directory", "/directory"],
       ]);
-      expect(model.links[0]?.activeOn).toEqual([]);
+      expect(model.links[0]?.activeOn).toEqual(["/home"]);
+      expect(model.brand.href).toBe("/home");
       expect(model.pill).toBeNull();
       expect(model.account).toMatchObject({
         avatar: "alumni",
@@ -374,7 +375,11 @@ describe("navModel", () => {
         "account",
         "signOut",
       ]);
-      expect(menu(model)[1]).toEqual(["alsoAlumnus", ["myAlumniProfile", "browseAsAlumnus"]]);
+      expect(menu(model)[1]).toEqual([
+        "alsoAlumnus",
+        ["alumniHome", "myAlumniProfile", "browseAsAlumnus"],
+      ]);
+      expect(item(model, "alumniHome")?.href).toBe("/home");
       expect(model.account?.sections[1]?.title).toBe("You are also an alumnus");
     });
   });

@@ -25,6 +25,11 @@ async function signUp(page: Page, email: string) {
 const badPassword = (page: Page) =>
   expect(page.locator(".notice[role=alert]")).toHaveText("Wrong email or password.");
 
+test("password sign-in without a destination opens the alumni home", async ({ page, baseURL }) => {
+  await signIn(page, accounts.alumni);
+  await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/home"));
+});
+
 test("the public email Join link and navbar open the same account creation page", async ({
   page,
 }, testInfo) => {

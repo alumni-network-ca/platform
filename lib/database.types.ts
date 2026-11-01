@@ -1479,7 +1479,13 @@ export type Database = {
         }[];
       };
       search_directory: {
-        Args: { p_filters?: Json; p_inst: string; p_limit?: number; p_offset?: number };
+        Args: {
+          p_filters?: Json;
+          p_inst: string;
+          p_limit?: number;
+          p_offset?: number;
+          p_sort?: string;
+        };
         Returns: {
           career_field_en: string;
           career_field_fr: string;
@@ -1494,6 +1500,7 @@ export type Database = {
           last_name: string;
           offers: string[];
           preferred_name: string;
+          published_at: string;
           schools: string[];
           total_count: number;
         }[];

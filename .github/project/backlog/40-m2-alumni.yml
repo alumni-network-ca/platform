@@ -479,6 +479,25 @@ items:
     ac:
       - An automated check crawls the public pages as anon and finds no seeded personal data.
 
+  - key: DIR-06
+    title: "Alumni home page (/home)"
+    epic: EPIC-DIR
+    labels: [type:feature, area:directory, P1]
+    size: M
+    depends: [DIR-01, ONB-05]
+    reqs: [F5, F7]
+    summary: |
+      The landing page for an alumnus who finished onboarding (design 3.0 Home; ADR 0014 as amended): the yearly
+      "still accurate?" question when due, search and "open to" shortcuts into the directory, three classmates
+      (a different three on each visit), the latest members to publish, their own visibility and the people they
+      contacted. Reads go through RLS: search_directory (sorts name, recent, random) and the reader's own
+      contact_events.
+    ac:
+      - homeFor() sends an onboarded alumnus to /home; the nav's Home link and brand open it.
+      - Classmates and newcomers never include hidden, suspended or unfinished profiles, nor the reader.
+      - Answering "Yes, still accurate" calls confirm_still_accurate_in_app and the question goes away for a year.
+      - EN and FR strings; axe passes; works at phone width.
+
   # ---------------------------------------------------------------- contact (WS3)
   - key: CON-01
     title: "initiate_contact RPC: checks, reveal, dedupe, contact_events"

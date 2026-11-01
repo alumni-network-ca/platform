@@ -169,8 +169,8 @@ export function navModel(input: NavInput): NavModel {
   if (role === "alumnus" && state) {
     const home = homeFor(state);
     links = [
-      // Home has no page of its own yet: it is the person's home, which is the directory once onboarding is done.
-      { key: "home", label: t.home, href: home, activeOn: home === "/directory" ? [] : [home] },
+      // The alumni home page once onboarding is done (DIR-06); until then, onboarding.
+      { key: "home", label: t.home, href: home, activeOn: [home] },
       {
         key: "directory",
         label: t.directory,
@@ -302,7 +302,11 @@ export function navModel(input: NavInput): NavModel {
       alsoAlumnus &&
         section(
           "alsoAlumnus",
-          [item("myAlumniProfile", "/me"), item("browseAsAlumnus", "/directory")],
+          [
+            item("alumniHome", "/home"),
+            item("myAlumniProfile", "/me"),
+            item("browseAsAlumnus", "/directory"),
+          ],
           t.alsoAlumnusSection,
         ),
       section(

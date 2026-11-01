@@ -27,7 +27,7 @@ const canUseDirectory = (s: AccountState) => hasActiveProfile(s) && s.profile!.o
 export function homeFor(state: AccountState): string {
   if (isStaff(state)) return "/admin";
   if (isActiveMember(state)) {
-    if (canUseDirectory(state)) return "/directory";
+    if (canUseDirectory(state)) return "/home";
     if (hasActiveProfile(state)) return "/onboarding";
     return "/account/suspended";
   }
@@ -50,7 +50,7 @@ export function homeFor(state: AccountState): string {
 export function canOpen(state: AccountState, path: string): boolean {
   const [pathname = "/"] = path.split(/[?#]/);
   const under = (prefix: string) => pathname === prefix || pathname.startsWith(`${prefix}/`);
-  if (under("/directory") || under("/profile")) return canUseDirectory(state);
+  if (under("/home") || under("/directory") || under("/profile")) return canUseDirectory(state);
   if (under("/admin")) return isStaff(state);
   if (under("/onboarding") || under("/me")) return hasActiveProfile(state);
   // Sign-in settings are open to anyone signed in, whatever their state at this school.
