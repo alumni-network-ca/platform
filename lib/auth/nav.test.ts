@@ -128,7 +128,7 @@ describe("navRole", () => {
 });
 
 describe("navModel", () => {
-  it("guest: brand, language and sign-in only", () => {
+  it("guest: brand, language, sign-in and the public Join entry", () => {
     const model = at({ user: null, state: null });
     expect(model.theme).toBe("school");
     expect(model.brand).toMatchObject({
@@ -141,6 +141,7 @@ describe("navModel", () => {
     expect(model.pill).toBeNull();
     expect(model.account).toBeNull();
     expect(model.signIn).toEqual({ href: "/login", label: "Sign in" });
+    expect(model.join).toEqual({ href: "/join", label: "Join now" });
     expect(model.language).toEqual({ switchTo: "fr", code: "FR", name: "Français" });
   });
 
@@ -153,6 +154,7 @@ describe("navModel", () => {
       monogram: "AN",
     });
     expect(model.signIn?.href).toBe("/login");
+    expect(model.join).toBeNull();
   });
 
   it("an account with no console access on the root domain can only sign out", () => {
@@ -181,7 +183,7 @@ describe("navModel", () => {
         buttonLabel: "Account menu for Dana Levy",
       });
       expect(menu(model)).toEqual([
-        ["request", ["myRequest"]],
+        ["request", ["myRequest", "editRequest"]],
         ["account", ["language"]],
         ["help", ["withdrawRequest"]],
         ["signOut", ["signOut"]],

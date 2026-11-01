@@ -134,6 +134,11 @@ export function NavBar({ model }: { model: NavModel }) {
                 {model.signIn.label}
               </Link>
             )}
+            {model.join && (
+              <Link className="navJoin" href={model.join.href}>
+                {model.join.label}
+              </Link>
+            )}
           </>
         )}
       </div>

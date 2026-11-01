@@ -55,6 +55,8 @@ export type NavModel = {
   account: NavAccount | null;
   /** Shown to signed-out visitors only. */
   signIn: { href: string; label: string } | null;
+  /** Public account creation at this school; never shown on the platform console. */
+  join: { href: string; label: string } | null;
   language: { switchTo: Locale; code: string; name: string };
   /** Where signing out lands. */
   signOutTo: string;
@@ -236,7 +238,10 @@ export function navModel(input: NavInput): NavModel {
     status = stateStatus;
     const open = state.request === "pending" || state.request === "needs_info";
     sections = [
-      section("request", [stateItem, item("requestAccess", "/join")]),
+      section("request", [
+        stateItem,
+        open ? item("editRequest", "/join/edit") : item("requestAccess", "/join"),
+      ]),
       section("account", [language], t.accountSection),
       section("help", [
         contact,
@@ -428,6 +433,7 @@ export function navModel(input: NavInput): NavModel {
       sections: [...sections.filter((s) => s.items.length), signOut],
     },
     signIn: user ? null : { href: "/login", label: t.signIn },
+    join: !user && school ? { href: "/join", label: t.joinNow } : null,
     language: {
       switchTo: input.locale === "fr" ? "en" : "fr",
       code: t.otherLanguageCode,

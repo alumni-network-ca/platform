@@ -112,6 +112,18 @@ describe("canOpen", () => {
     expect(canOpen(pending, "/directory-export")).toBe(true);
     expect(canOpen(alumnus, "/administrator")).toBe(true);
   });
+
+  it("allows request editing only while this school's request awaits a decision", () => {
+    expect(canOpen(pending, "/join/edit")).toBe(true);
+    expect(canOpen({ ...none, request: "needs_info" }, "/join/edit")).toBe(true);
+    expect(canOpen(none, "/join/edit")).toBe(false);
+    expect(canOpen({ ...none, request: "rejected" }, "/join/edit")).toBe(false);
+    expect(canOpen(alumnus, "/join/edit")).toBe(false);
+    expect(canOpen(staff, "/join/edit")).toBe(false);
+    expect(canOpen({ ...pending, membership: member("alumni", "suspended") }, "/join/edit")).toBe(
+      false,
+    );
+  });
 });
 
 describe("safeNext", () => {

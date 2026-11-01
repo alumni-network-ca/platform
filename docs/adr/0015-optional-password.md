@@ -4,6 +4,8 @@
 
 ## Context
 
+Updated by [ADR 0016](0016-account-signup-and-school-admission.md): separate account creation and school admission; code sign-in hidden, password recovery available.
+
 ADR 0014 made the emailed code the only way to sign in. In use, every sign-in then costs an email, and email sending is rate-limited: a free Supabase project with the built-in sender allows about two auth emails an hour for the whole project, and even with our own sender (EML-04) a person who signs in often, or a tester, keeps waiting for the inbox. People who sign in often want to type a password, and password managers fill it for them.
 
 ## Decision

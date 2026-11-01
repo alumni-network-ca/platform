@@ -23,3 +23,4 @@ Each ADR records one decision: its context, the decision itself and its conseque
 | [0013](0013-git-workflow.md) | Git workflow and releases | Accepted | — |
 | [0014](0014-passwordless-sign-in.md) | Passwordless sign-in with an emailed code, and landing routing | Accepted, amended by 0015 | DEC-15 |
 | [0015](0015-optional-password.md) | Optional password alongside the emailed code | Accepted | DEC-16 |
+| [0016](0016-account-signup-and-school-admission.md) | Separate account creation from school admission; password sign-in | Accepted, November 1 product review | — |

@@ -34,7 +34,6 @@ test.describe("platform console", () => {
     baseURL,
   }) => {
     await page.goto(root(baseURL!, "/login?next=%2Fconsole"));
-    await page.getByRole("button", { name: "Sign in with a password" }).click();
     await page.getByLabel("Email address").fill(accounts.system);
     await page.getByLabel("Password", { exact: true }).fill(LOCAL_PASSWORD);
     await page.getByRole("button", { name: "Sign in", exact: true }).click();

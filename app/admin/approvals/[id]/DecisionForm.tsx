@@ -2,7 +2,7 @@
 import { useActionState, useState } from "react";
 import type { Database } from "@/lib/database";
 import { format } from "@/lib/i18n";
-import { errorMessage, type AdminCopy } from "@/lib/admin/forms";
+import { errorMessage, type AdminCopy, type ActionResult } from "@/lib/admin/forms";
 import { decideRequest } from "./actions";
 type Match = Database["public"]["Functions"]["access_request_matches"]["Returns"][number];
 export function DecisionForm({
@@ -18,7 +18,14 @@ export function DecisionForm({
 }) {
   const [choice, setChoice] = useState("approve");
   const [reason, setReason] = useState<string>(t.notGraduate);
-  const [state, action, pending] = useActionState(decideRequest.bind(null, id), { error: null });
+  const [state, action, pending] = useActionState(
+    async (previous: ActionResult, form: FormData) => {
+      const result = await decideRequest(id, previous, form);
+      if (result.next) window.location.assign(result.next);
+      return result;
+    },
+    { error: null },
+  );
   const linkable = matches.filter((m) => !m.claimed);
   return (
     <form action={action} className="panel">

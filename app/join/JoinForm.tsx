@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
-import { requestAccess, type JoinResult } from "./actions";
+import { requestAccess, updateRequest, type JoinResult } from "./actions";
 
 const TEXT = {
   en: {
@@ -11,7 +11,10 @@ const TEXT = {
     maidenName: "Last name at school, if different (optional)",
     gradYear: "Graduation year",
     note: "Anything that helps the school recognise you (optional)",
-    submit: "Send my request",
+    submit: "Submit for school review",
+    save: "Save request details",
+    privacy:
+      "Only authorised school staff can read this request. Alumni access stays locked until a reviewer approves it.",
     sending: "Sending…",
     errors: {
       missing: "Please fill in your name and graduation year.",
@@ -26,6 +29,9 @@ const TEXT = {
     gradYear: "Année de graduation",
     note: "Tout ce qui aide l'école à vous reconnaître (facultatif)",
     submit: "Envoyer ma demande",
+    save: "Enregistrer les modifications",
+    privacy:
+      "Seul le personnel autorisé de l'école peut lire cette demande. L'accès au réseau reste bloqué jusqu'à l'approbation d'un réviseur.",
     sending: "Envoi…",
     errors: {
       missing: "Veuillez indiquer votre nom et votre année de graduation.",
@@ -35,12 +41,27 @@ const TEXT = {
   },
 };
 
-export function JoinForm() {
+export type RequestDetails = {
+  first_name: string;
+  last_name: string;
+  maiden_name: string | null;
+  grad_year: number;
+  note: string | null;
+};
+
+export function JoinForm({ initial }: { initial?: RequestDetails }) {
   const { locale } = useLanguage();
   const t = TEXT[locale];
-  const [result, action, pending] = useActionState<JoinResult, FormData>(requestAccess, {
-    error: null,
-  });
+  const [result, action, pending] = useActionState<JoinResult, FormData>(
+    async (previous, form) => {
+      const result = await (initial ? updateRequest : requestAccess)(previous, form);
+      if (result.next) window.location.assign(result.next);
+      return result;
+    },
+    {
+      error: null,
+    },
+  );
   const thisYear = new Date().getFullYear();
   return (
     <form action={action} className="authForm">
@@ -49,6 +70,7 @@ export function JoinForm() {
         <input
           className="input"
           name="first_name"
+          defaultValue={initial?.first_name}
           autoComplete="given-name"
           maxLength={80}
           required
@@ -59,6 +81,7 @@ export function JoinForm() {
         <input
           className="input"
           name="last_name"
+          defaultValue={initial?.last_name}
           autoComplete="family-name"
           maxLength={80}
           required
@@ -66,13 +89,19 @@ export function JoinForm() {
       </label>
       <label>
         {t.maidenName}
-        <input className="input" name="maiden_name" maxLength={80} />
+        <input
+          className="input"
+          name="maiden_name"
+          maxLength={80}
+          defaultValue={initial?.maiden_name ?? ""}
+        />
       </label>
       <label>
         {t.gradYear}
         <input
           className="input"
           name="grad_year"
+          defaultValue={initial?.grad_year}
           type="number"
           inputMode="numeric"
           min={1900}
@@ -82,10 +111,17 @@ export function JoinForm() {
       </label>
       <label>
         {t.note}
-        <textarea className="input" name="note" rows={3} maxLength={1000} />
+        <textarea
+          className="input"
+          name="note"
+          rows={3}
+          maxLength={1000}
+          defaultValue={initial?.note ?? ""}
+        />
       </label>
+      <p className="microcopy muted">{t.privacy}</p>
       <button className="btn btnPrimary btnWide" disabled={pending}>
-        {pending ? t.sending : t.submit}
+        {pending ? t.sending : initial ? t.save : t.submit}
       </button>
       {result.error && (
         <div className="notice" role="alert">

@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Alumni Full Flow — Account & admission design</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#eceef2;color:#0b2159;font:14px Arial,sans-serif}button,a{font:inherit}button{cursor:pointer}a{color:#7b1e3d}button:focus-visible,a:focus-visible{outline:3px solid #a7486c;outline-offset:3px}
+header{background:white;border-bottom:1px solid #d7dce7;padding:18px 24px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}header h1{margin:5px 0;font-size:20px}header p{margin:0;color:#66708a;font-size:12px}.tag{font-size:10px;letter-spacing:.12em;color:#7b1e3d;text-transform:uppercase;font-weight:bold}
+.controls{display:flex;gap:8px}.controls button{border:1px solid #c8cfdf;border-radius:6px;padding:8px 12px;background:#fff;color:#0b2159}.controls button[aria-pressed=true]{background:#0b2159;color:white;border-color:#0b2159}
+.workspace{display:grid;grid-template-columns:214px minmax(0,1fr);gap:22px;padding:22px}.screens{background:#fff;padding:16px 10px;border-radius:10px;border:1px solid #dce1ea;align-self:start;display:grid;gap:4px}.screens strong{padding:8px 10px;color:#7b1e3d;font-size:10px;letter-spacing:.1em;text-transform:uppercase}.screens a{display:block;text-decoration:none;color:#4a5575;padding:10px;border-radius:6px;font-size:12px;line-height:1.35}.screens a[aria-current=page]{background:#f6e9ee;color:#7b1e3d;font-weight:bold}.screens a:hover{background:#f2f4f8}.frame-label{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;font-size:12px}.stage{position:relative;overflow:hidden;width:100%;border-radius:10px;background:#fff;box-shadow:0 8px 24px #0b215914;border:1px solid #d8deea}.stage iframe{border:0;display:block;transform-origin:top left;background:#f7f7f6}.next{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:14px;flex-wrap:wrap;font-size:12px;color:#66708a}.next a{border:1px solid #c8cfdf;border-radius:6px;background:white;text-decoration:none;padding:8px 12px;font-weight:bold}
+#error{display:none;padding:18px;color:#9d193f}.hidden{display:none!important}@media(max-width:760px){.workspace{grid-template-columns:1fr;padding:12px;gap:12px}.screens{display:flex;overflow:auto;gap:4px;align-items:center}.screens strong{display:none}.screens a{flex-shrink:0;max-width:160px}header{padding:14px}.frame-label{flex-wrap:wrap}}
+</style>
+<script src="./signup-preview.js" defer></script>
+</head>
+<body>
+<header><div><span class="tag">Alumni Full Flow / Alumni</span><h1>Create account → request access → school approval</h1><p>Design proposal · November 1, 2026 · Same .dc.html sources as the Claude canvas</p></div><div class="controls" aria-label="Preview viewport"><button id="desktop" aria-pressed="true">Desktop · 1280</button><button id="mobile" aria-pressed="false">Mobile · 390</button></div></header>
+<div class="workspace">
+<nav class="screens" aria-label="Design screens">
+<strong>Entry points</strong>
+<a href="#Welcome">Public page & Join now</a><a href="#SignIn">Existing account · Sign in</a>
+<strong>New applicant</strong>
+<a href="#Join">1 · Create account</a><a href="#VerifyEmail">2 · Confirm email</a><a href="#ConfirmEmailMessage">Confirmation email</a><a href="#Request">3 · Request alumni access</a><a href="#Pending">4 · Waiting for school</a><a href="#RequestEdit">Edit pending request</a>
+<strong>School decision</strong>
+<a href="#SignupReview">5 · School reviewer</a><a href="#NeedsInfo">More information needed</a><a href="#RequestDeclined">Request not approved</a><a href="#Approved">Approval email</a><a href="#AccessApproved">6 · Access approved</a>
+</nav>
+<main><div class="frame-label"><strong id="screen-title">Loading design…</strong><span>Design only · no accounts or emails are created</span></div><p id="error" role="alert"></p><div class="stage" id="stage"><iframe title="Alumni flow design" sandbox="allow-scripts"></iframe></div><div class="next"><span id="screen-note"></span><a id="next-screen" href="#Join">Next screen →</a></div></main>
+</div>
+</body></html>

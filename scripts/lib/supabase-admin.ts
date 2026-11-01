@@ -7,7 +7,13 @@ export type Target = { url: string; secretKey: string };
 
 /** API URL, keys and Mailpit URL of the local stack started with `supabase start`. Also used by e2e tests. */
 export function localStack(): Target & { publishableKey: string; mailpitUrl: string } {
-  const output = execFileSync("supabase", ["status", "-o", "env"], { encoding: "utf8" });
+  // An isolated local stack lets worktree tests run without reconfiguring another checkout's Auth service.
+  const workdir = process.env.SUPABASE_WORKDIR;
+  const output = execFileSync(
+    "supabase",
+    ["status", "-o", "env", ...(workdir ? ["--workdir", workdir] : [])],
+    { encoding: "utf8" },
+  );
   const env = new Map(
     output.split(/\r?\n/).flatMap((line) => {
       const match = line.match(/^([A-Z_]+)="?(.*?)"?$/);

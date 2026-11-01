@@ -25,6 +25,7 @@ test.describe("nav bar", () => {
     const header = page.getByRole("banner");
     await expect(header.getByRole("link", { name: /^Herzliah Alumni Network/ })).toBeVisible();
     await expect(header.getByRole("link", { name: "Sign in" })).toHaveAttribute("href", "/login");
+    await expect(header.getByRole("link", { name: "Join now" })).toHaveAttribute("href", "/join");
     await expect(mainNav(page)).toHaveCount(0);
     await expect(accountButton(page)).toHaveCount(0);
     await expect(pill(page)).toHaveCount(0);
@@ -108,6 +109,7 @@ test.describe("nav bar", () => {
     await expect(page.getByText("Request pending with Herzliah")).toBeVisible();
     expect(await menuItems(page)).toEqual([
       "My request",
+      "Edit my request",
       "Language",
       "Withdraw my request",
       "Sign out",

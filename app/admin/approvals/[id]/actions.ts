@@ -1,13 +1,12 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { requireStaff } from "@/lib/auth/staff";
 import { actionError, field, type ActionResult } from "@/lib/admin/forms";
 export async function decideRequest(
   id: string,
   _: ActionResult,
   form: FormData,
-): Promise<ActionResult> {
+): Promise<ActionResult & { next?: string }> {
   const { supabase, school } = await requireStaff("/admin/approvals/" + id, "requests.decide");
   const { data, error: lookupError } = await supabase
     .from("access_requests")
@@ -34,5 +33,8 @@ export async function decideRequest(
   });
   if (error) return actionError(error);
   revalidatePath("/admin", "layout");
-  redirect("/admin/approvals?tab=" + (decision === "needs_info" ? "needs_info" : "decided"));
+  return {
+    error: null,
+    next: "/admin/approvals?tab=" + (decision === "needs_info" ? "needs_info" : "decided"),
+  };
 }

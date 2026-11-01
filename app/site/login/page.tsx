@@ -8,7 +8,7 @@ export default function ConsoleLoginPage() {
     <>
       <Nav />
       <main className="authPage">
-        <section className="authCard">
+        <section className="authCard joinAuth">
           <Suspense fallback={null}>
             <SignInForm networkName="Alumni Network" audience="console" />
           </Suspense>

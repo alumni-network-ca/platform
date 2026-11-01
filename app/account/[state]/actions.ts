@@ -1,13 +1,12 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { requireAccess } from "@/lib/auth/account";
 
 /** The applicant's answer to the school's question; the request goes back to the queue as pending. */
 export async function replyToInfoRequest(form: FormData) {
   const { school, supabase, user } = await requireAccess("/account/needs-info");
   const reply = String(form.get("reply") ?? "").trim();
-  if (!reply) redirect("/account/needs-info");
+  if (!reply || reply.length > 1000) return { error: true };
   const { data: request, error: readError } = await supabase
     .from("access_requests")
     .select("id")
@@ -23,5 +22,5 @@ export async function replyToInfoRequest(form: FormData) {
     });
     if (error) throw new Error(`Could not send the answer: ${error.message}`);
   }
-  redirect("/account/pending");
+  return { error: false, next: "/account/pending" };
 }

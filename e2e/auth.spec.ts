@@ -1,207 +1,255 @@
 import { expect, test, type Page } from "@playwright/test";
+import { join } from "node:path";
+import { createClient } from "@supabase/supabase-js";
+import { adminClient } from "../scripts/lib/supabase-admin";
 import { blockingViolations } from "./fixtures/a11y";
 import { accounts, LOCAL_PASSWORD } from "./fixtures/accounts";
-import { clearInbox, codeFor, newAddress } from "./fixtures/mailpit";
-import { addressOf } from "./fixtures/session";
+import { authLinkFor, clearInbox, codeFor, newAddress } from "./fixtures/mailpit";
+import { addressOf, readSession, signInAs, stack } from "./fixtures/session";
 
-// Sign-in with an emailed code (DEC-15, ADR 0014), through the real form and real emails in Mailpit.
-
-async function requestCode(page: Page, email: string) {
-  await clearInbox(email);
-  await page.getByLabel("Email address").fill(email);
-  await page.getByRole("button", { name: "Send me a code" }).click();
-  await expect(page.getByRole("status")).toHaveText(
-    `We sent a 6-digit code to ${email}. It expires in 10 minutes.`,
-  );
-}
-
-async function enterCode(page: Page, code: string) {
-  await page.getByLabel("6-digit code").fill(code);
-  await page.getByRole("button", { name: "Sign in", exact: true }).click();
-}
-
-test.describe("sign-in with an emailed code", () => {
-  test("a member is sent back to the page they wanted", async ({ page, baseURL }, testInfo) => {
-    // One shared seed account: run it in one browser project only, so two codes never race.
-    test.skip(testInfo.project.name !== "desktop", "uses a shared seed account");
-    await page.goto(addressOf(baseURL!, "test-school", "/directory"));
-    await expect(page).toHaveURL(addressOf(baseURL!, "test-school", "/login?next=%2Fdirectory"));
-    await requestCode(page, accounts.testSchoolAlumni);
-    await enterCode(page, await codeFor(accounts.testSchoolAlumni));
-    await expect(page).toHaveURL(addressOf(baseURL!, "test-school", "/directory"));
-    await expect(page.getByRole("link", { name: /Other\s+School/ })).toBeVisible();
-  });
-
-  test("a new email signs up with the same form and waits for approval", async ({
-    page,
-    baseURL,
-  }) => {
-    const email = newAddress("joiner");
-    await page.goto("/login");
-    await requestCode(page, email);
-    await enterCode(page, await codeFor(email));
-    await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/join"));
-
-    await page.getByLabel("First name").fill("Jo");
-    await page.getByLabel("Last name", { exact: true }).fill("Iner");
-    await page.getByLabel("Graduation year").fill("2010");
-    await page.getByRole("button", { name: "Send my request" }).click();
-    await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/account/pending"));
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-      "Your request is with Herzliah",
-    );
-  });
-
-  test("the answer is the same whether or not an email is known", async ({ page }) => {
-    const unknown = newAddress("unknown");
-    await page.goto("/login");
-    await requestCode(page, unknown);
-    const answer = (await page.getByRole("status").textContent())!.replace(unknown, "EMAIL");
-
-    await page.getByRole("button", { name: "Use a different email" }).click();
-    await requestCode(page, accounts.outsider);
-    expect(
-      (await page.getByRole("status").textContent())!.replace(accounts.outsider, "EMAIL"),
-    ).toBe(answer);
-  });
-
-  test("a code requested on one device works on another", async ({ page, browser, baseURL }) => {
-    const email = newAddress("two-devices");
-    await page.goto("/login");
-    await requestCode(page, email);
-    const code = await codeFor(email);
-
-    const phone = await browser.newContext({ baseURL });
-    const phonePage = await phone.newPage();
-    await phonePage.goto("/login");
-    await phonePage.getByRole("button", { name: "I already have a code" }).click();
-    await phonePage.getByLabel("Email address").fill(email);
-    await enterCode(phonePage, code);
-    await expect(phonePage).toHaveURL(addressOf(baseURL!, "herzliah", "/join"));
-    await phone.close();
-  });
-
-  test("a wrong code is refused", async ({ page, baseURL }) => {
-    const email = newAddress("wrong-code");
-    await page.goto("/login");
-    await requestCode(page, email);
-    await enterCode(page, "000000");
-    // Next.js also renders an empty role="alert" route announcer, hence the class.
-    await expect(page.locator(".notice[role=alert]")).toHaveText(
-      "That code is wrong or has expired.",
-    );
-    await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/login"));
-  });
-
-  test("the code is entered in six boxes, one digit each", async ({ page }) => {
-    await page.goto("/login");
-    await page.getByRole("button", { name: "I already have a code" }).click();
-    const field = page.getByLabel("6-digit code");
-    await field.click();
-    await page.keyboard.type("12a3");
-    await expect(field).toHaveValue("123");
-    await expect(page.locator(".codeBox")).toHaveText(["1", "2", "3", "", "", ""]);
-    expect(await blockingViolations(page)).toEqual([]);
-  });
-
-  test("changing email needs a code from both addresses", async ({ page, baseURL }) => {
-    const before = newAddress("before");
-    const after = newAddress("after");
-    await page.goto("/login");
-    await requestCode(page, before);
-    await enterCode(page, await codeFor(before));
-    await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/join"));
-
-    await page.goto("/account/email");
-    await clearInbox(before);
-    await page.getByLabel("New email address").fill(after);
-    await page.getByRole("button", { name: "Send the codes" }).click();
-    await page.getByLabel(`Code sent to ${after}`).fill(await codeFor(after));
-    await page.getByLabel(`Code sent to ${before}`).fill(await codeFor(before));
-    await page.getByRole("button", { name: "Change my email" }).click();
-    await expect(page.getByRole("status")).toHaveText(`Done. You now sign in with ${after}.`);
-  });
-});
-
-// The optional password (DEC-16, ADR 0015), set after a code sign-in.
-async function signInWithPassword(page: Page, email: string, password: string) {
+async function signIn(page: Page, email: string, password = LOCAL_PASSWORD) {
   await page.goto("/login");
-  await page.getByRole("button", { name: "Sign in with a password" }).click();
   await page.getByLabel("Email address").fill(email);
   await page.getByLabel("Password", { exact: true }).fill(password);
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
 }
-
+async function signUp(page: Page, email: string) {
+  await page.goto("/join");
+  await page.getByLabel("Email address").fill(email);
+  await page.getByLabel("Create a password", { exact: true }).fill(LOCAL_PASSWORD);
+  await page.getByLabel("Confirm password", { exact: true }).fill(LOCAL_PASSWORD);
+  await page.getByRole("button", { name: "Create my account", exact: true }).click();
+  await expect(page).toHaveURL(/\/join\/verify$/);
+  await expect(page.getByRole("heading", { name: "Confirm your email" })).toBeVisible();
+}
 const badPassword = (page: Page) =>
   expect(page.locator(".notice[role=alert]")).toHaveText("Wrong email or password.");
 
-test.describe("sign-in with a password", () => {
-  test("a seeded account signs in with its password and lands on its home page", async ({
-    page,
-    baseURL,
-  }) => {
-    await signInWithPassword(page, accounts.alumni, LOCAL_PASSWORD);
-    await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/directory"));
-  });
+test("the public email Join link and navbar open the same account creation page", async ({
+  page,
+}, testInfo) => {
+  await page.goto("/");
+  const header = page.getByRole("banner");
+  await header.getByRole("link", { name: "Join now", exact: true }).click();
+  await expect(page).toHaveURL(/\/join$/);
+  await expect(
+    page.getByRole("heading", { name: "Create your account", exact: true, level: 2 }),
+  ).toBeVisible();
+  await expect(page.getByText("Creating an account does not grant alumni access.")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Send me a code" })).toHaveCount(0);
+  expect(await blockingViolations(page)).toEqual([]);
+  // This is the ordinary link placed in the school's email; no invitation token or alternate signup.
+  await page.goto("/join");
+  await expect(page.getByRole("button", { name: "Create my account" })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  if (process.env.E2E_SCREENSHOT_DIR)
+    await page.screenshot({
+      path: join(process.env.E2E_SCREENSHOT_DIR, `signup-${testInfo.project.name}-en.png`),
+      fullPage: true,
+    });
+  await page.getByRole("banner").getByRole("button", { name: "FR · Français" }).click();
+  await expect(page.getByRole("button", { name: "Créer mon compte", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Créez votre compte", level: 2 })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  if (process.env.E2E_SCREENSHOT_DIR)
+    await page.screenshot({
+      path: join(process.env.E2E_SCREENSHOT_DIR, `signup-${testInfo.project.name}-fr.png`),
+      fullPage: true,
+    });
+});
 
-  test("a wrong password, an unknown email and a code-only account get the same answer", async ({
-    page,
-    baseURL,
-  }) => {
-    await signInWithPassword(page, accounts.alumni, "not-the-password");
-    await badPassword(page);
-    await signInWithPassword(page, newAddress("nobody"), LOCAL_PASSWORD);
-    await badPassword(page);
+test("signup confirms email on another device, waits for a reviewer and unlocks onboarding only after approval", async ({
+  page,
+  browser,
+  baseURL,
+}) => {
+  test.setTimeout(90_000);
+  const email = newAddress("signup-review");
+  await signUp(page, email);
+  await expect(page.getByRole("button", { name: /Resend available/ })).toBeDisabled();
+  await page.context().clearCookies();
+  await signIn(page, email);
+  await badPassword(page); // Email ownership has not been confirmed.
+  const secondDevice = await browser.newContext({ baseURL });
+  const applicant = await secondDevice.newPage();
+  const reviewerContext = await browser.newContext({ baseURL });
+  const reviewer = await reviewerContext.newPage();
+  try {
+    await applicant.goto(await authLinkFor(email, "signup"));
+    await expect(applicant).toHaveURL(addressOf(baseURL!, "herzliah", "/join"));
+    await expect(
+      applicant.getByRole("heading", { name: "Request alumni access", exact: true }),
+    ).toBeVisible();
+    const session = await readSession(secondDevice, baseURL!);
+    const client = createClient(stack.url, stack.publishableKey, {
+      global: { headers: { Authorization: "Bearer " + session.access_token } },
+      auth: { persistSession: false },
+    });
+    const membership = await client.from("institution_memberships").select("role, status");
+    expect(membership.data).toEqual([]);
+    await applicant.getByLabel("First name").fill("Jo");
+    await applicant.getByLabel("Last name", { exact: true }).fill("Iner");
+    await applicant.getByLabel("Graduation year").fill("2010");
+    await applicant.getByRole("button", { name: "Submit for school review" }).click();
+    await expect(applicant).toHaveURL(/\/account\/pending$/);
+    await expect(applicant.getByText("Awaiting school approval", { exact: true })).toBeVisible();
+    for (const route of ["/directory", "/admin"]) {
+      await applicant.goto(route);
+      await expect(applicant).toHaveURL(/\/account\/pending$/);
+    }
+    await applicant.getByRole("link", { name: "Edit my request", exact: true }).click();
+    await applicant.getByLabel("Graduation year").fill("2011");
+    await applicant.getByRole("button", { name: "Save request details" }).click();
+    await expect(applicant).toHaveURL(/\/account\/pending$/);
+    const owner = adminClient(stack);
+    const { data: requests, error } = await owner
+      .from("access_requests")
+      .select("id, grad_year")
+      .eq("email", email);
+    expect(error).toBeNull();
+    expect(requests).toHaveLength(1);
+    expect(requests![0]!.grad_year).toBe(2011);
+    await signInAs(reviewerContext, baseURL!, accounts.reviewer);
+    await reviewer.goto("/admin/approvals/" + requests![0]!.id);
+    await reviewer.getByRole("radio", { name: "Ask for more info", exact: true }).check();
+    await reviewer.getByLabel("Question for the applicant").fill("Which homeroom were you in?");
+    await reviewer.getByRole("button", { name: "Ask for more info", exact: true }).click();
+    await expect(reviewer).toHaveURL(/\/admin\/approvals\?tab=needs_info$/);
+    await applicant.goto("/auth/home");
+    await expect(applicant).toHaveURL(/\/account\/needs-info$/);
+    await applicant.getByLabel("Your answer", { exact: true }).fill("Homeroom with Mme Tremblay.");
+    await applicant.getByRole("button", { name: "Send reply to the reviewer" }).click();
+    await expect(applicant).toHaveURL(/\/account\/pending$/);
+    await reviewer.goto("/admin/approvals/" + requests![0]!.id);
+    await reviewer.getByRole("button", { name: "Approve", exact: true }).click();
+    await expect(reviewer).toHaveURL(/\/admin\/approvals\?tab=decided$/);
+    await applicant.getByRole("link", { name: "Check request status", exact: true }).click();
+    await expect(applicant).toHaveURL(/\/onboarding\/welcome$/);
+    await expect(applicant.getByText("Approved by Herzliah", { exact: true })).toBeVisible();
+    // The approved profile starts hidden.
+    const { data: profile } = await client
+      .from("alumni_profiles")
+      .select("visibility")
+      .eq("user_id", sessionUser(session.access_token));
+    expect(profile?.[0]?.visibility).toBe("hidden");
+  } finally {
+    await secondDevice.close();
+    await reviewerContext.close();
+  }
+});
+function sessionUser(token: string) {
+  return JSON.parse(Buffer.from(token.split(".")[1]!, "base64url").toString()).sub as string;
+}
 
-    const codeOnly = newAddress("code-only");
-    await page.goto("/login");
-    await requestCode(page, codeOnly);
-    await enterCode(page, await codeFor(codeOnly));
-    await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/join"));
-    await page.context().clearCookies();
-    await signInWithPassword(page, codeOnly, LOCAL_PASSWORD);
-    await badPassword(page);
-    await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/login"));
-  });
+test("signup rejects mismatched passwords before creating an account", async ({ page }) => {
+  await page.goto("/join");
+  await page.getByLabel("Email address").fill(newAddress("mismatch"));
+  await page.getByLabel("Create a password", { exact: true }).fill(LOCAL_PASSWORD);
+  await page.getByLabel("Confirm password", { exact: true }).fill(LOCAL_PASSWORD + "x");
+  await page.getByRole("button", { name: "Create my account" }).click();
+  await expect(page.locator(".notice[role=alert]")).toHaveText("The two passwords are different.");
+  await expect(page).toHaveURL(/\/join$/);
+});
 
-  test("a password set after a code sign-in works next time", async ({ page, baseURL }) => {
-    const email = newAddress("sets-password");
-    const password = `Long-enough-${Date.now()}`;
-    await page.goto("/login");
-    await requestCode(page, email);
-    await enterCode(page, await codeFor(email));
-    await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/join"));
+test("password sign-in returns members to the page they requested and exposes no code controls", async ({
+  page,
+  baseURL,
+}) => {
+  await page.goto("/directory");
+  await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/login?next=%2Fdirectory"));
+  await expect(page.getByRole("button", { name: /code/i })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "Create an account", exact: true })).toHaveAttribute(
+    "href",
+    "/join",
+  );
+  expect(await blockingViolations(page)).toEqual([]);
+  await page.getByLabel("Email address").fill(accounts.alumni);
+  await page.getByLabel("Password", { exact: true }).fill(LOCAL_PASSWORD);
+  await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/directory"));
+});
 
-    await page.goto("/account/password");
-    const field = page.getByLabel("New password");
-    await field.fill("short");
-    await page.getByLabel("Type it again").fill("short");
-    await page.getByRole("button", { name: "Save my password" }).click();
-    expect(await field.evaluate((input: HTMLInputElement) => input.validity.tooShort)).toBe(true);
+test("unknown email, wrong password and an account without a password have the same answer", async ({
+  page,
+}) => {
+  await signIn(page, accounts.alumni, "wrong-password");
+  await badPassword(page);
+  await signIn(page, newAddress("unknown"));
+  await badPassword(page);
+  const email = newAddress("no-password");
+  const { error } = await adminClient(stack).auth.admin.createUser({ email, email_confirm: true });
+  expect(error).toBeNull();
+  await signIn(page, email);
+  await badPassword(page);
+});
 
-    await field.fill(password);
-    await page.getByLabel("Type it again").fill(`${password}x`);
-    await page.getByRole("button", { name: "Save my password" }).click();
-    await expect(page.locator(".notice[role=alert]")).toHaveText(
-      "The two passwords are different.",
-    );
+test("a user who previously had no password can recover access by email link", async ({
+  page,
+  browser,
+  baseURL,
+}) => {
+  const email = newAddress("password-recovery");
+  const owner = adminClient(stack);
+  expect((await owner.auth.admin.createUser({ email, email_confirm: true })).error).toBeNull();
+  await page.goto("/forgot-password");
+  await page.getByLabel("Email address").fill(email);
+  await page.getByRole("button", { name: "Send password reset link" }).click();
+  await expect(page.getByRole("status")).toContainText("If an account exists");
+  const otherDevice = await browser.newContext({ baseURL });
+  const reset = await otherDevice.newPage();
+  try {
+    const link = await authLinkFor(email, "recovery");
+    await reset.goto(link);
+    await expect(reset).toHaveURL(/\/reset-password$/);
+    await reset.getByLabel("New password", { exact: true }).fill(LOCAL_PASSWORD);
+    await reset.getByLabel("Type it again").fill(LOCAL_PASSWORD);
+    await reset.getByRole("button", { name: "Save my password" }).click();
+    await expect(reset.getByRole("status")).toContainText("Your password is saved.");
+    await otherDevice.clearCookies();
+    await signIn(reset, email);
+    await expect(reset).toHaveURL(/\/join$/);
+  } finally {
+    await otherDevice.close();
+  }
+});
 
-    await page.getByLabel("Type it again").fill(password);
-    await page.getByRole("button", { name: "Save my password" }).click();
-    await expect(page.locator(".notice[role=status]")).toContainText("Your password is saved.");
+test("malformed, expired or external-target confirmation links never grant access", async ({
+  page,
+}) => {
+  await page.goto("/auth/confirm?type=signup&token_hash=invalid&next=https%3A%2F%2Fevil.example");
+  await expect(page).toHaveURL(/\/join\?confirmation=expired$/);
+  await expect(page.getByText(/This confirmation link is invalid or expired/)).toBeVisible();
+  await page.goto("/auth/confirm?type=email_change&token_hash=invalid");
+  await expect(page).toHaveURL(/\/join\?confirmation=expired$/);
+});
 
-    await page.context().clearCookies();
-    await signInWithPassword(page, email, password);
-    await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/join"));
-  });
+test("changing email still requires confirmation of both addresses", async ({ page }) => {
+  const before = newAddress("email-before");
+  const after = newAddress("email-after");
+  expect(
+    (
+      await adminClient(stack).auth.admin.createUser({
+        email: before,
+        password: LOCAL_PASSWORD,
+        email_confirm: true,
+      })
+    ).error,
+  ).toBeNull();
+  await signIn(page, before);
+  await expect(page).toHaveURL(/\/join$/);
+  await page.goto("/account/email");
+  await clearInbox(before);
+  await page.getByLabel("New email address").fill(after);
+  await page.getByRole("button", { name: "Send the codes" }).click();
+  await page.getByLabel("Code sent to " + after).fill(await codeFor(after));
+  await page.getByLabel("Code sent to " + before).fill(await codeFor(before));
+  await page.getByRole("button", { name: "Change my email" }).click();
+  await expect(page.getByRole("status")).toHaveText("Done. You now sign in with " + after + ".");
+});
 
-  test("the password page asks a signed-out visitor to sign in first", async ({
-    page,
-    baseURL,
-  }) => {
-    await page.goto("/account/password");
-    await expect(page).toHaveURL(
-      addressOf(baseURL!, "herzliah", "/login?next=%2Faccount%2Fpassword"),
-    );
-  });
+test("password settings still require a signed-in account", async ({ page, baseURL }) => {
+  await page.goto("/account/password");
+  await expect(page).toHaveURL(
+    addressOf(baseURL!, "herzliah", "/login?next=%2Faccount%2Fpassword"),
+  );
 });

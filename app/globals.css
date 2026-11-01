@@ -2437,3 +2437,319 @@ a.onbStep:hover {
     padding: 20px;
   }
 }
+
+/* Alumni account creation and admission (approved Alumni canvas, November 2026). */
+.navJoin {
+  padding: 10px 17px;
+  border-radius: 7px;
+  background: var(--burgundy);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.navJoin:hover {
+  background: var(--burgundy-dark);
+}
+.navJoin:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+.joinPage {
+  width: 100%;
+  max-width: 1112px;
+  margin: 0 auto;
+  padding: 48px 28px 64px;
+  line-height: 1.55;
+}
+.joinPage h1,
+.joinPage h2,
+.joinPage h3 {
+  margin: 0;
+  font-family: Inter, Arial, sans-serif;
+}
+.joinPage h1 {
+  font-size: 34px;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+  font-weight: 800;
+}
+.joinPage h2 {
+  font-size: 27px;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+.joinPage h3 {
+  font-size: 15px;
+  line-height: 1.5;
+}
+.joinPage p {
+  margin: 0;
+}
+.joinSplit {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 460px;
+  gap: 64px;
+  align-items: start;
+}
+.joinIntro {
+  display: grid;
+  gap: 24px;
+  padding-top: 28px;
+}
+.joinIntro h1 {
+  font-size: 46px;
+  line-height: 1.12;
+}
+.joinLead {
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+.joinEyebrow {
+  display: block;
+  font-size: 11px;
+  line-height: 1.5;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--burgundy);
+}
+.joinCard {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 32px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+.joinCard > .tag {
+  align-self: flex-start;
+}
+.joinCard .authForm {
+  margin-top: 0;
+}
+.joinCard .notice {
+  margin: 0;
+}
+.joinCard .input {
+  width: 100%;
+  min-width: 0;
+}
+.joinCard .authFooter {
+  margin-top: 0;
+  flex-wrap: wrap;
+}
+.joinCard p,
+.joinCard strong {
+  overflow-wrap: anywhere;
+}
+.joinCard .muted {
+  color: #4a5575;
+}
+.joinCard a:not(.btn) {
+  color: var(--burgundy);
+}
+.joinCentered {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 36px;
+}
+.joinStack {
+  display: grid;
+  gap: 8px;
+}
+.joinDivider {
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+  font-size: 13px;
+}
+.joinDivider a {
+  color: var(--burgundy);
+  font-weight: 700;
+}
+.joinNotice {
+  margin: 0;
+  padding: 15px 17px;
+  border-left: 3px solid var(--burgundy);
+  border-radius: 0 8px 8px 0;
+  background: #f2f4f8;
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.joinNotice a {
+  text-decoration: underline;
+}
+.joinProgress {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  list-style: none;
+  margin: 0 0 28px;
+  padding: 0;
+  font-size: 12px;
+  color: #4a5575;
+}
+.joinProgress li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.joinProgress [aria-current] {
+  color: var(--burgundy);
+  font-weight: 700;
+}
+.joinDot {
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #c5ccda;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 800;
+  background: #fff;
+  color: #4a5575;
+}
+.joinProgress .joinDot {
+  width: 23px;
+  height: 23px;
+  flex-basis: 23px;
+  font-size: 10px;
+}
+.joinCurrent {
+  background: var(--burgundy);
+  border-color: var(--burgundy);
+  color: #fff;
+}
+.joinDone {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+}
+.joinWaiting {
+  background: #fff4dc;
+  border-color: #b38a30;
+  color: #7a4b00;
+}
+.joinJourney {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 20px;
+}
+.joinJourney li {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.joinJourney p {
+  margin-top: 3px;
+  font-size: 13px;
+  color: #4a5575;
+  line-height: 1.6;
+}
+.joinRequestLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 28px;
+  align-items: start;
+}
+.joinAside {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+}
+.joinDarkPanel {
+  display: grid;
+  gap: 20px;
+  padding: 24px;
+  background: var(--ink);
+  color: #fff;
+  border-radius: 12px;
+}
+.joinDarkPanel h2 {
+  font-size: 20px;
+}
+.joinDarkPanel p {
+  color: #d2d7e4;
+  font-size: 14px;
+}
+.joinDarkPanel strong {
+  color: #fff;
+}
+.joinIcon {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  background: var(--pink-pale);
+  border-radius: 14px;
+  font-size: 24px;
+  color: var(--burgundy);
+}
+.joinActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.joinPage a:focus-visible,
+.joinPage button:focus-visible,
+.joinPage input:focus-visible,
+.joinPage textarea:focus-visible {
+  outline: 3px solid #a7486c;
+  outline-offset: 3px;
+}
+.authCard > .joinEyebrow {
+  margin-bottom: 12px;
+}
+.authCard .joinNotice {
+  margin-top: 24px;
+}
+.authCard .joinDivider {
+  margin-top: 24px;
+}
+@media (max-width: 800px) {
+  .joinPage {
+    padding: 32px 20px 48px;
+  }
+  .joinSplit,
+  .joinRequestLayout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+  .joinSplit .joinIntro {
+    order: 2;
+    padding-top: 0;
+  }
+  .joinIntro h1 {
+    font-size: 35px;
+  }
+  .joinPage h1 {
+    font-size: 29px;
+  }
+  .joinCard,
+  .joinCentered {
+    padding: 25px;
+  }
+  .joinProgress {
+    gap: 10px;
+  }
+  .navRight {
+    margin-left: auto;
+  }
+}
+
+.joinAuth h1 {
+  font-family: Inter, Arial, sans-serif;
+  font-size: 30px;
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
