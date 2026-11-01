@@ -65,8 +65,8 @@ test.describe("sessions", () => {
       expires_at: Math.floor(Date.now() / 1000) - 60,
     });
 
-    await page.goto(addressOf(baseURL!, "herzliah", "/directory"));
-    await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/directory"));
+    await page.goto(addressOf(baseURL!, "herzliah", "/directory?q=frenkel"));
+    await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/directory?q=frenkel"));
     await expect(page.getByRole("link", { name: /Maya\s+Frenkel/ })).toBeVisible();
 
     // proxy.ts refreshed the session and sent the new cookies back.

@@ -271,7 +271,8 @@ select set_eq(
     'platform_create_school', 'platform_appoint_school_admin', 'platform_open_grant', 'platform_revoke_grant',
     'platform_set_school_status', 'issue_staff_invitation_link', 'revoke_staff_invitation',
     -- not audited on purpose: reads, preferences, and contact reveals (contact_events)
-    'public_school', 'search_directory', 'set_my_locale', 'initiate_contact',
+    'public_school', 'search_directory', 'set_my_locale', 'initiate_contact', 'directory_facets',
+    'profile_contact_types',
     'platform_school_summaries', 'platform_admin_emails',
     'school_staff', 'audit_people', 'admin_dashboard', 'admin_roster', 'admin_profile_email', 'access_request_matches',
     -- RLS helpers used inside policies (and by search_directory, which runs as the caller)

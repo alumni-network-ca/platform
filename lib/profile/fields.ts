@@ -312,6 +312,15 @@ export function parsePublish(form: FormReader): Parsed<{ visibility: Visibility 
   return c.done({ visibility: form.get("visibility") === "members" ? "members" : "hidden" });
 }
 
+/** An experience row that only repeats the current role on the profile, so lists show it once. */
+export const repeatsCurrentRole = (
+  role: { job_title: string; employer: string | null; is_current: boolean },
+  profile: { job_title: string | null; employer: string | null },
+) =>
+  role.is_current &&
+  role.job_title.trim().toLowerCase() === (profile.job_title ?? "").trim().toLowerCase() &&
+  (role.employer ?? "").trim().toLowerCase() === (profile.employer ?? "").trim().toLowerCase();
+
 /** How recent a sign-in must be to delete a profile (PRF-06's re-authentication). */
 export const REAUTH_MINUTES = 15;
 

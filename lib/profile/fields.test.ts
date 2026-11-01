@@ -10,6 +10,7 @@ import {
   parseOffers,
   parsePublish,
   readForm,
+  repeatsCurrentRole,
   resumeStep,
   signedInRecently,
   type FormReader,
@@ -340,5 +341,15 @@ describe("signedInRecently", () => {
     expect(signedInRecently("2026-11-01T11:50:00Z", now)).toBe(true);
     expect(signedInRecently("2026-11-01T11:44:59Z", now)).toBe(false);
     expect(signedInRecently(null, now)).toBe(false);
+  });
+});
+
+describe("repeatsCurrentRole", () => {
+  const profile = { job_title: "Corporate Lawyer", employer: "Fasken" };
+  it("matches only a current row with the same title and employer", () => {
+    const role = { job_title: "corporate lawyer ", employer: "Fasken", is_current: true };
+    expect(repeatsCurrentRole(role, profile)).toBe(true);
+    expect(repeatsCurrentRole({ ...role, is_current: false }, profile)).toBe(false);
+    expect(repeatsCurrentRole({ ...role, employer: "Stikeman" }, profile)).toBe(false);
   });
 });

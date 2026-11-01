@@ -88,8 +88,8 @@ Signed-out pages use the `guest` role: FR, Sign in and the proposed Join now act
 | **Built** · 2.1–2.4 Onboarding (`OnbAbout`, `OnbCareer`, `OnbNetwork`, `OnbPublish`) | `/onboarding` | ONB-05, PRF-05 |
 | **Built** · 3.0 Home (`Home`) | `/home` | DIR-06 |
 | **Built** · 3.1 My profile (`Me`) | `/me` | PRF-02 |
-| 3.2 Directory (`Directory`) | `/directory` | DIR-02 |
-| 3.3 Profile and message (`Profile`) | `/profile/[id]` | DIR-03, CON-02 |
+| **Built** · 3.2 Directory (`Directory`) | `/directory` | DIR-02 |
+| **Built** · 3.3 Profile and message (`Profile`) | `/profile/[id]` | DIR-03, CON-02 |
 | 3.4 Relay email (`RecipientEmail`) | email | CON-02 |
 
 Implementation notes: A2.3 uses a dedicated route with dialog styling. The record edit route was added to cover the fields accepted by `admin_update_profile`; it is not drawn on the canvas. French admin copy and empty states need Noah’s language review.

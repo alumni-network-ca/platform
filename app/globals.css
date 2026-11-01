@@ -497,9 +497,7 @@ a {
 }
 .ledgerCard,
 .card,
-.sideCard,
 .statCard,
-.profileCard,
 .authCard {
   background: #fff;
   border: 1px solid var(--line);
@@ -529,8 +527,7 @@ a {
   user-select: none;
   pointer-events: none;
 }
-.year,
-.yearBadge {
+.year {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   color: var(--burgundy);
   background: var(--burgundy-soft);
@@ -624,64 +621,6 @@ a {
   align-items: flex-start;
   margin-bottom: 28px;
 }
-.privacyBadge {
-  background: #fff;
-  border: 1px solid var(--line);
-  padding: 9px 13px;
-  border-radius: 999px;
-  color: var(--slate);
-  font-size: 12px;
-  font-weight: 700;
-}
-.directoryPage {
-  max-width: 1320px;
-}
-.directoryToolbar {
-  display: flex;
-  gap: 10px;
-  align-items: stretch;
-}
-.searchbar {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 0 14px;
-  box-shadow: 0 4px 14px rgba(11, 33, 89, 0.035);
-}
-.searchbar span {
-  font-size: 22px;
-  color: var(--slate);
-}
-.searchbar input {
-  border: 0;
-  outline: 0;
-  background: transparent;
-  flex: 1;
-  padding: 13px 0;
-  color: var(--ink);
-  font-size: 14px;
-}
-.filterPanel {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 10px;
-  margin: 14px 0 18px;
-}
-.filterPanel label {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--slate);
-  font-weight: 800;
-}
-.filterPanel select,
 .input,
 .select,
 textarea {
@@ -693,75 +632,15 @@ textarea {
   color: var(--ink);
   outline: none;
 }
-.filterPanel select:focus,
 .input:focus,
 .select:focus,
 textarea:focus {
   border-color: #a6b0c9;
   box-shadow: 0 0 0 3px rgba(11, 33, 89, 0.06);
 }
-.directoryMeta {
-  font-size: 13px;
-  color: var(--slate);
-  margin: 10px 0 18px;
-  display: flex;
-  gap: 8px;
-}
-.profileGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-}
-.profileCard {
-  padding: 19px;
-  min-height: 245px;
-  display: flex;
-  flex-direction: column;
-  transition: 0.16s;
-  box-shadow: 0 7px 22px rgba(11, 33, 89, 0.035);
-}
-.profileCard:hover {
-  transform: translateY(-3px);
-  border-color: #c8cfdd;
-  box-shadow: 0 14px 32px rgba(11, 33, 89, 0.08);
-}
-.profileCardTop {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 16px;
-}
-.profileCard .avatar {
-  width: 54px;
-  height: 54px;
-}
-.yearBadge {
-  font-size: 11px;
-}
-.profileCard h3 {
-  font-size: 16px;
-  margin: 0 0 7px;
-}
 .verified {
   color: var(--burgundy);
   font-size: 12px;
-}
-.profileRole {
-  font-size: 13.5px;
-  font-weight: 650;
-  color: var(--ink-soft);
-}
-.profileCompany,
-.profileLocation {
-  font-size: 12.5px;
-  color: var(--slate);
-  margin-top: 4px;
-}
-.tagRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-top: 15px;
 }
 .viewProfile {
   margin-top: auto;
@@ -769,17 +648,6 @@ textarea:focus {
   font-size: 12px;
   font-weight: 800;
   color: var(--burgundy);
-}
-.emptyState {
-  grid-column: 1/-1;
-  background: #fff;
-  border: 1px dashed #cbd2df;
-  border-radius: 13px;
-  padding: 52px;
-  text-align: center;
-}
-.emptyState h3 {
-  margin-top: 0;
 }
 .authPage {
   min-height: calc(100vh - 72px);
@@ -880,15 +748,6 @@ textarea:focus {
   font-size: 12px;
   color: var(--burgundy);
 }
-.twoCol {
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 32px;
-}
-.sideCard {
-  padding: 20px;
-  margin-bottom: 18px;
-}
 .notice {
   padding: 14px;
   border-radius: 9px;
@@ -979,14 +838,6 @@ textarea:focus {
   color: #d5dae6;
   font-size: 13px;
 }
-@media (max-width: 1100px) {
-  .profileGrid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  .filterPanel {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
 @media (max-width: 850px) {
   .hero {
     grid-template-columns: 1fr;
@@ -1008,17 +859,11 @@ textarea:focus {
     padding-left: 20px;
     padding-right: 20px;
   }
-  .profileGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
   .adminLayout {
     grid-template-columns: 1fr;
   }
   .adminSide {
     display: none;
-  }
-  .twoCol {
-    grid-template-columns: 1fr;
   }
   .footer {
     padding: 28px 20px;
@@ -1027,22 +872,14 @@ textarea:focus {
   .pageHeader {
     flex-direction: column;
   }
-  .privacyBadge {
-    align-self: flex-start;
-  }
 }
 @media (max-width: 600px) {
   .grid3,
-  .filterPanel,
-  .statCards,
-  .profileGrid {
+  .statCards {
     grid-template-columns: 1fr;
   }
   .statsInner {
     grid-template-columns: 1fr 1fr;
-  }
-  .directoryToolbar {
-    flex-direction: column;
   }
   .person {
     grid-template-columns: 48px 1fr;
@@ -1248,39 +1085,6 @@ textarea:focus {
   font-size: 11px;
   color: var(--slate);
   margin-top: 3px;
-}
-.profileTimeline {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-.timelineItem {
-  display: grid;
-  grid-template-columns: 110px 1fr;
-  gap: 14px;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--line);
-}
-.timelineItem:last-child {
-  border-bottom: 0;
-}
-.timelineYears {
-  font-size: 12px;
-  color: var(--slate);
-  font-family: monospace;
-}
-.timelineTitle {
-  font-weight: 750;
-}
-.timelineSub {
-  font-size: 13px;
-  color: var(--slate);
-  margin-top: 3px;
-}
-@media (max-width: 800px) {
-  .timelineItem {
-    grid-template-columns: 1fr;
-  }
 }
 
 /* Console and school admin shell (docs/design/alumni-full-flow, S1–S2 and A1–A4) */
@@ -3115,4 +2919,418 @@ a.onbStep:hover {
   .homeHead h1 {
     font-size: 26px;
   }
+}
+
+/* Directory (docs/design/alumni-full-flow, Directory) */
+.dir {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 36px 24px 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  color: #0b2159;
+}
+.dirHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+.dirHead > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.dirHead h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 800;
+}
+.dirEyebrow {
+  color: #7b1e3d;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.dirCount {
+  color: #4a5575;
+  font-size: 14px;
+}
+.dirForm {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.dirSearch {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 6px 6px 18px;
+  border: 1px solid #8a93ab;
+  border-radius: 10px;
+  background: #fff;
+}
+.dirSearch:focus-within {
+  outline: 2px solid #7b1e3d;
+  outline-offset: 1px;
+}
+.dirSearch input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 0;
+  border: 0;
+  background: transparent;
+  color: #0b2159;
+  font: inherit;
+  font-size: 16px;
+  outline: none;
+}
+.dirBody {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 24px;
+}
+.dirFilters {
+  flex: 1 1 240px;
+  max-width: 280px;
+}
+.dirFiltersToggle {
+  display: none;
+}
+.dirPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 22px;
+  box-sizing: border-box;
+  border: 1px solid #e2e5ee;
+  border-radius: 12px;
+  background: #fff;
+}
+.dirPanelHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dirPanelHead h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+.dirClear {
+  color: #7b1e3d;
+  font-size: 13px;
+  font-weight: 700;
+}
+.dirField {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.dirField label,
+.dirSort {
+  font-size: 13px;
+  font-weight: 600;
+}
+.dirSelect {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid #8a93ab;
+  border-radius: 7px;
+  background: #fff;
+  color: #0b2159;
+  font: inherit;
+  font-size: 14px;
+}
+.dirSelect:focus,
+.dirChip:focus-within {
+  outline: 2px solid #7b1e3d;
+  outline-offset: 1px;
+}
+.dirOffers {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.dirOffers legend {
+  margin-bottom: 10px;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+.dirOffers > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+/* An "Open to" option looks like a toggle button; the checkbox inside stays for keyboards and forms. */
+.dirChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 12px;
+  border: 1px solid #8a93ab;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.dirChip input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.dirChip:has(input:checked) {
+  border-color: #7b1e3d;
+  background: #7b1e3d;
+  color: #fff;
+}
+.dirApply {
+  align-self: flex-start;
+}
+.dirResults {
+  flex: 999 1 560px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.dirResultsHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #4a5575;
+  font-size: 14px;
+}
+.dirSort {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #0b2159;
+}
+.dirSort .dirSelect {
+  width: auto;
+}
+.dirChips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+}
+.dirChips ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.dirChips ul a {
+  display: inline-flex;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #f1dce3;
+  color: #611630;
+  font-size: 13px;
+  font-weight: 700;
+}
+.dirGrid {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+.dirCard {
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid #e2e5ee;
+  border-radius: 12px;
+  background: #fff;
+  color: #0b2159;
+}
+.dirCard:hover {
+  border-color: #8a93ab;
+}
+.dirCard:focus-visible {
+  outline: 2px solid #7b1e3d;
+  outline-offset: 2px;
+}
+.dirCardHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.dirAvatar {
+  display: grid;
+  place-items: center;
+  flex: 0 0 46px;
+  height: 46px;
+  border-radius: 50%;
+  color: #0b2159;
+  font-size: 15px;
+  font-weight: 800;
+}
+.dirCardWho {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  color: #4a5575;
+  font-size: 13px;
+}
+.dirCardName {
+  color: #0b2159;
+  font-size: 16px;
+  font-weight: 800;
+}
+.dirCardRole {
+  color: #3a4a70;
+  font-size: 14px;
+  line-height: 1.45;
+}
+.dirTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.dirTags span {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #f1dce3;
+  color: #611630;
+  font-size: 12px;
+  font-weight: 700;
+}
+.dirEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 28px;
+  border: 1px dashed #c3c9d6;
+  border-radius: 12px;
+  color: #3a4a70;
+}
+.dirEmpty p {
+  margin: 0;
+}
+.dirPages {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #4a5575;
+  font-size: 14px;
+}
+.dirPages a {
+  color: #7b1e3d;
+  font-weight: 700;
+}
+@media (max-width: 720px) {
+  .dir {
+    padding: 24px 16px 40px;
+  }
+  .dirFilters {
+    flex-basis: 100%;
+    max-width: none;
+  }
+  /* On a phone the filters open from a button, like a sheet. */
+  .dirFiltersToggle {
+    display: inline-flex;
+    padding: 10px 16px;
+    border: 1px solid #8a93ab;
+    border-radius: 7px;
+    background: #fff;
+    color: #0b2159;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .dirPanel {
+    display: none;
+    margin-top: 10px;
+  }
+  .dirPanel[data-open="true"] {
+    display: flex;
+  }
+}
+
+/* Profile as other alumni see it (docs/design/alumni-full-flow, Profile) */
+.profBack {
+  flex: 1 1 100%;
+}
+.profHead {
+  overflow: hidden;
+}
+.profBanner {
+  height: 88px;
+  background: #0b2159;
+}
+.profHeadBody {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0 28px 26px;
+}
+.profHeadBody .meWho {
+  flex: none;
+}
+.profAvatar {
+  width: 88px;
+  height: 88px;
+  flex: 0 0 auto;
+  margin-top: -44px;
+  border: 4px solid #fff;
+}
+.profH2 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+}
+.profNote {
+  margin: 0;
+  color: #4a5575;
+  font-size: 13px;
+}
+.profShow {
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 7px;
+  background: #7b1e3d;
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.profShow:hover {
+  background: #611630;
+}
+.profShow:focus-visible {
+  outline: 2px solid #7b1e3d;
+  outline-offset: 2px;
+}
+.profReveal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  overflow-wrap: anywhere;
 }
