@@ -94,6 +94,7 @@ jobs:
             echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$PUBLISHABLE_KEY"
             echo "ROOT_DOMAIN=localhost"
             echo "NEXT_PUBLIC_SITE_URL=http://herzliah.localhost:3000"
+            echo "EMAIL_CODES=on"
           } > .env.local
       - name: Build
         run: npm run build

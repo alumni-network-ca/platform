@@ -13,7 +13,12 @@ export default async function LoginPage() {
       <main className="authPage">
         <section className="authCard">
           <Suspense fallback={null}>
-            <SignInForm networkName={networkName} audience="school" />
+            {/* Codes need working email; EMAIL_CODES=on where it does (local Mailpit, CI). */}
+            <SignInForm
+              networkName={networkName}
+              audience="school"
+              codes={process.env.EMAIL_CODES === "on"}
+            />
           </Suspense>
         </section>
       </main>

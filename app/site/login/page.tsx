@@ -10,7 +10,12 @@ export default function ConsoleLoginPage() {
       <main className="authPage">
         <section className="authCard">
           <Suspense fallback={null}>
-            <SignInForm networkName="Alumni Network" audience="console" />
+            {/* Codes need working email; EMAIL_CODES=on where it does (local Mailpit, CI). */}
+            <SignInForm
+              networkName="Alumni Network"
+              audience="console"
+              codes={process.env.EMAIL_CODES === "on"}
+            />
           </Suspense>
         </section>
       </main>

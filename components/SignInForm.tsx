@@ -46,6 +46,10 @@ const TEXT = {
     tooManyTries: "Too many attempts. Wait a few minutes and try again.",
     failed: "Something went wrong. Please try again.",
     home: "← Home",
+    passwordIntro: "Enter your email address and password.",
+    codesSoon:
+      "Signing in with an emailed code is coming soon. No password yet? Contact the alumni office.",
+    consoleCodesSoon: "Signing in with an emailed code is coming soon.",
   },
   fr: {
     title: (network: string) => `Connexion à ${network}`,
@@ -78,21 +82,30 @@ const TEXT = {
     tooManyTries: "Trop de tentatives. Patientez quelques minutes et réessayez.",
     failed: "Une erreur est survenue. Veuillez réessayer.",
     home: "← Accueil",
+    passwordIntro: "Entrez votre adresse courriel et votre mot de passe.",
+    codesSoon:
+      "La connexion avec un code reçu par courriel arrive bientôt. Pas encore de mot de passe ? Contactez le bureau des anciens.",
+    consoleCodesSoon: "La connexion avec un code reçu par courriel arrive bientôt.",
   },
 };
 
-/** The sign-in card's content. `school`: a school's address, landing through /auth/home; `console`: the root domain. */
+/**
+ * The sign-in card's content. `school`: a school's address, landing through /auth/home; `console`: the root domain.
+ * `codes`: false while the address can't receive our emails (EMAIL_CODES unset): password sign-in only.
+ */
 export function SignInForm({
   networkName,
   audience,
+  codes,
 }: {
   networkName: string;
   audience: "school" | "console";
+  codes: boolean;
 }) {
   const { locale } = useLanguage();
   const t = TEXT[locale];
   const next = safeNext(useSearchParams().get("next"));
-  const [step, setStep] = useState<"email" | "code" | "password">("email");
+  const [step, setStep] = useState<"email" | "code" | "password">(codes ? "email" : "password");
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [password, setPassword] = useState("");
@@ -193,7 +206,9 @@ export function SignInForm({
   return (
     <>
       <h1>{t.title(networkName)}</h1>
-      <p className="muted">{audience === "console" ? t.consoleIntro : t.intro}</p>
+      <p className="muted">
+        {!codes ? t.passwordIntro : audience === "console" ? t.consoleIntro : t.intro}
+      </p>
 
       {step === "email" && (
         <form onSubmit={sendCode} className="authForm">
@@ -242,11 +257,19 @@ export function SignInForm({
             {busy ? t.checking : t.signIn}
           </button>
           <p className="muted microcopy">
-            {audience === "console" ? t.consoleNoPassword : t.noPassword}
+            {codes
+              ? audience === "console"
+                ? t.consoleNoPassword
+                : t.noPassword
+              : audience === "console"
+                ? t.consoleCodesSoon
+                : t.codesSoon}
           </p>
-          <button type="button" className="textButton" onClick={() => switchTo("email")}>
-            {t.useCode}
-          </button>
+          {codes && (
+            <button type="button" className="textButton" onClick={() => switchTo("email")}>
+              {t.useCode}
+            </button>
+          )}
         </form>
       )}
 
