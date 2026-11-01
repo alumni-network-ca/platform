@@ -8,7 +8,7 @@ import { canOpen, hasActiveProfile, homeFor, isStaff, type AccountState } from "
 
 export type NavRole =
   "guest" | "applicant" | "alumnus" | "reviewer" | "school_admin" | "platform_admin";
-export type ChipKind = "count" | "info" | "good" | "warn";
+export type ChipKind = "count" | "info" | "good" | "warn" | "soon";
 export type StatusTone = "good" | "warn" | "neutral" | "platform";
 
 export type NavLink = {
@@ -29,6 +29,8 @@ export type NavItem = {
   action?: "language" | "signOut";
   chip?: { text: string; kind: ChipKind };
   danger?: boolean;
+  /** The page is not built yet ("#"): shown with a "Coming soon" chip, and choosing it does nothing. */
+  soon?: boolean;
 };
 
 export type NavSection = { key: string; title?: string; items: NavItem[] };
@@ -126,6 +128,8 @@ export function navModel(input: NavInput): NavModel {
     label: t[key],
     href,
     ...extra,
+    // A "#" placeholder says so instead of any chip it would carry once built.
+    ...(href === "#" && { soon: true, chip: { text: t.comingSoon, kind: "soon" } }),
   });
   const keep = (items: (NavItem | false | null | undefined)[]) =>
     items.filter((i): i is NavItem => !!i && (!i.href || opens(i.href)));
