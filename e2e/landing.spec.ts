@@ -8,7 +8,7 @@ import { addressOf, signInAs } from "./fixtures/session";
 const homes: [school: string, email: string, home: string][] = [
   ["herzliah", accounts.admin, "/admin"],
   ["herzliah", accounts.reviewer, "/admin"],
-  ["herzliah", accounts.alumni, "/directory"],
+  ["herzliah", accounts.alumni, "/home"],
   // homeFor() says /onboarding, which resumes at the first step not saved yet.
   ["herzliah", accounts.newMember, "/onboarding/welcome"],
   ["herzliah", accounts.pending, "/account/pending"],
@@ -20,7 +20,7 @@ const homes: [school: string, email: string, home: string][] = [
   // A system admin with no role at a school sees no data there and is pointed to the console (ADR 0005).
   ["herzliah", accounts.system, "/account/platform"],
   ["test-school", accounts.testSchoolAdmin, "/admin"],
-  ["test-school", accounts.testSchoolAlumni, "/directory"],
+  ["test-school", accounts.testSchoolAlumni, "/home"],
   ["test-school", accounts.testSchoolPending, "/account/pending"],
   // A person's state at one school says nothing about another (DEC-13).
   ["test-school", accounts.alumni, "/join"],
@@ -42,7 +42,7 @@ test.describe("landing on the right home page", () => {
   }) => {
     await signInAs(context, baseURL!, accounts.alumni);
     await page.goto("/");
-    await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/directory"));
+    await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/home"));
   });
 
   test("the account pages show the school's question and decision", async ({
@@ -75,7 +75,7 @@ test.describe("?next=", () => {
     test(`never leaves the site: ${next}`, async ({ page, context, baseURL }) => {
       await signInAs(context, baseURL!, accounts.alumni);
       await page.goto(`/auth/home?next=${encodeURIComponent(next)}`);
-      await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/directory"));
+      await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/home"));
     });
   }
 
@@ -101,9 +101,9 @@ test.describe("page guards", () => {
   test("keep alumni out of admin and sign-up", async ({ page, context, baseURL }) => {
     await signInAs(context, baseURL!, accounts.alumni);
     await page.goto("/admin");
-    await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/directory"));
+    await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/home"));
     await page.goto("/join");
-    await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/directory"));
+    await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/home"));
   });
 });
 

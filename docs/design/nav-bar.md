@@ -119,7 +119,7 @@ exist yet and leave a TODO with the backlog key.
 - Sign out
 
 **school_admin or reviewer with `alsoAlumnus`** — status line "{School} · Class of {year}"; insert after *Admin*:
-- *You are also an alumnus*: My alumni profile → `/me` · Browse as an alumnus → `/directory`
+- *You are also an alumnus*: Alumni home → `/home` · My alumni profile → `/me` · Browse as an alumnus → `/directory`
 
 **platform_admin** — status line "All schools" (purple)
 - *Console*: Schools (chip = count) · Support access (chip "{n} active", warn) · Platform health (chip "{n} alert(s)" when any, warn)

@@ -141,7 +141,7 @@ test.describe("sign-in with a password", () => {
     baseURL,
   }) => {
     await signInWithPassword(page, accounts.alumni, LOCAL_PASSWORD);
-    await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/directory"));
+    await expect(page).toHaveURL(addressOf(baseURL!, "herzliah", "/home"));
   });
 
   test("a wrong password, an unknown email and a code-only account get the same answer", async ({

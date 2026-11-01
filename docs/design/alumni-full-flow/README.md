@@ -63,13 +63,15 @@ Signed-out pages (Join, Code) use the `guest` role: FR and Sign in, no avatar.
 | 1.5 Pending, 1.6 Needs info (`Pending`, `NeedsInfo`) | `/account/pending`, `/account/needs-info` | ONB-06 |
 | 1.7 Approval email (`Approved`) | email | EML-02 |
 | 2.1–2.4 Onboarding (`OnbAbout`, `OnbCareer`, `OnbNetwork`, `OnbPublish`) | `/onboarding` | ONB-05, PRF-05 |
-| 3.0 Home (`Home`) | `/home` | new (not in the backlog yet); lands here after onboarding once ADR 0014 is amended |
+| **Built** · 3.0 Home (`Home`) | `/home` | DIR-06 |
 | 3.1 My profile (`Me`) | `/me` | PRF-02 |
 | 3.2 Directory (`Directory`) | `/directory` | DIR-02 |
 | 3.3 Profile and message (`Profile`) | `/profile/[id]` | DIR-03, CON-02 |
 | 3.4 Relay email (`RecipientEmail`) | email | CON-02 |
 
 Implementation notes: A2.3 uses a dedicated route with dialog styling. The record edit route was added to cover the fields accepted by `admin_update_profile`; it is not drawn on the canvas. French admin copy and empty states need Noah’s language review.
+
+Home (DIR-06) differs from the canvas in two places: the search hint says "Name, job title or employer", because `search_directory` does not search universities; and its search box and "open to" chips link to `/directory?q=…` / `?offer=…`, which the directory reads once DIR-02 rebuilds it.
 
 Template approvals save and approve the submitted version in one database transaction. Preview stays hidden until EML-01 supplies the renderer, including `graduation_year` and `onboarding_link`.
 
