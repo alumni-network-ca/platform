@@ -4,73 +4,17 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import type { FormState } from "@/components/profile/ProfileForm";
-import { homeFor } from "@/lib/auth/home";
-import type { Json } from "@/lib/database";
-import {
-  POLICY_VERSION,
-  STEPS,
-  parseAbout,
-  parseCareer,
-  parseChannels,
-  parseEducation,
-  parseOffers,
-  parsePublish,
-  readForm,
-  type Parsed,
-  type Step,
-} from "@/lib/profile/fields";
-import { loadMyProfile, type MyProfile } from "@/lib/profile/server";
+import { POLICY_VERSION, STEPS, parsePublish, readForm, type Section } from "@/lib/profile/fields";
+import { failure, loadMyProfile, parseSection, type Sections } from "@/lib/profile/server";
 
 // The onboarding wizard's saves (ONB-05). Each step is one save_my_profile call, a single transaction checked
 // again in the database, so a failed step never loses what an earlier step saved.
 
-const failure = (error: { code?: string }): FormState => ({
-  errors: {},
-  failed: error.code === "42501" ? "forbidden" : "failed",
-});
-
-type Sections = { profile?: Record<string, Json>; [section: string]: Json | undefined };
-
-function parseStep(
-  step: Exclude<Step, "publish">,
-  form: FormData,
-  me: MyProfile,
-): Parsed<Sections> {
-  const reader = readForm(form);
-  switch (step) {
-    case "welcome":
-      return { ok: true, data: {} };
-    case "about":
-      return parseAbout(reader);
-    case "education":
-      return parseEducation(reader);
-    case "career":
-      return parseCareer(
-        reader,
-        me.careerFields.map((field) => field.id),
-      );
-    case "networking":
-      return {
-        ok: true,
-        data: parseOffers(
-          reader,
-          me.offerTypes.map((offer) => offer.key),
-        ),
-      };
-    case "contact":
-      return parseChannels(reader);
-  }
-}
-
 /** Saves one step, then moves on to the next. */
-export async function saveStep(
-  step: Exclude<Step, "publish">,
-  _: FormState,
-  form: FormData,
-): Promise<FormState> {
+export async function saveStep(step: Section, _: FormState, form: FormData): Promise<FormState> {
   const me = await loadMyProfile(`/onboarding/${step}`);
-  if (me.profile.onboarding_completed_at) redirect(homeFor(me.state));
-  const parsed = parseStep(step, form, me);
+  if (me.profile.onboarding_completed_at) redirect("/me");
+  const parsed = parseSection(step, form, me);
   if (!parsed.ok) return { errors: parsed.errors };
 
   if (step === "welcome") {
@@ -107,7 +51,7 @@ export async function saveStep(
  */
 export async function finish(_: FormState, form: FormData): Promise<FormState> {
   const me = await loadMyProfile("/onboarding/publish");
-  if (me.profile.onboarding_completed_at) redirect(homeFor(me.state));
+  if (me.profile.onboarding_completed_at) redirect("/me");
   const parsed = parsePublish(readForm(form));
   if (!parsed.ok) return { errors: parsed.errors };
   const { visibility } = parsed.data;
@@ -141,6 +85,5 @@ export async function finish(_: FormState, form: FormData): Promise<FormState> {
     if (error) return failure(error);
   }
   revalidatePath("/", "layout");
-  // TODO(PRF-02): land on /me, as the design does, once the profile editor is on the v2 schema.
-  redirect("/directory");
+  redirect("/me");
 }

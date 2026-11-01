@@ -3,7 +3,20 @@ import { requireAccess } from "@/lib/auth/account";
 import { translations } from "@/lib/i18n";
 import { getServerLocale } from "@/lib/i18n-server";
 import { schoolBranding } from "@/lib/school";
-import { optionsFor, type Channel } from "./fields";
+import type { FormState } from "@/components/profile/ProfileForm";
+import type { Json } from "@/lib/database";
+import {
+  optionsFor,
+  parseAbout,
+  parseCareer,
+  parseChannels,
+  parseEducation,
+  parseOffers,
+  readForm,
+  type Channel,
+  type Parsed,
+  type Section,
+} from "./fields";
 
 async function read<T>(query: PromiseLike<{ data: T; error: { message: string } | null }>) {
   const { data, error } = await query;
@@ -23,7 +36,7 @@ export async function loadMyProfile(path: string) {
       supabase
         .from("alumni_profiles")
         .select(
-          "id, first_name, last_name, preferred_name, grad_year, city, country, bio, job_title, employer, career_field_id, languages, visibility, onboarding_step, onboarding_completed_at",
+          "id, first_name, last_name, preferred_name, grad_year, city, country, bio, job_title, employer, career_field_id, languages, visibility, onboarding_step, onboarding_completed_at, last_confirmed_at, confirmation_due_at",
         )
         .eq("institution_id", school.id)
         .eq("user_id", user.id)
@@ -112,3 +125,40 @@ export async function loadMyProfile(path: string) {
 }
 
 export type MyProfile = Awaited<ReturnType<typeof loadMyProfile>>;
+
+/** What save_my_profile takes: the sections a form changed. */
+export type Sections = { profile?: Record<string, Json>; [section: string]: Json | undefined };
+
+/** One section's form, checked against the school's own career fields and options. */
+export function parseSection(section: Section, form: FormData, me: MyProfile): Parsed<Sections> {
+  const reader = readForm(form);
+  switch (section) {
+    case "welcome":
+      return { ok: true, data: {} };
+    case "about":
+      return parseAbout(reader);
+    case "education":
+      return parseEducation(reader);
+    case "career":
+      return parseCareer(
+        reader,
+        me.careerFields.map((field) => field.id),
+      );
+    case "networking":
+      return {
+        ok: true,
+        data: parseOffers(
+          reader,
+          me.offerTypes.map((offer) => offer.key),
+        ),
+      };
+    case "contact":
+      return parseChannels(reader);
+  }
+}
+
+/** A database refusal (42501) or any other failure, as the form shows it. */
+export const failure = (error: { code?: string }): FormState => ({
+  errors: {},
+  failed: error.code === "42501" ? "forbidden" : "failed",
+});

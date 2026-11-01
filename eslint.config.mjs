@@ -26,11 +26,9 @@ export default defineConfig([
     // Pages and components still on the legacy schema. Each one names the M2 issue that rewires it;
     // remove it from this list in that PR.
     files: [
-      "app/me/page.tsx",
       "app/profile/[[]id]/page.tsx",
       "components/AdminImport.tsx",
       "components/ContactAlumnusButton.tsx",
-      "components/ProfileEditor.tsx",
     ],
     rules: { "no-restricted-imports": "off" },
   },

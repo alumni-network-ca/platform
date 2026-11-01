@@ -277,7 +277,7 @@ describe("navModel", () => {
       ]);
       expect(model.account?.sections[1]?.title).toBe("Account");
       expect(item(model, "whoCanSeeMe")).toMatchObject({
-        href: "/me#visibility",
+        href: "/me/visibility",
         chip: { text: "Verified alumni", kind: "good" },
       });
       expect(item(model, "language")).toMatchObject({
@@ -285,7 +285,8 @@ describe("navModel", () => {
         chip: { text: "English · Français", kind: "info" },
       });
       expect(item(model, "emailAndSignIn")?.href).toBe("/account/email");
-      expect(item(model, "downloadMyData")?.href).toBe("#");
+      expect(item(model, "downloadMyData")?.href).toBe("/me#your-data");
+      expect(item(model, "editProfile")?.href).toBe("/me/edit/about");
       expect(item(model, "privacyAndTerms")?.href).toBe("#");
     });
 
