@@ -60,7 +60,13 @@ export default async function Home() {
                     .join("")}
                 </div>
                 <div style={{ flex: 1 }}>
-                  <strong>{name}</strong>
+                  {/* Names stay hidden until the visitor is an approved member. */}
+                  <strong>
+                    <span className="censored" aria-hidden="true">
+                      {name}
+                    </span>
+                    <span className="srOnly">Name visible to members</span>
+                  </strong>
                   <div className="personMeta">{role}</div>
                 </div>
                 <div className="pill">{flag}</div>

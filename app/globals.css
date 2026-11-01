@@ -523,6 +523,12 @@ a {
 .ledgerHead {
   justify-content: space-between;
 }
+.censored {
+  display: inline-block;
+  filter: blur(6px);
+  user-select: none;
+  pointer-events: none;
+}
 .year,
 .yearBadge {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
