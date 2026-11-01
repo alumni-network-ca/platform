@@ -4,7 +4,7 @@ import { getServerLocale } from "@/lib/i18n-server";
 import { schoolBranding } from "@/lib/school";
 import { AcceptForm } from "./AcceptForm";
 
-// Where a staff invitation link leads (SA-02, ADM-06). The person signs in first, with a code if they are new;
+// Where a staff invitation link leads (SA-02, ADM-06). The person signs in or creates and confirms an account first;
 // accepting needs the session's email to be the invited one.
 export default async function AcceptStaffPage({
   searchParams,

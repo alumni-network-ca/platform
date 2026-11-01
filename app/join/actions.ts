@@ -1,16 +1,31 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { requireAccess } from "@/lib/auth/account";
 
-export type JoinResult = { error: "missing" | "tooMany" | "failed" | null };
+export type JoinResult = { error: "missing" | "tooMany" | "failed" | null; next?: string };
 
 /** Sends the sign-up to the school's approval queue (ADR 0004). Consent capture and Turnstile come in ONB-03. */
 export async function requestAccess(_: JoinResult, form: FormData): Promise<JoinResult> {
-  const { school, supabase } = await requireAccess("/join");
+  return submitRequest("/join", form);
+}
+
+export async function updateRequest(_: JoinResult, form: FormData): Promise<JoinResult> {
+  return submitRequest("/join/edit", form);
+}
+
+async function submitRequest(path: string, form: FormData): Promise<JoinResult> {
+  const { school, supabase } = await requireAccess(path);
   const field = (name: string) => String(form.get(name) ?? "").trim();
   const gradYear = Number(field("grad_year"));
-  if (!field("first_name") || !field("last_name") || !Number.isInteger(gradYear))
+  if (
+    !field("first_name") ||
+    !field("last_name") ||
+    !Number.isInteger(gradYear) ||
+    gradYear < 1900 ||
+    gradYear > new Date().getFullYear() + 1 ||
+    ["first_name", "last_name", "maiden_name"].some((name) => field(name).length > 80) ||
+    field("note").length > 1000
+  )
     return { error: "missing" };
 
   const { error } = await supabase.rpc("request_access", {
@@ -22,5 +37,5 @@ export async function requestAccess(_: JoinResult, form: FormData): Promise<Join
     p_note: field("note"),
   });
   if (error) return { error: error.code === "54000" ? "tooMany" : "failed" };
-  redirect("/account/pending");
+  return { error: null, next: "/account/pending" };
 }

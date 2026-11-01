@@ -42,6 +42,11 @@ export default async function OnboardingStepPage({
   const [title, intro] = titles[step];
   const heading = (
     <div className="onbHead">
+      {step === "welcome" && (
+        <span className="tag tagGood">
+          {me.locale === "fr" ? `Approuvé par ${school}` : `Approved by ${school}`}
+        </span>
+      )}
       <small>{format(t.stepOf, { n: index + 1, total: STEPS.length })}</small>
       <h1>{title}</h1>
       <p>{intro}</p>

@@ -4,24 +4,20 @@ import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
 import { createClient } from "@/lib/supabase/client";
+import { MIN_PASSWORD_LENGTH } from "@/lib/auth/password";
 
-// A password is optional (ADR 0015): it saves an email on each sign-in. A forgotten one is replaced the same way,
-// after signing in with a code, so there is no reset link. Supabase checks the length (minimum_password_length)
-// and, with secure_password_change, asks for a recent sign-in before a change.
-
-export const MIN_PASSWORD_LENGTH = 10;
+// Also used after an email recovery link. Supabase requires a recent sign-in for a password change.
 
 const TEXT = {
   en: {
     title: "Your password",
-    intro: (email: string) =>
-      `Set a password to sign in as ${email} without waiting for a code. You can still use a code at any time.`,
+    intro: (email: string) => `Choose the password you will use to sign in as ${email}.`,
     password: "New password",
     hint: `At least ${MIN_PASSWORD_LENGTH} characters. A few unrelated words make a strong one.`,
     confirm: "Type it again",
     save: "Save my password",
     saving: "Saving…",
-    saved: "Your password is saved. Next time, choose “Sign in with a password”.",
+    saved: "Your password is saved. Use it the next time you sign in.",
     mismatch: "The two passwords are different.",
     weak: `Choose a password of at least ${MIN_PASSWORD_LENGTH} characters.`,
     same: "That is already your password.",
@@ -32,14 +28,13 @@ const TEXT = {
   fr: {
     title: "Votre mot de passe",
     intro: (email: string) =>
-      `Choisissez un mot de passe pour vous connecter en tant que ${email} sans attendre de code. Vous pouvez toujours utiliser un code.`,
+      `Choisissez le mot de passe que vous utiliserez pour vous connecter en tant que ${email}.`,
     password: "Nouveau mot de passe",
     hint: `Au moins ${MIN_PASSWORD_LENGTH} caractères. Quelques mots sans lien entre eux en font un solide.`,
     confirm: "Tapez-le de nouveau",
     save: "Enregistrer mon mot de passe",
     saving: "Enregistrement…",
-    saved:
-      "Votre mot de passe est enregistré. La prochaine fois, choisissez « Se connecter avec un mot de passe ».",
+    saved: "Votre mot de passe est enregistré. Utilisez-le lors de votre prochaine connexion.",
     mismatch: "Les deux mots de passe sont différents.",
     weak: `Choisissez un mot de passe d'au moins ${MIN_PASSWORD_LENGTH} caractères.`,
     same: "C'est déjà votre mot de passe.",
@@ -50,7 +45,15 @@ const TEXT = {
   },
 };
 
-export function PasswordForm({ email }: { email: string }) {
+export function PasswordForm({
+  email,
+  recovery = false,
+  continueTo = "/auth/home",
+}: {
+  email: string;
+  recovery?: boolean;
+  continueTo?: string;
+}) {
   const { locale } = useLanguage();
   const t = TEXT[locale];
   const [password, setPassword] = useState("");
@@ -82,7 +85,13 @@ export function PasswordForm({ email }: { email: string }) {
 
   return (
     <>
-      <h1>{t.title}</h1>
+      <h1>
+        {recovery
+          ? locale === "fr"
+            ? "Choisissez un nouveau mot de passe"
+            : "Choose a new password"
+          : t.title}
+      </h1>
       <p className="muted">{t.intro(email)}</p>
       <form onSubmit={save} className="authForm">
         {/* Tells password managers which account the new password belongs to. */}
@@ -122,6 +131,12 @@ export function PasswordForm({ email }: { email: string }) {
       {saved && (
         <p className="notice" role="status">
           {t.saved}
+          {recovery && (
+            <>
+              {" "}
+              <Link href={continueTo}>{locale === "fr" ? "Continuer →" : "Continue →"}</Link>
+            </>
+          )}
         </p>
       )}
       {message && (
@@ -129,9 +144,11 @@ export function PasswordForm({ email }: { email: string }) {
           {message}
         </div>
       )}
-      <div className="authFooter">
-        <Link href="/account/email">{t.email}</Link>
-      </div>
+      {!recovery && (
+        <div className="authFooter">
+          <Link href="/account/email">{t.email}</Link>
+        </div>
+      )}
     </>
   );
 }

@@ -4,6 +4,29 @@ Source: the "Alumni Full Flow" design canvas (claude.ai artifact `K7UANkXdF1Te9s
 
 The canvas is the reference for layout, wording and flow. The database rules (ADR 0005, RLS, the RPCs) stay the authority on who may do what.
 
+## Account and admission proposal · November 1, 2026
+
+This revision was approved on November 1, 2026 and implemented on `codex/alumni-signup-design`, based on `origin/dev`. It edits this repository's exported Claude design files and their existing **Alumni** canvas page. It does not update the original cloud artifact automatically. The static preview remains design only; the running application uses real accounts and school review.
+
+Run `node docs/design/alumni-full-flow/serve-preview.mjs` from the repository root, then open [the clickable preview](http://127.0.0.1:4177/#Join). It uses these same `.dc.html` files. The local adapter supplies the shared navigation because the original canvas runtime and `support.js` are not included in the export. The preview creates no accounts, sends no emails and makes no admission decisions. The desktop/mobile controls change the design viewport.
+
+Implemented flow: **Join now → Create account → Confirm email by link → Request alumni access → School review → Approved → Profile setup**. Email confirmation confirms ownership only; school approval admits the alumnus. The email shared by the school contains the same public `/join` link as the navigation. See [ADR 0016](../../adr/0016-account-signup-and-school-admission.md) for authentication and hosted template setup.
+
+| Design | Purpose |
+|---|---|
+| `Welcome`, `NavBar` | Separate **Sign in** and **Join now**, with Join now at the top right for guests. |
+| `Join` | Explicit new-account creation with email, password and password confirmation; no membership granted. |
+| `VerifyEmail`, `ConfirmEmailMessage` | Confirmation link for the new account; no code entry or code sign-in. |
+| `Request`, `Pending`, `RequestEdit` | Submit school details, wait for a school reviewer, and correct a pending request. Directory access stays locked. |
+| `SignupReview` | Staff-only reviewer handoff shown on the Alumni page to explain this end-to-end flow. Approval grants membership; asking for information or declining requires a message. The detailed existing staff design remains `AdmReview`. |
+| `NeedsInfo`, `RequestDeclined` | Clear applicant outcomes without suggesting that an account grants access. |
+| `Approved`, `AccessApproved` | School approval notification and the transition to the existing onboarding designs. |
+| `SignIn` | Existing-account email/password sign-in only. In the prototype, ordinary sign-in previews a pending applicant; the approval email previews an approved applicant. The app must route from the authenticated account state. |
+
+`Code.dc.html` is preserved on a separate **Archive · hidden code sign-in** canvas page. Code sign-in is hidden in the application. Existing accounts without passwords can use the email recovery link to set one.
+
+The preview's Next screen control switches between applicant, email and staff contexts for review. These controls are outside the product screen and never grant applicant access to staff functionality. Sample people and email addresses are mock data. The application includes French signup and request copy. Terms/Privacy destinations remain with PUB-02; the application does not present placeholder consent links. The prototype retains its draft wording. School decision notifications keep their existing outbox dependency (EML-01); the implemented waiting page directs applicants to sign in to check status.
+
 ## Rules drawn on the canvas
 
 - **School admin** sees every school admin page. **Reviewer** sees the dashboard, decides sign-ups, reads the roster, records and audit log; no record actions, exports, templates, staff or settings (ADR 0005).
@@ -19,7 +42,7 @@ The **Layout** page of the canvas holds components every screen reuses. Screens 
 |---|---|---|
 | **Built** · Nav bar with role pill and account menu (`NavBar`) | L0 component; L1–L6 one per role: alumnus, applicant, reviewer, school admin, school admin who is also an alumnus, platform admin | [`../nav-bar.md`](../nav-bar.md) |
 
-Signed-out pages (Join, Code) use the `guest` role: FR and Sign in, no avatar.
+Signed-out pages use the `guest` role: FR, Sign in and the proposed Join now action, no avatar. The legacy Code frame is archived.
 
 ## Screens → routes → backlog
 
@@ -59,7 +82,7 @@ Signed-out pages (Join, Code) use the `guest` role: FR and Sign in, no avatar.
 | Screen | Route | Backlog |
 |---|---|---|
 | 1.1 School's invitation email (`Main`) | email | EML-02 |
-| 1.2 Join, 1.3 Code, 1.4 Request (`Join`, `Code`, `Request`) | `/join`, `/login` | FND-09, FND-18, ONB-03 |
+| **Built** · 1.2 Create account, 1.3 Confirm email, 1.4 Request (`Join`, `VerifyEmail`, `ConfirmEmailMessage`, `Request`) | Public `/join` account entry and signed-in request; `/join/verify` confirmation instructions; `/login` separate. | FND-09, FND-18, ONB-03 |
 | 1.5 Pending, 1.6 Needs info (`Pending`, `NeedsInfo`) | `/account/pending`, `/account/needs-info` | ONB-06 |
 | 1.7 Approval email (`Approved`) | email | EML-02 |
 | **Built** · 2.1–2.4 Onboarding (`OnbAbout`, `OnbCareer`, `OnbNetwork`, `OnbPublish`) | `/onboarding` | ONB-05, PRF-05 |

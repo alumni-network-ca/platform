@@ -57,6 +57,8 @@ export function canOpen(state: AccountState, path: string): boolean {
   if (pathname === "/account/email" || pathname === "/account/password") return true;
   // A platform admin with no role here may still sign up as a graduate of the school.
   if (pathname === "/join" && homeFor(state) === "/account/platform") return true;
+  if (pathname === "/join/edit")
+    return ["/account/pending", "/account/needs-info"].includes(homeFor(state));
   if (under("/account") || under("/join")) return homeFor(state) === pathname;
   return true;
 }

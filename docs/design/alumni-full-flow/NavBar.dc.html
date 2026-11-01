@@ -32,7 +32,8 @@ body{margin:0}
     <sc-if value="{{isGuest}}" hint-placeholder-val="{{false}}">
       <div style="display: flex; align-items: center; gap: 10px">
         <a href="#" style="padding: 8px 12px; border-radius: 999px; color: #d2d7e4; font-size: 14px; text-decoration: none">FR</a>
-        <a href="Code.dc.html" style="padding: 9px 16px; border-radius: 7px; border: 1px solid #6b7a9e; color: #ffffff; font-size: 14px; font-weight: 700; text-decoration: none">Sign in</a>
+        <a href="SignIn.dc.html" style="padding: 9px 16px; border-radius: 7px; border: 1px solid #6b7a9e; color: #ffffff; font-size: 14px; font-weight: 700; text-decoration: none">Sign in</a>
+        <a href="Join.dc.html" style="padding: 10px 17px; border-radius: 7px; background: #7b1e3d; color: #ffffff; font-size: 14px; font-weight: 700; text-decoration: none">Join now</a>
       </div>
     </sc-if>
     <sc-if value="{{hasAccount}}" hint-placeholder-val="{{true}}">
@@ -73,7 +74,7 @@ body{margin:0}
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"role":{"editor":"enum","options":["guest","alumnus","applicant","reviewer","school_admin","platform_admin"],"default":"school_admin"},"active":{"editor":"text","default":""},"alsoAlumnus":{"editor":"boolean","default":false},"open":{"editor":"boolean","default":true},"$preview":{"width":1280,"height":640}}'>
+<script type="text/x-dc" data-dc-script data-props='{"requestState":{"editor":"enum","options":["draft","pending","needs_info","rejected"],"default":"pending"},"role":{"editor":"enum","options":["guest","alumnus","applicant","reviewer","school_admin","platform_admin"],"default":"school_admin"},"active":{"editor":"text","default":""},"alsoAlumnus":{"editor":"boolean","default":false},"open":{"editor":"boolean","default":true},"$preview":{"width":1280,"height":640}}'>
 class Component extends DCLogic {
   constructor(props) {
     super(props);
@@ -149,6 +150,15 @@ class Component extends DCLogic {
       }
     };
     var p = P[role] || P.school_admin;
+    if (role === 'applicant') {
+      var requestState = this.props.requestState || 'pending';
+      var requestLabels = { draft: 'Account created · request not submitted', pending: 'Request pending with Herzliah', needs_info: 'School reviewer needs more information', rejected: 'Request not approved' };
+      p = Object.assign({}, p, { subline: requestLabels[requestState] || requestLabels.pending });
+      if (requestState === 'draft') p.sections = [
+        sec('', [item('Complete my request', 'Request.dc.html', 'Not submitted', 'info')]),
+        sec('Account', [langItem]), signOut
+      ];
+    }
     var sections = p.sections.slice();
     if (role === 'school_admin' && also) {
       p = Object.assign({}, p, { subline: 'Herzliah High School · Class of 1998' });

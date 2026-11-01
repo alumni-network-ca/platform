@@ -53,7 +53,7 @@ inactive = `#d2d7e4`, 500):
 Badge: min-width 20px, radius 999px, `#eab6ce` bg, `#0b2159` text, 11px/800.
 
 Right cluster:
-- **guest**: "FR" text link (language switch) + "Sign in" outlined button (`1px solid #6b7a9e`, radius 7px).
+- **guest**: "FR" text link (language switch) + "Sign in" outlined button (`1px solid #6b7a9e`, radius 7px) + **Join now** filled burgundy button, at the far right. The approved November 1 design is drawn in `alumni-full-flow/NavBar.dc.html`; the application implements this guest navigation. Sign in opens the existing-account password form; Join now opens new-account creation and the school admission flow.
 - **everyone else**: role pill (if any) + avatar button.
 
 Role pill (12px/800, padding 6px 12px, radius 999px, small shield icon before the text):

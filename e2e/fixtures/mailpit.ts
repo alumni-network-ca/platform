@@ -26,3 +26,26 @@ export async function codeFor(email: string): Promise<string> {
 export function newAddress(label: string) {
   return `${label}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}@example.test`;
 }
+
+/** The real confirmation/recovery link rendered by the local Auth email template. */
+export async function authLinkFor(email: string, flow: "signup" | "recovery"): Promise<string> {
+  for (let attempt = 0; attempt < 40; attempt++) {
+    const { messages } = (await (await fetch(search(email))).json()) as {
+      messages: { ID: string }[];
+    };
+    for (const message of messages ?? []) {
+      const body = (await (
+        await fetch(stack.mailpitUrl + "/api/v1/message/" + message.ID)
+      ).json()) as { HTML: string };
+      const links = [...(body.HTML ?? "").matchAll(/href="([^"]+)"/g)].map((match) =>
+        match[1]!.replaceAll("&amp;", "&"),
+      );
+      const link = links.find(
+        (link) => link.includes("/auth/confirm?") && link.includes("flow=" + flow),
+      );
+      if (link) return link;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+  throw new Error("No " + flow + " link arrived for " + email);
+}

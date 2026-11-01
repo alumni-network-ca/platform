@@ -27,6 +27,11 @@ export default async function Review({ params }: { params: Promise<{ id: string 
             {r.first_name} {r.last_name} · {r.grad_year}
           </h1>
           <p>{dateLabel(r.created_at, locale)}</p>
+          <p>
+            {locale === "fr"
+              ? "Le compte est créé. L’approbation de cette demande donne accès au réseau des anciens."
+              : "The account is created. Approving this request grants alumni access."}
+          </p>
         </div>
       </div>
       <div className="panelGrid">

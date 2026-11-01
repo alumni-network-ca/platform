@@ -4,6 +4,8 @@
 
 ## Context
 
+Updated by [ADR 0016](0016-account-signup-and-school-admission.md): separate account creation and school admission; code sign-in hidden, password recovery available.
+
 Alumni sign in a few times a year. With passwords, most of them would forget theirs between visits, so the password mostly creates reset emails and support requests. The MVP's emailed links also broke when opened on another device (F9). Every sign-in already depends on the person's inbox (sign-up confirmation, resets), so the password adds little protection.
 
 ## Decision

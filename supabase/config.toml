@@ -186,7 +186,7 @@ enable_anonymous_sign_ins = false
 # Allow/disallow testing manual linking of accounts
 enable_manual_linking = false
 # Passwords shorter than this value will be rejected as weak. Minimum 6, recommended 8 or more.
-# Passwords are optional (ADR 0015): length only, no composition rules (NIST SP 800-63B).
+# Password signup/sign-in: length only, no composition rules.
 minimum_password_length = 10
 # Passwords that do not meet the following requirements will be rejected as weak. Supported values
 # are: `letters_digits`, `lower_upper_letters_digits`, `lower_upper_letters_digits_symbols`
@@ -253,11 +253,14 @@ otp_expiry = 600
 # admin_email = "admin@email.com"
 # sender_name = "Admin"
 
-# Sign-in and email-change emails carry the code (ADR 0014). New emails get the confirmation template, known ones
-# the magic link template; both show the same code email.
+# Account creation confirms the email by link, separately from school admission.
 [auth.email.template.confirmation]
-subject = "Your sign-in code: {{ .Token }}"
-content_path = "./supabase/templates/sign-in-code.html"
+subject = "Confirm your alumni account / Confirmez votre compte"
+content_path = "./supabase/templates/confirm-account.html"
+
+[auth.email.template.recovery]
+subject = "Reset your password / Réinitialisez votre mot de passe"
+content_path = "./supabase/templates/reset-password.html"
 
 [auth.email.template.magic_link]
 subject = "Your sign-in code: {{ .Token }}"

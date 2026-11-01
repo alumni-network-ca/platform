@@ -11,7 +11,7 @@ export default async function LoginPage() {
     <>
       <Nav />
       <main className="authPage">
-        <section className="authCard">
+        <section className="authCard joinAuth">
           <Suspense fallback={null}>
             <SignInForm networkName={networkName} audience="school" />
           </Suspense>
