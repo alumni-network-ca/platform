@@ -55,6 +55,7 @@ export type FieldError =
       code:
         | "required"
         | "year"
+        | "month"
         | "yearOrder"
         | "email"
         | "phone"
@@ -85,17 +86,27 @@ class Checker {
     else if (value.length > max) this.errors[field] = { code: "tooLong", max };
     return value;
   }
+  /** Any four-digit year. */
   year(field: string, value: string, required = false): number | null {
     if (!value) {
       if (required) this.errors[field] = { code: "required" };
       return null;
     }
-    const year = Number(value);
-    if (!/^\d{4}$/.test(value) || year < 1900 || year > 2100) {
+    if (!/^\d{4}$/.test(value)) {
       this.errors[field] = { code: "year" };
       return null;
     }
-    return year;
+    return Number(value);
+  }
+  /** "2019-03" from a month picker, or a bare "2019" where the browser has no picker. */
+  month(field: string, value: string): { year: number | null; month: number | null } {
+    if (!value) return { year: null, month: null };
+    const match = value.match(/^(\d{4})(?:-(0[1-9]|1[0-2]))?$/);
+    if (!match) {
+      this.errors[field] = { code: "month" };
+      return { year: null, month: null };
+    }
+    return { year: Number(match[1]), month: match[2] ? Number(match[2]) : null };
   }
   done<T>(data: T): Parsed<T> {
     return Object.keys(this.errors).length
@@ -172,7 +183,9 @@ export type ExperienceRow = {
   employer: string;
   location: string;
   start_year: number | null;
+  start_month: number | null;
   end_year: number | null;
+  end_month: number | null;
   is_current: boolean;
 };
 
@@ -182,20 +195,19 @@ export type Career = {
 };
 
 /**
- * The current role lives on the profile (the directory shows it); other roles are experience rows. A row
- * already marked current keeps that flag (role_current) and has no end year, as the database requires.
+ * The current role lives on the profile (the directory shows it); other roles are experience rows. A role
+ * with no end date is current ("2019 – now").
  */
 export function parseCareer(form: FormReader, careerFieldIds: readonly string[]): Parsed<Career> {
   const c = new Checker();
   const field = form.get("career_field_id");
   if (field && !careerFieldIds.includes(field)) c.errors.career_field_id = { code: "careerField" };
-  const [titles, employers, locations, starts, ends, currents] = [
+  const [titles, employers, locations, starts, ends] = [
     form.all("role_title"),
     form.all("role_employer"),
     form.all("role_location"),
     form.all("role_start"),
     form.all("role_end"),
-    form.all("role_current"),
   ];
   const experience = titles
     .map((title, i) => ({
@@ -205,19 +217,27 @@ export function parseCareer(form: FormReader, careerFieldIds: readonly string[])
       location: locations[i] ?? "",
       start: starts[i] ?? "",
       end: ends[i] ?? "",
-      current: currents[i] === "true",
     }))
     .filter((row) => row.title || row.employer || row.location || row.start || row.end)
-    .map(({ i, title, employer, location, start, end, current }) => {
+    .map(({ i, title, employer, location, start, end }) => {
+      const from = c.month(`role_start.${i}`, start);
+      const to = c.month(`role_end.${i}`, end);
       const row: ExperienceRow = {
         job_title: c.text(`role_title.${i}`, title, MAX.title, true),
         employer: c.text(`role_employer.${i}`, employer, MAX.title),
         location: c.text(`role_location.${i}`, location, MAX.title),
-        start_year: c.year(`role_start.${i}`, start),
-        end_year: current ? null : c.year(`role_end.${i}`, end),
-        is_current: current,
+        start_year: from.year,
+        start_month: from.month,
+        end_year: to.year,
+        end_month: to.month,
+        is_current: !end,
       };
-      if (row.start_year && row.end_year && row.end_year < row.start_year)
+      // The database refuses an end year before the start year; months are compared here too.
+      if (
+        from.year &&
+        to.year &&
+        to.year * 12 + (to.month ?? 12) < from.year * 12 + (from.month ?? 1)
+      )
         c.errors[`role_end.${i}`] = { code: "yearOrder" };
       return row;
     });

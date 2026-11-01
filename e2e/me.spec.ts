@@ -40,6 +40,16 @@ test.describe("my profile", () => {
     await expect(page.getByRole("status")).toHaveText("Your changes are saved.");
     await expect(page.getByText(/Montreal, Canada/)).toBeVisible();
 
+    // Roles take a month and year; an empty end means the role is held now.
+    await page.goto("/me/edit/career");
+    const role = page.getByRole("group", { name: "Previous roles 1" });
+    await expect(role.getByLabel("From")).toHaveValue("2018-01");
+    await role.getByLabel("From").fill("2018-09");
+    await role.getByLabel("To").fill("");
+    await page.getByRole("button", { name: "Save changes" }).click();
+    await expect(page).toHaveURL(/\/me\?saved=1$/);
+    await expect(page.getByRole("region", { name: "Career" })).toContainText("Sep 2018 – now");
+
     // Leaving with unsaved changes asks first.
     await page.goto("/me/edit/career");
     await page.getByLabel("Job title").first().fill("Head of Design");

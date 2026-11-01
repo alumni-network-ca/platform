@@ -74,7 +74,9 @@ export async function loadMyProfile(path: string) {
     read(
       supabase
         .from("alumni_experience")
-        .select("job_title, employer, location, start_year, end_year, is_current")
+        .select(
+          "job_title, employer, location, start_year, start_month, end_year, end_month, is_current",
+        )
         .eq("profile_id", profile.id)
         .order("sort_order"),
     ),

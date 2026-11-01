@@ -192,8 +192,10 @@ type InputProps = {
   optional?: boolean;
   maxLength?: number;
   required?: boolean;
-  type?: "text" | "email" | "tel" | "url";
+  type?: "text" | "email" | "tel" | "url" | "month";
   inputMode?: "numeric" | "tel" | "email" | "url";
+  /** Keeps only digits as they are typed (years). */
+  digits?: boolean;
   placeholder?: string;
   autoComplete?: string;
   list?: string;
@@ -206,6 +208,7 @@ export function TextInput({
   errorKey = name,
   hint,
   optional,
+  digits,
   ...input
 }: InputProps) {
   const { errors, t } = useForm();
@@ -224,6 +227,13 @@ export function TextInput({
         aria-invalid={invalid || undefined}
         aria-describedby={
           [invalid && `${id}-error`, hint && `${id}-hint`].filter(Boolean).join(" ") || undefined
+        }
+        onInput={
+          digits
+            ? (event) => {
+                event.currentTarget.value = event.currentTarget.value.replace(/\D/g, "");
+              }
+            : undefined
         }
         {...input}
       />
