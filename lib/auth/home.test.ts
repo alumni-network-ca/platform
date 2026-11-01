@@ -27,7 +27,7 @@ describe("homeFor", () => {
     [
       "approved alumnus",
       { membership: member("alumni"), profile: profile(), request: "approved" },
-      "/directory",
+      "/home",
     ],
     [
       "approved, onboarding not finished",
@@ -62,7 +62,7 @@ describe("homeFor", () => {
         request: "approved",
         platformAdmin: true,
       },
-      "/directory",
+      "/home",
     ],
     [
       "self-deleted (membership revoked)",
@@ -83,7 +83,8 @@ describe("canOpen", () => {
   const staff: AccountState = { ...none, membership: member("school_admin") };
   const pending: AccountState = { ...none, request: "pending" };
 
-  it("lets alumni use the directory and profiles, not admin", () => {
+  it("lets alumni use their home, the directory and profiles, not admin", () => {
+    expect(canOpen(alumnus, "/home")).toBe(true);
     expect(canOpen(alumnus, "/directory")).toBe(true);
     expect(canOpen(alumnus, "/profile/abc?x=1")).toBe(true);
     expect(canOpen(alumnus, "/admin")).toBe(false);
@@ -93,6 +94,7 @@ describe("canOpen", () => {
   it("keeps staff without an alumni profile out of the directory (DEC-04)", () => {
     expect(canOpen(staff, "/admin/requests")).toBe(true);
     expect(canOpen(staff, "/directory")).toBe(false);
+    expect(canOpen(staff, "/home")).toBe(false);
     expect(canOpen({ ...staff, profile: profile() }, "/directory")).toBe(true);
   });
 
@@ -100,6 +102,13 @@ describe("canOpen", () => {
     expect(canOpen(pending, "/account/pending")).toBe(true);
     expect(canOpen(pending, "/account/rejected")).toBe(false);
     expect(canOpen(pending, "/directory")).toBe(false);
+    expect(canOpen(pending, "/home")).toBe(false);
+    expect(
+      canOpen(
+        { membership: member("alumni"), profile: profile(false), request: "approved" },
+        "/home",
+      ),
+    ).toBe(false);
     expect(canOpen(pending, "/account/email")).toBe(true);
     expect(canOpen(pending, "/account/password")).toBe(true);
     expect(canOpen(none, "/account/password")).toBe(true);

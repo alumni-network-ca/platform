@@ -17,7 +17,7 @@ for (const role of ["admin", "reviewer"] as const) {
 test("alumni cannot open the console", async ({ page, context, baseURL }) => {
   await signInAs(context, baseURL!, accounts.alumni);
   await page.goto("/admin");
-  await expect(page).toHaveURL(/\/directory$/);
+  await expect(page).toHaveURL(/\/home$/);
 });
 for (const decision of ["approve", "needs_info", "reject"] as const) {
   test("reviewer can " + decision + " a request", async ({ page, context, baseURL }) => {

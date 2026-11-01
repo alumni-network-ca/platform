@@ -1,6 +1,6 @@
 # 0014: Passwordless sign-in with an emailed one-time code, and landing routing
 
-- **Status:** Accepted (DEC-15, 2026-10-27); amended by [0015](0015-optional-password.md), which adds an optional password · **Date:** 2026-10-27 · **Requirements:** S1, S4, F9 · **Built in:** FND-09
+- **Status:** Accepted (DEC-15, 2026-10-27); amended by [0015](0015-optional-password.md), which adds an optional password, and on 2026-11-01 (DIR-06), which lands onboarded alumni on `/home` · **Date:** 2026-10-27 · **Requirements:** S1, S4, F9 · **Built in:** FND-09
 
 ## Context
 
@@ -19,7 +19,7 @@ Alumni sign in a few times a year. With passwords, most of them would forget the
 |---|---|
 | school admin or reviewer | `/admin` |
 | approved alumnus, onboarding not finished | `/onboarding` |
-| approved alumnus | `/directory` |
+| approved alumnus | `/home`, the alumni home page (DIR-06; until 2026-11-01, `/directory`) |
 | sign-up pending, needs info, or rejected | the matching account page (ONB-06) |
 | suspended | `/account/suspended` |
 | not known, or sign-up withdrawn | `/join` |

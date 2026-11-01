@@ -2437,3 +2437,330 @@ a.onbStep:hover {
     padding: 20px;
   }
 }
+
+/* The alumni home page (DIR-06; design Home). */
+.homePage {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 36px 24px 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.homeHead {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.homeHead .eyebrow {
+  color: var(--burgundy);
+}
+.homeHead h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 800;
+}
+.homeBanner {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 18px 22px;
+  border-radius: 12px;
+  font-size: 14px;
+}
+.homeBanner p {
+  margin: 4px 0 0;
+}
+.homeBanner strong {
+  font-size: 15px;
+}
+.homeBannerWarn {
+  background: #fff4dc;
+  border: 1px solid #f0d9a6;
+  color: #7a4b00;
+}
+.homeBannerGood {
+  background: #e3f3e8;
+  border: 1px solid #b9dcc4;
+  color: #1b5e33;
+  font-weight: 600;
+}
+.homeBannerError {
+  font-weight: 700;
+  color: #a1173b;
+}
+.homeActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.homeActions form {
+  margin: 0;
+}
+.homeActions .btn {
+  min-height: 44px;
+}
+.homeColumns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: flex-start;
+}
+.homeMain {
+  flex: 999 1 560px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.homeSide {
+  flex: 1 1 280px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.homePanel {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 14px;
+}
+.homePanel h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+.homeMain > .homePanel {
+  padding: 24px;
+  gap: 16px;
+}
+.homeMain > .homePanel h2,
+.homeSectionHead h2 {
+  font-size: 17px;
+}
+.homePanel p {
+  margin: 0;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+.homePanel a {
+  font-weight: 600;
+}
+.homeSearch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+}
+.homeSearch input {
+  flex: 1 1 280px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid #8a93ab;
+  border-radius: 10px;
+  color: var(--ink);
+  background: #fff;
+}
+.homeSearch .btn {
+  min-height: 44px;
+}
+.homeOffers {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.homeOffers > span {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+.homeOffers ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.homeOffers a {
+  display: inline-block;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid #8a93ab;
+  background: #fff;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.homeOffers a:hover {
+  border-color: var(--burgundy);
+}
+.homeSection {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.homeSectionHead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+.homeSectionHead h2 {
+  margin: 0;
+  font-weight: 700;
+}
+.homeSectionHead p {
+  margin: 3px 0 0;
+  font-size: 13px;
+  color: #4a5575;
+}
+.homeSectionHead a {
+  font-size: 14px;
+  font-weight: 700;
+}
+.homeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+.homeCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.homeCard:hover {
+  border-color: #aab3c7;
+}
+.homeCardHead {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.homeCardName {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.homeCardName strong {
+  font-size: 16px;
+  font-weight: 800;
+}
+.homeCardName small {
+  font-size: 13px;
+  color: #4a5575;
+}
+.homeCardRole {
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+.homeTag {
+  align-self: flex-start;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: #eef0f4;
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 700;
+}
+.homeAvatar {
+  display: grid;
+  place-items: center;
+  flex: 0 0 46px;
+  height: 46px;
+  border-radius: 50%;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 800;
+}
+.homeAvatarSmall {
+  flex-basis: 34px;
+  height: 34px;
+  font-size: 12px;
+}
+.homeEmpty {
+  margin: 0;
+  padding: 28px;
+  text-align: center;
+  background: var(--paper-raised);
+  border: 1px dashed #8a93ab;
+  border-radius: 12px;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+.homeVisibility {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-weight: 600;
+}
+.homePanel .homeVisibility {
+  color: var(--ink);
+}
+.homeDot {
+  flex: 0 0 9px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--slate);
+}
+.homeDotOn {
+  background: #2e8b57;
+}
+.homeContacts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.homeContacts a {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 500;
+}
+.homeContacts span:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.homeContacts small {
+  font-size: 13px;
+  color: #4a5575;
+}
+.homePanel .homeNote {
+  font-size: 13px;
+  color: #4a5575;
+}
+@media (max-width: 720px) {
+  .homePage {
+    padding: 24px 16px 40px;
+  }
+  .homeHead h1 {
+    font-size: 26px;
+  }
+}
