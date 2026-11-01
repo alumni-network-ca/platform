@@ -1335,6 +1335,7 @@ export type Database = {
         Returns: string;
       };
       delete_my_profile: { Args: { p_inst: string }; Returns: undefined };
+      directory_facets: { Args: { p_inst: string }; Returns: Json };
       directory_profile_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
       enqueue_email: {
         Args: {
@@ -1426,6 +1427,10 @@ export type Database = {
       platform_set_school_status: {
         Args: { p_inst: string; p_reason?: string; p_status: string };
         Returns: undefined;
+      };
+      profile_contact_types: {
+        Args: { p_profile: string };
+        Returns: Database["public"]["Enums"]["channel_type"][];
       };
       public_school: { Args: { p_slug: string }; Returns: Json };
       record_confirmation: {

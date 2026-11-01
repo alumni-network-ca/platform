@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { Nav } from "@/components/Nav";
 import { dateLabel } from "@/lib/admin/data";
 import { format, translations } from "@/lib/i18n";
-import { CHANNELS, initials, type Channel } from "@/lib/profile/fields";
+import { CHANNELS, initials, type Channel, repeatsCurrentRole } from "@/lib/profile/fields";
 import { loadMyProfile } from "@/lib/profile/server";
 import { confirmStillAccurate } from "./actions";
 
@@ -116,13 +116,15 @@ export default async function MyProfilePage({
                 {(p.job_title || p.employer) && (
                   <Row title={join([p.job_title, p.employer])} sub={join([field, p.city])} />
                 )}
-                {me.experience.map((role, i) => (
-                  <Row
-                    key={i}
-                    title={join([role.job_title, role.employer])}
-                    sub={join([role.location, dates(role, me.locale, t.now)])}
-                  />
-                ))}
+                {me.experience
+                  .filter((role) => !repeatsCurrentRole(role, p))
+                  .map((role, i) => (
+                    <Row
+                      key={i}
+                      title={join([role.job_title, role.employer])}
+                      sub={join([role.location, dates(role, me.locale, t.now)])}
+                    />
+                  ))}
               </>
             ) : (
               <p className="meEmpty">{t.noCareer}</p>
