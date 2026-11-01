@@ -3,6 +3,7 @@ import { Nav } from "@/components/Nav";
 import { JoinProgress } from "@/components/JoinProgress";
 import { getAccount } from "@/lib/auth/account";
 import { canOpen, homeFor } from "@/lib/auth/home";
+import { signupDestination } from "@/lib/auth/next";
 import { getServerLocale } from "@/lib/i18n-server";
 import { schoolBranding } from "@/lib/school";
 import { JoinForm } from "./JoinForm";
@@ -12,19 +13,23 @@ import { SignupForm } from "./SignupForm";
 export default async function JoinPage({
   searchParams,
 }: {
-  searchParams: Promise<{ confirmation?: string }>;
+  searchParams: Promise<{ confirmation?: string; next?: string }>;
 }) {
+  const query = await searchParams;
+  const destination = signupDestination(query.next);
   const { school, user, state } = await getAccount();
+  if (user && destination !== "/join")
+    redirect(`/auth/home?next=${encodeURIComponent(destination)}`);
   if (user && !canOpen(state, "/join")) redirect(homeFor(state));
   const { shortName } = schoolBranding(school);
   const locale = await getServerLocale();
   const fr = locale === "fr";
-  const expired = (await searchParams).confirmation === "expired";
+  const expired = query.confirmation === "expired";
   return (
     <>
       <Nav />
       <main className="joinPage">
-        <JoinProgress step={user ? 1 : 0} locale={locale} />
+        {destination === "/join" && <JoinProgress step={user ? 1 : 0} locale={locale} />}
         {user ? (
           <div className="joinRequestLayout">
             <section className="joinCard">
@@ -77,82 +82,102 @@ export default async function JoinPage({
           </div>
         ) : (
           <div className="joinSplit">
-            <section className="joinIntro">
-              <span className="joinEyebrow">
-                {fr ? "Nouveau sur le réseau ?" : "New to the network?"}
-              </span>
-              <h1>
-                {fr ? (
-                  "Tout commence par votre compte."
-                ) : (
-                  <>
-                    It starts with
-                    <br />
-                    your account.
-                  </>
-                )}
-              </h1>
-              <p className="joinLead">
-                {fr
-                  ? "Créez votre compte, puis présentez-vous à " +
-                    shortName +
-                    ". Un réviseur de l'école approuvera votre accès au réseau."
-                  : "Create your account, then tell " +
-                    shortName +
-                    " who you are. A school reviewer will approve your alumni access."}
-              </p>
-              <ol className="joinJourney">
-                <li>
-                  <span className="joinDot joinCurrent" aria-hidden="true">
-                    1
-                  </span>
-                  <div>
-                    <h3>{fr ? "Créez votre compte" : "Create your account"}</h3>
-                    <p>
-                      {fr
-                        ? "Choisissez votre adresse courriel et votre mot de passe."
-                        : "Choose the email and password you'll use to sign in."}
-                    </p>
-                  </div>
-                </li>
-                <li>
-                  <span className="joinDot" aria-hidden="true">
-                    2
-                  </span>
-                  <div>
-                    <h3>{fr ? "Demandez l'accès au réseau" : "Request alumni access"}</h3>
-                    <p>
-                      {fr
-                        ? "Indiquez votre nom à l'école et votre année de graduation."
-                        : "Share your name at school and graduation year."}
-                    </p>
-                  </div>
-                </li>
-                <li>
-                  <span className="joinDot" aria-hidden="true">
-                    3
-                  </span>
-                  <div>
-                    <h3>{fr ? "Attendez l'approbation de l'école" : "Wait for school approval"}</h3>
-                    <p>
-                      {fr
-                        ? "Après l'approbation, créez votre profil et rejoignez la communauté."
-                        : "Once approved, set up your profile and join the community."}
-                    </p>
-                  </div>
-                </li>
-              </ol>
-              <div className="joinNotice">
-                <strong>
-                  {fr ? "Vos renseignements restent privés" : "Private from the start"}
-                </strong>
-                <br />
-                {fr
-                  ? "Seul le personnel autorisé de l'école voit votre demande. Votre profil reste masqué jusqu'à sa publication."
-                  : "Only authorised school staff see your request. Your profile stays hidden until you publish it."}
-              </div>
-            </section>
-            <SignupForm shortName={shortName} expired={expired} />
+            {destination !== "/join" ? (
+              <section className="joinIntro">
+                <span className="joinEyebrow">
+                  {fr ? "Invitation du personnel" : "Staff invitation"}
+                </span>
+                <h1>
+                  {fr
+                    ? "Créez votre compte pour accepter l'invitation."
+                    : "Create your account to accept the invitation."}
+                </h1>
+                <p className="joinLead">
+                  {fr
+                    ? "Utilisez l'adresse courriel invitée par l'école. Après sa confirmation, vous pourrez consulter et accepter votre invitation."
+                    : "Use the email address the school invited. After confirming it, you'll return to review and accept your invitation."}
+                </p>
+              </section>
+            ) : (
+              <section className="joinIntro">
+                <span className="joinEyebrow">
+                  {fr ? "Nouveau sur le réseau ?" : "New to the network?"}
+                </span>
+                <h1>
+                  {fr ? (
+                    "Tout commence par votre compte."
+                  ) : (
+                    <>
+                      It starts with
+                      <br />
+                      your account.
+                    </>
+                  )}
+                </h1>
+                <p className="joinLead">
+                  {fr
+                    ? "Créez votre compte, puis présentez-vous à " +
+                      shortName +
+                      ". Un réviseur de l'école approuvera votre accès au réseau."
+                    : "Create your account, then tell " +
+                      shortName +
+                      " who you are. A school reviewer will approve your alumni access."}
+                </p>
+                <ol className="joinJourney">
+                  <li>
+                    <span className="joinDot joinCurrent" aria-hidden="true">
+                      1
+                    </span>
+                    <div>
+                      <h3>{fr ? "Créez votre compte" : "Create your account"}</h3>
+                      <p>
+                        {fr
+                          ? "Choisissez votre adresse courriel et votre mot de passe."
+                          : "Choose the email and password you'll use to sign in."}
+                      </p>
+                    </div>
+                  </li>
+                  <li>
+                    <span className="joinDot" aria-hidden="true">
+                      2
+                    </span>
+                    <div>
+                      <h3>{fr ? "Demandez l'accès au réseau" : "Request alumni access"}</h3>
+                      <p>
+                        {fr
+                          ? "Indiquez votre nom à l'école et votre année de graduation."
+                          : "Share your name at school and graduation year."}
+                      </p>
+                    </div>
+                  </li>
+                  <li>
+                    <span className="joinDot" aria-hidden="true">
+                      3
+                    </span>
+                    <div>
+                      <h3>
+                        {fr ? "Attendez l'approbation de l'école" : "Wait for school approval"}
+                      </h3>
+                      <p>
+                        {fr
+                          ? "Après l'approbation, créez votre profil et rejoignez la communauté."
+                          : "Once approved, set up your profile and join the community."}
+                      </p>
+                    </div>
+                  </li>
+                </ol>
+                <div className="joinNotice">
+                  <strong>
+                    {fr ? "Vos renseignements restent privés" : "Private from the start"}
+                  </strong>
+                  <br />
+                  {fr
+                    ? "Seul le personnel autorisé de l'école voit votre demande. Votre profil reste masqué jusqu'à sa publication."
+                    : "Only authorised school staff see your request. Your profile stays hidden until you publish it."}
+                </div>
+              </section>
+            )}
+            <SignupForm shortName={shortName} expired={expired} destination={destination} />
           </div>
         )}
       </main>

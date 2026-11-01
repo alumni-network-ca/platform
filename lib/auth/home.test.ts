@@ -1,8 +1,23 @@
 import { describe, expect, it } from "vitest";
 import { canOpen, homeFor, type AccountState } from "./home";
-import { safeNext } from "./next";
+import { safeNext, signupDestination } from "./next";
 
 const none: AccountState = { membership: null, profile: null, request: null };
+
+describe("signupDestination", () => {
+  it.each([
+    [undefined, "/join"],
+    ["/join", "/join"],
+    ["/directory", "/join"],
+    ["/staff/accept?token=example-invitation", "/staff/accept?token=example-invitation"],
+    ["/staff/accept-other?token=example", "/join"],
+    ["https://evil.example/staff/accept", "/join"],
+    ["//evil.example/staff/accept", "/join"],
+    ["/\\evil.example/staff/accept", "/join"],
+  ])("%s → %s", (value, expected) => {
+    expect(signupDestination(value)).toBe(expected);
+  });
+});
 const member = (
   role: "school_admin" | "reviewer" | "alumni",
   status: "active" | "suspended" | "revoked" = "active",

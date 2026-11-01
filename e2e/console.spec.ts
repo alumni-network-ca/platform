@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import { blockingViolations } from "./fixtures/a11y";
 import { accounts, LOCAL_PASSWORD } from "./fixtures/accounts";
-import { codeFor, newAddress } from "./fixtures/mailpit";
+import { authLinkFor, newAddress } from "./fixtures/mailpit";
 import { addressOf, signInAs } from "./fixtures/session";
 
 // The platform console on the root domain (SA-01, SA-02; design S1–S2). Schools created here get a unique
@@ -66,15 +66,21 @@ test.describe("platform console", () => {
     const link = await page.getByLabel("Invitation link").inputValue();
     expect(link.startsWith(addressOf(baseURL!, slug, "/staff/accept?token="))).toBe(true);
 
-    // The invited person opens the link in their own browser, signs in with a code, and accepts.
+    // A new invitee creates a password account and confirms their email, then resumes the invitation.
     const theirs = await browser.newContext();
     const invited = await theirs.newPage();
     await invited.goto(link);
     await expect(invited).toHaveURL(/\/login\?next=/);
+    await invited.getByRole("link", { name: "Create an account", exact: true }).click();
+    await expect(invited.getByText("Staff invitation", { exact: true })).toBeVisible();
     await invited.getByLabel("Email address").fill(head);
-    await invited.getByRole("button", { name: "Send me a code" }).click();
-    await invited.getByLabel("6-digit code").fill(await codeFor(head));
-    await invited.getByRole("button", { name: "Sign in", exact: true }).click();
+    await invited.getByLabel("Create a password", { exact: true }).fill(LOCAL_PASSWORD);
+    await invited.getByLabel("Confirm password", { exact: true }).fill(LOCAL_PASSWORD);
+    await invited.getByRole("button", { name: "Create my account", exact: true }).click();
+    await expect(
+      invited.getByRole("heading", { name: "Confirm your email", exact: true }),
+    ).toBeVisible();
+    await invited.goto(await authLinkFor(head, "signup"));
     await expect(invited).toHaveURL(link);
     await invited.getByRole("button", { name: "Accept the invitation" }).click();
     await expect(invited).toHaveURL(addressOf(baseURL!, slug, "/admin"));

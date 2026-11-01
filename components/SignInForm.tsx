@@ -3,7 +3,7 @@ import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useLanguage } from "./LanguageProvider";
-import { safeNext } from "@/lib/auth/next";
+import { safeNext, signupDestination } from "@/lib/auth/next";
 import { createClient } from "@/lib/supabase/client";
 
 // Password sign-in only while code sign-in is unavailable. Signup is a separate school flow.
@@ -17,6 +17,7 @@ export function SignInForm({
   const { locale } = useLanguage();
   const fr = locale === "fr";
   const next = safeNext(useSearchParams().get("next"));
+  const signupNext = signupDestination(next);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -116,7 +117,13 @@ export function SignInForm({
           </div>
           <p className="joinDivider">
             {fr ? "Pas encore de compte ?" : "Don't have an account?"}{" "}
-            <Link href="/join">{fr ? "Créer un compte" : "Create an account"}</Link>
+            <Link
+              href={
+                signupNext === "/join" ? "/join" : `/join?next=${encodeURIComponent(signupNext)}`
+              }
+            >
+              {fr ? "Créer un compte" : "Create an account"}
+            </Link>
           </p>
         </>
       )}

@@ -5,6 +5,7 @@ import { Nav } from "@/components/Nav";
 import { JoinProgress } from "@/components/JoinProgress";
 import { getAccount } from "@/lib/auth/account";
 import { homeFor } from "@/lib/auth/home";
+import { signupDestination } from "@/lib/auth/next";
 import { getServerLocale } from "@/lib/i18n-server";
 import { ConfirmationResend } from "./ConfirmationResend";
 
@@ -14,9 +15,15 @@ function resendDelay(lastSent: number) {
 
 export default async function VerifySignupPage() {
   const { user, state } = await getAccount();
-  if (user) redirect(homeFor(state));
   const store = await cookies();
   const email = store.get("alumni-confirmation-email")?.value;
+  const destination = signupDestination(store.get("alumni-confirmation-next")?.value);
+  if (user)
+    redirect(
+      destination === "/join"
+        ? homeFor(state)
+        : `/auth/home?next=${encodeURIComponent(destination)}`,
+    );
   const lastSent = Number(store.get("alumni-confirmation-sent")?.value ?? 0);
   const retryIn = resendDelay(lastSent);
   const locale = await getServerLocale();
@@ -25,7 +32,7 @@ export default async function VerifySignupPage() {
     <>
       <Nav />
       <main className="joinPage">
-        <JoinProgress step={0} locale={locale} />
+        {destination === "/join" && <JoinProgress step={0} locale={locale} />}
         <section className="joinCard joinCentered">
           <span className="joinIcon" aria-hidden="true">
             ✉
@@ -55,9 +62,13 @@ export default async function VerifySignupPage() {
               : "Select “Confirm my email” to continue."}
           </p>
           <div className="joinNotice">
-            {fr
-              ? "La confirmation du courriel ne confirme pas votre statut d'ancien. Ensuite, vous soumettrez votre demande d'accès à un réviseur de l'école."
-              : "Email confirmation is the first step. Next, submit your alumni request. A school reviewer must approve it before you can access the network."}
+            {destination !== "/join"
+              ? fr
+                ? "Après la confirmation de votre courriel, vous pourrez consulter et accepter votre invitation du personnel."
+                : "After confirming your email, you'll return to review and accept your staff invitation."
+              : fr
+                ? "La confirmation du courriel ne confirme pas votre statut d'ancien. Ensuite, vous soumettrez votre demande d'accès à un réviseur de l'école."
+                : "Email confirmation is the first step. Next, submit your alumni request. A school reviewer must approve it before you can access the network."}
           </div>
           <p className="muted microcopy">
             {fr
@@ -66,8 +77,20 @@ export default async function VerifySignupPage() {
           </p>
           {email && <ConfirmationResend retryIn={retryIn} />}
           <div className="authFooter">
-            <Link href="/join">{fr ? "Changer d'adresse" : "Change email"}</Link>
-            <Link href="/login">
+            <Link
+              href={
+                destination === "/join" ? "/join" : `/join?next=${encodeURIComponent(destination)}`
+              }
+            >
+              {fr ? "Changer d'adresse" : "Change email"}
+            </Link>
+            <Link
+              href={
+                destination === "/join"
+                  ? "/login"
+                  : `/login?next=${encodeURIComponent(destination)}`
+              }
+            >
               {fr ? "Déjà confirmé ? Se connecter" : "Already confirmed? Sign in"}
             </Link>
           </div>

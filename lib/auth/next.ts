@@ -8,3 +8,9 @@ export function safeNext(value: string | null | undefined): string | null {
   if (/[\u0000-\u001f\u007f\\]/.test(value)) return null;
   return value;
 }
+
+/** Account creation normally leads to alumni signup; staff invitations resume their separate acceptance flow. */
+export function signupDestination(value: string | null | undefined): string {
+  const next = safeNext(value);
+  return next?.split(/[?#]/)[0] === "/staff/accept" ? next : "/join";
+}

@@ -6,7 +6,15 @@ import { useLanguage } from "@/components/LanguageProvider";
 import { MIN_PASSWORD_LENGTH } from "@/lib/auth/password";
 import { createAccount, type SignupResult } from "./signup-actions";
 
-export function SignupForm({ shortName, expired }: { shortName: string; expired: boolean }) {
+export function SignupForm({
+  shortName,
+  expired,
+  destination,
+}: {
+  shortName: string;
+  expired: boolean;
+  destination: string;
+}) {
   const { locale } = useLanguage();
   const fr = locale === "fr";
   const [result, action, pending] = useActionState<SignupResult, FormData>(
@@ -41,9 +49,13 @@ export function SignupForm({ shortName, expired }: { shortName: string; expired:
         <span className="joinEyebrow">{fr ? "Étape 1 de 3" : "Step 1 of 3"}</span>
         <h2 id="create-account-title">{fr ? "Créez votre compte" : "Create your account"}</h2>
         <p className="muted">
-          {fr
-            ? `Pour les nouveaux candidats au réseau des anciens de ${shortName}.`
-            : `For new applicants to the ${shortName} Alumni Network.`}
+          {destination !== "/join"
+            ? fr
+              ? "Utilisez l'adresse courriel invitée par l'école."
+              : "Use the email address the school invited."
+            : fr
+              ? `Pour les nouveaux candidats au réseau des anciens de ${shortName}.`
+              : `For new applicants to the ${shortName} Alumni Network.`}
         </p>
       </div>
       {expired && (
@@ -55,6 +67,7 @@ export function SignupForm({ shortName, expired }: { shortName: string; expired:
         </p>
       )}
       <form action={action} className="authForm">
+        <input type="hidden" name="next" value={destination} />
         <label>
           {fr ? "Adresse courriel" : "Email address"}
           <input
@@ -107,9 +120,13 @@ export function SignupForm({ shortName, expired }: { shortName: string; expired:
               : "Creating an account does not grant alumni access."}
           </strong>
           <br />
-          {fr
-            ? "Ensuite, envoyez votre demande à l'école pour vérification."
-            : "Next, submit your request for the school's review."}
+          {destination !== "/join"
+            ? fr
+              ? "Après la confirmation de votre courriel, consultez et acceptez votre invitation du personnel."
+              : "After confirming your email, review and accept your staff invitation."
+            : fr
+              ? "Ensuite, envoyez votre demande à l'école pour vérification."
+              : "Next, submit your request for the school's review."}
         </div>
         {result.error && (
           <div className="notice" role="alert">
@@ -128,7 +145,13 @@ export function SignupForm({ shortName, expired }: { shortName: string; expired:
       </form>
       <p className="joinDivider">
         {fr ? "Vous avez déjà un compte ?" : "Already have an account?"}{" "}
-        <Link href="/login">{fr ? "Se connecter" : "Sign in"}</Link>
+        <Link
+          href={
+            destination === "/join" ? "/login" : `/login?next=${encodeURIComponent(destination)}`
+          }
+        >
+          {fr ? "Se connecter" : "Sign in"}
+        </Link>
       </p>
     </section>
   );

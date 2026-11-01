@@ -25,9 +25,17 @@ const TEXT = {
 export function AcceptForm({ token, email }: { token: string; email: string }) {
   const { locale } = useLanguage();
   const t = TEXT[locale];
-  const [result, action, pending] = useActionState<AcceptResult, FormData>(acceptInvitation, {
-    failed: false,
-  });
+  const [result, action, pending] = useActionState<AcceptResult, FormData>(
+    async (previous, form) => {
+      const result = await acceptInvitation(previous, form);
+      // Reload so the proxy and account guards read the newly granted role at this school's host.
+      if (result.next) window.location.assign(result.next);
+      return result;
+    },
+    {
+      failed: false,
+    },
+  );
   const back = `/login?next=${encodeURIComponent(`/staff/accept?token=${token}`)}`;
   return (
     <form action={action} className="authForm">

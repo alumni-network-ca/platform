@@ -15,6 +15,8 @@ Confirmation and recovery links use the current school's origin, with the tenant
 
 An applicant can edit an open request, reply to a reviewer's question and check its status. Rejected and suspended accounts retain their state pages. Approval resumes the existing onboarding wizard with an explicit school-approval badge. The directory stays guarded until approval and profile setup.
 
+Staff invitations use account creation without submitting an alumni access request. The login page carries the invitation destination to `/join`; signup and confirmation resends retain only the allowlisted `/staff/accept` destination. After email confirmation the invitee reviews and explicitly accepts the invitation, whose existing RPC verifies the invited email before granting staff membership. All other signup destinations fall back to the normal alumni `/join` flow.
+
 ## Hosting and validation
 
 Apply the confirmation and recovery templates in `supabase/templates/` to each hosted Supabase project, with the matching redirect allowlist. This is Auth configuration, not a SQL migration. Link-based templates require the app's `/auth/confirm?flow=signup` or `?flow=recovery` redirect target; never replace the tenant-specific target with the root domain. Keep email confirmations enabled and configure SMTP in hosted environments. The existing school-decision outbox worker remains separate (EML-01); this change does not implement email delivery for review decisions.

@@ -7,6 +7,7 @@ import { authEmailRedirect } from "@/lib/auth/email-links";
 import { getOrigin } from "@/lib/tenant/server";
 import { homeFor } from "@/lib/auth/home";
 import { MIN_PASSWORD_LENGTH } from "@/lib/auth/password";
+import { signupDestination } from "@/lib/auth/next";
 
 export type SignupResult = {
   error: "email" | "weak" | "mismatch" | "tooMany" | "failed" | null;
@@ -15,10 +16,19 @@ export type SignupResult = {
 export type ResendResult = { error: "tooMany" | "failed" | null; sent: boolean };
 const EMAIL_COOKIE = "alumni-confirmation-email";
 const SENT_COOKIE = "alumni-confirmation-sent";
+const NEXT_COOKIE = "alumni-confirmation-next";
 
 export async function createAccount(_: SignupResult, form: FormData): Promise<SignupResult> {
   const { supabase, user, state } = await getAccount();
-  if (user) redirect(homeFor(state));
+  const destination = signupDestination(String(form.get("next") ?? ""));
+  if (user)
+    return {
+      error: null,
+      next:
+        destination === "/join"
+          ? homeFor(state)
+          : `/auth/home?next=${encodeURIComponent(destination)}`,
+    };
   const email = String(form.get("email") ?? "").trim();
   const password = String(form.get("password") ?? "");
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) return { error: "email" };
@@ -28,14 +38,15 @@ export async function createAccount(_: SignupResult, form: FormData): Promise<Si
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
-    options: { emailRedirectTo: await authEmailRedirect("signup") },
+    options: { emailRedirectTo: await authEmailRedirect("signup", destination) },
   });
   if (error && error.code !== "user_already_exists")
     return {
       error: error.status === 429 ? "tooMany" : error.code === "weak_password" ? "weak" : "failed",
     };
   // Supports environments with auto-confirmation; membership still requires school approval.
-  if (data.session?.user.email_confirmed_at) return { error: null, next: "/join" };
+  if (data.session?.user.email_confirmed_at)
+    return { error: null, next: `/auth/home?next=${encodeURIComponent(destination)}` };
   const store = await cookies();
   const options = {
     httpOnly: true,
@@ -46,6 +57,7 @@ export async function createAccount(_: SignupResult, form: FormData): Promise<Si
   };
   store.set(EMAIL_COOKIE, email, options);
   store.set(SENT_COOKIE, String(Date.now()), options);
+  store.set(NEXT_COOKIE, destination, options);
   return { error: null, next: "/join/verify" };
 }
 
@@ -54,13 +66,14 @@ export async function resendConfirmation(): Promise<ResendResult> {
   if (user) redirect(homeFor(state));
   const store = await cookies();
   const email = store.get(EMAIL_COOKIE)?.value;
+  const destination = signupDestination(store.get(NEXT_COOKIE)?.value);
   if (!email) return { error: "failed", sent: false };
   const lastSent = Number(store.get(SENT_COOKIE)?.value ?? 0);
   if (Date.now() - lastSent < 60_000) return { error: "tooMany", sent: false };
   const { error } = await supabase.auth.resend({
     type: "signup",
     email,
-    options: { emailRedirectTo: await authEmailRedirect("signup") },
+    options: { emailRedirectTo: await authEmailRedirect("signup", destination) },
   });
   if (error) return { error: error.status === 429 ? "tooMany" : "failed", sent: false };
   store.set(SENT_COOKIE, String(Date.now()), {
