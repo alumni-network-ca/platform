@@ -183,8 +183,8 @@ export function navModel(input: NavInput): NavModel {
     sections = [
       section("profile", [
         item("myProfile", "/me"),
-        item("editProfile", state.profile?.onboardingComplete ? "/me" : "/onboarding"),
-        item("whoCanSeeMe", "/me#visibility", {
+        item("editProfile", state.profile?.onboardingComplete ? "/me/edit/about" : "/onboarding"),
+        item("whoCanSeeMe", "/me/visibility", {
           chip: visibility && {
             text: visibility === "members" ? t.visibleToMembers : t.hidden,
             kind: visibility === "members" ? "good" : "info",
@@ -196,8 +196,8 @@ export function navModel(input: NavInput): NavModel {
         [
           item("emailAndSignIn", "/account/email"),
           language,
-          // TODO(PRF-06): export my data (Law 25).
-          item("downloadMyData", "#"),
+          // The download is a POST from the "Your data" box on /me (each export is audited).
+          item("downloadMyData", "/me#your-data"),
         ],
         t.accountSection,
       ),

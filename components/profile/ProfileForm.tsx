@@ -11,11 +11,12 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import Link from "next/link";
 import { format, type Locale, type translations } from "@/lib/i18n";
 import type { Errors, FieldError } from "@/lib/profile/fields";
 import { useLanguage } from "../LanguageProvider";
 
-export type FormState = { errors: Errors; failed?: "failed" | "forbidden" };
+export type FormState = { errors: Errors; failed?: "failed" | "forbidden" | "reauth" };
 export type ProfileCopy = (typeof translations)[Locale]["onboarding"];
 
 const FormContext = createContext<{
@@ -23,6 +24,9 @@ const FormContext = createContext<{
   failed: FormState["failed"];
   t: ProfileCopy;
   pending: boolean;
+  /** Whether a field changed since the page loaded (the unsaved-changes warning). */
+  dirty: boolean;
+  unsavedWarning?: string;
 } | null>(null);
 
 function useForm() {
@@ -42,6 +46,8 @@ export function errorText(error: FieldError, t: ProfileCopy) {
  * A profile form posting to a server action. Values stay in the fields when the action returns errors (it is
  * dispatched by hand, so React does not reset the form), and focus moves to the first invalid field.
  * `syncLocale` switches the page language as well when the form chooses one (the welcome step).
+ * `unsavedWarning` asks before leaving with changes that are not saved (PRF-02): the browser's own prompt on
+ * reload or close, and this text on the form's Cancel link.
  */
 export function ProfileForm({
   action,
@@ -49,29 +55,47 @@ export function ProfileForm({
   children,
   className,
   syncLocale = false,
+  unsavedWarning,
 }: {
   action: (state: FormState, form: FormData) => Promise<FormState>;
   t: ProfileCopy;
   children: ReactNode;
   className?: string;
   syncLocale?: boolean;
+  unsavedWarning?: string;
 }) {
   const [state, dispatch, pending] = useActionState(action, { errors: {} });
   const { setLocale } = useLanguage();
   const form = useRef<HTMLFormElement>(null);
+  const [dirty, setDirty] = useState(false);
+  const submitting = useRef(false);
 
   useEffect(() => {
+    if (!unsavedWarning || !dirty) return;
+    const warn = (event: BeforeUnloadEvent) => {
+      if (!submitting.current) event.preventDefault();
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [dirty, unsavedWarning]);
+
+  useEffect(() => {
+    submitting.current = false;
     form.current?.querySelector<HTMLElement>('[aria-invalid="true"], [role="alert"]')?.focus();
   }, [state]);
 
   return (
-    <FormContext value={{ errors: state.errors, failed: state.failed, t, pending }}>
+    <FormContext
+      value={{ errors: state.errors, failed: state.failed, t, pending, dirty, unsavedWarning }}
+    >
       <form
         ref={form}
         className={className}
         action={dispatch}
         noValidate
+        onChange={() => setDirty(true)}
         onSubmit={(event) => {
+          submitting.current = true;
           event.preventDefault();
           const data = new FormData(event.currentTarget);
           const locale = data.get("locale");
@@ -90,21 +114,49 @@ export function FormAlert() {
   const { failed, t } = useForm();
   return failed ? (
     <p className="onbAlert" role="alert" tabIndex={-1}>
-      {failed === "forbidden" ? t.errors.forbidden : t.errors.failed}
+      {failed === "forbidden"
+        ? t.errors.forbidden
+        : failed === "reauth"
+          ? t.errors.reauth
+          : t.errors.failed}
     </p>
   ) : null;
 }
 
-export function SubmitButton({ label, disabled = false }: { label: string; disabled?: boolean }) {
+export function SubmitButton({
+  label,
+  disabled = false,
+  danger = false,
+}: {
+  label: string;
+  disabled?: boolean;
+  danger?: boolean;
+}) {
   const { pending, t } = useForm();
   return (
     <button
-      className="onbSubmit"
+      className={danger ? "onbSubmit onbDanger" : "onbSubmit"}
       disabled={pending || disabled}
       aria-disabled={pending || disabled}
     >
       {pending ? t.saving : label}
     </button>
+  );
+}
+
+/** A link out of the form that asks first when there are unsaved changes. */
+export function CancelLink({ href, label }: { href: string; label: string }) {
+  const { dirty, unsavedWarning } = useForm();
+  return (
+    <Link
+      className="onbBack"
+      href={href}
+      onClick={(event) => {
+        if (dirty && unsavedWarning && !window.confirm(unsavedWarning)) event.preventDefault();
+      }}
+    >
+      {label}
+    </Link>
   );
 }
 

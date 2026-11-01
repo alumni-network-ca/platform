@@ -13,6 +13,18 @@ export const STEPS = [
 ] as const;
 export type Step = (typeof STEPS)[number];
 
+/** The steps with fields of their own: /me edits each one on its own page. */
+export type Section = Exclude<Step, "publish">;
+export const SECTIONS = [
+  "about",
+  "education",
+  "career",
+  "networking",
+  "contact",
+] as const satisfies readonly Section[];
+export const isSection = (value: string): value is (typeof SECTIONS)[number] =>
+  (SECTIONS as readonly string[]).includes(value);
+
 export const isStep = (value: string): value is Step =>
   (STEPS as readonly string[]).includes(value);
 
@@ -41,7 +53,15 @@ export const MAX = {
 export type FieldError =
   | {
       code:
-        "required" | "year" | "yearOrder" | "email" | "phone" | "url" | "careerField" | "consent";
+        | "required"
+        | "year"
+        | "yearOrder"
+        | "email"
+        | "phone"
+        | "url"
+        | "careerField"
+        | "consent"
+        | "confirm";
     }
   | { code: "tooLong"; max: number }
   | { code: "platform"; channel: Channel };
@@ -271,6 +291,12 @@ export function parsePublish(form: FormReader): Parsed<{ visibility: Visibility 
   if (form.get("consent") !== "on") c.errors.consent = { code: "consent" };
   return c.done({ visibility: form.get("visibility") === "members" ? "members" : "hidden" });
 }
+
+/** How recent a sign-in must be to delete a profile (PRF-06's re-authentication). */
+export const REAUTH_MINUTES = 15;
+
+export const signedInRecently = (lastSignInAt: string | null | undefined, now: Date) =>
+  Boolean(lastSignInAt) && now.getTime() - Date.parse(lastSignInAt!) < REAUTH_MINUTES * 60_000;
 
 /** Initials for an avatar: "Dana Levy" → "DL". */
 export const initials = (first: string, last: string) =>
