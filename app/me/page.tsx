@@ -13,9 +13,30 @@ import { confirmStillAccurate } from "./actions";
 const join = (parts: (string | number | null | undefined)[], separator = " · ") =>
   parts.filter((part) => part !== null && part !== undefined && part !== "").join(separator);
 
-/** "2019 – 2023", "2019 – now", or a single year. */
-const years = (start: number | null, end: number | null, current: boolean, now: string) =>
-  start && (end || current) ? `${start} – ${current ? now : end}` : (start ?? end ?? "");
+type Role = {
+  start_year: number | null;
+  start_month: number | null;
+  end_year: number | null;
+  end_month: number | null;
+  is_current: boolean;
+};
+
+/** "Mar 2019 – Jun 2023", "Mar 2019 – now", or a single date; a role saved without a month shows its year. */
+function dates(role: Role, locale: string, now: string) {
+  const label = (year: number | null, month: number | null) =>
+    !year
+      ? ""
+      : month
+        ? new Intl.DateTimeFormat(locale === "fr" ? "fr-CA" : "en-CA", {
+            month: "short",
+            year: "numeric",
+            timeZone: "UTC",
+          }).format(new Date(Date.UTC(year, month - 1, 1)))
+        : String(year);
+  const start = label(role.start_year, role.start_month);
+  const end = role.is_current ? now : label(role.end_year, role.end_month);
+  return start && end ? `${start} – ${end}` : start || end;
+}
 
 export default async function MyProfilePage({
   searchParams,
@@ -99,10 +120,7 @@ export default async function MyProfilePage({
                   <Row
                     key={i}
                     title={join([role.job_title, role.employer])}
-                    sub={join([
-                      role.location,
-                      years(role.start_year, role.end_year, role.is_current, t.now),
-                    ])}
+                    sub={join([role.location, dates(role, me.locale, t.now)])}
                   />
                 ))}
               </>

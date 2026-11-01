@@ -135,6 +135,7 @@ export type Database = {
           career_field_id: string | null;
           created_at: string;
           employer: string | null;
+          end_month: number | null;
           end_year: number | null;
           id: string;
           institution_id: string;
@@ -143,6 +144,7 @@ export type Database = {
           location: string | null;
           profile_id: string;
           sort_order: number;
+          start_month: number | null;
           start_year: number | null;
         };
         ComputedFields: never;
@@ -150,6 +152,7 @@ export type Database = {
           career_field_id?: string | null;
           created_at?: string;
           employer?: string | null;
+          end_month?: number | null;
           end_year?: number | null;
           id?: string;
           institution_id: string;
@@ -158,12 +161,14 @@ export type Database = {
           location?: string | null;
           profile_id: string;
           sort_order?: number;
+          start_month?: number | null;
           start_year?: number | null;
         };
         Update: {
           career_field_id?: string | null;
           created_at?: string;
           employer?: string | null;
+          end_month?: number | null;
           end_year?: number | null;
           id?: string;
           institution_id?: string;
@@ -172,6 +177,7 @@ export type Database = {
           location?: string | null;
           profile_id?: string;
           sort_order?: number;
+          start_month?: number | null;
           start_year?: number | null;
         };
         Relationships: [

@@ -441,6 +441,8 @@ export const translations = {
       roleLocation: "City",
       startYear: "From",
       endYear: "To",
+      endHint: "Leave empty if you still work there.",
+      monthPlaceholder: "YYYY-MM",
       addRole: "Add a role",
       networkingTitle: "How would you like to help?",
       networkingIntro:
@@ -501,8 +503,9 @@ export const translations = {
       errors: {
         required: "Fill this in.",
         tooLong: "Too long: {max} characters at most.",
-        year: "Enter a year between 1900 and 2100.",
-        yearOrder: "The end year can't be before the start year.",
+        year: "Enter a four-digit year, such as 2018.",
+        month: "Choose a month and year, such as 2019-03.",
+        yearOrder: "The end can't be before the start.",
         email: "Enter an email address such as name@example.com.",
         phone: "Use the international format, such as +1 514 555 0123.",
         url: "Enter an address that starts with https://.",
@@ -1056,6 +1059,8 @@ export const translations = {
       roleLocation: "Ville",
       startYear: "De",
       endYear: "À",
+      endHint: "Laissez vide si vous y travaillez encore.",
+      monthPlaceholder: "AAAA-MM",
       addRole: "Ajouter un poste",
       networkingTitle: "Comment aimeriez-vous aider?",
       networkingIntro:
@@ -1118,8 +1123,9 @@ export const translations = {
       errors: {
         required: "Remplissez ce champ.",
         tooLong: "Trop long : {max} caractères au maximum.",
-        year: "Entrez une année entre 1900 et 2100.",
-        yearOrder: "L'année de fin ne peut pas précéder l'année de début.",
+        year: "Entrez une année à quatre chiffres, par exemple 2018.",
+        month: "Choisissez un mois et une année, par exemple 2019-03.",
+        yearOrder: "La fin ne peut pas précéder le début.",
         email: "Entrez une adresse courriel comme nom@exemple.com.",
         phone: "Utilisez le format international, par exemple +1 514 555 0123.",
         url: "Entrez une adresse qui commence par https://.",

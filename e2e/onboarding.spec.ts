@@ -56,11 +56,11 @@ test.describe("onboarding", () => {
     await page.getByLabel("Current employer").fill("Northline Health");
     const role = page.getByRole("group", { name: "Previous roles 1" });
     await role.getByLabel("Job title").fill("Software Engineer");
-    await role.getByLabel("From").fill("2019");
-    await role.getByLabel("To").fill("2017");
+    await role.getByLabel("From").fill("2019-03");
+    await role.getByLabel("To").fill("2017-06");
     await next(page);
-    await expect(page.getByText("The end year can't be before the start year.")).toBeVisible();
-    await role.getByLabel("To").fill("2023");
+    await expect(page.getByText("The end can't be before the start.")).toBeVisible();
+    await role.getByLabel("To").fill("2023-11");
     await next(page);
 
     await expect(page).toHaveURL(/\/onboarding\/networking$/);

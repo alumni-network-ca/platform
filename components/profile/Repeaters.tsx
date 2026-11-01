@@ -9,9 +9,14 @@ type Role = {
   employer: string | null;
   location: string | null;
   start_year: number | null;
+  start_month: number | null;
   end_year: number | null;
-  is_current: boolean;
+  end_month: number | null;
 };
+
+/** A month picker's value: "2019-03". A role saved with a year only shows as its January. */
+const monthValue = (year: number | null, month: number | null) =>
+  year ? `${year}-${String(month ?? 1).padStart(2, "0")}` : "";
 
 let nextKey = 0;
 const keyed = <T,>(rows: T[]) => rows.map((row) => ({ key: nextKey++, row }));
@@ -67,9 +72,10 @@ export function EducationRows({ initial, t }: { initial: EducationRow[]; t: Prof
             defaultValue={row.graduation_year}
             inputMode="numeric"
             maxLength={4}
+            digits
             optional
           />
-          <button type="button" className="onbButton" onClick={() => remove(key)}>
+          <button type="button" className="onbButton onbRemove" onClick={() => remove(key)}>
             {t.remove}
           </button>
         </div>
@@ -87,14 +93,19 @@ export function RoleRows({ initial, t }: { initial: Role[]; t: ProfileCopy }) {
     employer: "",
     location: "",
     start_year: null,
+    start_month: null,
     end_year: null,
-    is_current: false,
+    end_month: null,
   });
   return (
     <div className="onbSection">
       {rows.map(({ key, row }, i) => (
-        <div key={key} className="onbRow" role="group" aria-label={`${t.previousRoles} ${i + 1}`}>
-          <input type="hidden" name="role_current" value={row.is_current ? "true" : ""} />
+        <div
+          key={key}
+          className="onbRow onbRowRole"
+          role="group"
+          aria-label={`${t.previousRoles} ${i + 1}`}
+        >
           <TextInput
             name="role_title"
             errorKey={`role_title.${i}`}
@@ -120,23 +131,20 @@ export function RoleRows({ initial, t }: { initial: Role[]; t: ProfileCopy }) {
             name="role_start"
             errorKey={`role_start.${i}`}
             label={t.startYear}
-            defaultValue={row.start_year}
-            inputMode="numeric"
-            maxLength={4}
+            type="month"
+            placeholder={t.monthPlaceholder}
+            defaultValue={monthValue(row.start_year, row.start_month)}
           />
-          {row.is_current ? (
-            <input type="hidden" name="role_end" value="" />
-          ) : (
-            <TextInput
-              name="role_end"
-              errorKey={`role_end.${i}`}
-              label={t.endYear}
-              defaultValue={row.end_year}
-              inputMode="numeric"
-              maxLength={4}
-            />
-          )}
-          <button type="button" className="onbButton" onClick={() => remove(key)}>
+          <TextInput
+            name="role_end"
+            errorKey={`role_end.${i}`}
+            label={t.endYear}
+            type="month"
+            placeholder={t.monthPlaceholder}
+            hint={t.endHint}
+            defaultValue={monthValue(row.end_year, row.end_month)}
+          />
+          <button type="button" className="onbButton onbRemove" onClick={() => remove(key)}>
             {t.remove}
           </button>
         </div>

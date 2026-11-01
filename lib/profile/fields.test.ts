@@ -140,7 +140,7 @@ describe("parseCareer", () => {
           ["career_field_id", "tech"],
           ["job_title", "Engineer"],
           ["employer", "Northline"],
-          ...roles("Developer", "2019", "2023"),
+          ...roles("Developer", "2019-03", "2023-11"),
         ]),
         ["tech"],
       ),
@@ -154,7 +154,9 @@ describe("parseCareer", () => {
             employer: "Shopify",
             location: "Ottawa",
             start_year: 2019,
+            start_month: 3,
             end_year: 2023,
+            end_month: 11,
             is_current: false,
           },
         ],
@@ -162,12 +164,33 @@ describe("parseCareer", () => {
     });
   });
 
-  it("refuses an unknown field, a role without a title and years out of order", () => {
-    const result = parseCareer(
-      form([["career_field_id", "astrology"], ...roles("", "2020", "2018")]),
-      ["tech"],
-    );
-    expect(result).toEqual({
+  it("treats an empty end as a role held now", () => {
+    const result = parseCareer(form(roles("Founder", "2021-06", "")), []);
+    expect(result.ok && result.data.experience[0]).toMatchObject({
+      start_year: 2021,
+      start_month: 6,
+      end_year: null,
+      end_month: null,
+      is_current: true,
+    });
+  });
+
+  it("accepts a bare year where the browser has no month picker, and any year", () => {
+    const result = parseCareer(form(roles("Clerk", "1850", "1852-02")), []);
+    expect(result.ok && result.data.experience[0]).toMatchObject({
+      start_year: 1850,
+      start_month: null,
+      end_year: 1852,
+      end_month: 2,
+    });
+  });
+
+  it("refuses an unknown field, a role without a title, a malformed date and dates out of order", () => {
+    expect(
+      parseCareer(form([["career_field_id", "astrology"], ...roles("", "2020-05", "2020-04")]), [
+        "tech",
+      ]),
+    ).toEqual({
       ok: false,
       errors: {
         career_field_id: { code: "careerField" },
@@ -175,17 +198,9 @@ describe("parseCareer", () => {
         "role_end.0": { code: "yearOrder" },
       },
     });
-  });
-
-  it("keeps a current role current, without an end year", () => {
-    const result = parseCareer(
-      form([...roles("Founder", "2021", "2024"), ["role_current", "true"]]),
-      [],
-    );
-    expect(result.ok && result.data.experience[0]).toMatchObject({
-      job_title: "Founder",
-      end_year: null,
-      is_current: true,
+    expect(parseCareer(form(roles("Clerk", "sas", "2020-13")), [])).toEqual({
+      ok: false,
+      errors: { "role_start.0": { code: "month" }, "role_end.0": { code: "month" } },
     });
   });
 
