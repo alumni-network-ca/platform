@@ -145,6 +145,42 @@ items:
       - Every resolution is audited and reversible by a school admin.
       - Nothing is ever merged automatically.
 
+  - key: ONB-08
+    title: "Bulk approval: school admins accept many access requests at once"
+    epic: EPIC-ONB
+    labels: [type:feature, area:onboarding, area:admin, P1]
+    size: M
+    depends: [ONB-04, ADM-05]
+    reqs: [F4, F12, E1]
+    summary: |
+      At launch the school emails every alumnus the /join link, so the pending queue fills with hundreds of
+      requests at once. Approving them one by one is too slow. School admins can tick several pending requests in
+      /admin/approvals (or "select all on this page") and approve them in one action.
+      - **approve_access_requests(p_requests uuid[]):** creates a new profile for each request, exactly as
+        decide_access_request's approve path with no linked record. It reuses that logic rather than copying it.
+        Each request is decided on its own: one that can't be approved is skipped with its reason, and the others
+        still go through. It returns the outcome per request (approved / skipped + reason).
+      - **Who:** school admins only (a new requests.bulk_decide permission, given to school_admin). Reviewers keep
+        deciding one by one.
+      - **Skipped, never bulk-approved:** requests already decided, requests from another institution, requests with
+        a suggested matching record (claimed or unclaimed), and people who already have a profile. These need a
+        human look on the review page.
+      - **UI:** checkboxes on the pending tab, a confirm dialog with the count ("Approve 42 requests?"), then a
+        summary of what was approved and what was skipped and why, in EN and FR. Bulk reject and needs-info are out
+        of scope.
+      - **Limit:** at most 200 requests per call.
+      Each approval sends its own approval email through the outbox and writes its own audit row, plus one audit
+      row for the batch (count and who ran it).
+    ac:
+      - Only school admins see the checkboxes and can call the RPC; reviewers and alumni get "not allowed".
+      - A request with a suggested match or an existing profile is never approved in bulk.
+      - One failing request never blocks or rolls back the others; the summary lists each skip with its reason.
+      - Every approved person gets exactly one approval email, even if the action is retried.
+      - Every approval is audited one by one, as in ONB-04.
+    tests:
+      - "pgTAP: school admin can, reviewer and alumni can't; cross-tenant ids skipped; matched and already-decided requests skipped; 201 ids refused."
+      - "E2E: select three pending requests (one with a match), approve, see two approved and one skipped, with Mailpit assertions."
+
   # ---------------------------------------------------------------- email (WS1)
   - key: EML-01
     title: "Email outbox and worker (idempotent, retrying, Mailpit locally)"
