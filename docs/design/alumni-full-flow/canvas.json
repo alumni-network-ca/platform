@@ -158,7 +158,7 @@
       "page": "alumni",
       "title": "3.2 Directory",
       "w": 1280,
-      "x": 1360,
+      "x": 2720,
       "y": 2840
     },
     "Join.dc.html": {
@@ -187,7 +187,7 @@
       "page": "alumni",
       "title": "3.1 /me — my profile",
       "w": 1280,
-      "x": 0,
+      "x": 1360,
       "y": 2840
     },
     "NavAlumnus.dc.html": {
@@ -319,7 +319,7 @@
       "page": "alumni",
       "title": "3.3 Alumnus profile + message",
       "w": 1280,
-      "x": 2720,
+      "x": 4080,
       "y": 2840
     },
     "RecipientEmail.dc.html": {
@@ -328,7 +328,7 @@
       "page": "alumni",
       "title": "3.4 What Maya receives (relay email)",
       "w": 1280,
-      "x": 4080,
+      "x": 5440,
       "y": 2840
     },
     "Request.dc.html": {
@@ -400,6 +400,16 @@
       "w": 1280,
       "x": 1360,
       "y": 1380
+    },
+    "Home.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "is_interactive": true,
+      "page": "alumni",
+      "title": "3.0 Home — your network at a glance",
+      "w": 1280,
+      "x": 0,
+      "y": 2840
     }
   },
   "createdOnFiles": {
@@ -526,7 +536,7 @@
     },
     "row3": {
       "kind": "title1",
-      "maxW": 5360,
+      "maxW": 6720,
       "page": "alumni",
       "text": "3 · Using the network — profile, directory, contact",
       "w": 240,
@@ -572,6 +582,7 @@
     "OnbCareer.dc.html",
     "OnbNetwork.dc.html",
     "OnbPublish.dc.html",
+    "Home.dc.html",
     "Me.dc.html",
     "Directory.dc.html",
     "Profile.dc.html",

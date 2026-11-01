@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Alumni home</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7b1e3d}a:hover{color:#611630}
+input,button{font:inherit}
+input:focus,button:focus-visible,a:focus-visible{outline:2px solid #7b1e3d;outline-offset:1px}
+</style>
+</helmet>
+<div style="min-height: 1100px; background: #f7f7f6; font-family: Inter, Arial, sans-serif; color: #0b2159; display: flex; flex-direction: column">
+  <dc-import name="NavBar" role="alumnus" active="home" open="{{ false }}" hint-size="100%,66px"></dc-import>
+  <main style="flex: 1; width: 100%; max-width: 1200px; margin: 0 auto; box-sizing: border-box; padding: 36px 24px 56px; display: flex; flex-direction: column; gap: 24px">
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #7b1e3d">Class of 2014 · Herzliah Alumni Network</span>
+      <h1 style="margin: 0; font-size: 32px; font-weight: 800">Welcome back, Dana</h1>
+    </div>
+
+    <sc-if value="{{askFreshness}}" hint-placeholder-val="{{true}}">
+      <section aria-label="Keep your profile current" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; padding: 18px 22px; background: #fff4dc; border: 1px solid #f0d9a6; border-radius: 12px; color: #7a4b00">
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <span style="font-size: 15px; font-weight: 700">It's been a year. Is your profile still accurate?</span>
+          <span style="font-size: 14px">Last confirmed Oct 30, 2025. Alumni trust the directory because it stays current.</span>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px">
+          <button type="button" onClick="{{confirm}}" style="min-height: 44px; padding: 10px 16px; border-radius: 7px; border: 0; background: #7b1e3d; color: #ffffff; font-size: 14px; font-weight: 700; cursor: pointer">Yes, still accurate</button>
+          <a href="Me.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; box-sizing: border-box; padding: 10px 16px; border-radius: 7px; border: 1px solid #8a93ab; background: #ffffff; color: #0b2159; font-size: 14px; font-weight: 700; text-decoration: none">Update my profile</a>
+        </div>
+      </section>
+    </sc-if>
+    <sc-if value="{{confirmed}}" hint-placeholder-val="{{false}}">
+      <section aria-live="polite" style="display: flex; align-items: center; gap: 10px; padding: 14px 22px; background: #e3f3e8; border: 1px solid #b9dcc4; border-radius: 12px; color: #1b5e33; font-size: 14px; font-weight: 600">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1b5e33" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"></path></svg>Thanks. Your profile is confirmed for another year.
+      </section>
+    </sc-if>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+      <div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+        <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 16px">
+          <h2 style="margin: 0; font-size: 17px; font-weight: 700">Find someone</h2>
+          <form action="Directory.dc.html" style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 0">
+            <div style="flex: 1 1 280px; display: flex; align-items: center; gap: 12px; padding: 0 14px; border: 1px solid #8a93ab; border-radius: 10px">
+              <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4a5575" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+              <label for="home-q" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Search alumni</label>
+              <input id="home-q" placeholder="Name, job title, employer or university" style="flex: 1; min-width: 0; border: 0; padding: 12px 0; font-size: 15px; color: #0b2159; background: transparent; outline: none">
+            </div>
+            <a href="Directory.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; box-sizing: border-box; padding: 10px 18px; border-radius: 7px; background: #7b1e3d; color: #ffffff; font-size: 14px; font-weight: 700; text-decoration: none">Search</a>
+          </form>
+          <div style="display: flex; flex-direction: column; gap: 10px">
+            <span style="font-size: 13px; font-weight: 600; color: #3a4a70">Alumni open to</span>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px">
+              <sc-for list="{{offers}}" as="o" hint-placeholder-count="6">
+                <a href="Directory.dc.html" style="padding: 7px 12px; border-radius: 999px; border: 1px solid #8a93ab; background: #ffffff; color: #0b2159; font-size: 13px; font-weight: 700; text-decoration: none">{{o}}</a>
+              </sc-for>
+            </div>
+          </div>
+        </section>
+
+        <section style="display: flex; flex-direction: column; gap: 14px">
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px">
+            <div style="display: flex; flex-direction: column; gap: 3px"><h2 style="margin: 0; font-size: 17px; font-weight: 700">Your class · Class of 2014</h2><span style="font-size: 13px; color: #4a5575">See what's new with your classmates</span></div>
+            <a href="Directory.dc.html" style="font-size: 14px; font-weight: 700">See all 38 classmates →</a>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px">
+            <sc-for list="{{classmates}}" as="p" hint-placeholder-count="3">
+              <a href="Profile.dc.html" style="display: flex; flex-direction: column; gap: 12px; padding: 18px; background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; color: #0b2159; text-decoration: none">
+                <div style="display: flex; gap: 12px; align-items: center">
+                  <span aria-hidden="true" style="display: grid; place-items: center; flex: 0 0 46px; height: 46px; border-radius: 50%; background: {{p.tint}}; color: #0b2159; font-size: 15px; font-weight: 800">{{p.initials}}</span>
+                  <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span style="font-weight: 800; font-size: 16px">{{p.name}}</span><span style="font-size: 13px; color: #4a5575">{{p.city}}</span></div>
+                </div>
+                <span style="font-size: 14px; line-height: 1.45; color: #3a4a70">{{p.role}}</span>
+              </a>
+            </sc-for>
+          </div>
+        </section>
+
+        <section style="display: flex; flex-direction: column; gap: 14px">
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px">
+            <h2 style="margin: 0; font-size: 17px; font-weight: 700">New in the network</h2>
+            <a href="Directory.dc.html" style="font-size: 14px; font-weight: 700">Browse the directory →</a>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px">
+            <sc-for list="{{newcomers}}" as="p" hint-placeholder-count="3">
+              <a href="Profile.dc.html" style="display: flex; flex-direction: column; gap: 12px; padding: 18px; background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; color: #0b2159; text-decoration: none">
+                <div style="display: flex; gap: 12px; align-items: center">
+                  <span aria-hidden="true" style="display: grid; place-items: center; flex: 0 0 46px; height: 46px; border-radius: 50%; background: {{p.tint}}; color: #0b2159; font-size: 15px; font-weight: 800">{{p.initials}}</span>
+                  <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span style="font-weight: 800; font-size: 16px">{{p.name}}</span><span style="font-size: 13px; color: #4a5575">Class of {{p.year}} · {{p.city}}</span></div>
+                </div>
+                <span style="font-size: 14px; line-height: 1.45; color: #3a4a70">{{p.role}}</span>
+                <span style="align-self: flex-start; padding: 4px 9px; border-radius: 999px; background: #eef0f4; color: #3a4a70; font-size: 12px; font-weight: 700">Joined {{p.joined}}</span>
+              </a>
+            </sc-for>
+          </div>
+        </section>
+      </div>
+
+      <aside style="flex: 1 1 280px; display: flex; flex-direction: column; gap: 16px">
+        <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 22px; display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; gap: 12px; align-items: center">
+            <span aria-hidden="true" style="display: grid; place-items: center; flex: 0 0 46px; height: 46px; border-radius: 50%; background: #eab6ce; color: #0b2159; font-size: 16px; font-weight: 800">DL</span>
+            <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><h2 style="margin: 0; font-size: 15px; font-weight: 700">Your profile</h2><span style="font-size: 13px; color: #4a5575">Senior Software Engineer · Northline Health</span></div>
+          </div>
+          <span style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600"><span aria-hidden="true" style="width: 9px; height: 9px; border-radius: 50%; background: #2e8b57"></span>Visible to verified Herzliah alumni</span>
+          <a href="Me.dc.html" style="font-size: 14px; font-weight: 600">View my profile</a>
+          <a href="OnbPublish.dc.html" style="font-size: 14px; font-weight: 600">Change who can see me</a>
+        </section>
+        <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 22px; display: flex; flex-direction: column; gap: 12px">
+          <h2 style="margin: 0; font-size: 15px; font-weight: 700">People you contacted</h2>
+          <sc-for list="{{contacted}}" as="c" hint-placeholder-count="2">
+            <a href="Profile.dc.html" style="display: flex; gap: 10px; align-items: center; color: #0b2159; text-decoration: none">
+              <span aria-hidden="true" style="display: grid; place-items: center; flex: 0 0 34px; height: 34px; border-radius: 50%; background: {{c.tint}}; font-size: 12px; font-weight: 800">{{c.initials}}</span>
+              <span style="display: flex; flex-direction: column; gap: 1px; min-width: 0"><span style="font-size: 14px; font-weight: 700">{{c.name}}</span><span style="font-size: 13px; color: #4a5575">{{c.channel}} · {{c.date}}</span></span>
+            </a>
+          </sc-for>
+          <span style="font-size: 13px; line-height: 1.5; color: #4a5575">Only you see this list. When you contact someone, they show up here.</span>
+        </section>
+        <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 22px; display: flex; flex-direction: column; gap: 10px">
+          <h2 style="margin: 0; font-size: 15px; font-weight: 700">Private by design</h2>
+          <span style="font-size: 14px; line-height: 1.5; color: #3a4a70">Only verified Herzliah graduates see the directory. Your email is shared only if you reply to a message.</span>
+          <a href="#" style="font-size: 14px; font-weight: 600">Contact the alumni office</a>
+        </section>
+      </aside>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"showFreshness":{"editor":"boolean","default":true},"$preview":{"width":1280,"height":1100}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    // A new random pick of 3 classmates on every visit (page load), from the members-visible class list.
+    var pool = [
+      { name: 'Jacob Elbaz', initials: 'JE', city: 'Montreal', role: 'Pharmacist · [Pharmacy]', tint: '#c9d6f2' },
+      { name: 'Sarah Peretz', initials: 'SP', city: 'Toronto', role: 'Marketing Manager · [Company]', tint: '#f6dcae' },
+      { name: 'Daniel Ohana', initials: 'DO', city: 'Tel Aviv', role: 'Software Engineer · [Company]', tint: '#cfe8d8' },
+      { name: 'Miriam Assouline', initials: 'MA', city: 'Montreal', role: 'Family Physician · [Clinic]', tint: '#eab6ce' },
+      { name: 'Ari Wexler', initials: 'AW', city: 'New York', role: 'Investment Analyst · [Firm]', tint: '#e3d4f2' },
+      { name: 'Noa Dahan', initials: 'ND', city: 'Montreal', role: 'High School Teacher · [School]', tint: '#c9d6f2' },
+      { name: 'Ethan Malka', initials: 'EM', city: 'Toronto', role: 'Civil Engineer · [Company]', tint: '#f6dcae' },
+      { name: 'Shira Bensoussan', initials: 'SB', city: 'Ottawa', role: 'Policy Advisor · [Department]', tint: '#cfe8d8' }
+    ];
+    for (var i = pool.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = pool[i]; pool[i] = pool[j]; pool[j] = t;
+    }
+    this.state = { confirmed: false, classmates: pool.slice(0, 3) };
+  }
+  renderVals() {
+    var self = this;
+    var show = this.props.showFreshness === undefined ? true : !!this.props.showFreshness;
+    return {
+      askFreshness: show && !this.state.confirmed,
+      confirmed: show && this.state.confirmed,
+      confirm: function () { self.setState({ confirmed: true }); },
+      offers: ['Mentoring', 'Career advice', 'Hiring', 'Offering internships', 'Introductions', 'Helping current students'],
+      classmates: this.state.classmates,
+      newcomers: [
+        { name: 'Leah Bitton', initials: 'LB', year: 2018, city: 'Toronto', role: 'Architect in training · [Studio]', joined: 'Oct 2026', tint: '#eab6ce' },
+        { name: 'Eli Benchetrit', initials: 'EB', year: 2016, city: 'Montreal', role: 'Founder · early-stage climate startup', joined: 'Oct 2026', tint: '#cfe8d8' },
+        { name: 'Talia Weiss', initials: 'TW', year: 2011, city: 'Tel Aviv', role: 'Data Scientist · [Company]', joined: 'Sep 2026', tint: '#e3d4f2' }
+      ],
+      contacted: [
+        { name: 'Maya Azoulay', initials: 'MA', channel: 'Message via the Network', date: 'Oct 21', tint: '#eab6ce' },
+        { name: 'Rachel Gold', initials: 'RG', channel: 'LinkedIn', date: 'Sep 30', tint: '#f6dcae' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
