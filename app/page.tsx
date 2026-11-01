@@ -61,8 +61,11 @@ export default async function Home() {
                 </div>
                 <div style={{ flex: 1 }}>
                   {/* Names stay hidden until the visitor is an approved member. */}
-                  <strong className="censored" aria-label="Name visible to members">
-                    <span aria-hidden="true">{name}</span>
+                  <strong>
+                    <span className="censored" aria-hidden="true">
+                      {name}
+                    </span>
+                    <span className="srOnly">Name visible to members</span>
                   </strong>
                   <div className="personMeta">{role}</div>
                 </div>
