@@ -181,6 +181,54 @@ items:
       - "pgTAP: school admin can, reviewer and alumni can't; cross-tenant ids skipped; matched and already-decided requests skipped; 201 ids refused."
       - "E2E: select three pending requests (one with a match), approve, see two approved and one skipped, with Mailpit assertions."
 
+  - key: ONB-09
+    title: "Optional student ID on the access request, used to help reviewers match"
+    epic: EPIC-ONB
+    labels: [type:feature, area:onboarding, area:admin, P1]
+    size: M
+    depends: [ONB-03, ONB-04]
+    reqs: [F4, F12, S4]
+    related: [DEC-02, LEGAL-01, IMP-02]
+    summary: |
+      Reviewers match a request to a person by name, maiden name and graduation year. That is weak for common names
+      and for people whose names changed. The school knows its alumni by student ID (matricule), so applicants can
+      give it, optionally, on the request form. A person still approves every request: the ID is self-reported, is
+      used only as a matching hint and is never checked against school data, so ADR 0004 / DEC-01 stand.
+      Auto-approval on a matching ID is out of scope; it would need a school list (IMP-*), a new ADR and LEGAL-01.
+      - **Data:** access_requests.school_student_id (40 characters max, like alumni_private.school_student_id).
+        One SQL helper normalizes both columns (trim, empty to null, strip spaces and dashes, uppercase) so values
+        compare equal. A partial index on alumni_private (institution_id, school_student_id); no unique constraint,
+        because applicants mistype and staff fix it.
+      - **request_access:** takes p_school_student_id (default null). The /join/edit and needs-info reply paths
+        accept it too. The response never says whether the ID is known (S4).
+      - **decide_access_request:** on approve, a new profile gets the ID in alumni_private. When linking, the ID
+        fills the record only if it is empty; a staff-entered value is never overwritten.
+      - **access_request_matches:** an exact match on the normalized ID within the same school comes back with
+        score 1.0 and id_match = true, above name matches. For ONB-08, an ID match counts as a suggested match, so
+        that request is never bulk-approved.
+      - **Applicant UI:** an optional "Student ID (if you remember it)" field after graduation year on /join and
+        /join/edit, with a hint that it only helps the school find you faster. /account/pending and needs-info show
+        it back. Reuse the "Student ID" / "Matricule" labels; the hint is in EN and FR.
+      - **Reviewer UI:** /admin/approvals/[id] shows the submitted ID and flags "Same student ID as …". If the linked
+        record already has a different ID, both values are shown.
+      - **Design first:** add the field to Request.dc.html and the review screen in docs/design/alumni-full-flow/
+        and note it in its README. Update data-model.md, TRACEABILITY.md, and add a note to ADR 0004.
+      Open questions for Noah: the request form's privacy text should name the new field (Law 25, LEGAL-01);
+      DEC-02 calls the ID admin-only but RLS lets the owner read what they typed; and what Herzliah's IDs look like,
+      before validating more than the length.
+    ac:
+      - An applicant can submit, edit and leave blank the student ID; leaving it blank changes nothing in the flow.
+      - A request whose ID matches an existing record in the same school shows that record first, marked as an ID
+        match; an ID from another school never matches.
+      - Approving copies the ID to the new profile, and never overwrites an ID staff already entered on a linked record.
+      - No response, page or email tells the applicant whether their ID is known.
+      - Another alumnus can't read the ID, through the UI or by calling the database directly (pgTAP test).
+      - A request with an ID match is skipped by bulk approval.
+      - Every new string is in English and French.
+    tests:
+      - "pgTAP: request_access in 03_rpc_matrix with the new signature; normalized ID match within the school only; cross-tenant never matches; linked record's ID not overwritten; another alumnus can't read it."
+      - "E2E: sign up with an ID, reviewer sees the ID match, approve, ID shows on /admin/alumni/[id]; sign up without an ID, flow unchanged."
+
   # ---------------------------------------------------------------- email (WS1)
   - key: EML-01
     title: "Email outbox and worker (idempotent, retrying, Mailpit locally)"
