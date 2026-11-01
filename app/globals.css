@@ -364,6 +364,15 @@ a {
   background: #fff4dc;
   color: #7a4b00;
 }
+.menuChip-soon {
+  background: #f7e6ee;
+  color: #7b1e3d;
+}
+.menuItemSoon,
+.menuItemSoon:hover {
+  color: #4a5575;
+  cursor: default;
+}
 .srOnly {
   position: absolute;
   width: 1px;

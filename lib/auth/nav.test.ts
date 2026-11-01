@@ -287,7 +287,11 @@ describe("navModel", () => {
       expect(item(model, "emailAndSignIn")?.href).toBe("/account/email");
       expect(item(model, "downloadMyData")?.href).toBe("/me#your-data");
       expect(item(model, "editProfile")?.href).toBe("/me/edit/about");
-      expect(item(model, "privacyAndTerms")?.href).toBe("#");
+      expect(item(model, "privacyAndTerms")).toMatchObject({
+        href: "#",
+        soon: true,
+        chip: { text: "Coming soon", kind: "soon" },
+      });
     });
 
     it("still onboarding: no directory yet, and editing continues onboarding", () => {

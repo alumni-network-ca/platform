@@ -188,6 +188,18 @@ function MenuItem({ item, onChoose }: { item: NavItem; onChoose: () => void }) {
       {item.chip && <span className={`menuChip menuChip-${item.chip.kind}`}>{item.chip.text}</span>}
     </>
   );
+  // Not built yet: stays in the arrow-key order (ARIA keeps disabled items focusable) but goes nowhere.
+  if (item.soon)
+    return (
+      <div
+        role="menuitem"
+        tabIndex={-1}
+        aria-disabled="true"
+        className={`${props.className} menuItemSoon`}
+      >
+        {content}
+      </div>
+    );
   if (item.action)
     return (
       <button type="button" {...props}>
