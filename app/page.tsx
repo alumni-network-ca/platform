@@ -5,10 +5,11 @@ import { getAccount } from "@/lib/auth/account";
 import { homeFor } from "@/lib/auth/home";
 import { schoolBranding } from "@/lib/school";
 
-const recent: [year: string, name: string, role: string, offer: string][] = [
-  ["'08", "Dana Kessler", "Corporate Lawyer · Montreal", "Mentoring"],
-  ["'14", "Aaron Segal", "Product Lead · New York", "Open to intros"],
-  ["'99", "Rachel Berger", "Family Physician · Toronto", "Career advice"],
+// This page is public, so it never carries alumni names: only approved members see them.
+const recent: [year: string, role: string, offer: string][] = [
+  ["'08", "Corporate Lawyer · Montreal", "Mentoring"],
+  ["'14", "Product Lead · New York", "Open to intros"],
+  ["'99", "Family Physician · Toronto", "Career advice"],
 ];
 
 export default async function Home() {
@@ -50,20 +51,17 @@ export default async function Home() {
               <strong>Recently joined</strong>
               <span className="muted">{shortName} network</span>
             </div>
-            {recent.map(([year, name, role, flag]) => (
-              <div className="ledgerRow" key={name}>
+            {recent.map(([year, role, flag]) => (
+              <div className="ledgerRow" key={role}>
                 <div className="year">{year}</div>
-                <div className="avatar avatarInitials">
-                  {name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
+                <div className="avatar avatarInitials" aria-hidden="true">
+                  ✦
                 </div>
                 <div style={{ flex: 1 }}>
-                  {/* Names stay hidden until the visitor is an approved member. */}
+                  {/* A blurred placeholder, not a real name, so nothing leaks via page source. */}
                   <strong>
                     <span className="censored" aria-hidden="true">
-                      {name}
+                      Member name
                     </span>
                     <span className="srOnly">Name visible to members</span>
                   </strong>
