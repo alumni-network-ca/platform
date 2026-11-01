@@ -71,17 +71,23 @@ export function PublishChoices({
   progress,
   head,
   back,
+  settings,
 }: {
   t: ProfileCopy;
   school: string;
   initial: Visibility;
   consentText: React.ReactNode;
   preview: PreviewCard;
-  /** How far through the wizard, in percent. */
-  progress: number;
+  /** How far through the wizard, in percent (the onboarding step only). */
+  progress?: number;
   /** The step's heading, drawn on the server. */
   head: React.ReactNode;
   back: React.ReactNode;
+  /**
+   * On /me: the consent is asked only to publish without one on file, and the button just saves. Without it
+   * (onboarding), the consent is always needed and the button names what finishing does.
+   */
+  settings?: { saveLabel: string; hasConsent: boolean };
 }) {
   const [visibility, setVisibility] = useState<Visibility>(initial);
   const [consent, setConsent] = useState(false);
@@ -95,6 +101,8 @@ export function PublishChoices({
     if (ticked) setConsent(ticked.checked);
   }, []);
   const members = visibility === "members";
+  const askConsent = !settings || (members && !settings.hasConsent);
+  const blocked = askConsent && !consent;
   const choices: [Visibility, string, string][] = [
     ["members", format(t.visMembers, { school }), t.visMembersHint],
     ["hidden", t.visHidden, t.visHiddenHint],
@@ -105,9 +113,11 @@ export function PublishChoices({
   return (
     <>
       <section className="onbCard" ref={card}>
-        <div className="onbProgress">
-          <span style={{ width: `${progress}%` }} />
-        </div>
+        {progress !== undefined && (
+          <div className="onbProgress">
+            <span style={{ width: `${progress}%` }} />
+          </div>
+        )}
         <div className="onbBody">
           {head}
           <FormAlert />
@@ -129,7 +139,7 @@ export function PublishChoices({
               </label>
             ))}
           </fieldset>
-          <div className="onbField">
+          <div className="onbField" hidden={!askConsent}>
             <label className="onbConsent">
               <input
                 type="checkbox"
@@ -145,8 +155,16 @@ export function PublishChoices({
         <div className="onbFooter">
           {back}
           <SubmitButton
-            label={consent ? (members ? t.publish : t.finishPrivate) : t.acceptFirst}
-            disabled={!consent}
+            label={
+              blocked
+                ? t.acceptFirst
+                : settings
+                  ? settings.saveLabel
+                  : members
+                    ? t.publish
+                    : t.finishPrivate
+            }
+            disabled={blocked}
           />
         </div>
       </section>

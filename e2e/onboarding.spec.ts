@@ -98,7 +98,7 @@ test.describe("onboarding", () => {
     await page.getByRole("checkbox", { name: /I've read the/ }).check();
     expect(await blockingViolations(page)).toEqual([]);
     await page.getByRole("button", { name: "Publish my profile" }).click();
-    await expect(page).toHaveURL(/\/directory$/);
+    await expect(page).toHaveURL(/\/me$/);
 
     // Another alumnus finds the profile, with what was saved along the way.
     const peer = await clientFor(accounts.alumni);
@@ -118,9 +118,9 @@ test.describe("onboarding", () => {
     });
     expect([...data![0]!.offers].sort()).toEqual(["career_advice", "mentoring"]);
 
-    // Done: the wizard sends the alumnus home instead of starting again.
+    // Done: the wizard sends the alumnus to their profile instead of starting again.
     await page.goto("/onboarding");
-    await expect(page).toHaveURL(/\/directory$/);
+    await expect(page).toHaveURL(/\/me$/);
   });
 
   test("a later step waits for the earlier ones, and the wizard speaks French", async ({

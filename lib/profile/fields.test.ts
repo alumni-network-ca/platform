@@ -11,6 +11,7 @@ import {
   parsePublish,
   readForm,
   resumeStep,
+  signedInRecently,
   type FormReader,
 } from "./fields";
 
@@ -316,4 +317,13 @@ describe("optionsFor", () => {
 
 describe("initials", () => {
   it("takes the first letters", () => expect(initials(" dana", "levy")).toBe("DL"));
+});
+
+describe("signedInRecently", () => {
+  const now = new Date("2026-11-01T12:00:00Z");
+  it("allows a sign-in from the last 15 minutes only", () => {
+    expect(signedInRecently("2026-11-01T11:50:00Z", now)).toBe(true);
+    expect(signedInRecently("2026-11-01T11:44:59Z", now)).toBe(false);
+    expect(signedInRecently(null, now)).toBe(false);
+  });
 });

@@ -62,9 +62,9 @@ Signed-out pages (Join, Code) use the `guest` role: FR and Sign in, no avatar.
 | 1.2 Join, 1.3 Code, 1.4 Request (`Join`, `Code`, `Request`) | `/join`, `/login` | FND-09, FND-18, ONB-03 |
 | 1.5 Pending, 1.6 Needs info (`Pending`, `NeedsInfo`) | `/account/pending`, `/account/needs-info` | ONB-06 |
 | 1.7 Approval email (`Approved`) | email | EML-02 |
-| 2.1–2.4 Onboarding (`OnbAbout`, `OnbCareer`, `OnbNetwork`, `OnbPublish`) | `/onboarding` | ONB-05, PRF-05 |
+| **Built** · 2.1–2.4 Onboarding (`OnbAbout`, `OnbCareer`, `OnbNetwork`, `OnbPublish`) | `/onboarding` | ONB-05, PRF-05 |
 | 3.0 Home (`Home`) | `/home` | new (not in the backlog yet); lands here after onboarding once ADR 0014 is amended |
-| 3.1 My profile (`Me`) | `/me` | PRF-02 |
+| **Built** · 3.1 My profile (`Me`) | `/me` | PRF-02 |
 | 3.2 Directory (`Directory`) | `/directory` | DIR-02 |
 | 3.3 Profile and message (`Profile`) | `/profile/[id]` | DIR-03, CON-02 |
 | 3.4 Relay email (`RecipientEmail`) | email | CON-02 |
