@@ -22,7 +22,8 @@ How we plan, build, review and release the Alumni Network platform. The rules ar
 
 | Command | What it does |
 |---|---|
-| `npm run check` | Lint + typecheck + format check + unit tests. Run it before every PR (CI runs the same). |
+| `npm run check` | Lint + translation check + typecheck + format check + unit tests. Run it before every PR (CI runs the same). |
+| `npm run i18n:check` / `npm run i18n:audit` | Prevent new untranslated UI literals and invalid EN/FR dictionaries / report every existing finding. See [translation checks](docs/i18n-checks.md). |
 | `npm test` / `npm run test:watch` | Vitest unit and component tests (`*.test.ts(x)` next to the code) |
 | `npm run test:e2e` | Playwright end-to-end and axe accessibility tests in `e2e/`, desktop and mobile. Starts `next dev` automatically. First run `npx playwright install chromium`. |
 | `npm run test:db` | pgTAP database tests (`supabase/tests/`); needs the local Supabase stack (Docker) |
@@ -41,7 +42,7 @@ A pre-commit hook (simple-git-hooks + lint-staged) lints and formats staged file
 
 | Job | What it runs |
 |---|---|
-| Lint, types, format, unit | `npm run lint`, `typecheck`, `format:check`, `test`, `npm audit --omit=dev --audit-level=critical` |
+| Lint, types, format, unit | `npm run lint`, `i18n:check`, `typecheck`, `format:check`, `test`, `npm audit --omit=dev --audit-level=critical`. Uploads the full translation audit. |
 | Database | `supabase db start` (migrations + seed), `supabase test db` (pgTAP), then `npm run db:types` must leave `lib/database.types.ts` unchanged |
 | Build and end-to-end | Local Supabase stack, `npm run build`, then Playwright (desktop + mobile, axe). On failure, the report is uploaded as an artifact. |
 | Secret scan | gitleaks over the full git history |

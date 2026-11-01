@@ -37,6 +37,15 @@ jobs:
       - run: npm ci
       - name: Lint
         run: npm run lint
+      - name: Translation coverage
+        run: npm run i18n:check
+      - name: Upload full translation audit
+        if: ${{ always() && hashFiles('i18n-report.json') != '' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: translation-audit
+          path: i18n-report.json
+          retention-days: 7
       - name: Typecheck
         run: npm run typecheck
       - name: Format

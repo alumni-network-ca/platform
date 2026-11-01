@@ -9,6 +9,8 @@
     "prepare": "simple-git-hooks",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "i18n:check": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/i18n/check.ts",
+    "i18n:audit": "npm run i18n:check -- --strict",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "next typegen && tsc --noEmit",
@@ -20,7 +22,7 @@
     "seed:perf": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/seed-perf.ts",
     "bench:directory": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/bench-directory.ts",
     "admin:bootstrap": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/admin/bootstrap-platform-admin.ts",
-    "check": "npm run lint && npm run typecheck && npm run format:check && npm run test",
+    "check": "npm run lint && npm run i18n:check && npm run typecheck && npm run format:check && npm run test",
     "backlog:seed": "node scripts/github/seed-backlog.mjs",
     "backlog:check": "node scripts/github/seed-backlog.mjs --dry-run"
   },
