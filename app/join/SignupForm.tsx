@@ -68,51 +68,58 @@ export function SignupForm({
       )}
       <form action={action} className="authForm">
         <input type="hidden" name="next" value={destination} />
-        <label>
-          {fr ? "Adresse courriel" : "Email address"}
-          <input
-            className="input"
-            name="email"
-            type="email"
-            autoComplete="email"
-            maxLength={254}
-            placeholder="you@example.com"
-            required
-          />
-        </label>
-        <p className="microcopy muted">
-          {fr
-            ? "Utilisez une adresse personnelle que vous garderez après la graduation."
-            : "Use a personal email you will keep after graduation."}
-        </p>
-        <label>
-          {fr ? "Créer un mot de passe" : "Create a password"}
-          <input
-            className="input"
-            name="password"
-            type="password"
-            autoComplete="new-password"
-            minLength={MIN_PASSWORD_LENGTH}
-            aria-describedby="signup-password-hint"
-            required
-          />
-        </label>
-        <p id="signup-password-hint" className="microcopy muted">
-          {fr
-            ? `Au moins ${MIN_PASSWORD_LENGTH} caractères.`
-            : `At least ${MIN_PASSWORD_LENGTH} characters.`}
-        </p>
-        <label>
-          {fr ? "Confirmer le mot de passe" : "Confirm password"}
-          <input
-            className="input"
-            name="confirm_password"
-            type="password"
-            autoComplete="new-password"
-            minLength={MIN_PASSWORD_LENGTH}
-            required
-          />
-        </label>
+        <div className="signupField">
+          <label>
+            {fr ? "Adresse courriel" : "Email address"}
+            <input
+              className="input"
+              name="email"
+              type="email"
+              autoComplete="email"
+              aria-describedby="signup-email-hint"
+              maxLength={254}
+              placeholder="you@example.com"
+              required
+            />
+          </label>
+          <p id="signup-email-hint" className="microcopy muted">
+            {fr
+              ? "Utilisez une adresse personnelle que vous garderez après la graduation."
+              : "Use a personal email you will keep after graduation."}
+          </p>
+        </div>
+        <div className="signupPasswords">
+          <div className="signupField">
+            <label>
+              {fr ? "Créer un mot de passe" : "Create a password"}
+              <input
+                className="input"
+                name="password"
+                type="password"
+                autoComplete="new-password"
+                minLength={MIN_PASSWORD_LENGTH}
+                aria-describedby="signup-password-hint"
+                required
+              />
+            </label>
+            <p id="signup-password-hint" className="microcopy muted">
+              {fr
+                ? `Au moins ${MIN_PASSWORD_LENGTH} caractères.`
+                : `At least ${MIN_PASSWORD_LENGTH} characters.`}
+            </p>
+          </div>
+          <label>
+            {fr ? "Confirmer le mot de passe" : "Confirm password"}
+            <input
+              className="input"
+              name="confirm_password"
+              type="password"
+              autoComplete="new-password"
+              minLength={MIN_PASSWORD_LENGTH}
+              required
+            />
+          </label>
+        </div>
         <div className="joinNotice">
           <strong>
             {fr

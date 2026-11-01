@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { Nav } from "@/components/Nav";
 import { getAccount } from "@/lib/auth/account";
 import { homeFor } from "@/lib/auth/home";
+import { getServerLocale } from "@/lib/i18n-server";
 import { schoolBranding } from "@/lib/school";
 
 // This page is public, so it never carries alumni names: only approved members see them.
@@ -17,6 +18,7 @@ export default async function Home() {
   // Signed-in visitors go straight to their home page at this school (ADR 0014).
   if (user) redirect(homeFor(state));
   const { shortName, networkName } = schoolBranding(school);
+  const fr = (await getServerLocale()) === "fr";
   return (
     <>
       <Nav />
@@ -61,7 +63,7 @@ export default async function Home() {
                   {/* A blurred placeholder, not a real name, so nothing leaks via page source. */}
                   <strong>
                     <span className="censored" aria-hidden="true">
-                      Member name
+                      {fr ? "Nom du membre" : "Member name"}
                     </span>
                     <span className="srOnly">Name visible to members</span>
                   </strong>
