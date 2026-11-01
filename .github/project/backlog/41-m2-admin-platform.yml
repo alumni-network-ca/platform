@@ -356,6 +356,34 @@ items:
       - request_access is refused while a school is in setup.
       - Opening sign-ups is available only when the checklist is complete, and is audited.
 
+  - key: SA-06
+    title: "School names in English and French, long and short"
+    epic: EPIC-SA
+    labels: [type:feature, area:platform, area:i18n, P1]
+    size: M
+    depends: [SA-01]
+    reqs: [MT6]
+    summary: |
+      Today a school has one name (institutions.name) and one short name (branding.short_name), shown the same in
+      both languages, and lib/school.ts builds the network name in English only ("{short} Alumni Network") while the
+      nav uses the translated template. A school gets four names instead: long name EN/FR ("Herzliah High School" /
+      "École secondaire Herzliah") and short name EN/FR ("Herzliah"). All four are required; there is no fallback.
+      - **Data:** name_en, name_fr, short_name_en, short_name_fr on institutions (not null, trimmed, non-empty), backfilled
+        from name and branding.short_name, then name and branding.short_name are dropped. public_school() returns all four.
+      - **Who edits:** platform admins only, on create and on the school's console page (SA-01). School admins see the
+        names in /admin/settings (ADM-08) read-only. Every change is audited with the old and new values.
+      - **Display:** one helper, schoolNames(school, locale), returns { name, shortName, networkName } for the page's
+        language; the network name is the translated networkName template with the short name. It replaces
+        schoolBranding().shortName/networkName and every direct use of school.name (nav, profile, home, admin, console).
+      - **Emails:** {{school_name}} uses the long name in the recipient's language; add {{school_short_name}}.
+        The sender display name stays email_display_name.
+      - **Metadata:** page titles, the web app manifest and Open Graph tags use the name in the page's language.
+    ac:
+      - Switching the language switches every school name on the page, in emails and in the page title.
+      - A school can't be created or saved without all four names (database constraint and form validation).
+      - A school admin can't change the names, through the UI or by calling the database directly (pgTAP test).
+      - The console list shows each school's long name in the console user's language.
+
   # ---------------------------------------------------------------- public pages (WS4)
   - key: PUB-01
     title: "Tenant landing page (branded, real or no stats)"
