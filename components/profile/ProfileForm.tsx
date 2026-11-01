@@ -9,6 +9,7 @@ import {
   useId,
   useRef,
   useState,
+  useSyncExternalStore,
   type ReactNode,
 } from "react";
 import Link from "next/link";
@@ -123,6 +124,8 @@ export function FormAlert() {
   ) : null;
 }
 
+const subscribeNever = () => () => {};
+
 export function SubmitButton({
   label,
   disabled = false,
@@ -133,11 +136,19 @@ export function SubmitButton({
   danger?: boolean;
 }) {
   const { pending, t } = useForm();
+  // Off until React has hydrated: a submission before that is a plain form post, whose page comes back with
+  // the saved values and loses what was typed.
+  const hydrated = useSyncExternalStore(
+    subscribeNever,
+    () => true,
+    () => false,
+  );
+  const off = !hydrated || pending || disabled;
   return (
     <button
       className={danger ? "onbSubmit onbDanger" : "onbSubmit"}
-      disabled={pending || disabled}
-      aria-disabled={pending || disabled}
+      disabled={off}
+      aria-disabled={off}
     >
       {pending ? t.saving : label}
     </button>
