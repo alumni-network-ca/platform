@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Accept the staff invitation</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"><style>
+*{box-sizing:border-box}
+body{margin:0;background:#f7f7f6;color:#0b2159;font-family:Inter,Arial,sans-serif;font-size:15px;line-height:1.55}
+x-dc{display:block}
+a{color:#7b1e3d;text-underline-offset:3px}
+button,input,select,textarea{font:inherit}
+a:focus-visible,button:focus-visible{outline:3px solid #a7486c;outline-offset:3px}
+h1,h2,h3,p{margin:0}
+h1{font-size:34px;line-height:1.15;letter-spacing:-.035em}
+h3{font-size:14px}
+.shell{min-height:980px;display:flex;flex-direction:column}
+.page{width:100%;max-width:1112px;margin:auto;padding:48px 28px;flex:1}
+.center{max-width:720px;margin:0 auto}
+.muted{color:#4a5575}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#7b1e3d}
+.card{background:#fff;border:1px solid #e2e5ee;border-radius:14px;padding:36px;box-shadow:0 18px 50px -32px #0b215948;display:grid;gap:24px}
+.tight{display:grid;gap:8px}
+.small{font-size:13px}
+.fine{font-size:12px;color:#4a5575}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700}
+.chip.green{background:#e3f3e8;color:#1b5e33}
+.facts{margin:0;padding:18px 20px;background:#f7f7f6;border:1px solid #e2e5ee;border-radius:10px;display:grid;grid-template-columns:auto 1fr;gap:10px 20px;font-size:14px;align-items:center}
+.facts dt{color:#4a5575}
+.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.list{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:8px;font-size:13px;line-height:1.45}
+.list li{display:flex;gap:8px;align-items:flex-start}
+.list svg{flex:0 0 15px;margin-top:2px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:12px 22px;border:1px solid transparent;border-radius:7px;background:#7b1e3d;color:#fff;text-decoration:none;font-weight:700;font-size:14px;cursor:pointer}
+.btn:hover{background:#611630;color:#fff}
+.notice{background:#f2f4f8;border-left:3px solid #7b1e3d;border-radius:0 8px 8px 0;padding:15px 17px;font-size:13px;color:#3a4a70}
+.progress{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;list-style:none;padding:0;margin:0 0 28px;font-size:12px;color:#68728a}
+.progress li{display:flex;gap:7px;align-items:center}
+.progress .current{color:#7b1e3d;font-weight:700}
+.step{flex:0 0 23px;width:23px;height:23px;display:grid;place-items:center;border:1px solid #c5ccda;border-radius:50%;font-size:10px;font-weight:800;color:#4a5575;background:#fff}
+.step.active{background:#7b1e3d;border-color:#7b1e3d;color:#fff}
+.step.done{background:#0b2159;border-color:#0b2159;color:#fff}
+.footer{padding:20px 32px;border-top:1px solid #e2e5ee;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:12px;color:#4a5575}
+@media(max-width:800px){.page{padding:32px 20px}
+.card{padding:25px}
+.cols{grid-template-columns:1fr}
+.footer{padding:18px 20px}
+h1{font-size:29px}
+}
+</style></helmet>
+<div class="shell"><dc-import name="NavBar" role="invitee" open="{{ false }}" hint-size="100%,70px"></dc-import>
+<main class="page">
+<ol class="progress" aria-label="Joining the staff"><li><span class="step done">1</span>Your account</li><li class="current" aria-current="step"><span class="step active">2</span>Accept the invitation</li><li><span class="step">3</span>Two-factor sign-in</li></ol>
+<div class="center"><section class="card" aria-labelledby="sa-title">
+<div class="tight"><span class="eyebrow">Staff invitation · Herzliah High School</span><h1 id="sa-title">Join the Herzliah team as a reviewer</h1><p class="muted">Ruth Klein, school admin, invited you on November 2.</p></div>
+<dl class="facts">
+<dt>Signed in as</dt><dd>croy@[school domain]<span class="chip green"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"></path></svg>Matches the invitation</span></dd>
+<dt>Role</dt><dd>Reviewer</dd>
+<dt>School</dt><dd>Herzliah High School</dd>
+</dl>
+<div class="cols">
+<div><h3>As a reviewer you can</h3><ul class="list">
+<li><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1b5e33" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"></path></svg>Approve, question or decline sign-up requests</li>
+<li><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1b5e33" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"></path></svg>Read alumni records and their history</li>
+<li><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1b5e33" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"></path></svg>Read the audit log</li>
+</ul></div>
+<div><h3>You can't</h3><ul class="list" style="color:#4a5575">
+<li><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4a5575" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg>Change, suspend or export records</li>
+<li><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4a5575" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg>Manage staff, email templates or school settings</li>
+</ul></div>
+</div>
+<div class="notice">You'll see graduates' personal details. Use them only for Herzliah's alumni work. What staff do is recorded in the school's audit log.</div>
+<div style="display:flex;flex-wrap:wrap;gap:14px 20px;align-items:center"><a class="btn" href="StaffMfa.dc.html">Accept and continue</a><span class="small muted">Next: set up two-factor sign-in.</span></div>
+<p class="small" style="border-top:1px solid #e2e5ee;padding-top:18px">Not you? <a href="StaffLanding.dc.html"><strong>Sign out and use another account</strong></a></p>
+<p class="fine">Not ready? You can leave this page. The invitation stays open until November 9.</p>
+</section></div></main><footer class="footer"><span>Herzliah Alumni Network</span><span>A private network. Every alumnus approved by the school.</span></footer></div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":980}}'>
+class Component extends DCLogic { renderVals() { return {}; } }
+</script>
+</body>
+</html>

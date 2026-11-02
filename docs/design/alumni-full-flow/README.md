@@ -23,6 +23,26 @@ Implemented flow: **Join now → Create account → Confirm email by link → Re
 | `Approved`, `AccessApproved` | School approval notification and the transition to the existing onboarding designs. |
 | `SignIn` | Existing-account email/password sign-in only. In the prototype, ordinary sign-in previews a pending applicant; the approval email previews an approved applicant. The app must route from the authenticated account state. |
 
+## Staff invitation flow · November 2, 2026
+
+Drawn on the cloud canvas and copied here. The cloud canvas now also holds the November 1 revision above, so the two copies match again. Spec: [`../staff-invite.md`](../staff-invite.md).
+
+Two new rows on the **School admin** page take a staff member from the invitation to their first admin page. A4.1 Staff now invites through a single button that opens A5.1, instead of an inline form.
+
+| Design | Purpose |
+|---|---|
+| `AdmStaff` (A4.1, revised) | Team and Invitations tables; **Invite a staff member** opens A5.1. Invitations show sent, expired and revoked states. |
+| `StaffInviteNew` (A5.1) | Invited email plus a choice between Reviewer and School admin, each listing what it can and can't do. |
+| `StaffInviteSent` (A5.2) | The Staff page after sending: "Invitation emailed" banner, or the copy-link fallback while email delivery is missing (tweak `delivery`). |
+| `StaffInviteEmail` (A5.3) | The invitation email: inviter, role, one-time link, expiry date. |
+| `StaffLanding` (A6.1) | Where the link lands when signed out: who invited you, role, address, expiry; create an account or sign in. |
+| `StaffSignup`, `StaffVerify` (A6.2, A6.3) | Staff account creation with the email fixed to the invited address, then email confirmation that returns to the invitation. |
+| `StaffAccept` (A6.4) | Signed in: the account matches the invitation; role, inviter, what the role allows; accept. |
+| `StaffMfa` (A6.5) | Two-factor setup (tweak `step`). Design only until FND-11. |
+| `StaffWelcome` (A6.6) | First admin page with a one-time welcome and three places to start. |
+| `StaffInviteProblem` (A6.7) | Wrong account, expired, cancelled, already accepted, unrecognised link (tweak `reason`). |
+| `NavBar` (`invitee` role) | Signed in with an open staff invitation and no membership yet: no pill, menu "Finish staff setup". |
+
 `Code.dc.html` is preserved on a separate **Archive · hidden code sign-in** canvas page. Code sign-in is hidden in the application. Existing accounts without passwords can use the email recovery link to set one.
 
 The preview's Next screen control switches between applicant, email and staff contexts for review. These controls are outside the product screen and never grant applicant access to staff functionality. Sample people and email addresses are mock data. The application includes French signup and request copy. Terms/Privacy destinations remain with PUB-02; the application does not present placeholder consent links. The prototype retains its draft wording. School decision notifications keep their existing outbox dependency (EML-01); the implemented waiting page directs applicants to sign in to check status.
@@ -40,7 +60,7 @@ The **Layout** page of the canvas holds components every screen reuses. Screens 
 
 | Component | Frames | Spec |
 |---|---|---|
-| **Built** · Nav bar with role pill and account menu (`NavBar`) | L0 component; L1–L6 one per role: alumnus, applicant, reviewer, school admin, school admin who is also an alumnus, platform admin | [`../nav-bar.md`](../nav-bar.md) |
+| **Built** · Nav bar with role pill and account menu (`NavBar`) | L0 component; L1–L6 one per role: alumnus, applicant, reviewer, school admin, school admin who is also an alumnus, platform admin. The `invitee` role (staff invitation flow) is drawn in L0 only and not built yet | [`../nav-bar.md`](../nav-bar.md) |
 
 Signed-out pages use the `guest` role: FR, Sign in and the proposed Join now action, no avatar. The legacy Code frame is archived.
 
@@ -73,7 +93,16 @@ Signed-out pages use the `guest` role: FR, Sign in and the proposed Join now act
 | **Built** · A3.1 Email templates (`AdmTemplates`) | `/admin/templates` | EML-03 | `save_email_template`, `approve_email_template` |
 | A3.2 Freshness (`AdmFreshness`) | `/admin/freshness` | FRS-04 | needs FRS-02 |
 | A3.3 Export (`AdmExport`) | `/admin/export` | EXP-01, EXP-02 | new |
-| **Built** · A4.1 Staff and roles (`AdmStaff`) | `/admin/staff` | ADM-06 | `invite_staff`, `change_staff_role`, `remove_staff`; `school_staff`, `issue_staff_invitation_link`, `revoke_staff_invitation` |
+| **Built** (Nov 2 revision not yet) · A4.1 Staff and roles (`AdmStaff`) | `/admin/staff` | ADM-06 | `invite_staff`, `change_staff_role`, `remove_staff`; `school_staff`, `issue_staff_invitation_link`, `revoke_staff_invitation` |
+| A5.1 Invite a staff member (`StaffInviteNew`) | `/admin/staff/invite` | ADM-06 | `invite_staff` |
+| A5.2 Invitations after sending (`StaffInviteSent`) | `/admin/staff` | ADM-06, EML-01 | `issue_staff_invitation_link`; Resend restarting the 7 days is new |
+| A5.3 Staff invitation email (`StaffInviteEmail`) | email | EML-01, EML-03 | `staff_invitation` template; placeholders `inviter_name`, `role`, `expires_on` are new |
+| A6.1 Invitation link, signed out (`StaffLanding`) | `/staff/accept?token=` | SA-02, ADM-06 | new `staff_invitation_preview(token)` |
+| A6.2–A6.3 Staff account and email confirmation (`StaffSignup`, `StaffVerify`) | `/join?next=/staff/accept…`, `/join/verify` | FND-09, SA-02 | Supabase signup; storing the staff member's name is new |
+| A6.4 Accept (`StaffAccept`) | `/staff/accept?token=` | SA-02 | `accept_staff_invitation`, `staff_invitation_preview` |
+| A6.5 Two-factor setup (`StaffMfa`) | `/account/two-factor` | FND-11 | Supabase MFA (TOTP), `aal2` checks |
+| A6.6 First admin page (`StaffWelcome`) | `/admin` | ADM-01 | `admin_dashboard` |
+| A6.7 Link problems (`StaffInviteProblem`) | `/staff/accept?token=` | SA-02 | `staff_invitation_preview` |
 | **Built** · A4.2 School settings (`AdmSettings`) | `/admin/settings` | ADM-08 | `update_school_settings`; logo upload needs storage |
 | **Built** · A4.3 Audit log (`AdmAudit`) | `/admin/audit` | ADM-07 | `audit_people`; RLS audit reads |
 

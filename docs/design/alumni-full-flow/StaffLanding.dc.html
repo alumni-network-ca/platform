@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Staff invitation</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"><style>
+*{box-sizing:border-box}
+body{margin:0;background:#f7f7f6;color:#0b2159;font-family:Inter,Arial,sans-serif;font-size:15px;line-height:1.55}
+x-dc{display:block}
+a{color:#7b1e3d;text-underline-offset:3px}
+button,input,select,textarea{font:inherit}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #a7486c;outline-offset:3px}
+h1,h2,h3,p{margin:0}
+h1{font-size:34px;line-height:1.15;letter-spacing:-.035em}
+h2{font-size:20px;line-height:1.3;letter-spacing:-.02em}
+h3{font-size:15px}
+.shell{min-height:980px;display:flex;flex-direction:column}
+.page{width:100%;max-width:1112px;margin:auto;padding:48px 28px;flex:1}
+.split{display:grid;grid-template-columns:1fr 460px;gap:64px;align-items:start}
+.intro{padding-top:12px;display:grid;gap:24px}
+.intro h1{font-size:42px;line-height:1.12}
+.muted{color:#4a5575}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#7b1e3d}
+.lead{font-size:17px;line-height:1.65;color:#3a4a70}
+.card{background:#fff;border:1px solid #e2e5ee;border-radius:14px;padding:32px;box-shadow:0 18px 50px -32px #0b215948;display:grid;gap:22px}
+.tight{display:grid;gap:8px}
+.small{font-size:13px}
+.fine{font-size:12px;color:#4a5575}
+.field{display:grid;gap:7px;font-size:13px;font-weight:600}
+.field input{width:100%;padding:12px 13px;background:#fff;border:1px solid #8a93ab;border-radius:7px;color:#0b2159;font-size:15px;font-weight:400;min-width:0}
+.field input[readonly]{background:#f2f4f8;border-color:#c5ccda}
+.field input::placeholder{color:#66728d}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:12px 20px;border:1px solid transparent;border-radius:7px;background:#7b1e3d;color:#fff;text-decoration:none;font-weight:700;font-size:14px;cursor:pointer}
+.btn:hover{background:#611630;color:#fff}
+.wide{width:100%}
+.notice{background:#f2f4f8;border-left:3px solid #7b1e3d;border-radius:0 8px 8px 0;padding:15px 17px;font-size:13px;color:#3a4a70}
+.journey{list-style:none;padding:0;margin:0;display:grid;gap:18px}
+.journey li{display:flex;gap:14px;align-items:flex-start}
+.step{flex:0 0 30px;width:30px;height:30px;display:grid;place-items:center;border:1px solid #c5ccda;border-radius:50%;font-size:12px;font-weight:800;color:#4a5575;background:#fff}
+.step.active{background:#7b1e3d;border-color:#7b1e3d;color:#fff}
+.journey p{font-size:13px;color:#4a5575;margin-top:3px}
+.facts{margin:0;padding:20px 22px;background:#fff;border:1px solid #e2e5ee;border-radius:12px;display:grid;grid-template-columns:auto 1fr;gap:10px 20px;font-size:14px}
+.facts dt{color:#4a5575}
+.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:#eef0f4;border-radius:9px}
+.seg button{min-height:42px;border:0;border-radius:7px;font-size:14px;font-weight:700;cursor:pointer}
+.footer{padding:20px 32px;border-top:1px solid #e2e5ee;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:12px;color:#4a5575}
+@media(max-width:800px){.split{grid-template-columns:1fr;gap:28px}
+.page{padding:32px 20px}
+.intro{padding-top:0}
+.intro h1{font-size:32px}
+.card{padding:25px}
+.footer{padding:18px 20px}
+h1{font-size:29px}
+}
+</style></helmet>
+<div class="shell"><dc-import name="NavBar" role="guest" open="{{ false }}" hint-size="100%,70px"></dc-import>
+<main class="page"><div class="split">
+<section class="intro">
+<span class="eyebrow">Staff invitation · Herzliah High School</span>
+<h1>Ruth Klein invited you to join the Herzliah team</h1>
+<p class="lead">You'll help run the Herzliah Alumni Network as a <strong style="color:#0b2159">reviewer</strong>: you confirm which sign-up requests come from real Herzliah graduates.</p>
+<dl class="facts"><dt>Role</dt><dd>Reviewer</dd><dt>Invited by</dt><dd>Ruth Klein, school admin</dd><dt>For</dt><dd>croy@[school domain]</dd><dt>Link valid until</dt><dd>Monday, November 9</dd></dl>
+<ol class="journey">
+<li><span class="step active">1</span><div><h3>Your account</h3><p>Create one with the invited address, or sign in if you have one.</p></div></li>
+<li><span class="step">2</span><div><h3>Accept the invitation</h3><p>Check the role and what it lets you do.</p></div></li>
+<li><span class="step">3</span><div><h3>Set up two-factor sign-in</h3><p>An authenticator app on your phone. Required for every staff account.</p></div></li>
+</ol>
+</section>
+<section class="card" aria-labelledby="land-title">
+<div class="tight"><span class="eyebrow">Step 1 of 3</span><h2 id="land-title" style="font-size:27px">{{title}}</h2><p class="small muted">{{lead}}</p></div>
+<div class="seg" role="group" aria-label="Do you already have an account?">
+<button type="button" aria-pressed="{{newPressed}}" onClick="{{pickNew}}" style="background: {{newBg}}; color: {{newFg}}; box-shadow: {{newShadow}}">I'm new here</button>
+<button type="button" aria-pressed="{{oldPressed}}" onClick="{{pickOld}}" style="background: {{oldBg}}; color: {{oldFg}}; box-shadow: {{oldShadow}}">I have an account</button>
+</div>
+<label class="field" for="land-email">Email address<input id="land-email" type="email" readonly value="croy@[school domain]"></label>
+<sc-if value="{{isNew}}" hint-placeholder-val="{{true}}">
+<p class="fine" style="margin-top:-14px">Set by the invitation. Need a different address? Ask Ruth Klein to invite that one instead.</p>
+<a class="btn wide" href="StaffSignup.dc.html">Create my staff account</a>
+</sc-if>
+<sc-if value="{{isOld}}" hint-placeholder-val="{{false}}">
+<label class="field" for="land-password">Password<input id="land-password" type="password" autocomplete="current-password" placeholder="Your password"></label>
+<a class="btn wide" href="StaffAccept.dc.html">Sign in and continue</a>
+<p class="small"><a href="#">Forgot your password?</a></p>
+</sc-if>
+<div class="notice">Only croy@[school domain] can accept this invitation. If you're signed in with another address, we'll ask you to switch.</div>
+<p class="fine">Not expecting this? Close this page. Nothing happens unless you accept.</p>
+</section>
+</div></main><footer class="footer"><span>Herzliah Alumni Network</span><span>A private network. Every alumnus approved by the school.</span></footer></div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"mode":{"editor":"enum","options":["new","existing"],"default":"new"},"$preview":{"width":1280,"height":980}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { mode: null };
+  }
+  renderVals() {
+    var self = this;
+    var mode = this.state.mode || this.props.mode || 'new';
+    var isNew = mode !== 'existing';
+    function tab(on) { return { bg: on ? '#ffffff' : 'transparent', fg: on ? '#0b2159' : '#4a5575', shadow: on ? '0 1px 3px rgba(11,33,89,0.18)' : 'none', pressed: on ? 'true' : 'false' }; }
+    var a = tab(isNew), b = tab(!isNew);
+    return {
+      isNew: isNew, isOld: !isNew,
+      title: isNew ? 'Create your staff account' : 'Sign in to accept',
+      lead: isNew ? 'You need an account with the invited address. It takes a minute.' : 'Use the password for your existing account with this address.',
+      newBg: a.bg, newFg: a.fg, newShadow: a.shadow, newPressed: a.pressed,
+      oldBg: b.bg, oldFg: b.fg, oldShadow: b.shadow, oldPressed: b.pressed,
+      pickNew: function () { self.setState({ mode: 'new' }); },
+      pickOld: function () { self.setState({ mode: 'existing' }); }
+    };
+  }
+}
+</script>
+</body>
+</html>
