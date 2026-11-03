@@ -13,6 +13,7 @@ import { format } from "@/lib/i18n";
 import { getServerTranslations } from "@/lib/i18n-server";
 import { initials, optionsFor } from "@/lib/profile/fields";
 import { schoolBranding } from "@/lib/school";
+import { schoolConfig } from "@/lib/tenant/config";
 import { confirmStillAccurate } from "./actions";
 
 // The alumni home page (DIR-06; design Home): the reader's own status first, then ways into the network. Every
@@ -67,7 +68,7 @@ export default async function HomePage({
   const { shortName, networkName } = schoolBranding(school);
   const listed = me.visibility === "members";
 
-  const [classmates, newcomers, offerTypes, events, office] = await Promise.all([
+  const [classmates, newcomers, config, events, office] = await Promise.all([
     read(
       supabase.rpc("search_directory", {
         p_inst: school.id,
@@ -77,11 +78,7 @@ export default async function HomePage({
       }),
     ),
     read(supabase.rpc("search_directory", { p_inst: school.id, p_limit: 4, p_sort: "recent" })),
-    read(
-      supabase
-        .from("offer_types")
-        .select("key, label_en, label_fr, institution_id, is_active, sort_order"),
-    ),
+    schoolConfig(school.id),
     read(
       supabase
         .from("contact_events")
@@ -116,7 +113,7 @@ export default async function HomePage({
   const classTotal = classmateCount(Number(classmates?.[0]?.total_count ?? 0), listed);
   const classCards = others(classmates ?? [], me.id);
   const newCards = others(newcomers ?? [], me.id);
-  const offers = optionsFor(offerTypes ?? [], school.id);
+  const offers = optionsFor(config.offer_types, school.id);
   const dateFormat = (options: Intl.DateTimeFormatOptions) =>
     new Intl.DateTimeFormat(locale === "fr" ? "fr-CA" : "en-CA", {
       timeZone: "America/Toronto",

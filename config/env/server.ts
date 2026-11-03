@@ -10,6 +10,10 @@ export const serverEnv = {
   get isPreview() {
     return process.env.VERCEL_ENV === "preview";
   },
+  /** This build's commit, set by Vercel. Part of every cross-request cache key, so a deploy starts a fresh cache. */
+  get deploymentId() {
+    return process.env.VERCEL_GIT_COMMIT_SHA ?? "local";
+  },
   /** The school a PR preview shows when no tenant cookie is set. */
   get previewDefaultSchool() {
     return process.env.PREVIEW_DEFAULT_SCHOOL ?? "herzliah";

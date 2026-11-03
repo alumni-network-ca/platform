@@ -1,31 +1,25 @@
 // Runs before every page request (Next.js 16 proxy, Node.js runtime):
 // 1. Resolves the school from the host (FND-07, ADR 0001). The school travels to server components in the
-//    x-school request header; a client-sent x-school is always replaced or removed.
+//    x-school request header; a client-sent x-school is always replaced or removed. Its branding does not: pages
+//    read that from the cached school config (lib/tenant/config.ts).
 // 2. Refreshes the Supabase session and writes the new cookies to the response (FND-08). Cookies have no
 //    Domain attribute, so a session belongs to one school's address only (ADR 0002).
 import { createServerClient } from "@supabase/ssr";
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
 import { publicEnv } from "@/config/env/public";
 import { serverEnv } from "@/config/env/server";
 import { PREVIEW_COOKIE, SCHOOL_HEADER } from "@/config/tenancy";
 import type { Database } from "@/lib/database";
 import { encodeSchool, type PublicSchool } from "@/lib/school";
+import { anonClient } from "@/lib/supabase/anon";
 import { isSlug, resolveTenant } from "@/lib/tenant/host";
 import { lookupSchool } from "@/lib/tenant/lookup";
 
 /** Pages of the root domain (the page for schools, later the console) live under this path. */
 const ROOT_SITE = "/site";
 
-// Signed-out client for the public school card. It never carries a user's session. Created on first use, so a
-// missing Supabase variable surfaces as a failed request rather than a crash while the module loads.
-let anon: SupabaseClient<Database> | undefined;
-
 async function fetchSchool(slug: string) {
-  anon ??= createClient<Database>(publicEnv.supabaseUrl, publicEnv.supabasePublishableKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-  const { data, error } = await anon.rpc("public_school", { p_slug: slug });
+  const { data, error } = await anonClient().rpc("public_school", { p_slug: slug });
   if (error) throw new Error(`public_school: ${error.message}`);
   return data;
 }

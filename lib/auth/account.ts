@@ -12,11 +12,14 @@ import { canOpen, homeFor, type AccountState } from "./home";
  * the page's guard and the nav bar share it.
  */
 export const getAccount = cache(async () => {
-  const school = await requireSchool();
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // The school's cached config loads while Supabase Auth checks the session.
+  const [
+    school,
+    {
+      data: { user },
+    },
+  ] = await Promise.all([requireSchool(), supabase.auth.getUser()]);
   if (!user) return { school, supabase, user: null, state: null };
 
   const [membership, profile, request, platformAdmin] = await Promise.all([

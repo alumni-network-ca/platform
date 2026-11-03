@@ -57,12 +57,12 @@ select is(
   'every public RPC is security definer'
 );
 
--- anon can execute exactly two functions.
+-- anon can execute exactly three functions. school_config is public because the app caches it across visitors.
 select is(
   (select array_agg(p.proname::text order by p.proname) from pg_proc p join pg_namespace n on n.oid = p.pronamespace
    where n.nspname = 'public' and has_function_privilege('anon', p.oid, 'execute')),
-  array['confirm_still_accurate', 'public_school'],
-  'anon can execute only public_school and confirm_still_accurate'
+  array['confirm_still_accurate', 'public_school', 'school_config'],
+  'anon can execute only public_school, school_config and confirm_still_accurate'
 );
 
 -- Internal helpers are not callable by clients.

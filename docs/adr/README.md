@@ -25,3 +25,4 @@ Each ADR records one decision: its context, the decision itself and its conseque
 | [0015](0015-optional-password.md) | Optional password alongside the emailed code | Accepted | DEC-16 |
 | [0016](0016-account-signup-and-school-admission.md) | Separate account creation from school admission; password sign-in | Accepted, November 1 product review | — |
 | [0017](0017-configuration.md) | Configuration: env vars and shared settings in config/ | Accepted | — |
+| [0018](0018-school-config-cache.md) | School config read once, cached across requests | Accepted | — |
