@@ -16,6 +16,24 @@ export type PublicSchool = {
   branding: Json;
 };
 
+/** A career field or networking option: the platform's, or one a school added or renamed (same key). */
+export type ReferenceOption = {
+  id: string;
+  key: string;
+  label_en: string;
+  label_fr: string;
+  institution_id: string | null;
+  is_active: boolean;
+  sort_order: number;
+};
+
+export type SchoolConfig = {
+  branding: Json;
+  career_fields: ReferenceOption[];
+  offer_types: ReferenceOption[];
+  role_permissions: Partial<Record<Generated["public"]["Enums"]["member_role"], string[]>>;
+};
+
 export type DirectoryRow = {
   [K in keyof Fns["search_directory"]["Returns"][number]]: K extends
     "id" | "first_name" | "last_name" | "grad_year" | "offers" | "schools" | "total_count"
@@ -30,6 +48,7 @@ type Overrides = {
   school_staff: { Args: Fns["school_staff"]["Args"]; Returns: SchoolStaff[] };
   admin_roster: { Args: Fns["admin_roster"]["Args"]; Returns: AdminRosterRow[] };
   public_school: { Args: Fns["public_school"]["Args"]; Returns: PublicSchool | null };
+  school_config: { Args: Fns["school_config"]["Args"]; Returns: SchoolConfig | null };
   search_directory: { Args: Fns["search_directory"]["Args"]; Returns: DirectoryRow[] };
 };
 

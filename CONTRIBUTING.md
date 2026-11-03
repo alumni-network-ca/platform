@@ -25,7 +25,7 @@ How we plan, build, review and release the Alumni Network platform. The rules ar
 | `npm run check` | Lint + translation check + typecheck + format check + unit tests. Run it before every PR (CI runs the same). |
 | `npm run i18n:check` / `npm run i18n:audit` | Prevent new untranslated UI literals and invalid EN/FR dictionaries / report every existing finding. See [translation checks](docs/i18n-checks.md). |
 | `npm test` / `npm run test:watch` | Vitest unit and component tests (`*.test.ts(x)` next to the code) |
-| `npm run test:e2e` | Playwright end-to-end and axe accessibility tests in `e2e/`, desktop and mobile. Starts `next dev` automatically. First run `npx playwright install chromium`. |
+| `npm run test:e2e` | Playwright end-to-end and axe accessibility tests in `e2e/`, desktop and mobile. Starts its own `next dev` on the local Supabase stack (Docker), so stop `npm run dev` first. First run `npx playwright install chromium`. |
 | `npm run test:db` | pgTAP database tests (`supabase/tests/`); needs the local Supabase stack (Docker) |
 | `npm run db:types` | Regenerates `lib/database.types.ts` from the local database. Run it after every migration and commit the result. |
 | `npm run seed:perf` | Adds 10,000 alumni per school to the local stack for performance checks (`-- --count N` for fewer). Refuses any non-local database. |

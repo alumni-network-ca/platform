@@ -9,7 +9,7 @@ export async function requireStaff(path: string, permission = "metrics.read") {
   if (state.membership?.status !== "active" || (role !== "school_admin" && role !== "reviewer"))
     forbidden();
   // TODO(FND-11): require aal2 once staff MFA enrolment is available.
-  const permissions = new Set(await rolePermissions(role));
+  const permissions = new Set(await rolePermissions(school.id, role));
   const can = (key: string) => permissions.has(key);
   if (!can(permission)) forbidden();
   return { supabase, school, user, role, can };

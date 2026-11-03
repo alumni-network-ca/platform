@@ -14,3 +14,6 @@ next-env.d.ts
 
 .vercel
 .env*
+!.env.example
+# Dev settings for the shared cloud dev database: a URL and a publishable key, no secrets.
+!.env.development

@@ -33,3 +33,4 @@ Decisions marked **Accepted** were settled by the partners on 2026-10-26. Noah c
 | Observability | [0012](adr/0012-observability.md) |
 | Git workflow | [0013](adr/0013-git-workflow.md) |
 | Configuration: env vars and shared settings in `config/` | [0017](adr/0017-configuration.md) |
+| School config (branding, options, permissions) cached across requests | [0018](adr/0018-school-config-cache.md) |

@@ -7,6 +7,7 @@ import { format, translations } from "@/lib/i18n";
 import { getServerLocale } from "@/lib/i18n-server";
 import { initials, optionsFor, repeatsCurrentRole } from "@/lib/profile/fields";
 import { schoolBranding } from "@/lib/school";
+import { schoolConfig } from "@/lib/tenant/config";
 
 // An alumnus's profile as other alumni see it (DIR-03, CON-02; design Profile). Only a published profile at this
 // school opens: anything else is a 404, even for staff whose RLS could read hidden records. Email and phone are
@@ -54,60 +55,52 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
   );
   if (!p) notFound();
 
-  const [education, experience, offerIds, links, contactTypes, fieldRows, offerRows] =
-    await Promise.all([
-      read(
-        supabase
-          .from("alumni_education")
-          .select("school, degree, field_of_study, graduation_year")
-          .eq("profile_id", id)
-          .order("sort_order"),
-      ),
-      read(
-        supabase
-          .from("alumni_experience")
-          .select(
-            "job_title, employer, location, start_year, start_month, end_year, end_month, is_current",
-          )
-          .eq("profile_id", id)
-          .order("sort_order"),
-      ),
-      read(supabase.from("profile_offers").select("offer_type_id").eq("profile_id", id)),
-      // Public links only, whoever reads: staff RLS could return the private channels too.
-      read(
-        supabase
-          .from("profile_contact_channels")
-          .select("type, value")
-          .eq("profile_id", id)
-          .eq("is_public", true)
-          .in("type", [...LINKS])
-          .order("sort_order"),
-      ),
-      read(supabase.rpc("profile_contact_types", { p_profile: id })),
-      read(
-        supabase
-          .from("career_fields")
-          .select("id, key, label_en, label_fr, institution_id, is_active, sort_order"),
-      ),
-      read(
-        supabase
-          .from("offer_types")
-          .select("id, key, label_en, label_fr, institution_id, is_active, sort_order"),
-      ),
-    ]);
+  const [education, experience, offerIds, links, contactTypes, config] = await Promise.all([
+    read(
+      supabase
+        .from("alumni_education")
+        .select("school, degree, field_of_study, graduation_year")
+        .eq("profile_id", id)
+        .order("sort_order"),
+    ),
+    read(
+      supabase
+        .from("alumni_experience")
+        .select(
+          "job_title, employer, location, start_year, start_month, end_year, end_month, is_current",
+        )
+        .eq("profile_id", id)
+        .order("sort_order"),
+    ),
+    read(supabase.from("profile_offers").select("offer_type_id").eq("profile_id", id)),
+    // Public links only, whoever reads: staff RLS could return the private channels too.
+    read(
+      supabase
+        .from("profile_contact_channels")
+        .select("type, value")
+        .eq("profile_id", id)
+        .eq("is_public", true)
+        .in("type", [...LINKS])
+        .order("sort_order"),
+    ),
+    read(supabase.rpc("profile_contact_types", { p_profile: id })),
+    schoolConfig(school.id),
+  ]);
 
   const label = (row: { label_en: string; label_fr: string }) =>
     locale === "fr" ? row.label_fr : row.label_en;
   const name = `${p.preferred_name || p.first_name} ${p.last_name}`;
   const first = p.preferred_name || p.first_name;
   const own = p.user_id === user.id;
-  const field = (fieldRows ?? []).find((f) => f.id === p.career_field_id);
+  const field = config.career_fields.find((f) => f.id === p.career_field_id);
   const offerKeys = new Set(
-    (offerRows ?? [])
+    config.offer_types
       .filter((r) => (offerIds ?? []).some((x) => x.offer_type_id === r.id))
       .map((r) => r.key),
   );
-  const offers = optionsFor(offerRows ?? [], school.id).filter((offer) => offerKeys.has(offer.key));
+  const offers = optionsFor(config.offer_types, school.id).filter((offer) =>
+    offerKeys.has(offer.key),
+  );
   const reveal = (contactTypes ?? []).filter((type) => type === "email" || type === "phone");
   const shared = links ?? [];
   const date = (year: number, month: number | null) =>
