@@ -1,6 +1,6 @@
 // Links between the root site (the console) and the schools' addresses, on the deployment that served the
 // request. Pure, so it is unit-tested; lib/tenant/server.ts reads the request's origin.
-import { PREVIEW_COOKIE, PREVIEW_ROOT } from "./host";
+import { PREVIEW_COOKIE, PREVIEW_ROOT } from "@/config/tenancy";
 
 export type Origin = {
   protocol: "http:" | "https:";

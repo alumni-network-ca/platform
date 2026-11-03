@@ -1,8 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
-
-export const CODE_LENGTH = 6;
+import { CODE_LENGTH } from "@/config/auth";
 
 /**
  * An emailed one-time code, shown as six boxes. Underneath is one ordinary input, so paste, the browser's

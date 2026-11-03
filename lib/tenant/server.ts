@@ -2,9 +2,9 @@ import "server-only";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { serverEnv } from "@/config/env/server";
+import { SCHOOL_HEADER } from "@/config/tenancy";
 import { decodeSchool, type PublicSchool } from "@/lib/school";
 import type { Origin } from "./address";
-import { SCHOOL_HEADER } from "./host";
 
 /**
  * The school of this request, resolved by proxy.ts from the host and never taken from the client. Null on the

@@ -8,9 +8,10 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
 import { publicEnv } from "@/config/env/public";
 import { serverEnv } from "@/config/env/server";
+import { PREVIEW_COOKIE, SCHOOL_HEADER } from "@/config/tenancy";
 import type { Database } from "@/lib/database";
 import { encodeSchool, type PublicSchool } from "@/lib/school";
-import { PREVIEW_COOKIE, SCHOOL_HEADER, isSlug, resolveTenant } from "@/lib/tenant/host";
+import { isSlug, resolveTenant } from "@/lib/tenant/host";
 import { lookupSchool } from "@/lib/tenant/lookup";
 
 /** Pages of the root domain (the page for schools, later the console) live under this path. */

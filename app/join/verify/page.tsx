@@ -3,28 +3,36 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Nav } from "@/components/Nav";
 import { JoinProgress } from "@/components/JoinProgress";
+import { SIGNUP_CONFIRMATION } from "@/config/auth";
 import { getAccount } from "@/lib/auth/account";
 import { homeFor } from "@/lib/auth/home";
 import { signupDestination } from "@/lib/auth/next";
 import { getServerLocale } from "@/lib/i18n-server";
 import { ConfirmationResend } from "./ConfirmationResend";
 
+const COOKIE = SIGNUP_CONFIRMATION.cookies;
+
+/** Seconds until the confirmation email can be sent again. */
 function resendDelay(lastSent: number) {
-  return Math.max(0, Math.min(60, Math.ceil((lastSent + 60_000 - Date.now()) / 1000)));
+  const cooldown = SIGNUP_CONFIRMATION.resendCooldownMs;
+  return Math.max(
+    0,
+    Math.min(cooldown / 1000, Math.ceil((lastSent + cooldown - Date.now()) / 1000)),
+  );
 }
 
 export default async function VerifySignupPage() {
   const { user, state } = await getAccount();
   const store = await cookies();
-  const email = store.get("alumni-confirmation-email")?.value;
-  const destination = signupDestination(store.get("alumni-confirmation-next")?.value);
+  const email = store.get(COOKIE.email)?.value;
+  const destination = signupDestination(store.get(COOKIE.next)?.value);
   if (user)
     redirect(
       destination === "/join"
         ? homeFor(state)
         : `/auth/home?next=${encodeURIComponent(destination)}`,
     );
-  const lastSent = Number(store.get("alumni-confirmation-sent")?.value ?? 0);
+  const lastSent = Number(store.get(COOKIE.sent)?.value ?? 0);
   const retryIn = resendDelay(lastSent);
   const locale = await getServerLocale();
   const fr = locale === "fr";
