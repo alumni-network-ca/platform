@@ -39,3 +39,4 @@
 
 - One permission matrix, kept in the database and the docs, is tested by pgTAP for every role × tenant pair.
 - A status change (suspension or revocation) takes effect on the next request, because RLS reads membership live. JWT role claims are not used for authorization.
+- The role → permission table itself is public (`school_config`, ADR 0018), so the app can cache it across visitors. The app's own checks use that copy; the database always reads the table live.
