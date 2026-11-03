@@ -1,6 +1,7 @@
 import "server-only";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
+import { serverEnv } from "@/config/env/server";
 import { decodeSchool, type PublicSchool } from "@/lib/school";
 import type { Origin } from "./address";
 import { SCHOOL_HEADER } from "./host";
@@ -27,7 +28,7 @@ export async function getOrigin(): Promise<Origin> {
   return {
     protocol: forwarded === "https" || (!forwarded && !local) ? "https:" : "http:",
     host,
-    rootDomain: process.env.ROOT_DOMAIN ?? "localhost",
-    isPreview: process.env.VERCEL_ENV === "preview",
+    rootDomain: serverEnv.rootDomain,
+    isPreview: serverEnv.isPreview,
   };
 }
