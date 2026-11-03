@@ -12,6 +12,7 @@ import { signupDestination } from "@/lib/auth/next";
 export type SignupResult = {
   error: "email" | "weak" | "mismatch" | "tooMany" | "failed" | null;
   next?: string;
+  confirmationSent?: boolean;
 };
 export type ResendResult = { error: "tooMany" | "failed" | null; sent: boolean };
 const COOKIE = SIGNUP_CONFIRMATION.cookies;
@@ -60,7 +61,7 @@ export async function createAccount(_: SignupResult, form: FormData): Promise<Si
   store.set(COOKIE.email, email, options);
   store.set(COOKIE.sent, String(Date.now()), options);
   store.set(COOKIE.next, destination, options);
-  return { error: null, next: "/join/verify" };
+  return { error: null, confirmationSent: true };
 }
 
 export async function resendConfirmation(): Promise<ResendResult> {

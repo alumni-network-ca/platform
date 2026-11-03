@@ -3,8 +3,9 @@
 import { useActionState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
-import { MIN_PASSWORD_LENGTH } from "@/config/auth";
+import { MIN_PASSWORD_LENGTH, SIGNUP_CONFIRMATION } from "@/config/auth";
 import { createAccount, type SignupResult } from "./signup-actions";
+import { ConfirmationResend } from "./verify/ConfirmationResend";
 
 export function SignupForm({
   shortName,
@@ -43,6 +44,40 @@ export function SignupForm({
         tooMany: "Too many attempts. Wait a few minutes and try again.",
         failed: "We couldn't create the account right now. Please try again.",
       };
+  if (result.confirmationSent) {
+    return (
+      <section className="joinCard" aria-labelledby="confirmation-sent-title">
+        <div role="status" className="joinStack">
+          <span className="joinIcon" aria-hidden="true">
+            ✉
+          </span>
+          <h2 id="confirmation-sent-title">
+            {fr ? "Vérifiez votre boîte de réception" : "Check your inbox"}
+          </h2>
+          <p className="muted">
+            {fr
+              ? "Un courriel de confirmation a été envoyé. Consultez votre boîte de réception et cliquez sur le lien pour continuer."
+              : "A confirmation email has been sent. Please check your inbox and click the link to continue."}
+          </p>
+        </div>
+        <p className="muted microcopy">
+          {fr
+            ? "Vous ne trouvez pas le courriel ? Vérifiez vos indésirables."
+            : "Can't find the email? Check your spam folder."}
+        </p>
+        <ConfirmationResend retryIn={SIGNUP_CONFIRMATION.resendCooldownMs / 1000} />
+        <div className="authFooter">
+          <Link
+            href={
+              destination === "/join" ? "/login" : `/login?next=${encodeURIComponent(destination)}`
+            }
+          >
+            {fr ? "Déjà confirmé ? Se connecter" : "Already confirmed? Sign in"}
+          </Link>
+        </div>
+      </section>
+    );
+  }
   return (
     <section className="joinCard" aria-labelledby="create-account-title">
       <div className="joinStack">
