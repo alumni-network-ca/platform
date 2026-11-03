@@ -23,6 +23,23 @@ export default defineConfig([
     },
   },
   {
+    // Env vars are read in config/env only, so each has one default, one error message and one tier. Tooling runs
+    // outside Next (plain Node, Playwright) and keeps its own reads.
+    files: ["**/*.{ts,tsx}"],
+    ignores: ["config/env/**", "scripts/**", "e2e/**", "*.config.{ts,mts}"],
+    rules: {
+      "no-restricted-properties": [
+        "error",
+        {
+          object: "process",
+          property: "env",
+          message:
+            "Read env vars through @/config/env/public, server or secrets, not process.env directly.",
+        },
+      ],
+    },
+  },
+  {
     // Pages and components still on the legacy schema. Each one names the M2 issue that rewires it;
     // remove it from this list in that PR.
     files: ["components/AdminImport.tsx"],

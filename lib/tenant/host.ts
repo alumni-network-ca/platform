@@ -6,13 +6,7 @@
 //   alumninetwork.ca, www.alumninetwork.ca, localhost:3000 → the root site (for schools, console)
 //   <anything>.vercel.app on a PR preview → the `tenant` cookie ("root": the root site), else the preview default school
 //   anything else                         → no tenant (404)
-
-/** Request header the proxy sets to the resolved school. Any client-sent value is overwritten. */
-export const SCHOOL_HEADER = "x-school";
-/** Cookie that picks the school on Vercel PR previews, which have no school subdomain. Ignored elsewhere. */
-export const PREVIEW_COOKIE = "tenant";
-/** Preview cookie value for the root site (the console). "root" is a reserved address, never a school. */
-export const PREVIEW_ROOT = "root";
+import { PREVIEW_ROOT } from "@/config/tenancy";
 
 // Same rule as the institutions.slug check constraint.
 const SLUG = /^[a-z0-9-]{2,40}$/;
