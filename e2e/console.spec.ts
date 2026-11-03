@@ -78,7 +78,7 @@ test.describe("platform console", () => {
     await invited.getByLabel("Confirm password", { exact: true }).fill(LOCAL_PASSWORD);
     await invited.getByRole("button", { name: "Create my account", exact: true }).click();
     await expect(
-      invited.getByRole("heading", { name: "Confirm your email", exact: true }),
+      invited.getByRole("heading", { name: "Check your inbox", exact: true }),
     ).toBeVisible();
     await invited.goto(await authLinkFor(head, "signup"));
     await expect(invited).toHaveURL(link);

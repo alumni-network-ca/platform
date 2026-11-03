@@ -19,8 +19,10 @@ async function signUp(page: Page, email: string) {
   await page.getByLabel("Create a password", { exact: true }).fill(LOCAL_PASSWORD);
   await page.getByLabel("Confirm password", { exact: true }).fill(LOCAL_PASSWORD);
   await page.getByRole("button", { name: "Create my account", exact: true }).click();
-  await expect(page).toHaveURL(/\/join\/verify$/);
-  await expect(page.getByRole("heading", { name: "Confirm your email" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Check your inbox" })).toBeVisible();
+  await expect(page).toHaveURL(/\/join$/);
+  await expect(page.getByRole("status")).toContainText("A confirmation email has been sent.");
+  await expect(page.getByRole("button", { name: "Create my account", exact: true })).toHaveCount(0);
 }
 const badPassword = (page: Page) =>
   expect(page.locator(".notice[role=alert]")).toHaveText("Wrong email or password.");
