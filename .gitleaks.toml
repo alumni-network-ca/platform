@@ -1,0 +1,9 @@
+# Secret scan (CI job "Secret scan (gitleaks)"): every default rule, plus one exception.
+[extend]
+useDefault = true
+
+# Supabase publishable keys are public by design: every browser receives one, and RLS guards the data. The
+# committed .env.development carries the cloud dev database's key. Secret keys (sb_secret_…) are still caught.
+[[allowlists]]
+description = "Supabase publishable keys"
+regexes = ['''^sb_publishable_[A-Za-z0-9_-]+$''']
