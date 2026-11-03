@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
-import { MIN_PASSWORD_LENGTH } from "@/lib/auth/password";
+import { MIN_PASSWORD_LENGTH, SIGNUP_CONFIRMATION } from "@/config/auth";
 import { createAccount, type SignupResult } from "./signup-actions";
 import { ConfirmationResend } from "./verify/ConfirmationResend";
 
@@ -65,7 +65,7 @@ export function SignupForm({
             ? "Vous ne trouvez pas le courriel ? Vérifiez vos indésirables."
             : "Can't find the email? Check your spam folder."}
         </p>
-        <ConfirmationResend retryIn={60} />
+        <ConfirmationResend retryIn={SIGNUP_CONFIRMATION.resendCooldownMs / 1000} />
         <div className="authFooter">
           <Link
             href={

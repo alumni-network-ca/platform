@@ -1,6 +1,7 @@
 "use client";
 import { useActionState, useEffect, useState } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
+import { SIGNUP_CONFIRMATION } from "@/config/auth";
 import { resendConfirmation, type ResendResult } from "../signup-actions";
 
 export function ConfirmationResend({ retryIn }: { retryIn: number }) {
@@ -10,7 +11,7 @@ export function ConfirmationResend({ retryIn }: { retryIn: number }) {
   const [result, action, pending] = useActionState<ResendResult, FormData>(
     async () => {
       const result = await resendConfirmation();
-      if (result.sent) setWait(60);
+      if (result.sent) setWait(SIGNUP_CONFIRMATION.resendCooldownMs / 1000);
       return result;
     },
     { error: null, sent: false },

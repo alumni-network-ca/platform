@@ -90,4 +90,4 @@ The seed also holds 200 published Herzliah alumni and 20 at the second school (f
 
 ## Security
 
-Never commit secrets: `.env*.local` is ignored, and only `.env.example` (no values) is tracked. The Supabase **secret key** must never be exposed to the browser. Report vulnerabilities privately (see `.github/ISSUE_TEMPLATE/config.yml`).
+Never commit secrets: `.env*.local` is ignored, and only `.env.example` (no values) is tracked. The Supabase **secret key** must never be exposed to the browser. The app reads environment variables only through `config/env/` (public, server, secrets), and shared settings such as cookie names live in `config/` ([ADR 0017](docs/adr/0017-configuration.md)); lint rejects `process.env` anywhere else in app code. Report vulnerabilities privately (see `.github/ISSUE_TEMPLATE/config.yml`).

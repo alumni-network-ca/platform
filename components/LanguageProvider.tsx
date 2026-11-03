@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 
+import { LANGUAGE_COOKIE, LANGUAGE_COOKIE_MAX_AGE } from "@/config/language";
 import { Locale, translations } from "@/lib/i18n";
 
 type TranslationSet = typeof translations.en | typeof translations.fr;
@@ -18,7 +19,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>("en");
 
   useEffect(() => {
-    const saved = localStorage.getItem("herzliah-language") as Locale | null;
+    const saved = localStorage.getItem(LANGUAGE_COOKIE) as Locale | null;
 
     if (saved === "en" || saved === "fr") {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- replaced by next-intl in FND-03 (#89)
@@ -29,9 +30,9 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   function setLocale(newLocale: Locale) {
     setLocaleState(newLocale);
 
-    localStorage.setItem("herzliah-language", newLocale);
+    localStorage.setItem(LANGUAGE_COOKIE, newLocale);
 
-    document.cookie = `herzliah-language=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
+    document.cookie = `${LANGUAGE_COOKIE}=${newLocale}; path=/; max-age=${LANGUAGE_COOKIE_MAX_AGE}; SameSite=Lax`;
   }
 
   return (

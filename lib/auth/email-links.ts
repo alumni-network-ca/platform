@@ -1,6 +1,6 @@
 import "server-only";
+import { PREVIEW_COOKIE, PREVIEW_ROOT } from "@/config/tenancy";
 import { getOrigin, getSchool } from "@/lib/tenant/server";
-import { PREVIEW_COOKIE, PREVIEW_ROOT } from "@/lib/tenant/host";
 import { signupDestination } from "./next";
 
 /** Preserve the current school's address, including its selector on shared Vercel previews. */

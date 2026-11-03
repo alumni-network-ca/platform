@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Nav } from "@/components/Nav";
+import { AVATAR_TINTS } from "@/config/ui";
 import { requireAccess } from "@/lib/auth/account";
 import {
   classmateCount,
@@ -24,8 +25,7 @@ async function read<T>(query: PromiseLike<{ data: T; error: { message: string } 
   return data;
 }
 
-const TINTS = ["#eab6ce", "#c9d6f2", "#f6dcae", "#cfe8d8", "#e3d4f2"];
-const tint = (id: string) => TINTS[parseInt(id.slice(-2), 16) % TINTS.length];
+const tint = (id: string) => AVATAR_TINTS[parseInt(id.slice(-2), 16) % AVATAR_TINTS.length];
 
 type Card = {
   id: string;

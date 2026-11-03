@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Nav } from "@/components/Nav";
 import { DirectoryForm, FilterPanel } from "@/components/directory/DirectoryForm";
+import { AVATAR_TINTS } from "@/config/ui";
 import { requireAccess } from "@/lib/auth/account";
 import { PAGE_SIZE, activeChips, pages, readFilters, rpcFilters } from "@/lib/directory/filters";
 import { format, translations } from "@/lib/i18n";
@@ -15,8 +16,8 @@ type Facet = { value: string; count: number };
 type Facets = { total: number; cities: Facet[]; schools: Facet[]; decades: Facet[] };
 
 /** Avatar colours from the design, one per person so the grid is easy to scan. */
-const TINTS = ["#eab6ce", "#c9d6f2", "#f6dcae", "#cfe8d8", "#e3d4f2"];
-const tint = (id: string) => TINTS[parseInt(id.replace(/-/g, "").slice(-6), 16) % TINTS.length];
+const tint = (id: string) =>
+  AVATAR_TINTS[parseInt(id.replace(/-/g, "").slice(-6), 16) % AVATAR_TINTS.length];
 
 async function read<T>(query: PromiseLike<{ data: T; error: { message: string } | null }>) {
   const { data, error } = await query;
