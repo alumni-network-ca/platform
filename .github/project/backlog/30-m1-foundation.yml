@@ -344,3 +344,19 @@ items:
       - A password shorter than 10 characters is refused.
     tests:
       - "Unit: canOpen for /account/password. E2E: password sign-in for a seeded account, one message for every failure, a password set after a code sign-in then used, a short password refused."
+
+  - key: FND-20
+    title: "Move the Herzliah logo to public/institutes/logos/"
+    labels: [type:chore, area:ui, P2]
+    size: XS
+    summary: |
+      Maimonide's logo lives at public/institutes/logos/maimonide.png, but Herzliah's is still at
+      public/herzliah-logo.png. Move it to public/institutes/logos/herzliah.png so every school's logo sits in one
+      folder, and update every reference: the logo in institutions.branding (seed.sql and a migration for rows
+      already stored), the tests and fixtures that use the old path, and the design preview server and script
+      under docs/design/alumni-full-flow/.
+    ac:
+      - public/herzliah-logo.png no longer exists and no file in the repo refers to /herzliah-logo.png.
+      - The Herzliah nav bar and the sign-in page still show the logo, on a fresh seed and on the hosted dev database.
+    tests:
+      - "Unit: lib/school.test.ts and lib/auth/nav.test.ts use the new path. Manual: the logo shows for Herzliah."
