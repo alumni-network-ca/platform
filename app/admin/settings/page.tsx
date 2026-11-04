@@ -2,6 +2,7 @@ import Image from "next/image";
 import { requireStaff } from "@/lib/auth/staff";
 import { adminCopy, read } from "@/lib/admin/data";
 import { contrastRatio } from "@/lib/admin/contrast";
+import { DEFAULT_ACCENT, DEFAULT_PRIMARY } from "@/lib/theme";
 import { schoolBranding } from "@/lib/school";
 import { ActionForm } from "@/components/admin/ActionForm";
 import { saveSettings } from "./actions";
@@ -22,11 +23,11 @@ export default async function Settings() {
   const colours = [
     {
       label: t.primary,
-      hex: typeof branding.primary_color === "string" ? branding.primary_color : "#0B2159",
+      hex: typeof branding.primary_color === "string" ? branding.primary_color : DEFAULT_PRIMARY,
     },
     {
       label: t.accent,
-      hex: typeof branding.accent_color === "string" ? branding.accent_color : "#7B1E3D",
+      hex: typeof branding.accent_color === "string" ? branding.accent_color : DEFAULT_ACCENT,
     },
   ];
   const { logo } = schoolBranding({ ...school, branding: settings.branding });

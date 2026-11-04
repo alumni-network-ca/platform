@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useActionState, useState } from "react";
 import { schoolUrl, slugFromName, type Origin } from "@/lib/tenant/address";
+import { DEFAULT_ACCENT, DEFAULT_PRIMARY } from "@/lib/theme";
 import { createSchool, type CreateSchoolResult } from "./actions";
 
 export function NewSchoolForm({ origin }: { origin: Origin }) {
@@ -66,11 +67,21 @@ export function NewSchoolForm({ origin }: { origin: Origin }) {
           </label>
           <label className="field">
             Primary colour
-            <input className="input" type="color" name="primary_color" defaultValue="#0B2159" />
+            <input
+              className="input"
+              type="color"
+              name="primary_color"
+              defaultValue={DEFAULT_PRIMARY}
+            />
           </label>
           <label className="field">
             Accent colour
-            <input className="input" type="color" name="accent_color" defaultValue="#7B1E3D" />
+            <input
+              className="input"
+              type="color"
+              name="accent_color"
+              defaultValue={DEFAULT_ACCENT}
+            />
           </label>
         </div>
         <div className="formRow">
