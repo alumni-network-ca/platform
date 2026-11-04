@@ -53,6 +53,8 @@ describe("school colours", () => {
       ])
         expect(ratio(v[text]!, v["--brand"]!), text).toBeGreaterThanOrEqual(4.5);
       expect(ratio(v["--on-brand-line"]!, v["--brand"]!)).toBeGreaterThanOrEqual(3);
+      expect(ratio(v["--on-brand-pill"]!, v["--brand"]!)).toBeGreaterThanOrEqual(4.5);
+      expect(ratio(v["--on-brand-pill-line"]!, v["--brand"]!)).toBeGreaterThanOrEqual(3);
       for (const text of ["--on-deep-soft", "--on-deep-muted"])
         expect(ratio(v[text]!, v["--brand-deep"]!), text).toBeGreaterThanOrEqual(4.5);
       for (const surface of ["#FFFFFF", "#F7F7F6", v["--accent-soft"]!, v["--accent-pale"]!])

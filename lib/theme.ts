@@ -90,6 +90,9 @@ export function schoolTheme(branding: Json | undefined): CSSProperties | undefin
       "--on-brand-line": onSurface(brand, 0.4, 3),
       "--on-deep-soft": onSurface(deep, 0.84),
       "--on-deep-muted": onSurface(deep, 0.62),
+      // The reviewer role pill (nav-bar spec colours, lightened if the bar needs it).
+      "--on-brand-pill": readable("#D6E2FF", brand, 4.5, WHITE),
+      "--on-brand-pill-line": readable("#8FA6D6", brand, 3, WHITE),
     });
   }
   if (accent) {

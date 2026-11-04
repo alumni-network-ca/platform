@@ -10,6 +10,8 @@
   --on-brand-faint: #a6b0c9;
   --on-brand-line: #6b7a9e;
   --on-brand-accent: #eab6ce;
+  --on-brand-pill: #d6e2ff;
+  --on-brand-pill-line: #8fa6d6;
   --on-deep-soft: #d5dae6;
   --on-deep-muted: #9ca8c5;
   --paper: #f7f7f6;
@@ -198,8 +200,8 @@ a {
   white-space: nowrap;
 }
 .rolePill-reviewer {
-  border: 1px solid #8fa6d6;
-  color: #d6e2ff;
+  border: 1px solid var(--on-brand-pill-line);
+  color: var(--on-brand-pill);
 }
 .rolePill-school_admin {
   background: #eab6ce;
