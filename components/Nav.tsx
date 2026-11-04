@@ -53,60 +53,68 @@ async function readSchool(): Promise<Reads> {
   if (!user || !state) return { now, school: site, user: null, state: null };
 
   const staff = isStaff(state);
-  const [profile, request, institution, permissions, pendingRequests, grant] = await Promise.all([
-    state.profile &&
-      read(
-        supabase
-          .from("alumni_profiles")
-          .select("first_name, last_name, preferred_name, grad_year, visibility")
-          .eq("institution_id", school.id)
-          .eq("user_id", user.id)
-          .maybeSingle(),
-      ),
-    !state.profile &&
-      state.request &&
-      read(
-        supabase
-          .from("access_requests")
-          .select("first_name, last_name")
-          .eq("institution_id", school.id)
-          .eq("user_id", user.id)
-          .order("created_at", { ascending: false })
-          .limit(1)
-          .maybeSingle(),
-      ),
-    // Members (and platform admins) may read the school's row, with its reply-to address; applicants may not.
-    (isActiveMember(state) || state.platformAdmin) &&
-      read(
-        supabase.from("institutions").select("reply_to_email").eq("id", school.id).maybeSingle(),
-      ),
-    staff && rolePermissions(state.membership!.role),
-    staff &&
-      count(
-        supabase
-          .from("access_requests")
-          .select("id", { count: "exact", head: true })
-          .eq("institution_id", school.id)
-          .eq("status", "pending"),
-      ),
-    state.platformAdmin &&
-      read(
-        supabase
-          .from("platform_access_grants")
-          .select("id")
-          .eq("institution_id", school.id)
-          .eq("user_id", user.id)
-          .is("revoked_at", null)
-          .gt("expires_at", now.toISOString())
-          .limit(1)
-          .maybeSingle(),
-      ),
-  ]);
+  const [profile, request, institution, permissions, pendingRequests, grant, invitation] =
+    await Promise.all([
+      state.profile &&
+        read(
+          supabase
+            .from("alumni_profiles")
+            .select("first_name, last_name, preferred_name, grad_year, visibility")
+            .eq("institution_id", school.id)
+            .eq("user_id", user.id)
+            .maybeSingle(),
+        ),
+      !state.profile &&
+        state.request &&
+        read(
+          supabase
+            .from("access_requests")
+            .select("first_name, last_name")
+            .eq("institution_id", school.id)
+            .eq("user_id", user.id)
+            .order("created_at", { ascending: false })
+            .limit(1)
+            .maybeSingle(),
+        ),
+      // Members (and platform admins) may read the school's row, with its reply-to address; applicants may not.
+      (isActiveMember(state) || state.platformAdmin) &&
+        read(
+          supabase.from("institutions").select("reply_to_email").eq("id", school.id).maybeSingle(),
+        ),
+      staff && rolePermissions(state.membership!.role),
+      staff &&
+        count(
+          supabase
+            .from("access_requests")
+            .select("id", { count: "exact", head: true })
+            .eq("institution_id", school.id)
+            .eq("status", "pending"),
+        ),
+      state.platformAdmin &&
+        read(
+          supabase
+            .from("platform_access_grants")
+            .select("id")
+            .eq("institution_id", school.id)
+            .eq("user_id", user.id)
+            .is("revoked_at", null)
+            .gt("expires_at", now.toISOString())
+            .limit(1)
+            .maybeSingle(),
+        ),
+      // Invited to the staff here, with no membership or request yet: the nav bar's invitee state.
+      !isActiveMember(state) &&
+        !state.request &&
+        read(supabase.rpc("my_staff_invitation", { p_inst: school.id })),
+    ]);
 
   const named = profile || request;
+  const metadataName = [user.user_metadata?.first_name, user.user_metadata?.last_name]
+    .filter((part): part is string => typeof part === "string" && part.trim() !== "")
+    .join(" ");
   const name = named
     ? `${(profile && profile.preferred_name) || named.first_name} ${named.last_name}`.trim()
-    : null;
+    : metadataName || null;
   return {
     now,
     school: { ...site, replyTo: (institution && institution.reply_to_email) || null },
@@ -116,6 +124,7 @@ async function readSchool(): Promise<Reads> {
     permissions: permissions || [],
     pendingRequests: pendingRequests || 0,
     platform: grant ? await readPlatform(supabase, user.id, now, true) : null,
+    invitation: invitation ? { role: invitation } : null,
   };
 }
 

@@ -57,12 +57,12 @@ select is(
   'every public RPC is security definer'
 );
 
--- anon can execute exactly two functions.
+-- anon can execute exactly three functions; the two token-based ones need a secret link.
 select is(
   (select array_agg(p.proname::text order by p.proname) from pg_proc p join pg_namespace n on n.oid = p.pronamespace
    where n.nspname = 'public' and has_function_privilege('anon', p.oid, 'execute')),
-  array['confirm_still_accurate', 'public_school'],
-  'anon can execute only public_school and confirm_still_accurate'
+  array['confirm_still_accurate', 'public_school', 'staff_invitation_preview'],
+  'anon can execute only public_school, confirm_still_accurate and staff_invitation_preview'
 );
 
 -- Internal helpers are not callable by clients.
@@ -70,7 +70,8 @@ select is(
   (select array_agg(p.proname::text order by p.proname) from pg_proc p join pg_namespace n on n.oid = p.pronamespace
    where n.nspname = 'public' and has_function_privilege('authenticated', p.oid, 'execute')
      and p.proname in ('log_audit', 'enqueue_email', 'mint_token', 'record_confirmation', 'hit_rate_limit',
-                       'create_staff_invitation', 'assert_permission', 'resolve_email_template', 'assert_last_school_admin_kept')),
+                       'create_staff_invitation', 'assert_permission', 'resolve_email_template', 'assert_last_school_admin_kept',
+                       'person_name')),
   null,
   'internal helpers are not executable by authenticated users'
 );

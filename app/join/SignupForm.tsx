@@ -10,10 +10,13 @@ export function SignupForm({
   shortName,
   expired,
   destination,
+  invitedEmail,
 }: {
   shortName: string;
   expired: boolean;
   destination: string;
+  /** A staff invitation's address (A6.2): fixed, and the form also asks for a name. */
+  invitedEmail?: string;
 }) {
   const { locale } = useLanguage();
   const fr = locale === "fr";
@@ -31,6 +34,7 @@ export function SignupForm({
   const errors = fr
     ? {
         email: "Veuillez entrer une adresse courriel valide.",
+        name: "Entrez votre prénom et votre nom.",
         weak: `Choisissez un mot de passe d'au moins ${MIN_PASSWORD_LENGTH} caractères.`,
         mismatch: "Les deux mots de passe sont différents.",
         tooMany: "Trop de tentatives. Patientez quelques minutes et réessayez.",
@@ -38,6 +42,7 @@ export function SignupForm({
       }
     : {
         email: "Please enter a valid email address.",
+        name: "Enter your first and last name.",
         weak: `Choose a password of at least ${MIN_PASSWORD_LENGTH} characters.`,
         mismatch: "The two passwords are different.",
         tooMany: "Too many attempts. Wait a few minutes and try again.",
@@ -68,6 +73,37 @@ export function SignupForm({
       )}
       <form action={action} className="authForm">
         <input type="hidden" name="next" value={destination} />
+        {invitedEmail && (
+          <div className="signupField">
+            <div className="signupPasswords">
+              <label>
+                {fr ? "Prénom" : "First name"}
+                <input
+                  className="input"
+                  name="first_name"
+                  autoComplete="given-name"
+                  maxLength={100}
+                  required
+                />
+              </label>
+              <label>
+                {fr ? "Nom" : "Last name"}
+                <input
+                  className="input"
+                  name="last_name"
+                  autoComplete="family-name"
+                  maxLength={100}
+                  required
+                />
+              </label>
+            </div>
+            <p className="microcopy muted">
+              {fr
+                ? `Le personnel de ${shortName} voit votre nom sur la page du personnel et dans le journal d'audit.`
+                : `Other ${shortName} staff see your name on the Staff page and in the audit log.`}
+            </p>
+          </div>
+        )}
         <div className="signupField">
           <label>
             {fr ? "Adresse courriel" : "Email address"}
@@ -79,13 +115,19 @@ export function SignupForm({
               aria-describedby="signup-email-hint"
               maxLength={254}
               placeholder="you@example.com"
+              defaultValue={invitedEmail}
+              readOnly={!!invitedEmail}
               required
             />
           </label>
           <p id="signup-email-hint" className="microcopy muted">
-            {fr
-              ? "Utilisez une adresse personnelle que vous garderez après la graduation."
-              : "Use a personal email you will keep after graduation."}
+            {invitedEmail
+              ? fr
+                ? "Fixée par l'invitation; elle ne peut pas être modifiée ici."
+                : "Set by the invitation, so it can't be changed here."
+              : fr
+                ? "Utilisez une adresse personnelle que vous garderez après la graduation."
+                : "Use a personal email you will keep after graduation."}
           </p>
         </div>
         <div className="signupPasswords">

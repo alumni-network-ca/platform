@@ -4,10 +4,17 @@
 import type { Enums } from "@/lib/database";
 import { format, type Locale, type translations } from "@/lib/i18n";
 import { rootUrl, schoolUrl, type Origin } from "@/lib/tenant/address";
-import { canOpen, hasActiveProfile, homeFor, isStaff, type AccountState } from "./home";
+import {
+  canOpen,
+  hasActiveProfile,
+  homeFor,
+  isActiveMember,
+  isStaff,
+  type AccountState,
+} from "./home";
 
 export type NavRole =
-  "guest" | "applicant" | "alumnus" | "reviewer" | "school_admin" | "platform_admin";
+  "guest" | "applicant" | "invitee" | "alumnus" | "reviewer" | "school_admin" | "platform_admin";
 export type ChipKind = "count" | "info" | "good" | "warn" | "soon";
 export type StatusTone = "good" | "warn" | "neutral" | "platform";
 
@@ -96,10 +103,12 @@ export type NavInput = {
     schools: { name: string; slug: string; grantEndsAt: string | null }[];
     activeGrants: number;
   } | null;
+  /** An open staff invitation here for the person's email (my_staff_invitation). */
+  invitation?: { role: Enums<"member_role"> } | null;
 };
 
 /** The person's nav role at this address (docs/design/nav-bar.md §1). */
-export function navRole({ school, user, state, platform }: NavInput): NavRole {
+export function navRole({ school, user, state, platform, invitation }: NavInput): NavRole {
   if (!user) return "guest";
   // On the root domain only the console has a role; anyone else signed in there has none.
   if (!school) return platform ? "platform_admin" : "guest";
@@ -108,6 +117,8 @@ export function navRole({ school, user, state, platform }: NavInput): NavRole {
   if (!state) return "applicant";
   if (isStaff(state)) return state.membership!.role === "reviewer" ? "reviewer" : "school_admin";
   if (hasActiveProfile(state)) return "alumnus";
+  // Invited to the staff, with no membership or alumni request here yet (docs/design/staff-invite.md §4).
+  if (invitation && !isActiveMember(state) && !state.request) return "invitee";
   return "applicant";
 }
 
@@ -253,6 +264,17 @@ export function navModel(input: NavInput): NavModel {
         open && item("withdrawRequest", "#", { danger: true }),
       ]),
     ];
+  }
+
+  if (role === "invitee" && input.invitation) {
+    // The invitation link lives only in the email, so the menu names the invitation instead of linking to it.
+    status = {
+      text: format(t.staffInvitation, {
+        role: input.invitation.role === "reviewer" ? t.reviewer : t.schoolAdmin,
+      }),
+      tone: "warn",
+    };
+    sections = [section("account", [language], t.accountSection)];
   }
 
   if ((role === "reviewer" || role === "school_admin") && state && school) {
@@ -432,7 +454,7 @@ export function navModel(input: NavInput): NavModel {
       avatar:
         role === "platform_admin"
           ? "platform"
-          : role === "reviewer" || role === "school_admin"
+          : role === "reviewer" || role === "school_admin" || role === "invitee"
             ? "staff"
             : "alumni",
       status,

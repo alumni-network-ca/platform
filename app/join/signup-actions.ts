@@ -7,10 +7,11 @@ import { authEmailRedirect } from "@/lib/auth/email-links";
 import { getOrigin } from "@/lib/tenant/server";
 import { homeFor } from "@/lib/auth/home";
 import { MIN_PASSWORD_LENGTH } from "@/lib/auth/password";
-import { signupDestination } from "@/lib/auth/next";
+import { invitationToken, signupDestination } from "@/lib/auth/next";
+import { previewInvitation } from "@/lib/staff/invitation";
 
 export type SignupResult = {
-  error: "email" | "weak" | "mismatch" | "tooMany" | "failed" | null;
+  error: "email" | "name" | "weak" | "mismatch" | "tooMany" | "failed" | null;
   next?: string;
 };
 export type ResendResult = { error: "tooMany" | "failed" | null; sent: boolean };
@@ -19,7 +20,7 @@ const SENT_COOKIE = "alumni-confirmation-sent";
 const NEXT_COOKIE = "alumni-confirmation-next";
 
 export async function createAccount(_: SignupResult, form: FormData): Promise<SignupResult> {
-  const { supabase, user, state } = await getAccount();
+  const { school, supabase, user, state } = await getAccount();
   const destination = signupDestination(String(form.get("next") ?? ""));
   if (user)
     return {
@@ -35,10 +36,30 @@ export async function createAccount(_: SignupResult, form: FormData): Promise<Si
   if (password.length < MIN_PASSWORD_LENGTH || password.length > 1024) return { error: "weak" };
   if (password !== form.get("confirm_password")) return { error: "mismatch" };
 
+  // A staff account uses the invited address and keeps the name staff lists show (A6.2). The invitation's own
+  // page explains one that can no longer be accepted; accepting checks the address again.
+  let metadata: { first_name: string; last_name: string } | undefined;
+  if (destination !== "/join") {
+    const invitation = await previewInvitation(
+      supabase,
+      invitationToken(destination) ?? "",
+      school.id,
+    );
+    if (invitation.status !== "open") return { error: null, next: destination };
+    if (email.toLowerCase() !== invitation.email) return { error: "email" };
+    const first = String(form.get("first_name") ?? "").trim();
+    const last = String(form.get("last_name") ?? "").trim();
+    if (!first || !last || first.length > 100 || last.length > 100) return { error: "name" };
+    metadata = { first_name: first, last_name: last };
+  }
+
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
-    options: { emailRedirectTo: await authEmailRedirect("signup", destination) },
+    options: {
+      emailRedirectTo: await authEmailRedirect("signup", destination),
+      ...(metadata && { data: metadata }),
+    },
   });
   if (error && error.code !== "user_already_exists")
     return {

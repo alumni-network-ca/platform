@@ -125,8 +125,9 @@ FND-11 ships).
 ## 4. Nav bar
 
 New nav role `invitee` ([`nav-bar.md`](nav-bar.md) §1, §4): signed in, no active membership at this school, an
-open invitation for the account's email, no alumni request. No pill; menu "Finish staff setup" → `/staff/accept`,
-Language, Sign out. Today such a person resolves to `applicant`.
+open invitation for the account's email (`my_staff_invitation`), no alumni request. No pill; status line
+"Staff invitation · {role}"; menu Language, Sign out. The canvas draws a "Finish staff setup" item, but the
+invitation link exists only in the email, so the menu doesn't link to it.
 
 ## 5. Accessibility and layout
 
@@ -137,19 +138,21 @@ Language, Sign out. Today such a person resolves to `applicant`.
 
 ## 6. Database needs
 
-The design needs more than the database offers today:
+What the design needed beyond the database, and where it stands:
 
-1. **`staff_invitation_preview(p_token text)`** (new, callable without a session): for A6.1, A6.4 and A6.7,
-   return the state from §1 plus school name, role, inviter name, invited email, sent and expiry dates for a
-   matching token hash. An unknown token returns only `invalid`. It never grants anything; the link already
-   reaches only the invited address.
-2. **Resend restarts the 7 days**: `issue_staff_invitation_link` keeps the original `expires_at` today, so
-   Resend on an old invitation fails once it expires.
-3. **Staff name**: A6.2 asks for a name; staff without an alumni profile have nowhere to store it
-   (`school_staff` falls back to the email).
-4. **Email**: delivery is EML-01; the template needs `inviter_name`, `role` and `expires_on` placeholders
-   (`lib/admin/templates.ts`), and `first_name` can't be filled for an invitation.
-5. **Two-factor**: FND-11 (TOTP, `aal2` in `requireStaff` and the staff RPCs, audited platform-admin reset).
+1. **Done** · `staff_invitation_preview(p_token text)` (migration `20261104000100`, callable without a session):
+   the state from §1 plus school, role, inviter name (the inviter's address when they have no name; none for a
+   platform admin), invited email, sent and expiry dates. An unknown token returns only `invalid`. It never
+   grants anything; the link already reaches only the invited address.
+2. **Done** · Resend restarts the 7 days: `issue_staff_invitation_link` now sets `expires_at`. An expired
+   invitation still gets no new link; "Send a new invitation" invites the same address and role again.
+3. **Done** · Staff name: A6.2 stores the name in the account's auth metadata; `person_name` reads it after the
+   profile and the request (`school_staff`, `audit_people`). Like those, it is self-entered.
+4. **Open** · Email: delivery is EML-01; the template needs `inviter_name`, `role` and `expires_on` placeholders
+   (`lib/admin/templates.ts`), and `first_name` can't be filled for an invitation. Until then A5.2 is the
+   copy-link result on the invite page, so the token never travels in a URL.
+5. **Open** · Two-factor: FND-11 (TOTP, `aal2` in `requireStaff` and the staff RPCs, audited platform-admin
+   reset). Accepting leads straight to `/admin` until then.
 
 `accept_staff_invitation`'s email check stays the real guard; the matching chip on A6.4 is only a hint.
 

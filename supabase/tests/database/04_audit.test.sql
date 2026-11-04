@@ -275,6 +275,7 @@ select set_eq(
     'profile_contact_types',
     'platform_school_summaries', 'platform_admin_emails',
     'school_staff', 'audit_people', 'admin_dashboard', 'admin_roster', 'admin_profile_email', 'access_request_matches',
+    'staff_invitation_preview', 'my_staff_invitation',
     -- RLS helpers used inside policies (and by search_directory, which runs as the caller)
     'is_system_admin', 'has_active_grant', 'is_member', 'has_permission', 'permitted_institutions', 'my_profile_ids',
     'directory_profile_ids'

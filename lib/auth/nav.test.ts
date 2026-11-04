@@ -104,6 +104,28 @@ describe("navRole", () => {
       { state: { membership: member("alumni"), profile: profile(false), request: "approved" } },
       "alumnus",
     ],
+    ["invited to the staff", { state: none, invitation: { role: "reviewer" } }, "invitee"],
+    [
+      "invited, with an alumni request here",
+      { state: { ...none, request: "pending" }, invitation: { role: "reviewer" } },
+      "applicant",
+    ],
+    [
+      "invited, already an alumnus",
+      {
+        state: { membership: member("alumni"), profile: profile(), request: "approved" },
+        invitation: { role: "school_admin" },
+      },
+      "alumnus",
+    ],
+    [
+      "invited, removed from the staff before",
+      {
+        state: { ...none, membership: { role: "reviewer", status: "revoked" } },
+        invitation: { role: "reviewer" },
+      },
+      "invitee",
+    ],
     ["reviewer", { state: { ...none, membership: member("reviewer") } }, "reviewer"],
     ["school admin", { state: { ...none, membership: member("school_admin") } }, "school_admin"],
     [
@@ -164,6 +186,28 @@ describe("navModel", () => {
     expect(model.account?.status).toEqual({ text: "No access to the console", tone: "neutral" });
     expect(menu(model)).toEqual([["signOut", ["signOut"]]]);
     expect(model.signOutTo).toBe("/login");
+  });
+
+  describe("invitee", () => {
+    it("names the invitation, without links or a pill", () => {
+      const model = at({
+        user: { ...ruth, name: "Claire Roy" },
+        state: none,
+        invitation: { role: "reviewer" },
+      });
+      expect(model.links).toEqual([]);
+      expect(model.pill).toBeNull();
+      expect(model.account).toMatchObject({
+        name: "Claire Roy",
+        initials: "CR",
+        avatar: "staff",
+        status: { text: "Staff invitation · Reviewer", tone: "warn" },
+      });
+      expect(menu(model)).toEqual([
+        ["account", ["language"]],
+        ["signOut", ["signOut"]],
+      ]);
+    });
   });
 
   describe("applicant", () => {
