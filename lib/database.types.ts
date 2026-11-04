@@ -1388,6 +1388,7 @@ export type Database = {
       };
       owns_profile: { Args: { p_profile: string }; Returns: boolean };
       permitted_institutions: { Args: { p_perm: string }; Returns: string[] };
+      person_name: { Args: { p_inst: string; p_user: string }; Returns: string };
       platform_add_admin: { Args: { p_email: string }; Returns: string };
       platform_admin_emails: {
         Args: Record<PropertyKey, never>;
@@ -1432,7 +1433,6 @@ export type Database = {
         Args: { p_inst: string; p_reason?: string; p_status: string };
         Returns: undefined;
       };
-      person_name: { Args: { p_inst: string; p_user: string }; Returns: string };
       profile_contact_types: {
         Args: { p_profile: string };
         Returns: Database["public"]["Enums"]["channel_type"][];
