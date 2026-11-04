@@ -1382,8 +1382,13 @@ export type Database = {
       };
       mint_token: { Args: { p_id: string; p_kind: string }; Returns: string };
       my_profile_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
+      my_staff_invitation: {
+        Args: { p_inst: string };
+        Returns: Database["public"]["Enums"]["member_role"];
+      };
       owns_profile: { Args: { p_profile: string }; Returns: boolean };
       permitted_institutions: { Args: { p_perm: string }; Returns: string[] };
+      person_name: { Args: { p_inst: string; p_user: string }; Returns: string };
       platform_add_admin: { Args: { p_email: string }; Returns: string };
       platform_admin_emails: {
         Args: Record<PropertyKey, never>;
@@ -1532,6 +1537,19 @@ export type Database = {
           p_status: Database["public"]["Enums"]["profile_status"];
         };
         Returns: undefined;
+      };
+      staff_invitation_preview: {
+        Args: { p_token: string };
+        Returns: {
+          email: string;
+          ended_at: string;
+          expires_at: string;
+          institution_id: string;
+          invited_at: string;
+          inviter_name: string;
+          role: Database["public"]["Enums"]["member_role"];
+          status: string;
+        }[];
       };
       update_school_settings: { Args: { p_inst: string; p_patch: Json }; Returns: undefined };
       validate_template_text: { Args: { p_body: string; p_subject: string }; Returns: undefined };

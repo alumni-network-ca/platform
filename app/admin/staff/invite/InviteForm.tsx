@@ -1,0 +1,122 @@
+"use client";
+import { useActionState } from "react";
+import Link from "next/link";
+import { CopyLink } from "@/components/admin/CopyLink";
+import { errorMessage, type AdminCopy } from "@/lib/admin/forms";
+import { format } from "@/lib/i18n";
+import { inviteStaff, type InviteResult } from "./actions";
+
+export function InviteForm({ t }: { t: AdminCopy }) {
+  const [state, action, pending] = useActionState<InviteResult, FormData>(inviteStaff, {
+    error: null,
+  });
+  const roles = [
+    {
+      id: "reviewer",
+      title: t.reviewer,
+      summary: t.reviewerSummary,
+      can: [t.reviewerCan1, t.reviewerCan2, t.reviewerCan3],
+      cannot: [t.reviewerCant1, t.reviewerCant2],
+    },
+    {
+      id: "school_admin",
+      title: t.schoolAdmin,
+      summary: t.schoolAdminSummary,
+      can: [t.schoolAdminCan1, t.schoolAdminCan2, t.schoolAdminCan3, t.schoolAdminCan4],
+      cannot: [t.schoolAdminCant1],
+    },
+  ];
+
+  if (state.invited) {
+    const { email, role, link, expires } = state.invited;
+    return (
+      <section className="panel inviteResult" role="status">
+        <h2>
+          {format(t.invitationReady, {
+            email,
+            role: role === "reviewer" ? t.reviewer : t.schoolAdmin,
+          })}
+        </h2>
+        <p>{format(t.invitationReadyHelp, { date: expires })}</p>
+        <div className="linkRow">
+          <label className="field">
+            {t.invitationLink}
+            <input className="input" readOnly value={link} onFocus={(e) => e.target.select()} />
+          </label>
+          <CopyLink value={link} label={t.copyLink} done={t.linkCopied} />
+        </div>
+        <div className="formActions">
+          <Link className="btn btnPrimary" href="/admin/staff">
+            {t.doneBackToStaff}
+          </Link>
+          {/* A full load starts a fresh form. */}
+          <a className="btn btnGhost" href="/admin/staff/invite">
+            {t.inviteAnother}
+          </a>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <form action={action} className="panel adminStack">
+      <label className="field inviteEmail">
+        {t.theirEmail}
+        <input
+          className="input"
+          name="email"
+          type="email"
+          autoComplete="off"
+          maxLength={254}
+          aria-describedby="invite-email-hint"
+          required
+        />
+      </label>
+      <p id="invite-email-hint" className="fieldHint">
+        {t.theirEmailHint}
+      </p>
+      <fieldset className="roleCards">
+        <legend>{t.role}</legend>
+        {roles.map((role) => (
+          <label key={role.id} className="roleCard">
+            <span className="roleCardHead">
+              <input
+                type="radio"
+                name="role"
+                value={role.id}
+                defaultChecked={role.id === "reviewer"}
+              />
+              <strong>{role.title}</strong>
+            </span>
+            <span className="cellSub">{role.summary}</span>
+            <span className="roleCardLabel">{t.canLabel}</span>
+            <span className="inviteCan">
+              {role.can.map((line) => (
+                <span key={line}>{line}</span>
+              ))}
+            </span>
+            <span className="roleCardLabel">{t.cantLabel}</span>
+            <span className="inviteCant">
+              {role.cannot.map((line) => (
+                <span key={line}>{line}</span>
+              ))}
+            </span>
+          </label>
+        ))}
+      </fieldset>
+      {state.error && (
+        <p role="alert" className="notice">
+          {state.error === "alreadyStaff" ? t.alreadyStaff : errorMessage(state.error, t)}
+        </p>
+      )}
+      <div className="formActions">
+        <button className="btn btnPrimary" disabled={pending}>
+          {t.invite}
+        </button>
+        <Link className="btn btnGhost" href="/admin/staff">
+          {t.cancel}
+        </Link>
+      </div>
+    </form>
+  );
+}

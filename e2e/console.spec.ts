@@ -66,14 +66,18 @@ test.describe("platform console", () => {
     const link = await page.getByLabel("Invitation link").inputValue();
     expect(link.startsWith(addressOf(baseURL!, slug, "/staff/accept?token="))).toBe(true);
 
-    // A new invitee creates a password account and confirms their email, then resumes the invitation.
+    // A new invitee sees the invitation first, creates a password account with the invited address,
+    // confirms their email, then resumes the invitation (docs/design/staff-invite.md §3).
     const theirs = await browser.newContext();
     const invited = await theirs.newPage();
     await invited.goto(link);
-    await expect(invited).toHaveURL(/\/login\?next=/);
-    await invited.getByRole("link", { name: "Create an account", exact: true }).click();
-    await expect(invited.getByText("Staff invitation", { exact: true })).toBeVisible();
-    await invited.getByLabel("Email address").fill(head);
+    await expect(invited.getByRole("heading", { level: 1 })).toContainText(
+      "Alumni Network invited you to join the",
+    );
+    await invited.getByRole("link", { name: "Create my staff account", exact: true }).click();
+    await expect(invited.getByLabel("Email address")).toHaveValue(head);
+    await invited.getByLabel("First name").fill("Hannah");
+    await invited.getByLabel("Last name").fill("Head");
     await invited.getByLabel("Create a password", { exact: true }).fill(LOCAL_PASSWORD);
     await invited.getByLabel("Confirm password", { exact: true }).fill(LOCAL_PASSWORD);
     await invited.getByRole("button", { name: "Create my account", exact: true }).click();
@@ -82,8 +86,13 @@ test.describe("platform console", () => {
     ).toBeVisible();
     await invited.goto(await authLinkFor(head, "signup"));
     await expect(invited).toHaveURL(link);
-    await invited.getByRole("button", { name: "Accept the invitation" }).click();
-    await expect(invited).toHaveURL(addressOf(baseURL!, slug, "/admin"));
+    await expect(invited.getByText("Matches the invitation", { exact: true })).toBeVisible();
+    expect(await blockingViolations(invited)).toEqual([]);
+    await invited.getByRole("button", { name: "Accept and continue" }).click();
+    await expect(invited).toHaveURL(addressOf(baseURL!, slug, "/admin?welcome=1"));
+    await expect(
+      invited.getByRole("heading", { name: "Welcome to the team, Hannah", exact: true }),
+    ).toBeVisible();
     await theirs.close();
 
     await page.reload();

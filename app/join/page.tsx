@@ -3,9 +3,11 @@ import { Nav } from "@/components/Nav";
 import { JoinProgress } from "@/components/JoinProgress";
 import { getAccount } from "@/lib/auth/account";
 import { canOpen, homeFor } from "@/lib/auth/home";
-import { signupDestination } from "@/lib/auth/next";
+import { invitationToken, signupDestination } from "@/lib/auth/next";
+import { format, translations } from "@/lib/i18n";
 import { getServerLocale } from "@/lib/i18n-server";
 import { schoolBranding } from "@/lib/school";
+import { previewInvitation } from "@/lib/staff/invitation";
 import { JoinForm } from "./JoinForm";
 import { SignupForm } from "./SignupForm";
 
@@ -17,7 +19,7 @@ export default async function JoinPage({
 }) {
   const query = await searchParams;
   const destination = signupDestination(query.next);
-  const { school, user, state } = await getAccount();
+  const { school, supabase, user, state } = await getAccount();
   if (user && destination !== "/join")
     redirect(`/auth/home?next=${encodeURIComponent(destination)}`);
   if (user && !canOpen(state, "/join")) redirect(homeFor(state));
@@ -25,6 +27,13 @@ export default async function JoinPage({
   const locale = await getServerLocale();
   const fr = locale === "fr";
   const expired = query.confirmation === "expired";
+  // A staff invitation fixes the address (A6.2). One that can't be accepted goes back to its page, which says why.
+  const invitation =
+    destination === "/join"
+      ? null
+      : await previewInvitation(supabase, invitationToken(destination) ?? "", school.id);
+  if (invitation && invitation.status !== "open") redirect(destination);
+  const staff = translations[locale].staffInvite;
   return (
     <>
       <Nav />
@@ -82,20 +91,17 @@ export default async function JoinPage({
           </div>
         ) : (
           <div className="joinSplit">
-            {destination !== "/join" ? (
+            {invitation?.status === "open" ? (
               <section className="joinIntro">
-                <span className="joinEyebrow">
-                  {fr ? "Invitation du personnel" : "Staff invitation"}
-                </span>
-                <h1>
-                  {fr
-                    ? "Créez votre compte pour accepter l'invitation."
-                    : "Create your account to accept the invitation."}
-                </h1>
+                <span className="joinEyebrow">{format(staff.eyebrow, { school: shortName })}</span>
+                <h1>{staff.createTitle}</h1>
                 <p className="joinLead">
-                  {fr
-                    ? "Utilisez l'adresse courriel invitée par l'école. Après sa confirmation, vous pourrez consulter et accepter votre invitation."
-                    : "Use the email address the school invited. After confirming it, you'll return to review and accept your invitation."}
+                  {format(staff.signupLead, {
+                    inviter: invitation.inviterName ?? staff.platformTeam,
+                    email: invitation.email,
+                    role:
+                      invitation.role === "reviewer" ? staff.roleReviewer : staff.roleSchoolAdmin,
+                  })}
                 </p>
               </section>
             ) : (
@@ -177,7 +183,12 @@ export default async function JoinPage({
                 </div>
               </section>
             )}
-            <SignupForm shortName={shortName} expired={expired} destination={destination} />
+            <SignupForm
+              shortName={shortName}
+              expired={expired}
+              destination={destination}
+              invitedEmail={invitation?.status === "open" ? invitation.email : undefined}
+            />
           </div>
         )}
       </main>

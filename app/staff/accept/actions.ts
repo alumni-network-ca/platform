@@ -11,5 +11,6 @@ export async function acceptInvitation(_: AcceptResult, form: FormData): Promise
     p_token: String(form.get("token") ?? ""),
   });
   if (error) return { failed: true };
-  return { failed: false, next: "/auth/home" };
+  // TODO(FND-11): two-factor enrolment (A6.5) before the first admin page.
+  return { failed: false, next: "/admin?welcome=1" };
 }

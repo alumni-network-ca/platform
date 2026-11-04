@@ -1,23 +1,35 @@
+import Link from "next/link";
 import { requireStaff } from "@/lib/auth/staff";
 import { adminCopy, dateLabel, read } from "@/lib/admin/data";
 import { ActionForm } from "@/components/admin/ActionForm";
+import { format } from "@/lib/i18n";
 import { manageStaff } from "./actions";
+
+const DAY = 86_400_000;
+
+// A4.1 Staff and roles (docs/design/staff-invite.md §2): the team, invitations by state, one way to invite.
 export default async function Staff() {
   const { supabase, school, user } = await requireStaff("/admin/staff", "staff.manage");
   const { t, locale } = await adminCopy();
+  // Request-time server rendering: invitation states use the time of this request.
+  const now = new Date().getTime();
   const [staff, invitations] = await Promise.all([
     read(supabase.rpc("school_staff", { p_inst: school.id })),
     read(
       supabase
         .from("staff_invitations")
-        .select("id,email,role,expires_at")
+        .select("id,email,role,created_at,expires_at,revoked_at,invited_by")
         .eq("institution_id", school.id)
         .is("accepted_at", null)
-        .is("revoked_at", null)
-        .order("created_at"),
+        .or(`revoked_at.is.null,revoked_at.gt.${new Date(now - 30 * DAY).toISOString()}`)
+        .order("created_at", { ascending: false })
+        .limit(50),
     ),
   ]);
   const admins = staff.filter((s) => s.role === "school_admin").length;
+  const names = new Map(staff.map((s) => [s.user_id, s.name || s.email]));
+  const date = (value: string | null) => dateLabel(value, locale);
+  const roleLabel = (role: string) => (role === "school_admin" ? t.schoolAdmin : t.reviewer);
   return (
     <>
       <div className="shellTitle">
@@ -25,26 +37,14 @@ export default async function Staff() {
           <h1>{t.staff}</h1>
           <p>{t.staffIntro}</p>
         </div>
+        <Link className="btn btnPrimary" href="/admin/staff/invite">
+          {t.inviteStaff}
+        </Link>
       </div>
-      <section className="panel">
-        <ActionForm action={manageStaff} label={t.invite} t={t}>
-          <input type="hidden" name="operation" value="invite" />
-          <div className="formRow">
-            <label className="field">
-              {t.inviteEmail}
-              <input className="input" name="email" type="email" required maxLength={254} />
-            </label>
-            <label className="field">
-              {t.role}
-              <select className="input" name="role">
-                <option value="reviewer">{t.reviewer}</option>
-                <option value="school_admin">{t.schoolAdmin}</option>
-              </select>
-            </label>
-          </div>
-        </ActionForm>
-      </section>
-      <div className="tableBox">
+      <section className="tableBox" aria-labelledby="staff-team">
+        <h2 id="staff-team" className="tableTitle">
+          {t.team}
+        </h2>
         <table className="dataTable">
           <thead>
             <tr>
@@ -86,7 +86,7 @@ export default async function Staff() {
                   </td>
                   <td>
                     <span className="tag tagGood">{t.active}</span>
-                    <span className="cellSub">{dateLabel(s.joined_at, locale)}</span>
+                    <span className="cellSub">{date(s.joined_at)}</span>
                   </td>
                   <td>
                     {last ? (
@@ -109,32 +109,97 @@ export default async function Staff() {
             })}
           </tbody>
         </table>
-      </div>
-      <section className="panel">
-        <h2>{t.openInvitations}</h2>
+      </section>
+      <section className="tableBox" aria-labelledby="staff-invitations">
+        <h2 id="staff-invitations" className="tableTitle">
+          {t.invitations}
+        </h2>
         {invitations.length ? (
-          invitations.map((inv) => (
-            <div key={inv.id} className="panel">
-              <strong>{inv.email}</strong>
-              <p>
-                {inv.role === "school_admin" ? t.schoolAdmin : t.reviewer} · {t.expires}{" "}
-                {dateLabel(inv.expires_at, locale)}
-              </p>
-              <div className="panelGrid">
-                <ActionForm action={manageStaff} label={t.resend} t={t}>
-                  <input type="hidden" name="operation" value="resend" />
-                  <input type="hidden" name="invitation" value={inv.id} />
-                </ActionForm>
-                <ActionForm action={manageStaff} label={t.revoke} t={t} danger>
-                  <input type="hidden" name="operation" value="revoke" />
-                  <input type="hidden" name="invitation" value={inv.id} />
-                </ActionForm>
-              </div>
-            </div>
-          ))
+          <table className="dataTable">
+            <thead>
+              <tr>
+                <th>{t.invitedAddress}</th>
+                <th>{t.role}</th>
+                <th>{t.status}</th>
+                <th>{t.actions}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {invitations.map((inv) => {
+                const state = inv.revoked_at
+                  ? "revoked"
+                  : Date.parse(inv.expires_at) <= now
+                    ? "expired"
+                    : "open";
+                const by = inv.invited_by && names.get(inv.invited_by);
+                return (
+                  <tr key={inv.id} className={state === "revoked" ? "rowMuted" : undefined}>
+                    <td>
+                      <strong>{inv.email}</strong>
+                      {by && <span className="cellSub">{format(t.invitedBy, { name: by })}</span>}
+                    </td>
+                    <td>{roleLabel(inv.role)}</td>
+                    <td>
+                      {state === "open" && (
+                        <>
+                          <span className="tag">{t.statusSent}</span>
+                          <span className="cellSub">
+                            {format(t.sentUntil, {
+                              sent: date(inv.created_at),
+                              date: date(inv.expires_at),
+                            })}
+                          </span>
+                        </>
+                      )}
+                      {state === "expired" && (
+                        <>
+                          <span className="tag tagWarn">{t.statusExpired}</span>
+                          <span className="cellSub">
+                            {format(t.expiredOn, {
+                              sent: date(inv.created_at),
+                              date: date(inv.expires_at),
+                            })}
+                          </span>
+                        </>
+                      )}
+                      {state === "revoked" && (
+                        <>
+                          <span className="tag">{t.statusRevoked}</span>
+                          <span className="cellSub">
+                            {format(t.revokedOn, { date: date(inv.revoked_at) })}
+                          </span>
+                        </>
+                      )}
+                    </td>
+                    <td>
+                      {state === "open" && (
+                        <div className="panelGrid">
+                          <ActionForm action={manageStaff} label={t.resend} t={t}>
+                            <input type="hidden" name="operation" value="resend" />
+                            <input type="hidden" name="invitation" value={inv.id} />
+                          </ActionForm>
+                          <ActionForm action={manageStaff} label={t.revoke} t={t} danger>
+                            <input type="hidden" name="operation" value="revoke" />
+                            <input type="hidden" name="invitation" value={inv.id} />
+                          </ActionForm>
+                        </div>
+                      )}
+                      {state === "expired" && (
+                        <ActionForm action={manageStaff} label={t.sendNewInvitation} t={t}>
+                          <input type="hidden" name="operation" value="reinvite" />
+                          <input type="hidden" name="invitation" value={inv.id} />
+                        </ActionForm>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         ) : (
-          <p>{t.empty}</p>
+          <p className="tableEmpty">{t.noInvitations}</p>
         )}
+        <p className="fieldHint tableNote">{t.invitationsNote}</p>
       </section>
       <div className="panelGrid">
         <section className="panel">
