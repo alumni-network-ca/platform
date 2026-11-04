@@ -1,6 +1,7 @@
 "use client";
 import { useActionState } from "react";
 import { errorMessage, type ActionResult, type AdminCopy } from "@/lib/admin/forms";
+import { CopyLink } from "./CopyLink";
 export function ActionForm({
   action,
   children,
@@ -39,10 +40,18 @@ export function ActionForm({
         </p>
       )}
       {state.link && (
-        <label className="field">
-          {t.invitationLink}
-          <input className="input" readOnly value={state.link} onFocus={(e) => e.target.select()} />
-        </label>
+        <div className="linkRow">
+          <label className="field">
+            {t.invitationLink}
+            <input
+              className="input"
+              readOnly
+              value={state.link}
+              onFocus={(e) => e.target.select()}
+            />
+          </label>
+          <CopyLink value={state.link} label={t.copyLink} done={t.linkCopied} />
+        </div>
       )}
       <div className="formActions">
         <button

@@ -14,3 +14,10 @@ export function signupDestination(value: string | null | undefined): string {
   const next = safeNext(value);
   return next?.split(/[?#]/)[0] === "/staff/accept" ? next : "/join";
 }
+
+/** The token of a staff invitation destination ("/staff/accept?token=…"); null for any other destination. */
+export function invitationToken(destination: string): string | null {
+  const [path = "", query = ""] = destination.split("#")[0]!.split("?");
+  if (path !== "/staff/accept") return null;
+  return new URLSearchParams(query).get("token") || null;
+}

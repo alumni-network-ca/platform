@@ -5,7 +5,7 @@ import { describeAudit } from "@/lib/admin/audit";
 import { periodSince } from "@/lib/admin/period";
 import { format } from "@/lib/i18n";
 export default async function Dashboard({ searchParams }: { searchParams: Search }) {
-  const { supabase, school, user } = await requireStaff("/admin", "metrics.read");
+  const { supabase, school, user, role, can } = await requireStaff("/admin", "metrics.read");
   const { t, locale } = await adminCopy();
   const params = await searchParams;
   const period = params.period === "year" || params.period === "all" ? params.period : "30d";
@@ -41,10 +41,28 @@ export default async function Dashboard({ searchParams }: { searchParams: Search
   ]);
   if (profileResult.error || requestResult.error)
     throw new Error(profileResult.error?.message || requestResult.error?.message);
+  const metadataName = user.user_metadata?.first_name;
   const name =
     profileResult.data?.preferred_name ||
     profileResult.data?.first_name ||
-    requestResult.data?.first_name;
+    requestResult.data?.first_name ||
+    (typeof metadataName === "string" ? metadataName.trim() : "");
+  // A6.6: once, right after accepting a staff invitation (the accept redirect carries ?welcome=1).
+  type Start = { href: string; title: string; help: string };
+  const starts: (Start | false)[] = [
+    can("requests.read") && {
+      href: "/admin/approvals",
+      title: t.welcomeApprovals,
+      help: t.welcomeApprovalsHelp,
+    },
+    can("records.read") && {
+      href: "/admin/alumni",
+      title: t.welcomeAlumni,
+      help: t.welcomeAlumniHelp,
+    },
+    can("audit.read") && { href: "/admin/audit", title: t.welcomeAudit, help: t.welcomeAuditHelp },
+  ];
+  const welcomeStarts = starts.filter((start): start is Start => !!start);
   const days = metrics.oldest_pending_at
     ? Math.max(0, Math.floor((now.getTime() - Date.parse(metrics.oldest_pending_at)) / 86400000))
     : 0;
@@ -73,6 +91,34 @@ export default async function Dashboard({ searchParams }: { searchParams: Search
           <button className="btn btnSecondary">{t.apply}</button>
         </form>
       </div>
+      {params.welcome === "1" && (
+        <section className="welcomeBanner" aria-labelledby="welcome-title">
+          <div className="welcomeHead">
+            <div>
+              <h2 id="welcome-title">
+                {name ? format(t.welcomeTitle, { name }) : t.welcomeTitleNoName}
+              </h2>
+              <p>
+                {format(t.welcomeLead, {
+                  role: role === "reviewer" ? t.welcomeReviewer : t.welcomeSchoolAdmin,
+                  school: school.name,
+                })}
+              </p>
+            </div>
+            <Link className="btn btnLight" href="/admin">
+              {t.dismiss}
+            </Link>
+          </div>
+          <div className="welcomeCards">
+            {welcomeStarts.map((start) => (
+              <Link key={start.href} href={start.href} className="welcomeCard">
+                <strong>{start.title}</strong>
+                <span>{start.help}</span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
       <Link className="adminHero" href="/admin/approvals">
         <span>
           <small>{t.needsYou}</small>

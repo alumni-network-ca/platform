@@ -132,23 +132,59 @@ test("reviewer receives 403 on staff management", async ({ page, context, baseUR
 test("school admin invites and revokes staff", async ({ page, context, baseURL }) => {
   await signInAs(context, baseURL!, accounts.admin);
   await page.goto("/admin/staff");
+  // One way in (A4.1 → A5.1): the button opens the invite page.
+  await page.getByRole("link", { name: "Invite a staff member", exact: true }).click();
+  await expect(page).toHaveURL(/\/admin\/staff\/invite$/);
   const email = "staff-e2e-" + crypto.randomUUID() + "@example.test";
-  await page.getByLabel("Invite by email").fill(email);
+  await page.getByLabel("Their email address").fill(email);
+  await page.getByRole("radio", { name: /^School admin/ }).check();
+  expect(await blockingViolations(page)).toEqual([]);
   await page.getByRole("button", { name: "Send invitation", exact: true }).click();
-  const inviteForm = page
-    .getByRole("button", { name: "Send invitation", exact: true })
-    .locator("..")
-    .locator("..");
-  await expect(inviteForm.getByLabel("Invitation link")).toHaveValue(/\/staff\/accept\?token=/);
-  const invitation = page
-    .getByRole("heading", { name: "Open invitations" })
-    .locator("..")
-    .getByText(email, { exact: true })
-    .locator("..");
+  await expect(page.getByRole("status")).toContainText(
+    `Invitation ready for ${email} as School admin.`,
+  );
+  await expect(page.getByLabel("Invitation link")).toHaveValue(/\/staff\/accept\?token=/);
+  await page.getByRole("link", { name: "Back to Staff", exact: true }).click();
+
+  const invitation = page.getByRole("row", { name: new RegExp(email) });
+  await expect(invitation).toContainText("Sent");
   await invitation.getByRole("button", { name: "Resend invitation", exact: true }).click();
   await expect(invitation.getByLabel("Invitation link")).toHaveValue(/token=/);
   await invitation.getByRole("button", { name: "Revoke", exact: true }).click();
-  await expect(page.getByText(email, { exact: true })).toHaveCount(0);
+  await expect(invitation).toContainText("Revoked");
+  await expect(invitation.getByRole("button")).toHaveCount(0);
+  expect(await blockingViolations(page)).toEqual([]);
+});
+
+test("a staff invitation link shows the invitation before sign-in, and why a dead link fails", async ({
+  page,
+  context,
+  baseURL,
+}) => {
+  await signInAs(context, baseURL!, accounts.admin);
+  await page.goto("/admin/staff/invite");
+  const email = "staff-link-" + crypto.randomUUID() + "@example.test";
+  await page.getByLabel("Their email address").fill(email);
+  await page.getByRole("button", { name: "Send invitation", exact: true }).click();
+  const link = await page.getByLabel("Invitation link").inputValue();
+  await context.clearCookies();
+
+  await page.goto(link);
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("invited you to join");
+  await expect(page.getByText(email, { exact: true }).first()).toBeVisible();
+  expect(await blockingViolations(page)).toEqual([]);
+  await page.getByRole("button", { name: "I have an account", exact: true }).click();
+  await expect(page.getByLabel("Email address")).toHaveValue(email);
+  await page.getByRole("button", { name: "I’m new here", exact: true }).click();
+  await expect(page.getByRole("link", { name: "Create my staff account" })).toHaveAttribute(
+    "href",
+    /^\/join\?next=%2Fstaff%2Faccept%3Ftoken%3D/,
+  );
+
+  await page.goto("/staff/accept?token=" + "0".repeat(64));
+  await expect(
+    page.getByRole("heading", { name: "We can’t open this invitation", exact: true }),
+  ).toBeVisible();
   expect(await blockingViolations(page)).toEqual([]);
 });
 
@@ -284,6 +320,7 @@ test("school console screens pass accessibility and fit the viewport", async ({
     { path: "/admin/alumni", heading: "Alumni", image: "roster" },
     { path: "/admin/alumni/00000000-0000-4000-8000-000000000001", heading: "Ari Benaroch" },
     { path: "/admin/staff", heading: "Staff" },
+    { path: "/admin/staff/invite", heading: "Invite a staff member" },
     { path: "/admin/audit", heading: "Audit log" },
     { path: "/admin/settings", heading: "School settings" },
     { path: "/admin/templates", heading: "Email templates", image: "templates" },

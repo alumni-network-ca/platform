@@ -109,10 +109,12 @@ exist yet and leave a TODO with the backlog key.
 - Contact the alumni office · Withdraw my request (destructive; existing withdraw action)
 - Sign out
 
-**invitee** — status line "Staff setup not finished" (amber); see [`staff-invite.md`](staff-invite.md)
-- Finish staff setup → `/staff/accept` · chip = invited role (info)
+**invitee** — status line "Staff invitation · {role}" (amber); see [`staff-invite.md`](staff-invite.md)
 - *Account*: Language
 - Sign out
+
+The invitation link lives only in the email, so the menu names the invitation instead of linking to it (the
+canvas draws a "Finish staff setup" item).
 
 **reviewer** — status line = school name
 - *Admin*: Dashboard → `/admin` · Approvals → queue · chip = pending count (count) · Alumni → roster · chip "Read-only" (info) · Audit log

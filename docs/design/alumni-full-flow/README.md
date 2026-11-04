@@ -93,16 +93,16 @@ Signed-out pages use the `guest` role: FR, Sign in and the proposed Join now act
 | **Built** · A3.1 Email templates (`AdmTemplates`) | `/admin/templates` | EML-03 | `save_email_template`, `approve_email_template` |
 | A3.2 Freshness (`AdmFreshness`) | `/admin/freshness` | FRS-04 | needs FRS-02 |
 | A3.3 Export (`AdmExport`) | `/admin/export` | EXP-01, EXP-02 | new |
-| **Built** (Nov 2 revision not yet) · A4.1 Staff and roles (`AdmStaff`) | `/admin/staff` | ADM-06 | `invite_staff`, `change_staff_role`, `remove_staff`; `school_staff`, `issue_staff_invitation_link`, `revoke_staff_invitation` |
-| A5.1 Invite a staff member (`StaffInviteNew`) | `/admin/staff/invite` | ADM-06 | `invite_staff` |
-| A5.2 Invitations after sending (`StaffInviteSent`) | `/admin/staff` | ADM-06, EML-01 | `issue_staff_invitation_link`; Resend restarting the 7 days is new |
+| **Built** · A4.1 Staff and roles (`AdmStaff`) | `/admin/staff` | ADM-06 | `invite_staff`, `change_staff_role`, `remove_staff`; `school_staff`, `issue_staff_invitation_link`, `revoke_staff_invitation` |
+| **Built** · A5.1 Invite a staff member (`StaffInviteNew`) | `/admin/staff/invite` | ADM-06 | `invite_staff`, `issue_staff_invitation_link` |
+| **Built** (copy-link only) · A5.2 Invitations after sending (`StaffInviteSent`) | `/admin/staff/invite` result | ADM-06, EML-01 | `issue_staff_invitation_link` restarts the 7 days |
 | A5.3 Staff invitation email (`StaffInviteEmail`) | email | EML-01, EML-03 | `staff_invitation` template; placeholders `inviter_name`, `role`, `expires_on` are new |
-| A6.1 Invitation link, signed out (`StaffLanding`) | `/staff/accept?token=` | SA-02, ADM-06 | new `staff_invitation_preview(token)` |
-| A6.2–A6.3 Staff account and email confirmation (`StaffSignup`, `StaffVerify`) | `/join?next=/staff/accept…`, `/join/verify` | FND-09, SA-02 | Supabase signup; storing the staff member's name is new |
-| A6.4 Accept (`StaffAccept`) | `/staff/accept?token=` | SA-02 | `accept_staff_invitation`, `staff_invitation_preview` |
+| **Built** · A6.1 Invitation link, signed out (`StaffLanding`) | `/staff/accept?token=` | SA-02, ADM-06 | `staff_invitation_preview(token)` |
+| **Built** · A6.2–A6.3 Staff account and email confirmation (`StaffSignup`, `StaffVerify`) | `/join?next=/staff/accept…`, `/join/verify` | FND-09, SA-02 | Supabase signup; the name is kept in auth metadata (`person_name`) |
+| **Built** · A6.4 Accept (`StaffAccept`) | `/staff/accept?token=` | SA-02 | `accept_staff_invitation`, `staff_invitation_preview` |
 | A6.5 Two-factor setup (`StaffMfa`) | `/account/two-factor` | FND-11 | Supabase MFA (TOTP), `aal2` checks |
-| A6.6 First admin page (`StaffWelcome`) | `/admin` | ADM-01 | `admin_dashboard` |
-| A6.7 Link problems (`StaffInviteProblem`) | `/staff/accept?token=` | SA-02 | `staff_invitation_preview` |
+| **Built** · A6.6 First admin page (`StaffWelcome`) | `/admin?welcome=1` | ADM-01 | `admin_dashboard` |
+| **Built** · A6.7 Link problems (`StaffInviteProblem`) | `/staff/accept?token=` | SA-02 | `staff_invitation_preview` |
 | **Built** · A4.2 School settings (`AdmSettings`) | `/admin/settings` | ADM-08 | `update_school_settings`; logo upload needs storage |
 | **Built** · A4.3 Audit log (`AdmAudit`) | `/admin/audit` | ADM-07 | `audit_people`; RLS audit reads |
 

@@ -1,29 +1,15 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { requireStaff } from "@/lib/auth/staff";
-import { schoolUrl } from "@/lib/tenant/address";
-import { getOrigin } from "@/lib/tenant/server";
+import { invitationUrl } from "@/lib/staff/invitation";
 import { actionError, field, type ActionResult } from "@/lib/admin/forms";
 export async function manageStaff(_: ActionResult, form: FormData): Promise<ActionResult> {
   const { supabase, school } = await requireStaff("/admin/staff", "staff.manage");
   const operation = field(form, "operation");
   const role = field(form, "role");
-  if (
-    (operation === "invite" || operation === "role") &&
-    role !== "school_admin" &&
-    role !== "reviewer"
-  )
+  if (operation === "role" && role !== "school_admin" && role !== "reviewer")
     return { error: "invalid" };
-  let invitation = field(form, "invitation");
-  if (operation === "invite") {
-    const { data, error } = await supabase.rpc("invite_staff", {
-      p_inst: school.id,
-      p_email: field(form, "email"),
-      p_role: role as "school_admin" | "reviewer",
-    });
-    if (error) return actionError(error);
-    invitation = data;
-  } else if (operation === "role" || operation === "remove") {
+  if (operation === "role" || operation === "remove") {
     const result =
       operation === "role"
         ? await supabase.rpc("change_staff_role", {
@@ -35,29 +21,39 @@ export async function manageStaff(_: ActionResult, form: FormData): Promise<Acti
     if (result.error) return actionError(result.error);
     revalidatePath("/admin", "layout");
     return { error: null, saved: true };
-  } else if (operation !== "resend" && operation !== "revoke") return { error: "invalid" };
+  }
+  if (operation !== "resend" && operation !== "revoke" && operation !== "reinvite")
+    return { error: "invalid" };
   // IDs from the form are checked against the host's school before the ID-based RPC.
   const { data: scoped, error: lookupError } = await supabase
     .from("staff_invitations")
-    .select("id")
+    .select("id, email, role")
     .eq("institution_id", school.id)
-    .eq("id", invitation)
+    .eq("id", field(form, "invitation"))
     .maybeSingle();
   if (lookupError) return actionError(lookupError);
   if (!scoped) return { error: "forbidden" };
   if (operation === "revoke") {
-    const { error } = await supabase.rpc("revoke_staff_invitation", { p_invitation: invitation });
+    const { error } = await supabase.rpc("revoke_staff_invitation", { p_invitation: scoped.id });
     if (error) return actionError(error);
     revalidatePath("/admin", "layout");
     return { error: null, saved: true };
+  }
+  let invitation = scoped.id;
+  // An expired invitation can't get a new link: invite the same address and role again.
+  if (operation === "reinvite") {
+    const { data, error } = await supabase.rpc("invite_staff", {
+      p_inst: school.id,
+      p_email: scoped.email,
+      p_role: scoped.role,
+    });
+    if (error) return actionError(error);
+    invitation = data;
   }
   const { data: token, error } = await supabase.rpc("issue_staff_invitation_link", {
     p_invitation: invitation,
   });
   revalidatePath("/admin", "layout");
   if (error) return actionError(error);
-  // TODO(EML-01): send through the outbox worker; until then show a copyable invitation link.
-  const link = new URL(schoolUrl(await getOrigin(), school.slug, "/staff/accept"));
-  link.searchParams.set("token", token);
-  return { error: null, saved: true, link: link.toString() };
+  return { error: null, saved: true, link: await invitationUrl(school.slug, token) };
 }
