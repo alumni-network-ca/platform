@@ -589,6 +589,14 @@
       "w": 1280,
       "x": 9520,
       "y": 0
+    },
+    "Favicons.dc.html": {
+      "h": 640,
+      "page": "layout",
+      "title": "L7 Favicons · tab icon per school",
+      "w": 1280,
+      "x": 0,
+      "y": 2880
     }
   },
   "createdOnFiles": {
@@ -615,6 +623,7 @@
     "lay1",
     "lay2",
     "layRules",
+    "lay3",
     "signupEntry",
     "signupDecision",
     "adm5",
@@ -804,6 +813,15 @@
       "w": 440,
       "x": 8160,
       "y": -1480
+    },
+    "lay3": {
+      "kind": "title1",
+      "maxW": 4000,
+      "page": "layout",
+      "text": "Favicons · the school in the browser tab",
+      "w": 240,
+      "x": 0,
+      "y": 2580
     }
   },
   "order": [
@@ -866,6 +884,7 @@
     "NavSchoolAdmin.dc.html",
     "NavStaffAlumnus.dc.html",
     "NavPlatform.dc.html",
+    "Favicons.dc.html",
     "Code.dc.html"
   ],
   "pages": [

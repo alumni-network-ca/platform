@@ -3,7 +3,7 @@ import type { PublicSchool } from "@/lib/database";
 
 export type { PublicSchool };
 
-/** Display names and logo from institutions.branding, with fallbacks for a school that set none. */
+/** Display names, logo and tab icon from institutions.branding, with fallbacks for a school that set none. */
 export function schoolBranding(school: PublicSchool) {
   const branding =
     school.branding && typeof school.branding === "object" && !Array.isArray(school.branding)
@@ -13,9 +13,15 @@ export function schoolBranding(school: PublicSchool) {
     typeof branding.short_name === "string" && branding.short_name.trim()
       ? branding.short_name.trim()
       : school.name;
-  const logo =
-    typeof branding.logo === "string" && branding.logo.startsWith("/") ? branding.logo : null;
-  return { shortName, networkName: `${shortName} Alumni Network`, logo };
+  // Only files on this site: the database also accepts https addresses, which the app does not load yet.
+  const sitePath = (value: unknown) =>
+    typeof value === "string" && value.startsWith("/") && !value.startsWith("//") ? value : null;
+  return {
+    shortName,
+    networkName: `${shortName} Alumni Network`,
+    logo: sitePath(branding.logo),
+    favicon: sitePath(branding.favicon),
+  };
 }
 
 /**
