@@ -35,7 +35,7 @@ Height ≈ 66px, padding `12px 32px`, `flex-wrap: wrap` so it stacks on phones. 
 
 | Theme | Bar background | Brand | Sub-label |
 |---|---|---|---|
-| School (all roles except platform) | `--ink` `#0b2159` | School logo on a 42px white tile (r 10px, p 4px) + "{School} Alumni Network" | "Private · verified · connected" |
+| School (all roles except platform) | `--brand`: the school's primary colour, `#0b2159` by default (ADR 0019) | School logo on a 42px white tile (r 10px, p 4px) + "{School} Alumni Network" | "Private · verified · connected" |
 | Platform | `#15172b` | 42px `#4b2a8a` tile with "AN" + "Alumni Network" | "Platform console" |
 
 Brand links to the person's home (`homeFor()`; console for platform admins).
