@@ -8,10 +8,11 @@ import { getSchool } from "@/lib/tenant/server";
 export async function generateMetadata(): Promise<Metadata> {
   const school = await getSchool();
   if (!school) return { title: "Alumni Network" };
-  const { shortName, networkName } = schoolBranding(school);
+  const { shortName, networkName, favicon } = schoolBranding(school);
   return {
     title: networkName,
     description: `Private professional network for verified ${shortName} alumni.`,
+    ...(favicon && { icons: { icon: favicon } }),
   };
 }
 

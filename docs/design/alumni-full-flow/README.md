@@ -41,6 +41,7 @@ The **Layout** page of the canvas holds components every screen reuses. Screens 
 | Component | Frames | Spec |
 |---|---|---|
 | **Built** · Nav bar with role pill and account menu (`NavBar`) | L0 component; L1–L6 one per role: alumnus, applicant, reviewer, school admin, school admin who is also an alumnus, platform admin | [`../nav-bar.md`](../nav-bar.md) |
+| **Built** · Favicon per school (`Favicons`, added 2026-11-04) | L7: the school's mark on a white rounded tile, in light and dark tab bars, 16–128 px | One 256 px PNG per school at `public/institutes/favicons/<slug>.png`, named by `branding.favicon` |
 
 Signed-out pages use the `guest` role: FR, Sign in and the proposed Join now action, no avatar. The legacy Code frame is archived.
 

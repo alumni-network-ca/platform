@@ -75,15 +75,26 @@ select throws_ok(
        '{"branding": {"logo": "javascript:alert(1)"}}') $$,
   '22023', null, 'or a logo that is not a site path or an https address'
 );
+select throws_ok(
+  $$ select public.update_school_settings('aaaaaaaa-0000-4000-8000-000000000001',
+       '{"branding": {"logo": "//elsewhere.example/logo.png"}}') $$,
+  '22023', null, 'or a logo on another site written as //host/…'
+);
+select throws_ok(
+  $$ select public.update_school_settings('aaaaaaaa-0000-4000-8000-000000000001',
+       '{"branding": {"favicon": "data:image/png;base64,AAAA"}}') $$,
+  '22023', 'the favicon must be a site path or an https address', 'the favicon follows the logo''s rules'
+);
 select lives_ok(
   $$ select public.update_school_settings('aaaaaaaa-0000-4000-8000-000000000001',
-       '{"branding": {"short_name": " Herzliah ", "accent_color": "#7b1e3d", "font": "Comic Sans"}}') $$,
+       '{"branding": {"short_name": " Herzliah ", "accent_color": "#7b1e3d", "font": "Comic Sans",
+                      "favicon": " /institutes/favicons/herzliah.png "}}') $$,
   'valid branding is saved'
 );
 reset role;
 select is(
   (select branding from public.institutions where id = 'aaaaaaaa-0000-4000-8000-000000000001'),
-  '{"short_name": "Herzliah", "accent_color": "#7B1E3D"}'::jsonb,
+  '{"short_name": "Herzliah", "accent_color": "#7B1E3D", "favicon": "/institutes/favicons/herzliah.png"}'::jsonb,
   'trimmed and normalised, with unknown keys dropped'
 );
 
