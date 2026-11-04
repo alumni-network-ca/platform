@@ -2,6 +2,105 @@
   "v": 3,
   "attachments": {},
   "boards": {
+    "StaffInviteNew.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A5.1 Invite a staff member — email and role",
+      "w": 1280,
+      "x": 0,
+      "y": 5520
+    },
+    "StaffInviteSent.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A5.2 Invitations — sent, expired, copy-link fallback",
+      "w": 1280,
+      "x": 1360,
+      "y": 5520
+    },
+    "StaffInviteEmail.dc.html": {
+      "h": 960,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A5.3 Staff invitation email",
+      "w": 1280,
+      "x": 2720,
+      "y": 5520
+    },
+    "StaffLanding.dc.html": {
+      "expand": "fill",
+      "h": 980,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A6.1 Invitation link — signed out",
+      "w": 1280,
+      "x": 0,
+      "y": 6900
+    },
+    "StaffSignup.dc.html": {
+      "expand": "fill",
+      "h": 980,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A6.2 Create a staff account",
+      "w": 1280,
+      "x": 1360,
+      "y": 6900
+    },
+    "StaffVerify.dc.html": {
+      "expand": "fill",
+      "h": 980,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A6.3 Confirm email, then back to the invitation",
+      "w": 1280,
+      "x": 2720,
+      "y": 6900
+    },
+    "StaffAccept.dc.html": {
+      "expand": "fill",
+      "h": 980,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A6.4 Accept the invitation — signed in",
+      "w": 1280,
+      "x": 4080,
+      "y": 6900
+    },
+    "StaffMfa.dc.html": {
+      "expand": "fill",
+      "h": 980,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A6.5 Set up two-factor sign-in (tweak: step)",
+      "w": 1280,
+      "x": 5440,
+      "y": 6900
+    },
+    "StaffWelcome.dc.html": {
+      "expand": "fill",
+      "h": 980,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A6.6 First admin page — welcome",
+      "w": 1280,
+      "x": 6800,
+      "y": 6900
+    },
+    "StaffInviteProblem.dc.html": {
+      "expand": "fill",
+      "h": 980,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A6.7 When the link doesn't work (tweak: reason)",
+      "w": 1280,
+      "x": 8160,
+      "y": 6900
+    },
     "AdmAudit.dc.html": {
       "expand": "fill",
       "h": 960,
@@ -490,6 +589,14 @@
       "w": 1280,
       "x": 9520,
       "y": 0
+    },
+    "Favicons.dc.html": {
+      "h": 640,
+      "page": "layout",
+      "title": "L7 Favicons · tab icon per school",
+      "w": 1280,
+      "x": 0,
+      "y": 2880
     }
   },
   "createdOnFiles": {
@@ -515,9 +622,50 @@
     "saRules",
     "lay1",
     "lay2",
-    "layRules"
+    "layRules",
+    "lay3",
+    "signupEntry",
+    "signupDecision",
+    "adm5",
+    "adm6",
+    "admInviteRules",
+    "admInviteNeeds"
   ],
   "notes": {
+    "adm5": {
+      "kind": "title1",
+      "maxW": 4000,
+      "page": "school-admin",
+      "text": "A5 · Inviting a staff member",
+      "w": 240,
+      "x": 0,
+      "y": 5220
+    },
+    "adm6": {
+      "kind": "title1",
+      "maxW": 9440,
+      "page": "school-admin",
+      "text": "A6 · Accepting the invitation and first sign-in",
+      "w": 240,
+      "x": 0,
+      "y": 6600
+    },
+    "admInviteRules": {
+      "fill": "blue",
+      "page": "school-admin",
+      "text": "Staff invitations\n\nOne link per invitation. It works once, only for the invited email, for 7 days.\n\nResend emails a fresh link and restarts the 7 days. The old link stops working.\n\nNo admin page opens until two-factor sign-in is set up (FND-11).\n\nThe first school admin, invited from the console (S1.3), goes through the same A6 screens.",
+      "w": 420,
+      "x": 4160,
+      "y": 5520
+    },
+    "admInviteNeeds": {
+      "fill": "gray",
+      "page": "school-admin",
+      "text": "Still needed to build this\n\n• New staff_invitation_preview(token): A6.1 and A6.7 show school, role, inviter and status before sign-in.\n• Resend resets the 7-day expiry (issue_staff_invitation_link keeps the old date today).\n• Somewhere to store the name entered on A6.2.\n• Email template placeholders: inviter_name, role, expires_on.\n• Nav: an invitee state for a signed-in account with no role yet.\n• Email delivery: EML-01. Two-factor: FND-11, with an audited platform-admin reset.",
+      "w": 440,
+      "x": 4660,
+      "y": 5520
+    },
     "adm1": {
       "kind": "title1",
       "maxW": 4000,
@@ -665,6 +813,15 @@
       "w": 440,
       "x": 8160,
       "y": -1480
+    },
+    "lay3": {
+      "kind": "title1",
+      "maxW": 4000,
+      "page": "layout",
+      "text": "Favicons · the school in the browser tab",
+      "w": 240,
+      "x": 0,
+      "y": 2580
     }
   },
   "order": [
@@ -704,6 +861,16 @@
     "AdmStaff.dc.html",
     "AdmSettings.dc.html",
     "AdmAudit.dc.html",
+    "StaffInviteNew.dc.html",
+    "StaffInviteSent.dc.html",
+    "StaffInviteEmail.dc.html",
+    "StaffLanding.dc.html",
+    "StaffSignup.dc.html",
+    "StaffVerify.dc.html",
+    "StaffAccept.dc.html",
+    "StaffMfa.dc.html",
+    "StaffWelcome.dc.html",
+    "StaffInviteProblem.dc.html",
     "SaSchools.dc.html",
     "SaCreate.dc.html",
     "SaSetup.dc.html",
@@ -717,6 +884,7 @@
     "NavSchoolAdmin.dc.html",
     "NavStaffAlumnus.dc.html",
     "NavPlatform.dc.html",
+    "Favicons.dc.html",
     "Code.dc.html"
   ],
   "pages": [

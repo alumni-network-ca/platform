@@ -13,7 +13,7 @@
 body{margin:0}
 a{color:#7b1e3d}a:hover{color:#611630}
 button,input,select{font:inherit}
-button:focus-visible,input:focus,select:focus{outline:2px solid #7b1e3d;outline-offset:1px}
+a:focus-visible,button:focus-visible,input:focus,select:focus{outline:2px solid #7b1e3d;outline-offset:1px}
 </style>
 </helmet>
 <div style="min-height: 960px; background: #f7f7f6; font-family: Inter, Arial, sans-serif; color: #0b2159; display: flex; flex-direction: column">
@@ -25,36 +25,60 @@ button:focus-visible,input:focus,select:focus{outline:2px solid #7b1e3d;outline-
       </sc-for>
     </nav>
     <main style="flex: 999 1 640px; min-width: 0; padding: 28px 36px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
-      <div style="display: flex; flex-direction: column; gap: 6px">
-        <h1 style="margin: 0; font-size: 28px; font-weight: 800">Staff</h1>
-        <p style="margin: 0; font-size: 15px; color: #3a4a70">People at Herzliah who can manage the network. Staff set up two-factor sign-in the first time they log in.</p>
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px">
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <h1 style="margin: 0; font-size: 28px; font-weight: 800">Staff</h1>
+          <p style="margin: 0; font-size: 15px; color: #3a4a70">People at Herzliah who can manage the network. Everyone on staff signs in with two-factor sign-in.</p>
+        </div>
+        <a href="StaffInviteNew.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; box-sizing: border-box; padding: 11px 18px; border-radius: 7px; background: #7b1e3d; color: #ffffff; font-weight: 700; font-size: 14px; text-decoration: none">Invite a staff member</a>
       </div>
-      <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 20px 22px; display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end">
-        <div style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 7px">
-          <label for="st-email" style="font-size: 13px; font-weight: 600">Invite by email</label>
-          <input id="st-email" type="email" value="{{email}}" onChange="{{onEmail}}" placeholder="name@herzliah.ca" style="padding: 10px 12px; border: 1px solid #8a93ab; border-radius: 7px; color: #0b2159; font-size: 14px">
-        </div>
-        <div style="display: flex; flex-direction: column; gap: 7px">
-          <label for="st-role" style="font-size: 13px; font-weight: 600">Role</label>
-          <select id="st-role" style="padding: 10px 12px; border: 1px solid #8a93ab; border-radius: 7px; background: #ffffff; color: #0b2159; font-size: 14px"><option>Reviewer</option><option>School admin</option></select>
-        </div>
-        <button type="button" onClick="{{invite}}" style="padding: 11px 18px; border-radius: 7px; border: 0; background: #7b1e3d; color: #ffffff; font-weight: 700; font-size: 14px; cursor: pointer">Send invitation</button>
-      </section>
-      <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; overflow-x: auto">
+
+      <section aria-labelledby="st-team" style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; overflow-x: auto">
+        <h2 id="st-team" style="margin: 0; padding: 16px 20px 4px; font-size: 16px; font-weight: 700">Team</h2>
         <table style="width: 100%; min-width: 640px; border-collapse: collapse; font-size: 14px">
-          <thead><tr style="text-align: left; color: #3a4a70; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em"><th style="padding: 14px 20px; font-weight: 700">Person</th><th style="padding: 14px 20px; font-weight: 700">Role</th><th style="padding: 14px 20px; font-weight: 700">Status</th><th style="padding: 14px 20px"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Actions</span></th></tr></thead>
+          <thead><tr style="text-align: left; color: #3a4a70; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em"><th style="padding: 12px 20px; font-weight: 700">Person</th><th style="padding: 12px 20px; font-weight: 700">Role</th><th style="padding: 12px 20px; font-weight: 700">Status</th><th style="padding: 12px 20px"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Actions</span></th></tr></thead>
           <tbody>
-            <sc-for list="{{staff}}" as="s" hint-placeholder-count="3">
+            <sc-for list="{{team}}" as="s" hint-placeholder-count="2">
               <tr style="border-top: 1px solid #eef0f4">
                 <td style="padding: 13px 20px"><span style="display: flex; flex-direction: column; gap: 2px"><strong>{{s.name}}</strong><span style="font-size: 13px; color: #4a5575">{{s.email}}</span></span></td>
                 <td style="padding: 13px 20px">{{s.role}}</td>
-                <td style="padding: 13px 20px; color: #3a4a70">{{s.status}}</td>
+                <td style="padding: 13px 20px"><span style="display: inline-flex; padding: 3px 10px; border-radius: 999px; background: #e3f3e8; color: #1b5e33; font-size: 12px; font-weight: 700">{{s.status}}</span></td>
                 <td style="padding: 13px 20px; text-align: right; font-size: 13px; color: #4a5575">{{s.actions}}</td>
               </tr>
             </sc-for>
           </tbody>
         </table>
       </section>
+
+      <section aria-labelledby="st-inv" style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; overflow-x: auto">
+        <h2 id="st-inv" style="margin: 0; padding: 16px 20px 4px; font-size: 16px; font-weight: 700">Invitations</h2>
+        <table style="width: 100%; min-width: 640px; border-collapse: collapse; font-size: 14px">
+          <thead><tr style="text-align: left; color: #3a4a70; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em"><th style="padding: 12px 20px; font-weight: 700">Invited address</th><th style="padding: 12px 20px; font-weight: 700">Role</th><th style="padding: 12px 20px; font-weight: 700">Status</th><th style="padding: 12px 20px"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Actions</span></th></tr></thead>
+          <tbody>
+            <sc-for list="{{invites}}" as="i" hint-placeholder-count="3">
+              <tr style="border-top: 1px solid #eef0f4; color: {{i.fg}}">
+                <td style="padding: 13px 20px"><span style="display: flex; flex-direction: column; gap: 2px"><strong>{{i.email}}</strong><span style="font-size: 13px; color: #4a5575">{{i.by}}</span></span></td>
+                <td style="padding: 13px 20px">{{i.role}}</td>
+                <td style="padding: 13px 20px"><span style="display: flex; flex-direction: column; gap: 3px; align-items: flex-start"><span style="display: inline-flex; padding: 3px 10px; border-radius: 999px; background: {{i.chipBg}}; color: {{i.chipFg}}; font-size: 12px; font-weight: 700">{{i.status}}</span><span style="font-size: 13px; color: #4a5575">{{i.when}}</span></span></td>
+                <td style="padding: 13px 20px">
+                  <span style="display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px">
+                    <sc-if value="{{i.open}}" hint-placeholder-val="{{true}}">
+                      <button type="button" style="min-height: 36px; padding: 7px 12px; border-radius: 7px; border: 1px solid #bac1d2; background: #ffffff; color: #0b2159; font-size: 13px; font-weight: 700; cursor: pointer">Resend</button>
+                      <button type="button" onClick="{{copy}}" style="min-height: 36px; padding: 7px 12px; border-radius: 7px; border: 1px solid #bac1d2; background: #ffffff; color: #0b2159; font-size: 13px; font-weight: 700; cursor: pointer">{{copyLabel}}</button>
+                      <button type="button" onClick="{{i.revoke}}" style="min-height: 36px; padding: 7px 12px; border-radius: 7px; border: 0; background: transparent; color: #a1173b; font-size: 13px; font-weight: 700; cursor: pointer">Revoke</button>
+                    </sc-if>
+                    <sc-if value="{{i.expired}}" hint-placeholder-val="{{false}}">
+                      <a href="StaffInviteSent.dc.html" style="display: inline-flex; align-items: center; min-height: 36px; box-sizing: border-box; padding: 7px 12px; border-radius: 7px; border: 1px solid #bac1d2; background: #ffffff; color: #0b2159; font-size: 13px; font-weight: 700; text-decoration: none">Send a new invitation</a>
+                    </sc-if>
+                  </span>
+                </td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+        <p style="margin: 0; padding: 12px 20px 16px; font-size: 13px; line-height: 1.5; color: #4a5575; border-top: 1px solid #eef0f4">Resend emails a fresh link and restarts the 7 days; the previous link stops working. Accepted invitations move to Team.</p>
+      </section>
+
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px">
         <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 1.5"><strong>School admin</strong><span style="color: #3a4a70">Everything: approvals, record actions, exports, templates, staff and settings.</span></section>
         <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 1.5"><strong>Reviewer</strong><span style="color: #3a4a70">Decides sign-up requests and can read records and the audit log. Can't change records or export.</span></section>
@@ -68,7 +92,7 @@ button:focus-visible,input:focus,select:focus{outline:2px solid #7b1e3d;outline-
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { email: '', invited: [] };
+    this.state = { copied: false, revoked: false };
   }
   renderVals() {
     var self = this;
@@ -78,15 +102,25 @@ class Component extends DCLogic {
       var on = it[0] === active;
       return { label: it[1], href: it[2], badge: it[3] || 0, hasBadge: !!it[3], weight: on ? '700' : '500', bg: on ? '#faeef3' : 'transparent' };
     });
-    var staff = [
-      { name: 'Ruth Klein (you)', email: 'rklein@[school domain]', role: 'School admin', status: 'Active · 2FA on', actions: 'Only admin — can’t remove' },
-      { name: 'Avi Sasson', email: 'asasson@[school domain]', role: 'Reviewer', status: 'Active · 2FA on', actions: 'Change role · Remove' },
-      { name: 'Claire Roy', email: 'croy@[school domain]', role: 'Reviewer', status: 'Invited Oct 22 · not accepted', actions: 'Resend · Revoke' }
-    ].concat(this.state.invited.map(function (e) { return { name: e, email: e, role: 'Reviewer', status: 'Invitation sent just now', actions: 'Resend · Revoke' }; }));
+    var team = [
+      { name: 'Ruth Klein (you)', email: 'rklein@[school domain]', role: 'School admin', status: 'Active · two-factor on', actions: 'Only admin — can’t remove' },
+      { name: 'Avi Sasson', email: 'asasson@[school domain]', role: 'Reviewer', status: 'Active · two-factor on', actions: 'Change role · Remove' }
+    ];
+    var revoked = this.state.revoked;
+    var invites = [
+      { email: 'croy@[school domain]', by: 'Invited by Ruth Klein', role: 'Reviewer',
+        status: revoked ? 'Revoked' : 'Sent', when: revoked ? 'Just now · link no longer works' : 'Nov 2 · expires Nov 9',
+        chipBg: revoked ? '#eef0f4' : '#e3eefc', chipFg: revoked ? '#3a4a70' : '#123e7a', fg: revoked ? '#4a5575' : '#0b2159',
+        open: !revoked, expired: false, revoke: function () { self.setState({ revoked: true }); } },
+      { email: 'dcohen@[school domain]', by: 'Invited by Ruth Klein', role: 'School admin', status: 'Expired', when: 'Oct 24 · expired Oct 31',
+        chipBg: '#fff4dc', chipFg: '#7a4b00', fg: '#0b2159', open: false, expired: true, revoke: null },
+      { email: 'jtremblay@[school domain]', by: 'Revoked by Ruth Klein', role: 'Reviewer', status: 'Revoked', when: 'Oct 30',
+        chipBg: '#eef0f4', chipFg: '#3a4a70', fg: '#4a5575', open: false, expired: false, revoke: null }
+    ];
     return {
-      nav: nav, staff: staff, email: this.state.email,
-      onEmail: function (e) { self.setState({ email: e.target.value }); },
-      invite: function () { var v = (self.state.email || '').trim(); if (!v) return; self.setState({ invited: self.state.invited.concat([v]), email: '' }); }
+      nav: nav, team: team, invites: invites,
+      copyLabel: this.state.copied ? 'Link copied' : 'Copy link',
+      copy: function () { self.setState({ copied: true }); }
     };
   }
 }

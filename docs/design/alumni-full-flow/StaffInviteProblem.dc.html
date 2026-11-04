@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Staff invitation problem</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"><style>
+*{box-sizing:border-box}
+body{margin:0;background:#f7f7f6;color:#0b2159;font-family:Inter,Arial,sans-serif;font-size:15px;line-height:1.55}
+x-dc{display:block}
+a{color:#7b1e3d;text-underline-offset:3px}
+button{font:inherit}
+a:focus-visible,button:focus-visible{outline:3px solid #a7486c;outline-offset:3px}
+h1,h2,h3,p{margin:0}
+h1{font-size:34px;line-height:1.15;letter-spacing:-.035em}
+.shell{min-height:980px;display:flex;flex-direction:column}
+.page{width:100%;max-width:1112px;margin:auto;padding:64px 28px;flex:1}
+.center{max-width:640px;margin:0 auto}
+.muted{color:#4a5575}
+.card{background:#fff;border:1px solid #e2e5ee;border-radius:14px;padding:36px;box-shadow:0 18px 50px -32px #0b215948;display:grid;gap:22px}
+.tight{display:grid;gap:10px}
+.small{font-size:13px}
+.fine{font-size:12px;color:#4a5575}
+.chip{display:inline-flex;align-items:center;justify-self:start;padding:5px 11px;border-radius:999px;font-size:12px;font-weight:700}
+.facts{margin:0;padding:16px 20px;background:#f7f7f6;border:1px solid #e2e5ee;border-radius:10px;display:grid;grid-template-columns:auto 1fr;gap:8px 20px;font-size:14px}
+.facts dt{color:#4a5575}
+.facts dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:12px 22px;border:1px solid transparent;border-radius:7px;background:#7b1e3d;color:#fff;text-decoration:none;font-weight:700;font-size:14px;cursor:pointer}
+.btn:hover{background:#611630;color:#fff}
+.btn.secondary{border-color:#bac1d2;background:#fff;color:#0b2159}
+.footer{padding:20px 32px;border-top:1px solid #e2e5ee;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:12px;color:#4a5575}
+@media(max-width:800px){.page{padding:32px 20px}
+.card{padding:25px}
+.footer{padding:18px 20px}
+h1{font-size:29px}
+}
+</style></helmet>
+<div class="shell"><dc-import name="NavBar" role="{{navRole}}" open="{{ false }}" hint-size="100%,70px"></dc-import>
+<main class="page"><div class="center"><section class="card" aria-labelledby="ip-title">
+<div class="tight"><span class="chip" style="background: {{chipBg}}; color: {{chipFg}}">{{chip}}</span><h1 id="ip-title">{{title}}</h1><p class="muted">{{body}}</p></div>
+<sc-if value="{{showFacts}}" hint-placeholder-val="{{true}}">
+<dl class="facts"><dt>Role</dt><dd>Reviewer at Herzliah High School</dd><dt>Invited by</dt><dd>Ruth Klein, school admin</dd><dt>For</dt><dd>croy@[school domain]</dd></dl>
+</sc-if>
+<div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center"><a class="btn" href="{{primaryHref}}">{{primary}}</a><sc-if value="{{hasSecondary}}" hint-placeholder-val="{{false}}"><a class="btn secondary" href="{{secondaryHref}}">{{secondary}}</a></sc-if></div>
+<p class="fine">{{fine}}</p>
+</section></div></main><footer class="footer"><span>Herzliah Alumni Network</span><span>A private network. Every alumnus approved by the school.</span></footer></div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"reason":{"editor":"enum","options":["wrong_account","expired","revoked","used","invalid"],"default":"wrong_account"},"$preview":{"width":1280,"height":980}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var amber = ['#fff4dc', '#7a4b00'], gray = ['#eef0f4', '#3a4a70'], green = ['#e3f3e8', '#1b5e33'], blue = ['#e3eefc', '#123e7a'];
+    var R = {
+      wrong_account: { nav: 'alumnus', chip: 'Different account', c: blue, facts: true,
+        title: 'This invitation is for another address',
+        body: 'You’re signed in as dana.levy@gmail.com, but Ruth Klein invited croy@[school domain]. Sign in with that address to accept.',
+        primary: 'Sign out and switch account', primaryHref: 'StaffLanding.dc.html',
+        secondary: 'Ask Ruth Klein to invite this address', secondaryHref: '#',
+        fine: 'Invitations work only for the address they were sent to, so staff access always goes to the right person.' },
+      expired: { nav: 'guest', chip: 'Expired', c: amber, facts: true,
+        title: 'This invitation has expired',
+        body: 'Invitations last 7 days. This one was sent on October 24 and ended on October 31.',
+        primary: 'Ask Ruth Klein for a new invitation', primaryHref: '#', secondary: '', secondaryHref: '#',
+        fine: 'A new invitation emails a fresh link to the same address. This one won’t work again.' },
+      revoked: { nav: 'guest', chip: 'Cancelled', c: gray, facts: true,
+        title: 'This invitation was cancelled',
+        body: 'Ruth Klein cancelled it on November 4, so the link no longer works.',
+        primary: 'Contact Ruth Klein', primaryHref: '#', secondary: '', secondaryHref: '#',
+        fine: 'If you think this is a mistake, ask them to invite you again.' },
+      used: { nav: 'guest', chip: 'Already accepted', c: green, facts: true,
+        title: 'You’ve already joined the team',
+        body: 'This invitation was accepted on November 2. Sign in with croy@[school domain] to open the admin pages.',
+        primary: 'Sign in', primaryHref: 'SignIn.dc.html', secondary: '', secondaryHref: '#',
+        fine: 'Each invitation link works once.' },
+      invalid: { nav: 'guest', chip: 'Link not recognised', c: gray, facts: false,
+        title: 'We can’t open this invitation',
+        body: 'The link may be incomplete, or a newer invitation replaced it. Open the most recent invitation email from the Herzliah Alumni Network, or ask the person who invited you to send it again.',
+        primary: 'Contact the alumni office', primaryHref: '#', secondary: '', secondaryHref: '#',
+        fine: 'We don’t show who sent a link we can’t recognise.' }
+    };
+    var r = R[this.props.reason] || R.wrong_account;
+    return {
+      navRole: r.nav, chip: r.chip, chipBg: r.c[0], chipFg: r.c[1], showFacts: r.facts,
+      title: r.title, body: r.body, primary: r.primary, primaryHref: r.primaryHref,
+      secondary: r.secondary, secondaryHref: r.secondaryHref, hasSecondary: !!r.secondary, fine: r.fine
+    };
+  }
+}
+</script>
+</body>
+</html>

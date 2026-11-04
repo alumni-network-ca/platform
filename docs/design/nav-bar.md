@@ -16,6 +16,7 @@ Derive it on the server from `getAccount()` (`lib/auth/account.ts`) and the same
 |---|---|---|
 | `guest` | Not signed in | none |
 | `applicant` | Signed in, no active membership; latest request is pending / needs_info (also rejected, withdrawn) | none |
+| `invitee` | Signed in, no active membership, an open staff invitation for this account's email at this school, and no alumni request (staff invitation design, A6) | none |
 | `alumnus` | Active `alumni` membership with an active profile (onboarding done or not) | none |
 | `reviewer` | Active `reviewer` membership | **Reviewer** |
 | `school_admin` | Active `school_admin` membership | **School admin** |
@@ -35,7 +36,7 @@ Height ≈ 66px, padding `12px 32px`, `flex-wrap: wrap` so it stacks on phones. 
 
 | Theme | Bar background | Brand | Sub-label |
 |---|---|---|---|
-| School (all roles except platform) | `--ink` `#0b2159` | School logo on a 42px white tile (r 10px, p 4px) + "{School} Alumni Network" | "Private · verified · connected" |
+| School (all roles except platform) | `--brand`: the school's primary colour, `#0b2159` by default (ADR 0019) | School logo on a 42px white tile (r 10px, p 4px) + "{School} Alumni Network" | "Private · verified · connected" |
 | Platform | `#15172b` | 42px `#4b2a8a` tile with "AN" + "Alumni Network" | "Platform console" |
 
 Brand links to the person's home (`homeFor()`; console for platform admins).
@@ -45,7 +46,7 @@ inactive = `#d2d7e4`, 500):
 
 | Nav role | Links |
 |---|---|
-| guest, applicant | none |
+| guest, applicant, invitee | none |
 | alumnus | Home · Directory |
 | reviewer, school_admin | Admin (badge = pending sign-ups) · Directory |
 | platform_admin | Schools · Support (badge = active grants) · Health |
@@ -108,6 +109,11 @@ exist yet and leave a TODO with the backlog key.
 - Contact the alumni office · Withdraw my request (destructive; existing withdraw action)
 - Sign out
 
+**invitee** — status line "Staff setup not finished" (amber); see [`staff-invite.md`](staff-invite.md)
+- Finish staff setup → `/staff/accept` · chip = invited role (info)
+- *Account*: Language
+- Sign out
+
 **reviewer** — status line = school name
 - *Admin*: Dashboard → `/admin` · Approvals → queue · chip = pending count (count) · Alumni → roster · chip "Read-only" (info) · Audit log
 - *Account*: Two-factor and sign-in · chip "On" (good) · Language
@@ -133,7 +139,7 @@ and let server route guards stay the real check.
 ## 5. Acceptance
 
 - Each nav role renders exactly the links, pill and items above (unit test the role → menu mapping as a pure function, like `homeFor()`).
-- No role pill for guest / applicant / alumnus.
+- No role pill for guest / applicant / invitee / alumnus.
 - Menu is fully keyboard-usable; axe passes in the Playwright suite (`npm run test:e2e`).
 - All strings exist in EN and FR.
 - Works at phone width: bar wraps, menu stays inside the viewport (max-width `calc(100vw - 32px)`).
