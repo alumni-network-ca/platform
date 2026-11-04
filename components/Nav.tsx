@@ -81,7 +81,7 @@ async function readSchool(): Promise<Reads> {
         read(
           supabase.from("institutions").select("reply_to_email").eq("id", school.id).maybeSingle(),
         ),
-      staff && rolePermissions(state.membership!.role),
+      staff && rolePermissions(school.id, state.membership!.role),
       staff &&
         count(
           supabase

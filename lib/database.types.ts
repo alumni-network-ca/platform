@@ -1483,6 +1483,7 @@ export type Database = {
         Returns: undefined;
       };
       save_my_profile: { Args: { p_inst: string; p_payload: Json }; Returns: string };
+      school_config: { Args: { p_inst: string }; Returns: Json };
       school_staff: {
         Args: { p_inst: string };
         Returns: {

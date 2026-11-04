@@ -3,8 +3,8 @@
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
+import { MIN_PASSWORD_LENGTH } from "@/config/auth";
 import { createClient } from "@/lib/supabase/client";
-import { MIN_PASSWORD_LENGTH } from "@/lib/auth/password";
 
 // Also used after an email recovery link. Supabase requires a recent sign-in for a password change.
 

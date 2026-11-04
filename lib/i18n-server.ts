@@ -1,10 +1,11 @@
 import { cookies } from "next/headers";
+import { LANGUAGE_COOKIE } from "@/config/language";
 import { Locale, translations } from "@/lib/i18n";
 
 export async function getServerLocale(): Promise<Locale> {
   const cookieStore = await cookies();
 
-  const saved = cookieStore.get("herzliah-language")?.value;
+  const saved = cookieStore.get(LANGUAGE_COOKIE)?.value;
 
   if (saved === "fr") {
     return "fr";

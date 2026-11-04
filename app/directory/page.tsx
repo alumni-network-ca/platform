@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { Nav } from "@/components/Nav";
 import { DirectoryForm, FilterPanel } from "@/components/directory/DirectoryForm";
+import { AVATAR_TINTS } from "@/config/ui";
 import { requireAccess } from "@/lib/auth/account";
 import { PAGE_SIZE, activeChips, pages, readFilters, rpcFilters } from "@/lib/directory/filters";
 import { format, translations } from "@/lib/i18n";
 import { getServerLocale } from "@/lib/i18n-server";
 import { initials, optionsFor } from "@/lib/profile/fields";
 import { schoolBranding } from "@/lib/school";
+import { schoolConfig } from "@/lib/tenant/config";
 
 // The alumni directory (DIR-02; design Directory). Every filter is in the URL; search_directory returns only
 // published profiles at this school, and only to someone who may use the directory (RLS and has_permission).
@@ -15,8 +17,8 @@ type Facet = { value: string; count: number };
 type Facets = { total: number; cities: Facet[]; schools: Facet[]; decades: Facet[] };
 
 /** Avatar colours from the design, one per person so the grid is easy to scan. */
-const TINTS = ["#eab6ce", "#c9d6f2", "#f6dcae", "#cfe8d8", "#e3d4f2"];
-const tint = (id: string) => TINTS[parseInt(id.replace(/-/g, "").slice(-6), 16) % TINTS.length];
+const tint = (id: string) =>
+  AVATAR_TINTS[parseInt(id.replace(/-/g, "").slice(-6), 16) % AVATAR_TINTS.length];
 
 async function read<T>(query: PromiseLike<{ data: T; error: { message: string } | null }>) {
   const { data, error } = await query;
@@ -33,7 +35,7 @@ export default async function DirectoryPage({
   const locale = await getServerLocale();
   const t = translations[locale].directory;
   const f = readFilters(await searchParams);
-  const [rows, facets, fieldRows, offerRows] = await Promise.all([
+  const [rows, facets, config] = await Promise.all([
     read(
       supabase.rpc("search_directory", {
         p_inst: school.id,
@@ -44,22 +46,13 @@ export default async function DirectoryPage({
       }),
     ),
     read(supabase.rpc("directory_facets", { p_inst: school.id })),
-    read(
-      supabase
-        .from("career_fields")
-        .select("id, key, label_en, label_fr, institution_id, is_active, sort_order"),
-    ),
-    read(
-      supabase
-        .from("offer_types")
-        .select("id, key, label_en, label_fr, institution_id, is_active, sort_order"),
-    ),
+    schoolConfig(school.id),
   ]);
   const { total: members, cities, schools, decades } = facets as unknown as Facets;
   const label = (row: { label_en: string; label_fr: string }) =>
     locale === "fr" ? row.label_fr : row.label_en;
-  const fields = optionsFor(fieldRows ?? [], school.id);
-  const offers = optionsFor(offerRows ?? [], school.id);
+  const fields = optionsFor(config.career_fields, school.id);
+  const offers = optionsFor(config.offer_types, school.id);
   const offerLabel = (key: string) => {
     const offer = offers.find((o) => o.key === key);
     return offer ? label(offer) : key;

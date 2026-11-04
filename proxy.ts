@@ -1,30 +1,25 @@
 // Runs before every page request (Next.js 16 proxy, Node.js runtime):
 // 1. Resolves the school from the host (FND-07, ADR 0001). The school travels to server components in the
-//    x-school request header; a client-sent x-school is always replaced or removed.
+//    x-school request header; a client-sent x-school is always replaced or removed. Its branding does not: pages
+//    read that from the cached school config (lib/tenant/config.ts).
 // 2. Refreshes the Supabase session and writes the new cookies to the response (FND-08). Cookies have no
 //    Domain attribute, so a session belongs to one school's address only (ADR 0002).
 import { createServerClient } from "@supabase/ssr";
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
+import { publicEnv } from "@/config/env/public";
+import { serverEnv } from "@/config/env/server";
+import { PREVIEW_COOKIE, SCHOOL_HEADER } from "@/config/tenancy";
 import type { Database } from "@/lib/database";
 import { encodeSchool, type PublicSchool } from "@/lib/school";
-import { PREVIEW_COOKIE, SCHOOL_HEADER, isSlug, resolveTenant } from "@/lib/tenant/host";
+import { anonClient } from "@/lib/supabase/anon";
+import { isSlug, resolveTenant } from "@/lib/tenant/host";
 import { lookupSchool } from "@/lib/tenant/lookup";
 
 /** Pages of the root domain (the page for schools, later the console) live under this path. */
 const ROOT_SITE = "/site";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
-// Signed-out client for the public school card. It never carries a user's session. Created on first use, so a
-// missing Supabase variable surfaces as a failed request rather than a crash while the module loads.
-let anon: SupabaseClient<Database> | undefined;
-
 async function fetchSchool(slug: string) {
-  anon ??= createClient<Database>(supabaseUrl, publishableKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-  const { data, error } = await anon.rpc("public_school", { p_slug: slug });
+  const { data, error } = await anonClient().rpc("public_school", { p_slug: slug });
   if (error) throw new Error(`public_school: ${error.message}`);
   return data;
 }
@@ -33,17 +28,17 @@ const notFound = () => new NextResponse("Not found", { status: 404 });
 
 export async function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
-  const isPreview = process.env.VERCEL_ENV === "preview";
+  const { isPreview } = serverEnv;
   // On PR previews, ?tenant=<slug> switches school and is remembered in a cookie.
   const switchTo = isPreview
     ? (request.nextUrl.searchParams.get(PREVIEW_COOKIE) ?? undefined)
     : undefined;
   const tenant = resolveTenant({
     host: request.headers.get("host"),
-    rootDomain: process.env.ROOT_DOMAIN ?? "localhost",
+    rootDomain: serverEnv.rootDomain,
     isPreview,
     previewCookie: switchTo ?? request.cookies.get(PREVIEW_COOKIE)?.value,
-    previewDefault: process.env.PREVIEW_DEFAULT_SCHOOL ?? "herzliah",
+    previewDefault: serverEnv.previewDefaultSchool,
   });
   if (tenant.kind === "none") return notFound();
 
@@ -82,7 +77,8 @@ export async function proxy(request: NextRequest) {
   };
 
   let response = respond();
-  const supabase = createServerClient<Database>(supabaseUrl, publishableKey, {
+  const { supabaseUrl, supabasePublishableKey } = publicEnv;
+  const supabase = createServerClient<Database>(supabaseUrl, supabasePublishableKey, {
     cookies: {
       getAll() {
         return request.cookies.getAll();

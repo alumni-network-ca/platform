@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import type { FormState } from "@/components/profile/ProfileForm";
+import { LANGUAGE_COOKIE, LANGUAGE_COOKIE_MAX_AGE } from "@/config/language";
 import { POLICY_VERSION, STEPS, parsePublish, readForm, type Section } from "@/lib/profile/fields";
 import { failure, loadMyProfile, parseSection, type Sections } from "@/lib/profile/server";
 
@@ -19,9 +20,9 @@ export async function saveStep(step: Section, _: FormState, form: FormData): Pro
 
   if (step === "welcome") {
     const locale = form.get("locale") === "fr" ? "fr" : "en";
-    (await cookies()).set("herzliah-language", locale, {
+    (await cookies()).set(LANGUAGE_COOKIE, locale, {
       path: "/",
-      maxAge: 60 * 60 * 24 * 365,
+      maxAge: LANGUAGE_COOKIE_MAX_AGE,
       sameSite: "lax",
     });
     // Emails follow the person's saved language.

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { staffRecord } from "@/lib/admin/records";
 import { adminCopy, dateLabel, read, type Search } from "@/lib/admin/data";
 import { describeAudit } from "@/lib/admin/audit";
+import { schoolConfig } from "@/lib/tenant/config";
 export default async function Record({
   params,
   searchParams,
@@ -111,7 +112,7 @@ async function Details({
 }) {
   const { supabase, school } = await staffRecord(p.id);
   const { t, locale } = await adminCopy();
-  const [privateResult, emailResult, education, offers, career, channels] = await Promise.all([
+  const [privateResult, emailResult, education, offers, config, channels] = await Promise.all([
     supabase
       .from("alumni_private")
       .select("*")
@@ -133,13 +134,7 @@ async function Details({
         .eq("institution_id", school.id)
         .eq("profile_id", p.id),
     ),
-    p.career_field_id
-      ? supabase
-          .from("career_fields")
-          .select("label_en,label_fr")
-          .eq("id", p.career_field_id)
-          .maybeSingle()
-      : null,
+    schoolConfig(school.id),
     read(
       supabase
         .from("profile_contact_channels")
@@ -149,17 +144,15 @@ async function Details({
         .eq("type", "phone"),
     ),
   ]);
-  const error = privateResult.error || emailResult.error || career?.error;
+  const error = privateResult.error || emailResult.error;
+  const career = config.career_fields.find((field) => field.id === p.career_field_id);
   if (error) throw new Error(error.message);
   const pr = privateResult.data;
   const publicFields = [
     [t.first_name, p.first_name],
     [t.last_name, p.last_name],
     [t.preferred_name, p.preferred_name],
-    [
-      t.careerField,
-      career?.data?.[locale === "fr" ? "label_fr" : "label_en"] || p.career_field_other,
-    ],
+    [t.careerField, career?.[locale === "fr" ? "label_fr" : "label_en"] || p.career_field_other],
     [t.job_title, p.job_title],
     [t.employer, p.employer],
     [t.city, p.city],

@@ -1,0 +1,2 @@
+# The staging publishable key that PR 268 commits in .env.development. Publishable keys are public by design.
+8f87681c61feadd84d7437a2a3dd49b0edcf5d6e:.env.development:generic-api-key:7

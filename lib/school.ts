@@ -18,16 +18,21 @@ export function schoolBranding(school: PublicSchool) {
   return { shortName, networkName: `${shortName} Alumni Network`, logo };
 }
 
-// proxy.ts passes the school to server components in a request header. Header values must be ASCII, and
-// school names are not ("Université"), so the JSON is URI-encoded.
-export function encodeSchool(school: PublicSchool): string {
-  return encodeURIComponent(JSON.stringify(school));
+/**
+ * The school as proxy.ts passes it in a request header. Branding is left out: getSchool() adds it from the cached
+ * config (lib/tenant/config.ts), which a change clears on every server at once.
+ */
+export type SchoolHeader = Omit<PublicSchool, "branding">;
+
+// Header values must be ASCII, and school names are not ("Université"), so the JSON is URI-encoded.
+export function encodeSchool({ id, name, slug, default_locale }: PublicSchool): string {
+  return encodeURIComponent(JSON.stringify({ id, name, slug, default_locale }));
 }
 
-export function decodeSchool(raw: string | null): PublicSchool | null {
+export function decodeSchool(raw: string | null): SchoolHeader | null {
   if (!raw) return null;
   const value: unknown = JSON.parse(decodeURIComponent(raw));
   return value && typeof value === "object" && "id" in value && "slug" in value && "name" in value
-    ? (value as PublicSchool)
+    ? (value as SchoolHeader)
     : null;
 }
