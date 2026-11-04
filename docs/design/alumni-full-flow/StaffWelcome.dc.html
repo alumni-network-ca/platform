@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin — Welcome to the team</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7b1e3d}a:hover{color:#611630}
+button{font:inherit}
+a:focus-visible,button:focus-visible{outline:2px solid #7b1e3d;outline-offset:1px}
+</style>
+</helmet>
+<div style="min-height: 980px; background: #f7f7f6; font-family: Inter, Arial, sans-serif; color: #0b2159; display: flex; flex-direction: column">
+  <dc-import name="NavBar" role="reviewer" active="admin" open="{{ false }}" hint-size="100%,66px"></dc-import>
+  <div style="flex: 1; display: flex; flex-wrap: wrap">
+    <nav aria-label="Admin" style="flex: 1 1 200px; max-width: 232px; background: #ffffff; border-right: 1px solid #e2e5ee; padding: 20px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px">
+      <sc-for list="{{nav}}" as="n" hint-placeholder-count="4">
+        <a href="{{n.href}}" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: {{n.weight}}; background: {{n.bg}}; color: #0b2159; text-decoration: none">{{n.label}}<sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{false}}"><span style="min-width: 22px; padding: 2px 7px; box-sizing: border-box; border-radius: 999px; background: #7b1e3d; color: #ffffff; font-size: 12px; font-weight: 700; text-align: center">{{n.badge}}</span></sc-if></a>
+      </sc-for>
+    </nav>
+    <main style="flex: 999 1 640px; min-width: 0; padding: 28px 36px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+      <sc-if value="{{showWelcome}}" hint-placeholder-val="{{true}}">
+        <section aria-labelledby="wl-title" style="background: #0b2159; color: #ffffff; border-radius: 14px; padding: 28px 30px; display: flex; flex-wrap: wrap; gap: 18px 28px; align-items: flex-start; justify-content: space-between">
+          <div style="flex: 1 1 420px; display: flex; flex-direction: column; gap: 10px">
+            <span style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 999px; background: #e3f3e8; color: #1b5e33; font-size: 12px; font-weight: 700"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"></path></svg>Two-factor sign-in is on</span>
+            <h1 id="wl-title" style="margin: 0; font-size: 30px; line-height: 1.2; font-weight: 800; letter-spacing: -0.02em">Welcome to the team, Claire</h1>
+            <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #d2d7e4">You're a reviewer at Herzliah High School. Ruth Klein added you on November 2. Here's where to start.</p>
+          </div>
+          <button type="button" onClick="{{dismiss}}" style="min-height: 40px; padding: 9px 14px; border-radius: 7px; border: 1px solid #6b7a9e; background: transparent; color: #ffffff; font-size: 13px; font-weight: 700; cursor: pointer">Dismiss</button>
+        </section>
+      </sc-if>
+      <sc-if value="{{hideWelcome}}" hint-placeholder-val="{{false}}">
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <h1 style="margin: 0; font-size: 28px; font-weight: 800">Dashboard</h1>
+          <p style="margin: 0; font-size: 15px; color: #3a4a70">Herzliah High School · Reviewer</p>
+        </div>
+      </sc-if>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px">
+        <sc-for list="{{starts}}" as="s" hint-placeholder-count="3">
+          <a href="{{s.href}}" style="display: flex; flex-direction: column; gap: 10px; padding: 22px; border-radius: 12px; background: #ffffff; border: 1px solid #e2e5ee; color: #0b2159; text-decoration: none">
+            <span style="display: flex; justify-content: space-between; align-items: center; gap: 10px"><strong style="font-size: 16px">{{s.title}}</strong><sc-if value="{{s.hasCount}}" hint-placeholder-val="{{false}}"><span style="min-width: 24px; padding: 2px 8px; box-sizing: border-box; border-radius: 999px; background: #7b1e3d; color: #ffffff; font-size: 12px; font-weight: 700; text-align: center">{{s.count}}</span></sc-if></span>
+            <span style="font-size: 14px; line-height: 1.5; color: #3a4a70">{{s.body}}</span>
+            <span style="margin-top: auto; font-size: 14px; font-weight: 700; color: #7b1e3d">{{s.cta}} →</span>
+          </a>
+        </sc-for>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: stretch">
+        <section aria-labelledby="wl-access" style="flex: 999 1 420px; background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px">
+          <h2 id="wl-access" style="margin: 0; font-size: 16px; font-weight: 700">Your access</h2>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; font-size: 13px; line-height: 1.5">
+            <div style="display: flex; flex-direction: column; gap: 6px"><strong style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: #1b5e33">You can</strong><span>Approve, question or decline sign-up requests</span><span>Read alumni records and history</span><span>Read the audit log</span></div>
+            <div style="display: flex; flex-direction: column; gap: 6px; color: #4a5575"><strong style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: #4a5575">You can't</strong><span>Change, suspend or export records</span><span>Manage staff, email templates or settings</span></div>
+          </div>
+        </section>
+        <section style="flex: 1 1 260px; background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 20px 22px; display: flex; flex-direction: column; gap: 8px; font-size: 13px; line-height: 1.5; color: #3a4a70">
+          <h2 style="margin: 0; font-size: 16px; font-weight: 700; color: #0b2159">Need more access?</h2>
+          <span>Ask a school admin. At Herzliah that's Ruth Klein.</span>
+          <span>Your sign-in and two-factor settings are in the account menu.</span>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":980}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { dismissed: false };
+  }
+  renderVals() {
+    var self = this;
+    var active = 'dashboard';
+    var items = [['dashboard', 'Dashboard', 'AdmDashboard.dc.html'], ['queue', 'Approvals', 'AdmQueue.dc.html', 7], ['roster', 'Alumni', 'AdmRoster.dc.html'], ['audit', 'Audit log', 'AdmAudit.dc.html']];
+    var nav = items.map(function (it) {
+      var on = it[0] === active;
+      return { label: it[1], href: it[2], badge: it[3] || 0, hasBadge: !!it[3], weight: on ? '700' : '500', bg: on ? '#faeef3' : 'transparent' };
+    });
+    var starts = [
+      { title: 'Review sign-up requests', body: 'Check each request against the school’s records, then approve, ask a question or decline.', cta: 'Open approvals', href: 'AdmQueue.dc.html', count: 7, hasCount: true },
+      { title: 'Look up a graduate', body: 'Search records by name or class. Reviewers can read them but not change them.', cta: 'Open alumni', href: 'AdmRoster.dc.html', count: 0, hasCount: false },
+      { title: 'See what staff have done', body: 'Every approval, role change and record edit is in the audit log.', cta: 'Open the audit log', href: 'AdmAudit.dc.html', count: 0, hasCount: false }
+    ];
+    var d = this.state.dismissed;
+    return {
+      nav: nav, starts: starts, showWelcome: !d, hideWelcome: d,
+      dismiss: function () { self.setState({ dismissed: true }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

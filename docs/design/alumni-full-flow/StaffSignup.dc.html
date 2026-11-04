@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Create your staff account</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"><style>
+*{box-sizing:border-box}
+body{margin:0;background:#f7f7f6;color:#0b2159;font-family:Inter,Arial,sans-serif;font-size:15px;line-height:1.55}
+x-dc{display:block}
+a{color:#7b1e3d;text-underline-offset:3px}
+button,input,select,textarea{font:inherit}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #a7486c;outline-offset:3px}
+h1,h2,h3,p{margin:0}
+h1{font-size:34px;line-height:1.15;letter-spacing:-.035em}
+.shell{min-height:980px;display:flex;flex-direction:column}
+.page{width:100%;max-width:1112px;margin:auto;padding:48px 28px;flex:1}
+.auth{max-width:540px;margin:0 auto}
+.muted{color:#4a5575}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#7b1e3d}
+.card{background:#fff;border:1px solid #e2e5ee;border-radius:14px;padding:32px;box-shadow:0 18px 50px -32px #0b215948;display:grid;gap:20px}
+.tight{display:grid;gap:8px}
+.small{font-size:13px}
+.fine{font-size:12px;color:#4a5575}
+.field{display:grid;gap:7px;font-size:13px;font-weight:600}
+.field input{width:100%;padding:12px 13px;background:#fff;border:1px solid #8a93ab;border-radius:7px;color:#0b2159;font-size:15px;font-weight:400;min-width:0}
+.field input[readonly]{background:#f2f4f8;border-color:#c5ccda}
+.field input::placeholder{color:#66728d}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:12px 20px;border:1px solid transparent;border-radius:7px;background:#7b1e3d;color:#fff;text-decoration:none;font-weight:700;font-size:14px;cursor:pointer}
+.btn:hover{background:#611630;color:#fff}
+.wide{width:100%}
+.divider{border-top:1px solid #e2e5ee;padding-top:20px}
+.notice{background:#f2f4f8;border-left:3px solid #7b1e3d;border-radius:0 8px 8px 0;padding:15px 17px;font-size:13px;color:#3a4a70}
+.progress{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;list-style:none;padding:0;margin:0 0 28px;font-size:12px;color:#68728a}
+.progress li{display:flex;gap:7px;align-items:center}
+.progress .current{color:#7b1e3d;font-weight:700}
+.step{flex:0 0 23px;width:23px;height:23px;display:grid;place-items:center;border:1px solid #c5ccda;border-radius:50%;font-size:10px;font-weight:800;color:#4a5575;background:#fff}
+.step.active{background:#7b1e3d;border-color:#7b1e3d;color:#fff}
+.footer{padding:20px 32px;border-top:1px solid #e2e5ee;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:12px;color:#4a5575}
+@media(max-width:800px){.page{padding:32px 20px}
+.card{padding:25px}
+.grid2{grid-template-columns:1fr}
+.footer{padding:18px 20px}
+h1{font-size:29px}
+}
+</style></helmet>
+<div class="shell"><dc-import name="NavBar" role="guest" open="{{ false }}" hint-size="100%,70px"></dc-import>
+<main class="page">
+<ol class="progress" aria-label="Joining the staff"><li class="current" aria-current="step"><span class="step active">1</span>Your account</li><li><span class="step">2</span>Accept the invitation</li><li><span class="step">3</span>Two-factor sign-in</li></ol>
+<div class="auth"><section class="card" aria-labelledby="ss-title">
+<div class="tight"><span class="eyebrow">Staff invitation · Herzliah High School</span><h1 id="ss-title">Create your staff account</h1><p class="muted">Ruth Klein invited this address as a reviewer. Staff accounts skip the alumni request: the invitation is your approval.</p></div>
+<div class="grid2">
+<label class="field" for="ss-first">First name<input id="ss-first" autocomplete="given-name" value="Claire"></label>
+<label class="field" for="ss-last">Last name<input id="ss-last" autocomplete="family-name" value="Roy"></label>
+</div>
+<p class="fine" style="margin-top:-10px">Other Herzliah staff see your name on the Staff page and in the audit log.</p>
+<label class="field" for="ss-email">Email address<input id="ss-email" type="email" readonly value="croy@[school domain]"></label>
+<p class="fine" style="margin-top:-10px">Set by the invitation, so it can't be changed here.</p>
+<label class="field" for="ss-password">Create a password<input id="ss-password" type="password" autocomplete="new-password" placeholder="Choose a password"></label>
+<label class="field" for="ss-confirm">Confirm password<input id="ss-confirm" type="password" autocomplete="new-password" placeholder="Re-enter your password"></label>
+<div class="notice">Next, we email you a link to confirm the address. It brings you straight back to accept the invitation.</div>
+<a class="btn wide" href="StaffVerify.dc.html">Create my account</a>
+<p class="fine">By creating an account, you agree to the Terms and Privacy Policy.</p>
+<p class="small divider">Already have an account with this address? <a href="StaffLanding.dc.html"><strong>Sign in instead</strong></a></p>
+</section></div></main><footer class="footer"><span>Herzliah Alumni Network</span><span>A private network. Every alumnus approved by the school.</span></footer></div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":980}}'>
+class Component extends DCLogic { renderVals() { return {}; } }
+</script>
+</body>
+</html>

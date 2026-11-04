@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin — Invite a staff member</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7b1e3d}a:hover{color:#611630}
+button,input,select{font:inherit}
+a:focus-visible,button:focus-visible,input:focus,select:focus{outline:2px solid #7b1e3d;outline-offset:1px}
+</style>
+</helmet>
+<div style="min-height: 960px; background: #f7f7f6; font-family: Inter, Arial, sans-serif; color: #0b2159; display: flex; flex-direction: column">
+  <dc-import name="NavBar" role="school_admin" active="admin" open="{{ false }}" hint-size="100%,66px"></dc-import>
+  <div style="flex: 1; display: flex; flex-wrap: wrap">
+    <nav aria-label="Admin" style="flex: 1 1 200px; max-width: 232px; background: #ffffff; border-right: 1px solid #e2e5ee; padding: 20px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px">
+      <sc-for list="{{nav}}" as="n" hint-placeholder-count="9">
+        <a href="{{n.href}}" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: {{n.weight}}; background: {{n.bg}}; color: #0b2159; text-decoration: none">{{n.label}}<sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{false}}"><span style="min-width: 22px; padding: 2px 7px; box-sizing: border-box; border-radius: 999px; background: #7b1e3d; color: #ffffff; font-size: 12px; font-weight: 700; text-align: center">{{n.badge}}</span></sc-if></a>
+      </sc-for>
+    </nav>
+    <main style="flex: 999 1 640px; min-width: 0; padding: 28px 36px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+      <a href="AdmStaff.dc.html" style="align-self: flex-start; font-size: 14px; font-weight: 600">← Staff</a>
+      <div style="display: flex; flex-direction: column; gap: 6px; max-width: 760px">
+        <h1 style="margin: 0; font-size: 28px; font-weight: 800">Invite a staff member</h1>
+        <p style="margin: 0; font-size: 15px; line-height: 1.55; color: #3a4a70">We email them a link. They create a staff account or sign in, accept, and set up two-factor sign-in before they see any admin page.</p>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+        <section style="flex: 999 1 540px; min-width: 0; background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px">
+          <div style="display: flex; flex-direction: column; gap: 7px; max-width: 440px">
+            <label for="inv-email" style="font-size: 13px; font-weight: 600">Their email address</label>
+            <input id="inv-email" type="email" autocomplete="off" value="{{email}}" onChange="{{onEmail}}" placeholder="name@[school domain]" style="padding: 11px 13px; border: 1px solid #8a93ab; border-radius: 7px; color: #0b2159; font-size: 15px">
+            <span style="font-size: 12px; line-height: 1.5; color: #4a5575">Only this address can accept. Use the one they'll sign in with.</span>
+          </div>
+          <fieldset style="margin: 0; padding: 0; border: 0; min-width: 0">
+            <legend style="padding: 0; margin-bottom: 12px; font-size: 13px; font-weight: 600">Role</legend>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px">
+              <sc-for list="{{roles}}" as="r" hint-placeholder-count="2">
+                <label style="display: flex; flex-direction: column; gap: 12px; padding: 18px; border-radius: 10px; border: {{r.border}}; background: {{r.bg}}; cursor: pointer">
+                  <span style="display: flex; gap: 10px; align-items: center"><input type="radio" name="inv-role" value="{{r.id}}" checked="{{r.on}}" onChange="{{r.pick}}" style="accent-color: #7b1e3d; width: 18px; height: 18px; margin: 0"><strong style="font-size: 16px">{{r.label}}</strong></span>
+                  <span style="font-size: 13px; line-height: 1.5; color: #3a4a70">{{r.summary}}</span>
+                  <span style="display: flex; flex-direction: column; gap: 7px">
+                    <sc-for list="{{r.can}}" as="c" hint-placeholder-count="3">
+                      <span style="display: flex; gap: 8px; align-items: flex-start; font-size: 13px; line-height: 1.45"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1b5e33" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex: 0 0 15px; margin-top: 2px"><path d="M5 12l5 5 9-10"></path></svg><span>{{c}}</span></span>
+                    </sc-for>
+                    <sc-for list="{{r.cant}}" as="c" hint-placeholder-count="2">
+                      <span style="display: flex; gap: 8px; align-items: flex-start; font-size: 13px; line-height: 1.45; color: #4a5575"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4a5575" stroke-width="2.6" stroke-linecap="round" style="flex: 0 0 15px; margin-top: 2px"><path d="M6 6l12 12M18 6L6 18"></path></svg><span>{{c}}</span></span>
+                    </sc-for>
+                  </span>
+                </label>
+              </sc-for>
+            </div>
+          </fieldset>
+          <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding-top: 4px; border-top: 1px solid #eef0f4">
+            <a href="StaffInviteSent.dc.html" style="margin-top: 18px; display: inline-flex; align-items: center; min-height: 44px; box-sizing: border-box; padding: 11px 20px; border-radius: 7px; background: #7b1e3d; color: #ffffff; font-weight: 700; font-size: 14px; text-decoration: none">Send invitation</a>
+            <a href="AdmStaff.dc.html" style="margin-top: 18px; display: inline-flex; align-items: center; min-height: 44px; box-sizing: border-box; padding: 11px 16px; border-radius: 7px; border: 1px solid #bac1d2; color: #0b2159; font-weight: 700; font-size: 14px; text-decoration: none">Cancel</a>
+          </div>
+        </section>
+        <aside style="flex: 1 1 280px; display: flex; flex-direction: column; gap: 14px">
+          <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px">
+            <h2 style="margin: 0; font-size: 15px; font-weight: 700">What they'll receive</h2>
+            <div style="display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border-radius: 8px; background: #f2f4f8; font-size: 13px; line-height: 1.5">
+              <strong>Ruth Klein invited you to help run the Herzliah Alumni Network</strong>
+              <span style="color: #3a4a70">From Herzliah Alumni Network · replies go to you</span>
+            </div>
+            <span style="font-size: 13px; line-height: 1.5; color: #3a4a70">The link works once, only for <strong style="color: #0b2159">{{emailLabel}}</strong>, for 7 days. You can resend or cancel it from the Staff page.</span>
+            <a href="StaffInviteEmail.dc.html" style="font-size: 14px; font-weight: 600">See the email →</a>
+          </section>
+          <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 20px 22px; display: flex; flex-direction: column; gap: 8px; font-size: 13px; line-height: 1.5; color: #3a4a70">
+            <h2 style="margin: 0; font-size: 15px; font-weight: 700; color: #0b2159">Before they get access</h2>
+            <span>They set up two-factor sign-in with an authenticator app. Admin pages stay closed until they do.</span>
+            <span>Invitations, acceptances and role changes are recorded in the audit log.</span>
+          </section>
+        </aside>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":960}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { email: 'croy@[school domain]', role: 'reviewer' };
+  }
+  renderVals() {
+    var self = this;
+    var active = 'staff';
+    var items = [['dashboard', 'Dashboard', 'AdmDashboard.dc.html'], ['queue', 'Approvals', 'AdmQueue.dc.html', 7], ['roster', 'Alumni', 'AdmRoster.dc.html'], ['templates', 'Email templates', 'AdmTemplates.dc.html'], ['freshness', 'Freshness', 'AdmFreshness.dc.html'], ['exports', 'Exports', 'AdmExport.dc.html'], ['staff', 'Staff', 'AdmStaff.dc.html'], ['audit', 'Audit log', 'AdmAudit.dc.html'], ['settings', 'Settings', 'AdmSettings.dc.html']];
+    var nav = items.map(function (it) {
+      var on = it[0] === active;
+      return { label: it[1], href: it[2], badge: it[3] || 0, hasBadge: !!it[3], weight: on ? '700' : '500', bg: on ? '#faeef3' : 'transparent' };
+    });
+    var defs = [
+      { id: 'reviewer', label: 'Reviewer', summary: 'For staff who check who is a graduate.',
+        can: ['Approve, question or decline sign-up requests', 'Read alumni records and history', 'Read the audit log'],
+        cant: ['Change, suspend or export records', 'Manage staff, email templates or settings'] },
+      { id: 'school_admin', label: 'School admin', summary: 'For the people who run the network for the school.',
+        can: ['Everything a reviewer can do', 'Change, suspend and export records', 'Approve email templates and change settings', 'Invite, change and remove staff'],
+        cant: ['Remove or demote themselves if they are the last school admin'] }
+    ];
+    var roles = defs.map(function (d) {
+      var on = self.state.role === d.id;
+      return { id: d.id, label: d.label, summary: d.summary, can: d.can, cant: d.cant, on: on,
+        border: on ? '2px solid #7b1e3d' : '1px solid #e2e5ee', bg: on ? '#fdf6f9' : '#ffffff',
+        pick: function () { self.setState({ role: d.id }); } };
+    });
+    var email = (this.state.email || '').trim();
+    return {
+      nav: nav, roles: roles, email: this.state.email,
+      emailLabel: email || 'the address you enter',
+      onEmail: function (e) { self.setState({ email: e.target.value }); }
+    };
+  }
+}
+</script>
+</body>
+</html>
