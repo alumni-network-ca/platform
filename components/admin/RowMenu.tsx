@@ -1,6 +1,7 @@
 "use client";
 import { useActionState, useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { errorMessage, type ActionResult, type AdminCopy } from "@/lib/admin/forms";
+import { createPortal } from "react-dom";
 import { CopyLink } from "./CopyLink";
 
 export type RowMenuItem = {
@@ -13,11 +14,21 @@ export type RowMenuItem = {
 };
 
 const MENU_WIDTH = 220;
+const panelHeight = (count: number) => count * 40 + 12;
+
+/** Page coordinates under (or above) the button: the panel is rendered at the end of <body>. */
+function placeFor(rect: DOMRect, below: boolean, count: number) {
+  return {
+    top: (below ? rect.bottom + 4 : rect.top - 4 - panelHeight(count)) + window.scrollY,
+    left: Math.max(8, rect.right - MENU_WIDTH) + window.scrollX,
+  };
+}
 
 /**
  * A row's actions behind a "⋯" button (WAI-ARIA menu button, as AccountMenu). Each item submits its own form to
  * `action`; the result (error, saved, invitation link) shows in the row under the button. The panel is
- * positioned against the viewport so the table's horizontal scroll box doesn't clip it.
+ * rendered at the end of <body> in page coordinates, so the table's horizontal scroll box can't clip it and it
+ * stays under its button when the page scrolls (also on phones, where the page itself may scroll sideways).
  */
 export function RowMenu({
   action,
@@ -38,6 +49,7 @@ export function RowMenu({
   const wrapper = useRef<HTMLDivElement>(null);
   const button = useRef<HTMLButtonElement>(null);
   const menu = useRef<HTMLDivElement>(null);
+  const below = useRef(true);
   const id = useId();
 
   const list = () => [...(menu.current?.querySelectorAll<HTMLElement>('[role="menuitem"]') ?? [])];
@@ -51,31 +63,31 @@ export function RowMenu({
   useEffect(() => {
     if (!open) return;
     const outside = (event: PointerEvent) => {
-      if (!wrapper.current?.contains(event.target as Node)) setOpen(false);
+      const target = event.target as Node;
+      if (!wrapper.current?.contains(target) && !menu.current?.contains(target)) setOpen(false);
     };
-    // A fixed panel would drift from its button: scrolling or resizing closes it instead.
-    const drift = (event: Event) => {
-      if (!menu.current?.contains(event.target as Node)) setOpen(false);
+    // Scrolling the table's box (or smooth page scrolling after the tap) and resizing move the button: the
+    // panel follows it rather than closing under the pointer.
+    const follow = () => {
+      const rect = button.current?.getBoundingClientRect();
+      if (rect) setPlace(placeFor(rect, below.current, items.length));
     };
     document.addEventListener("pointerdown", outside);
-    window.addEventListener("scroll", drift, true);
-    window.addEventListener("resize", drift);
+    window.addEventListener("scroll", follow, true);
+    window.addEventListener("resize", follow);
     return () => {
       document.removeEventListener("pointerdown", outside);
-      window.removeEventListener("scroll", drift, true);
-      window.removeEventListener("resize", drift);
+      window.removeEventListener("scroll", follow, true);
+      window.removeEventListener("resize", follow);
     };
-  }, [open]);
+  }, [open, items.length]);
 
   function openOn(item: "first" | "last") {
     const rect = button.current?.getBoundingClientRect();
     if (rect) {
-      const height = items.length * 40 + 12;
-      const below = rect.bottom + 4 + height <= window.innerHeight;
-      setPlace({
-        top: below ? rect.bottom + 4 : Math.max(8, rect.top - 4 - height),
-        left: Math.max(8, Math.min(rect.right - MENU_WIDTH, window.innerWidth - MENU_WIDTH - 8)),
-      });
+      const height = panelHeight(items.length);
+      below.current = rect.bottom + 4 + height <= window.innerHeight || rect.top - 4 - height < 0;
+      setPlace(placeFor(rect, below.current, items.length));
     }
     setFocusOn(item);
     setOpen(true);
@@ -116,7 +128,9 @@ export function RowMenu({
         event.preventDefault();
         return close();
       case "Tab":
-        return setOpen(false);
+        // The panel lives at the end of <body>: Tab returns to the button rather than leaving the page.
+        event.preventDefault();
+        return close();
     }
   }
 
@@ -139,42 +153,44 @@ export function RowMenu({
           <circle cx="19" cy="12" r="2" />
         </svg>
       </button>
-      {open && (
-        <div
-          ref={menu}
-          id={`${id}menu`}
-          role="menu"
-          aria-label={label}
-          className="rowMenuPanel"
-          style={{ top: place.top, left: place.left, width: MENU_WIDTH }}
-        >
-          {items.map((item) => (
-            <form
-              key={item.key}
-              action={formAction}
-              onSubmit={(e) => {
-                if (item.confirm && !window.confirm(item.confirm)) {
-                  e.preventDefault();
-                  return;
-                }
-                setOpen(false);
-              }}
-            >
-              {Object.entries(item.fields).map(([name, value]) => (
-                <input key={name} type="hidden" name={name} value={value} />
-              ))}
-              <button
-                type="submit"
-                role="menuitem"
-                tabIndex={-1}
-                className={`menuItem${item.danger ? " menuItemDanger" : ""}`}
+      {open &&
+        createPortal(
+          <div
+            ref={menu}
+            id={`${id}menu`}
+            role="menu"
+            aria-label={label}
+            className="rowMenuPanel"
+            style={{ top: place.top, left: place.left, width: MENU_WIDTH }}
+          >
+            {items.map((item) => (
+              <form
+                key={item.key}
+                action={formAction}
+                onSubmit={(e) => {
+                  if (item.confirm && !window.confirm(item.confirm)) {
+                    e.preventDefault();
+                    return;
+                  }
+                  setOpen(false);
+                }}
               >
-                {item.label}
-              </button>
-            </form>
-          ))}
-        </div>
-      )}
+                {Object.entries(item.fields).map(([name, value]) => (
+                  <input key={name} type="hidden" name={name} value={value} />
+                ))}
+                <button
+                  type="submit"
+                  role="menuitem"
+                  tabIndex={-1}
+                  className={`menuItem${item.danger ? " menuItemDanger" : ""}`}
+                >
+                  {item.label}
+                </button>
+              </form>
+            ))}
+          </div>,
+          document.body,
+        )}
       {state.error && (
         <p role="alert" className="notice rowMenuNotice">
           {errorMessage(state.error, t)}

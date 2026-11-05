@@ -1239,7 +1239,7 @@ textarea:focus {
   color: var(--ink);
   font-weight: 700;
 }
-/* Row actions behind a "⋯" button (RowMenu, AdmStaff). The panel is fixed so the table's scroll box can't clip it. */
+/* Row actions behind a "⋯" button (RowMenu, AdmStaff). The panel is placed on <body> (page coordinates) so the table's scroll box can't clip it. */
 .dataTable .cellActions {
   width: 1%;
   text-align: right;
@@ -1278,7 +1278,7 @@ textarea:focus {
   cursor: progress;
 }
 .rowMenuPanel {
-  position: fixed;
+  position: absolute;
   z-index: 50;
   box-sizing: border-box;
   padding: 6px;
