@@ -7,6 +7,7 @@ defaults:
 items:
   - key: FND-01
     title: "Upgrade Next.js/React/Supabase libs, strict TS and generated DB types"
+    state: closed
     labels: [type:chore, area:ci, P0, launch-blocker]
     size: M
     depends: [SETUP-05]
@@ -58,6 +59,7 @@ items:
 
   - key: FND-04
     title: "Schema v2 baseline migration"
+    state: closed
     labels: [type:feature, area:db, area:tenancy, P0, launch-blocker]
     size: L
     depends: [AUDIT-09, SETUP-07]
@@ -86,6 +88,7 @@ items:
 
   - key: FND-05
     title: "RLS v2 and permission model (has_permission, protected columns, function hygiene)"
+    state: closed
     labels: [type:security, area:db, area:tenancy, P0, launch-blocker]
     size: L
     depends: [FND-04]
@@ -106,6 +109,7 @@ items:
 
   - key: FND-06
     title: "pgTAP tenant-isolation and role test suite"
+    state: closed
     labels: [type:test, area:db, area:tenancy, P0, launch-blocker]
     size: L
     depends: [FND-05, FND-15]
@@ -122,6 +126,7 @@ items:
 
   - key: FND-07
     title: "Tenant resolution from subdomain (proxy/middleware)"
+    state: closed
     labels: [type:feature, area:tenancy, P0, launch-blocker]
     size: M
     depends: [FND-04]
@@ -140,6 +145,7 @@ items:
 
   - key: FND-08
     title: "Supabase SSR session handling and client separation"
+    state: closed
     labels: [type:security, area:auth, P0, launch-blocker]
     size: S
     depends: [FND-07]
@@ -155,6 +161,7 @@ items:
 
   - key: FND-09
     title: "Auth: sign-in with an emailed one-time code, and landing on the right home page"
+    state: closed
     labels: [type:feature, area:auth, P0, launch-blocker]
     size: L
     depends: [FND-07, FND-08, FND-03]
@@ -215,6 +222,7 @@ items:
 
   - key: FND-12
     title: "Audit logging (append-only)"
+    state: closed
     labels: [type:security, area:db, P0, launch-blocker]
     size: S
     depends: [FND-05]
@@ -229,6 +237,7 @@ items:
 
   - key: FND-13
     title: "Platform admin bootstrap and time-boxed audited tenant access"
+    state: closed
     labels: [type:feature, area:platform, P0, launch-blocker]
     size: S
     depends: [FND-05, FND-12]
@@ -256,6 +265,7 @@ items:
 
   - key: FND-15
     title: "Seed data: two test institutions, every role, demo alumni and a perf seed"
+    state: closed
     labels: [type:chore, area:db, P0]
     size: S
     depends: [FND-04]
@@ -307,6 +317,7 @@ items:
 
   - key: FND-18
     title: "Sign-in code entered in six boxes"
+    state: closed
     labels: [type:feature, area:auth, area:ui, P1]
     size: S
     depends: [FND-09]
@@ -325,6 +336,7 @@ items:
 
   - key: FND-19
     title: "Password sign-in alongside the emailed code"
+    state: closed
     labels: [type:feature, area:auth, P0, launch-blocker]
     size: M
     depends: [FND-09]
