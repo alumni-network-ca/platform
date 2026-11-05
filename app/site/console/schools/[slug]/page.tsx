@@ -4,12 +4,12 @@ import { requirePlatformAdmin } from "@/lib/auth/platform";
 import { schoolBranding } from "@/lib/school";
 import { schoolUrl } from "@/lib/tenant/address";
 import { getOrigin } from "@/lib/tenant/server";
-import { Invitations, type Invitation } from "./Invitations";
+import { StaffPanel, type Invitation, type StaffMember } from "./StaffPanel";
 
 const day = (iso: string) =>
   new Date(iso).toLocaleDateString("en-CA", { month: "short", day: "numeric", year: "numeric" });
 
-// S1.3 A school: its address, counts, school admins and settings. The launch checklist ("Open sign-ups") needs
+// S1.3 A school: its address, counts, staff and invitations, and settings. The launch checklist ("Open sign-ups") needs
 // a school status for setup, which comes with SA-05.
 export default async function SchoolPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -23,8 +23,9 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
     .maybeSingle();
   if (!school) notFound();
 
-  const [summaries, invitations, created, admins] = await Promise.all([
+  const [summaries, staffList, invitations, created, admins] = await Promise.all([
     supabase.rpc("platform_school_summaries"),
+    supabase.rpc("platform_school_staff", { p_inst: school.id }),
     supabase
       .from("staff_invitations")
       .select("id, email, role, created_at, expires_at, accepted_at, revoked_at")
@@ -54,6 +55,13 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
         : Date.parse(i.expires_at) <= now
           ? { status: "expired" as const, when: day(i.expires_at) }
           : { status: "open" as const, when: `Sent ${day(i.created_at)}` }),
+  }));
+  const staff: StaffMember[] = (staffList.data ?? []).map((s) => ({
+    id: s.user_id,
+    name: s.name,
+    email: s.email,
+    role: s.role,
+    joined: day(s.joined_at),
   }));
   const origin = await getOrigin();
   const address = schoolUrl(origin, school.slug);
@@ -97,37 +105,34 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
         </div>
       </div>
 
+      <StaffPanel slug={school.slug} staff={staff} invitations={rows} />
+
       <div className="panelGrid">
-        <Invitations slug={school.slug} invitations={rows} />
-        <div className="formStack">
-          <section className="panel">
-            <h2>Settings</h2>
-            <p className="fieldHint">
-              The school&apos;s admins change these on their Settings page.
-            </p>
-            <dl className="detailList">
-              <dt>Network name</dt>
-              <dd>{shortName} Alumni Network</dd>
-              <dt>Default language</dt>
-              <dd>{school.default_locale === "fr" ? "Français" : "English"}</dd>
-              <dt>Email sender</dt>
-              <dd>{school.email_display_name ?? "Not set"}</dd>
-              <dt>Replies go to</dt>
-              <dd>{school.reply_to_email ?? "Not set"}</dd>
-            </dl>
-          </section>
-          <section className="panel">
-            <h2>Support and status</h2>
-            <p>
-              <Link href={`/console/support?school=${school.slug}`}>Open support access →</Link>
-            </p>
-            <p>
-              <Link href={`/console/schools/${school.slug}/status`}>
-                {suspended ? "Reactivate the school…" : "Suspend the school…"}
-              </Link>
-            </p>
-          </section>
-        </div>
+        <section className="panel">
+          <h2>Settings</h2>
+          <p className="fieldHint">The school&apos;s admins change these on their Settings page.</p>
+          <dl className="detailList">
+            <dt>Network name</dt>
+            <dd>{shortName} Alumni Network</dd>
+            <dt>Default language</dt>
+            <dd>{school.default_locale === "fr" ? "Français" : "English"}</dd>
+            <dt>Email sender</dt>
+            <dd>{school.email_display_name ?? "Not set"}</dd>
+            <dt>Replies go to</dt>
+            <dd>{school.reply_to_email ?? "Not set"}</dd>
+          </dl>
+        </section>
+        <section className="panel">
+          <h2>Support and status</h2>
+          <p>
+            <Link href={`/console/support?school=${school.slug}`}>Open support access →</Link>
+          </p>
+          <p>
+            <Link href={`/console/schools/${school.slug}/status`}>
+              {suspended ? "Reactivate the school…" : "Suspend the school…"}
+            </Link>
+          </p>
+        </section>
       </div>
     </>
   );

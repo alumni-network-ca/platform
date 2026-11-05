@@ -78,9 +78,12 @@ export default async function SchoolsPage({
           </thead>
           <tbody>
             {shown.map((s) => (
-              <tr key={s.id}>
+              // The whole row opens the school (S1.3); the name is the one real link, stretched over the row.
+              <tr key={s.id} className="rowLink">
                 <td>
-                  <Link href={`/console/schools/${s.slug}`}>{s.name}</Link>
+                  <Link className="rowLinkTarget" href={`/console/schools/${s.slug}`}>
+                    {s.name}
+                  </Link>
                   <span className="cellSub">{new URL(schoolUrl(origin, s.slug)).host}</span>
                 </td>
                 <td>

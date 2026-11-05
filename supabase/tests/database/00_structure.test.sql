@@ -52,7 +52,8 @@ select is(
 select is(
   (select array_agg(p.proname::text order by p.proname) from pg_proc p join pg_namespace n on n.oid = p.pronamespace
    where n.nspname = 'public' and not p.prosecdef and p.prorettype <> 'trigger'::regtype
-     and p.proname not in ('search_directory', 'hash_token', 'validate_template_text', 'clean_branding')),
+     and p.proname not in ('search_directory', 'hash_token', 'validate_template_text', 'clean_branding',
+                           'normalize_student_id')),
   null,
   'every public RPC is security definer'
 );
@@ -72,7 +73,7 @@ select is(
    where n.nspname = 'public' and has_function_privilege('authenticated', p.oid, 'execute')
      and p.proname in ('log_audit', 'enqueue_email', 'mint_token', 'record_confirmation', 'hit_rate_limit',
                        'create_staff_invitation', 'assert_permission', 'resolve_email_template', 'assert_last_school_admin_kept',
-                       'person_name')),
+                       'person_name', 'list_school_staff')),
   null,
   'internal helpers are not executable by authenticated users'
 );

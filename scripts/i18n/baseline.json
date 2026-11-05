@@ -402,108 +402,6 @@
     "count": 2
   },
   {
-    "file": "app/site/console/schools/[slug]/Invitations.tsx",
-    "rule": "ui-literal",
-    "text": ". It works once, only for that address, and expires in 7 days. Getting a new link cancels this one.",
-    "count": 1
-  },
-  {
-    "file": "app/site/console/schools/[slug]/Invitations.tsx",
-    "rule": "ui-literal",
-    "text": "Actions",
-    "count": 1
-  },
-  {
-    "file": "app/site/console/schools/[slug]/Invitations.tsx",
-    "rule": "ui-literal",
-    "text": "Copied",
-    "count": 1
-  },
-  {
-    "file": "app/site/console/schools/[slug]/Invitations.tsx",
-    "rule": "ui-literal",
-    "text": "Copy link",
-    "count": 1
-  },
-  {
-    "file": "app/site/console/schools/[slug]/Invitations.tsx",
-    "rule": "ui-literal",
-    "text": "Email",
-    "count": 1
-  },
-  {
-    "file": "app/site/console/schools/[slug]/Invitations.tsx",
-    "rule": "ui-literal",
-    "text": "Invitation link",
-    "count": 1
-  },
-  {
-    "file": "app/site/console/schools/[slug]/Invitations.tsx",
-    "rule": "ui-literal",
-    "text": "Invite school admin",
-    "count": 1
-  },
-  {
-    "file": "app/site/console/schools/[slug]/Invitations.tsx",
-    "rule": "ui-literal",
-    "text": "Invite the first school admin. They accept while signed in with that email, then invite the rest of their staff themselves. Emails are not sent yet, so copy the link and send it to them.",
-    "count": 1
-  },
-  {
-    "file": "app/site/console/schools/[slug]/Invitations.tsx",
-    "rule": "ui-literal",
-    "text": "Inviting…",
-    "count": 1
-  },
-  {
-    "file": "app/site/console/schools/[slug]/Invitations.tsx",
-    "rule": "ui-literal",
-    "text": "New link",
-    "count": 1
-  },
-  {
-    "file": "app/site/console/schools/[slug]/Invitations.tsx",
-    "rule": "ui-literal",
-    "text": "Person",
-    "count": 1
-  },
-  {
-    "file": "app/site/console/schools/[slug]/Invitations.tsx",
-    "rule": "ui-literal",
-    "text": "principal@school.ca",
-    "count": 1
-  },
-  {
-    "file": "app/site/console/schools/[slug]/Invitations.tsx",
-    "rule": "ui-literal",
-    "text": "Revoke",
-    "count": 1
-  },
-  {
-    "file": "app/site/console/schools/[slug]/Invitations.tsx",
-    "rule": "ui-literal",
-    "text": "Role",
-    "count": 1
-  },
-  {
-    "file": "app/site/console/schools/[slug]/Invitations.tsx",
-    "rule": "ui-literal",
-    "text": "School admins",
-    "count": 1
-  },
-  {
-    "file": "app/site/console/schools/[slug]/Invitations.tsx",
-    "rule": "ui-literal",
-    "text": "Send this link to",
-    "count": 1
-  },
-  {
-    "file": "app/site/console/schools/[slug]/Invitations.tsx",
-    "rule": "ui-literal",
-    "text": "Status",
-    "count": 1
-  },
-  {
     "file": "app/site/console/schools/[slug]/page.tsx",
     "rule": "ui-literal",
     "text": "· created",
@@ -639,6 +537,156 @@
     "file": "app/site/console/schools/[slug]/page.tsx",
     "rule": "ui-literal",
     "text": "The school&apos;s admins change these on their Settings page.",
+    "count": 1
+  },
+  {
+    "file": "app/site/console/schools/[slug]/StaffPanel.tsx",
+    "rule": "ui-literal",
+    "text": "). It works once, only for that address, and expires in 7 days. Getting a new link cancels this one.",
+    "count": 1
+  },
+  {
+    "file": "app/site/console/schools/[slug]/StaffPanel.tsx",
+    "rule": "ui-literal",
+    "text": "Actions",
+    "count": 1
+  },
+  {
+    "file": "app/site/console/schools/[slug]/StaffPanel.tsx",
+    "rule": "ui-literal",
+    "text": "Active",
+    "count": 1
+  },
+  {
+    "file": "app/site/console/schools/[slug]/StaffPanel.tsx",
+    "rule": "ui-literal",
+    "text": "Copied",
+    "count": 1
+  },
+  {
+    "file": "app/site/console/schools/[slug]/StaffPanel.tsx",
+    "rule": "ui-literal",
+    "text": "Copy link",
+    "count": 1
+  },
+  {
+    "file": "app/site/console/schools/[slug]/StaffPanel.tsx",
+    "rule": "ui-literal",
+    "text": "Current staff",
+    "count": 1
+  },
+  {
+    "file": "app/site/console/schools/[slug]/StaffPanel.tsx",
+    "rule": "ui-literal",
+    "text": "Email",
+    "count": 1
+  },
+  {
+    "file": "app/site/console/schools/[slug]/StaffPanel.tsx",
+    "rule": "ui-literal",
+    "text": "Invitation link",
+    "count": 1
+  },
+  {
+    "file": "app/site/console/schools/[slug]/StaffPanel.tsx",
+    "rule": "ui-literal",
+    "text": "Invitations",
+    "count": 1
+  },
+  {
+    "file": "app/site/console/schools/[slug]/StaffPanel.tsx",
+    "rule": "ui-literal",
+    "text": "Invite a school admin or a reviewer. They accept while signed in with that email. Emails aren&apos;t sent yet, so copy the link and send it to them.",
+    "count": 1
+  },
+  {
+    "file": "app/site/console/schools/[slug]/StaffPanel.tsx",
+    "rule": "ui-literal",
+    "text": "Joined",
+    "count": 1
+  },
+  {
+    "file": "app/site/console/schools/[slug]/StaffPanel.tsx",
+    "rule": "ui-literal",
+    "text": "name@school.ca",
+    "count": 1
+  },
+  {
+    "file": "app/site/console/schools/[slug]/StaffPanel.tsx",
+    "rule": "ui-literal",
+    "text": "New link",
+    "count": 1
+  },
+  {
+    "file": "app/site/console/schools/[slug]/StaffPanel.tsx",
+    "rule": "ui-literal",
+    "text": "No staff yet. Invite the school&apos;s first admin above.",
+    "count": 1
+  },
+  {
+    "file": "app/site/console/schools/[slug]/StaffPanel.tsx",
+    "rule": "ui-literal",
+    "text": "Person",
+    "count": 2
+  },
+  {
+    "file": "app/site/console/schools/[slug]/StaffPanel.tsx",
+    "rule": "ui-literal",
+    "text": "Reviewer",
+    "count": 1
+  },
+  {
+    "file": "app/site/console/schools/[slug]/StaffPanel.tsx",
+    "rule": "ui-literal",
+    "text": "Revoke",
+    "count": 1
+  },
+  {
+    "file": "app/site/console/schools/[slug]/StaffPanel.tsx",
+    "rule": "ui-literal",
+    "text": "Role",
+    "count": 3
+  },
+  {
+    "file": "app/site/console/schools/[slug]/StaffPanel.tsx",
+    "rule": "ui-literal",
+    "text": "School admin",
+    "count": 1
+  },
+  {
+    "file": "app/site/console/schools/[slug]/StaffPanel.tsx",
+    "rule": "ui-literal",
+    "text": "Send invitation",
+    "count": 1
+  },
+  {
+    "file": "app/site/console/schools/[slug]/StaffPanel.tsx",
+    "rule": "ui-literal",
+    "text": "Send this link to",
+    "count": 1
+  },
+  {
+    "file": "app/site/console/schools/[slug]/StaffPanel.tsx",
+    "rule": "ui-literal",
+    "text": "Sending…",
+    "count": 1
+  },
+  {
+    "file": "app/site/console/schools/[slug]/StaffPanel.tsx",
+    "rule": "ui-literal",
+    "text": "Staff",
+    "count": 1
+  },
+  {
+    "file": "app/site/console/schools/[slug]/StaffPanel.tsx",
+    "rule": "ui-literal",
+    "text": "Status",
+    "count": 2
+  },
+  {
+    "file": "app/site/console/schools/[slug]/StaffPanel.tsx",
+    "rule": "ui-literal",
+    "text": "To change a role or remove someone, the school&apos;s admins use their Staff page.",
     "count": 1
   },
   {

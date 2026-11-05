@@ -294,6 +294,58 @@ test("reviewer is forbidden from templates and school settings", async ({
   }
 });
 
+test("a request with a known student ID shows the matching record first", async ({
+  page,
+  context,
+  baseURL,
+}) => {
+  const owner = adminClient(stack);
+  const email = "student-id-e2e-" + crypto.randomUUID() + "@example.test";
+  const created = await owner.auth.admin.createUser({ email, email_confirm: true });
+  if (created.error) throw created.error;
+  try {
+    // A different graduation year from the seeded unclaimed record: the ID alone makes the match.
+    const fixture = await owner
+      .from("access_requests")
+      .insert({
+        institution_id: school,
+        user_id: created.data.user.id,
+        email,
+        first_name: "Test",
+        last_name: "Applicant",
+        grad_year: 1999,
+        school_student_id: "H10042",
+      })
+      .select("id")
+      .single();
+    if (fixture.error) throw fixture.error;
+    await signInAs(context, baseURL!, accounts.reviewer);
+    await page.goto("/admin/approvals?tab=pending");
+    await expect(page.getByText("Imported Unclaimed, 2010 · Same student ID")).toBeVisible();
+    await page.goto("/admin/approvals/" + fixture.data.id);
+    const match = page.locator(".adminMatch").first();
+    await expect(match.getByRole("link", { name: "Imported Unclaimed, 2010" })).toBeVisible();
+    await expect(match.getByText("✓ Same student ID")).toBeVisible();
+    await expect(page.getByRole("combobox", { name: "Link to the record" })).toHaveValue(
+      "22222222-2222-4222-8222-000000000001",
+    );
+    expect(await blockingViolations(page)).toEqual([]);
+  } finally {
+    await owner.auth.admin.deleteUser(created.data.user.id);
+  }
+});
+test("roster search finds a record by its student ID, typed in any form", async ({
+  page,
+  context,
+  baseURL,
+}) => {
+  await signInAs(context, baseURL!, accounts.reviewer);
+  await page.goto("/admin/alumni");
+  await page.getByLabel("Search", { exact: true }).fill("h10-042");
+  await page.getByRole("button", { name: "Apply filters", exact: true }).click();
+  await expect(page.getByText("1–1 of 1 records")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Imported Unclaimed", exact: true })).toBeVisible();
+});
 test("roster search uses the sign-in email and retains URL filters", async ({
   page,
   context,

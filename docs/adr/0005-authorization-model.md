@@ -32,7 +32,8 @@
 
 ### System admins (Gab and Noah)
 
-- Listed in `platform_admins`. They create and configure schools and appoint each school's first school admin, but get **no** standing read access to alumni data.
+- Listed in `platform_admins`. They create and configure schools and invite a school's staff (school admin or reviewer, `platform_invite_staff`), but get **no** standing read access to alumni data.
+- They can read a school's staff list (`platform_school_staff`: names, emails, roles of school admins and reviewers; never alumni). Changing a role or removing staff stays with the school's admins. *Amended 2026-11-04: before this, system admins could only appoint school admins and saw no staff list.*
 - To support a school, a system admin opens a time-boxed grant (`platform_access_grants`: institution, reason, expiry ≤ 8 h). The grant is audited and visible to the school's admins, and RLS honours it only while it is active.
 
 ## Consequences

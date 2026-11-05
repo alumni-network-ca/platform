@@ -362,12 +362,13 @@ where id = '33333333-3333-4333-8333-000000000007';
 update public.access_requests set profile_id = '22222222-2222-4222-8222-000000000005'
 where id = '33333333-3333-4333-8333-000000000008';
 
-insert into public.alumni_private (profile_id, institution_id, maiden_name, admin_notes) values
-  ('22222222-2222-4222-8222-000000000001', 'aaaaaaaa-0000-4000-8000-000000000001', null, 'Record kept for import tests'),
-  ('22222222-2222-4222-8222-000000000002', 'aaaaaaaa-0000-4000-8000-000000000001', 'Secretname', null),
-  ('22222222-2222-4222-8222-000000000003', 'aaaaaaaa-0000-4000-8000-000000000002', null, 'test-school private note'),
-  ('22222222-2222-4222-8222-000000000004', 'aaaaaaaa-0000-4000-8000-000000000001', null, 'Suspended after a report'),
-  ('22222222-2222-4222-8222-000000000005', 'aaaaaaaa-0000-4000-8000-000000000001', null, null);
+-- The unclaimed record and test-school's alumnus share a student ID on purpose: IDs only match within one school.
+insert into public.alumni_private (profile_id, institution_id, maiden_name, admin_notes, school_student_id) values
+  ('22222222-2222-4222-8222-000000000001', 'aaaaaaaa-0000-4000-8000-000000000001', null, 'Record kept for import tests', 'H10042'),
+  ('22222222-2222-4222-8222-000000000002', 'aaaaaaaa-0000-4000-8000-000000000001', 'Secretname', null, null),
+  ('22222222-2222-4222-8222-000000000003', 'aaaaaaaa-0000-4000-8000-000000000002', null, 'test-school private note', 'H10042'),
+  ('22222222-2222-4222-8222-000000000004', 'aaaaaaaa-0000-4000-8000-000000000001', null, 'Suspended after a report', null),
+  ('22222222-2222-4222-8222-000000000005', 'aaaaaaaa-0000-4000-8000-000000000001', null, null, null);
 
 insert into public.alumni_experience (profile_id, institution_id, job_title, employer, is_current) values
   ('22222222-2222-4222-8222-000000000002', 'aaaaaaaa-0000-4000-8000-000000000001', 'Private role', 'Private employer', true),

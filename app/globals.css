@@ -699,6 +699,10 @@ textarea:focus {
 .authForm .microcopy {
   margin: 0;
 }
+/* A hint under the field above it: the form's 16px gap less 9px matches the label's own 7px gap. */
+.authForm .joinFieldHint {
+  margin-top: -9px;
+}
 /* Six-box code entry (components/CodeInput.tsx): the real input lies invisible over the boxes. */
 .codeInput {
   position: relative;
@@ -1190,6 +1194,11 @@ textarea:focus {
 .panel p {
   margin: 0;
 }
+.panel h3 {
+  margin: 6px 0 0;
+  font-size: 15px;
+  font-weight: 700;
+}
 .panelWarn {
   background: #fff8e8;
   border-color: #f0d9a8;
@@ -1229,6 +1238,26 @@ textarea:focus {
 .dataTable a {
   color: var(--ink);
   font-weight: 700;
+}
+/* A table row that opens a page: its one link is stretched over the whole row (design: SaSchools). */
+.dataTable tr.rowLink {
+  position: relative;
+  cursor: pointer;
+}
+.dataTable tr.rowLink:hover td {
+  background: #f7f8fb;
+}
+.dataTable a.rowLinkTarget {
+  color: #4b2a8a;
+}
+.dataTable a.rowLinkTarget:hover,
+.dataTable a.rowLinkTarget:focus-visible {
+  text-decoration: underline;
+}
+.dataTable a.rowLinkTarget::after {
+  content: "";
+  position: absolute;
+  inset: 0;
 }
 .cellSub {
   display: block;
@@ -1310,6 +1339,25 @@ textarea:focus {
 .btnDanger {
   background: #a1173b;
   color: #fff;
+}
+/* Row actions on admin tables (AdmStaff): white outlined, or red text for destructive ones. */
+.btnCompact {
+  min-height: 36px;
+  padding: 7px 12px;
+  font-size: 13px;
+}
+.btnCompact.btnLight {
+  border-color: #bac1d2;
+}
+.btnCompact.btnLight:hover {
+  border-color: var(--ink);
+}
+.btnDangerText {
+  background: transparent;
+  color: #a1173b;
+}
+.btnDangerText:hover {
+  background: #fbeef1;
 }
 .noticeGood {
   background: #e3f3e8;
@@ -3530,6 +3578,55 @@ a.onbStep:hover {
 .inviteCant > span::before {
   content: "✕";
   font-weight: 800;
+}
+/* A5.1: the form, with "What they'll receive" and "Before they get access" beside it (under it on phones). */
+.inviteLayout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: flex-start;
+}
+.inviteForm {
+  flex: 999 1 540px;
+  min-width: 0;
+  gap: 24px;
+}
+.inviteAside {
+  flex: 1 1 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.inviteAside .panel {
+  gap: 12px;
+  padding: 20px 22px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #3a4a70;
+}
+.inviteAside .panel h2 {
+  font-size: 15px;
+  color: var(--ink);
+}
+.inviteAside strong {
+  color: var(--ink);
+}
+.inviteAside a {
+  font-size: 14px;
+  font-weight: 600;
+}
+.invitePreview {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  background: #f2f4f8;
+}
+.inviteActions {
+  justify-content: flex-start;
+  padding-top: 18px;
+  border-top: 1px solid #eef0f4;
 }
 .inviteResult h2 {
   font-size: 17px;

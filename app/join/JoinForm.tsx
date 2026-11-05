@@ -10,6 +10,8 @@ const TEXT = {
     lastName: "Last name",
     maidenName: "Last name at school, if different (optional)",
     gradYear: "Graduation year",
+    studentId: "Student ID (optional)",
+    studentIdHint: "If you remember it. It only helps the school find you faster.",
     note: "Anything that helps the school recognise you (optional)",
     submit: "Submit for school review",
     save: "Save request details",
@@ -27,6 +29,9 @@ const TEXT = {
     lastName: "Nom",
     maidenName: "Nom à l'école, s'il est différent (facultatif)",
     gradYear: "Année de graduation",
+    studentId: "Matricule (facultatif)",
+    studentIdHint:
+      "Si vous vous en souvenez. Il aide seulement l'école à vous retrouver plus vite.",
     note: "Tout ce qui aide l'école à vous reconnaître (facultatif)",
     submit: "Envoyer ma demande",
     save: "Enregistrer les modifications",
@@ -46,6 +51,7 @@ export type RequestDetails = {
   last_name: string;
   maiden_name: string | null;
   grad_year: number;
+  school_student_id: string | null;
   note: string | null;
 };
 
@@ -109,6 +115,21 @@ export function JoinForm({ initial }: { initial?: RequestDetails }) {
           required
         />
       </label>
+      <label>
+        {t.studentId}
+        <input
+          className="input"
+          name="school_student_id"
+          maxLength={40}
+          autoComplete="off"
+          aria-describedby="student-id-hint"
+          defaultValue={initial?.school_student_id ?? ""}
+        />
+      </label>
+      {/* Outside the label, so the field's name stays short; the input reads it as its description. */}
+      <p id="student-id-hint" className="microcopy muted joinFieldHint">
+        {t.studentIdHint}
+      </p>
       <label>
         {t.note}
         <textarea

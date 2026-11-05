@@ -56,7 +56,7 @@ Conventions for every table:
 
 | Table | Columns | Constraints and notes |
 |---|---|---|
-| `access_requests` | `institution_id`, `user_id` → `auth.users`, `source`, `email` (snapshot), `first_name`, `last_name`, `maiden_name`, `grad_year`, `note`, `status`, `info_request` (admin's question), `applicant_reply`, `decision_reason`, `decided_by`, `decided_at`, `profile_id` (set on approval) | One open request per user per school: partial unique (`institution_id`, `user_id`) where `status in ('pending','needs_info')`. `grad_year` between 1900 and the current year + 1. Rejected rows are deleted after 90 days (DEC-08). |
+| `access_requests` | `institution_id`, `user_id` → `auth.users`, `source`, `email` (snapshot), `first_name`, `last_name`, `maiden_name`, `grad_year`, `note`, `school_student_id` (optional, self-reported, ONB-09), `status`, `info_request` (admin's question), `applicant_reply`, `decision_reason`, `decided_by`, `decided_at`, `profile_id` (set on approval) | One open request per user per school: partial unique (`institution_id`, `user_id`) where `status in ('pending','needs_info')`. `grad_year` between 1900 and the current year + 1. Rejected rows are deleted after 90 days (DEC-08). |
 
 The duplicate hints admins see come from a view, `access_request_duplicates`: same `lower(email)`, or same normalized name and `grad_year` as an existing profile or another open request. Nothing in it is shown to applicants (S4).
 
@@ -65,7 +65,7 @@ The duplicate hints admins see come from a view, `access_request_duplicates`: sa
 | Table | Columns | Constraints and notes |
 |---|---|---|
 | `alumni_profiles` | `institution_id`, `user_id` null, `status`, `visibility`, `first_name`, `last_name`, `preferred_name`, `grad_year`, `city`, `country`, `bio`, `job_title`, `employer`, `career_field_id`, `career_field_other`, `languages` text[], `onboarding_step`, `onboarding_completed_at`, `published_at`, `last_confirmed_at`, `confirmation_due_at`, `deleted_at` | Unique (`institution_id`, `user_id`). `first_name`, `last_name` and `grad_year` required. `bio` ≤ 1,000 chars. **Only directory-safe columns.** `user_id` is always set at launch; null is reserved for imported, not-yet-claimed records. |
-| `alumni_private` | `profile_id` PK → `alumni_profiles`, `institution_id`, `maiden_name`, `admin_notes`, `school_student_id` | 1:1. The owner and staff only. `maiden_name` is admin-only (DEC-02). |
+| `alumni_private` | `profile_id` PK → `alumni_profiles`, `institution_id`, `maiden_name`, `admin_notes`, `school_student_id` | 1:1. The owner and staff only. `maiden_name` is admin-only (DEC-02). `school_student_id` is the school's own ID for the person, visible to staff and the owner (DEC-02 as amended). It is not unique, and a partial index on (`institution_id`, `school_student_id`) serves matching and roster search. |
 | `profile_contact_channels` | `profile_id`, `institution_id`, `type`, `value`, `is_public`, `sort_order` | Unique (`profile_id`, `type`). Optional (DEC-02): zero rows means "No contact details shared". Value formats are checked per type (email, E.164 phone, https URL). |
 | `alumni_education` | `profile_id`, `institution_id`, `school`, `degree`, `field_of_study`, `graduation_year`, `sort_order` | |
 | `alumni_experience` | `profile_id`, `institution_id`, `job_title`, `employer`, `career_field_id`, `location`, `start_year`, `end_year`, `is_current`, `sort_order` | `end_year >= start_year`. Not both `end_year` and `is_current`. |
@@ -207,6 +207,9 @@ Each job writes `job_runs`. A missing run raises an alert (OPS-03).
   - a GIN trigram index on `lower(first_name || ' ' || last_name || ' ' || coalesce(preferred_name, ''))`
 - `profile_offers` (`offer_type_id`) and `alumni_education` (lower(`school`)), for the filters.
 - `access_requests` (`institution_id`, `status`, `created_at`).
+- `alumni_private` (`institution_id`, `school_student_id`) where the ID is set.
+
+Both student ID columns hold one normal form, enforced by a check: `normalize_student_id` removes spaces and dashes, upper-cases, and turns empty into null, so `h10-042` and `H10042` compare equal.
 - `contact_events` (`institution_id`, `created_at`) and (`initiator_user_id`, `recipient_profile_id`, `channel`, `created_at`).
 - `email_outbox` (`status`, `next_attempt_at`).
 - `audit_log` (`institution_id`, `created_at`).

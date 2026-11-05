@@ -66,7 +66,14 @@ export default async function Staff() {
                     {s.name && <span className="cellSub">{s.email}</span>}
                   </td>
                   <td>
-                    <ActionForm action={manageStaff} label={t.changeRole} disabled={last} t={t}>
+                    <ActionForm
+                      action={manageStaff}
+                      label={t.changeRole}
+                      disabled={last}
+                      t={t}
+                      variant="light"
+                      compact
+                    >
                       <input type="hidden" name="operation" value="role" />
                       <input type="hidden" name="user" value={s.user_id} />
                       <label className="field">
@@ -96,7 +103,8 @@ export default async function Staff() {
                         action={manageStaff}
                         label={t.remove}
                         t={t}
-                        danger
+                        variant="danger"
+                        compact
                         confirm={t.confirmRemove}
                       >
                         <input type="hidden" name="operation" value="remove" />
@@ -174,18 +182,36 @@ export default async function Staff() {
                     <td>
                       {state === "open" && (
                         <div className="panelGrid">
-                          <ActionForm action={manageStaff} label={t.resend} t={t}>
+                          <ActionForm
+                            action={manageStaff}
+                            label={t.resend}
+                            t={t}
+                            variant="light"
+                            compact
+                          >
                             <input type="hidden" name="operation" value="resend" />
                             <input type="hidden" name="invitation" value={inv.id} />
                           </ActionForm>
-                          <ActionForm action={manageStaff} label={t.revoke} t={t} danger>
+                          <ActionForm
+                            action={manageStaff}
+                            label={t.revoke}
+                            t={t}
+                            variant="danger"
+                            compact
+                          >
                             <input type="hidden" name="operation" value="revoke" />
                             <input type="hidden" name="invitation" value={inv.id} />
                           </ActionForm>
                         </div>
                       )}
                       {state === "expired" && (
-                        <ActionForm action={manageStaff} label={t.sendNewInvitation} t={t}>
+                        <ActionForm
+                          action={manageStaff}
+                          label={t.sendNewInvitation}
+                          t={t}
+                          variant="light"
+                          compact
+                        >
                           <input type="hidden" name="operation" value="reinvite" />
                           <input type="hidden" name="invitation" value={inv.id} />
                         </ActionForm>
