@@ -1230,6 +1230,70 @@ textarea:focus {
   color: var(--ink);
   font-weight: 700;
 }
+/* Row actions behind a "⋯" button (RowMenu, AdmStaff). The panel is fixed so the table's scroll box can't clip it. */
+.dataTable .cellActions {
+  width: 1%;
+  text-align: right;
+  white-space: nowrap;
+}
+.rowMenu {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  white-space: normal;
+}
+.rowMenuButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+.rowMenuButton:hover,
+.rowMenuButton[aria-expanded="true"] {
+  background: #f1f3f8;
+  border-color: var(--line);
+}
+.rowMenuButton:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
+.rowMenuButton:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+.rowMenuPanel {
+  position: fixed;
+  z-index: 50;
+  box-sizing: border-box;
+  padding: 6px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 16px 40px -16px rgb(11 33 89 / 35%);
+  text-align: left;
+}
+.rowMenuPanel form {
+  margin: 0;
+}
+.rowMenuNotice {
+  max-width: 280px;
+  text-align: left;
+}
+.rowMenuLink {
+  width: 240px;
+  text-align: left;
+}
+.rowMenuLink .field {
+  flex: 1 1 100%;
+  min-width: 0;
+}
 .cellSub {
   display: block;
   color: #4a5575;
@@ -1310,25 +1374,6 @@ textarea:focus {
 .btnDanger {
   background: #a1173b;
   color: #fff;
-}
-/* Row actions on admin tables (AdmStaff): white outlined, or red text for destructive ones. */
-.btnCompact {
-  min-height: 36px;
-  padding: 7px 12px;
-  font-size: 13px;
-}
-.btnCompact.btnLight {
-  border-color: #bac1d2;
-}
-.btnCompact.btnLight:hover {
-  border-color: var(--ink);
-}
-.btnDangerText {
-  background: transparent;
-  color: #a1173b;
-}
-.btnDangerText:hover {
-  background: #fbeef1;
 }
 .noticeGood {
   background: #e3f3e8;

@@ -43,7 +43,7 @@ a:focus-visible,button:focus-visible,input:focus,select:focus{outline:2px solid 
                 <td style="padding: 13px 20px"><span style="display: flex; flex-direction: column; gap: 2px"><strong>{{s.name}}</strong><span style="font-size: 13px; color: #4a5575">{{s.email}}</span></span></td>
                 <td style="padding: 13px 20px">{{s.role}}</td>
                 <td style="padding: 13px 20px"><span style="display: inline-flex; padding: 3px 10px; border-radius: 999px; background: #e3f3e8; color: #1b5e33; font-size: 12px; font-weight: 700">{{s.status}}</span></td>
-                <td style="padding: 13px 20px; text-align: right; font-size: 13px; color: #4a5575">{{s.actions}}</td>
+                <td style="padding: 13px 20px; text-align: right; position: relative"><sc-if value="{{s.locked}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; color: #4a5575">Only admin — can’t remove</span></sc-if><sc-if value="{{s.hasMenu}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{s.toggle}}" aria-label="Actions for {{s.name}}" aria-haspopup="menu" aria-expanded="{{s.menuOpen}}" style="display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 8px; border: 1px solid {{s.btnBorder}}; background: {{s.btnBg}}; color: #0b2159; cursor: pointer"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="19" cy="12" r="2"></circle></svg></button><sc-if value="{{s.menuOpen}}" hint-placeholder-val="{{false}}"><span role="menu" aria-label="Actions for {{s.name}}" style="position: absolute; right: 20px; {{s.menuPlace}}; z-index: 2; width: 220px; box-sizing: border-box; padding: 6px; display: flex; flex-direction: column; background: #ffffff; border: 1px solid #e2e5ee; border-radius: 10px; box-shadow: 0 16px 40px -16px rgba(11, 33, 89, 0.35); text-align: left"><sc-for list="{{s.items}}" as="m" hint-placeholder-count="2"><button type="button" role="menuitem" onClick="{{m.pick}}" style="min-height: 40px; padding: 8px 12px; border: 0; border-radius: 8px; background: transparent; color: {{m.color}}; font-size: 14px; font-weight: {{m.weight}}; text-align: left; cursor: pointer">{{m.label}}</button></sc-for></span></sc-if></sc-if></td>
               </tr>
             </sc-for>
           </tbody>
@@ -60,18 +60,7 @@ a:focus-visible,button:focus-visible,input:focus,select:focus{outline:2px solid 
                 <td style="padding: 13px 20px"><span style="display: flex; flex-direction: column; gap: 2px"><strong>{{i.email}}</strong><span style="font-size: 13px; color: #4a5575">{{i.by}}</span></span></td>
                 <td style="padding: 13px 20px">{{i.role}}</td>
                 <td style="padding: 13px 20px"><span style="display: flex; flex-direction: column; gap: 3px; align-items: flex-start"><span style="display: inline-flex; padding: 3px 10px; border-radius: 999px; background: {{i.chipBg}}; color: {{i.chipFg}}; font-size: 12px; font-weight: 700">{{i.status}}</span><span style="font-size: 13px; color: #4a5575">{{i.when}}</span></span></td>
-                <td style="padding: 13px 20px">
-                  <span style="display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px">
-                    <sc-if value="{{i.open}}" hint-placeholder-val="{{true}}">
-                      <button type="button" style="min-height: 36px; padding: 7px 12px; border-radius: 7px; border: 1px solid #bac1d2; background: #ffffff; color: #0b2159; font-size: 13px; font-weight: 700; cursor: pointer">Resend</button>
-                      <button type="button" onClick="{{copy}}" style="min-height: 36px; padding: 7px 12px; border-radius: 7px; border: 1px solid #bac1d2; background: #ffffff; color: #0b2159; font-size: 13px; font-weight: 700; cursor: pointer">{{copyLabel}}</button>
-                      <button type="button" onClick="{{i.revoke}}" style="min-height: 36px; padding: 7px 12px; border-radius: 7px; border: 0; background: transparent; color: #a1173b; font-size: 13px; font-weight: 700; cursor: pointer">Revoke</button>
-                    </sc-if>
-                    <sc-if value="{{i.expired}}" hint-placeholder-val="{{false}}">
-                      <a href="StaffInviteSent.dc.html" style="display: inline-flex; align-items: center; min-height: 36px; box-sizing: border-box; padding: 7px 12px; border-radius: 7px; border: 1px solid #bac1d2; background: #ffffff; color: #0b2159; font-size: 13px; font-weight: 700; text-decoration: none">Send a new invitation</a>
-                    </sc-if>
-                  </span>
-                </td>
+                <td style="padding: 13px 20px; text-align: right; position: relative"><sc-if value="{{i.hasMenu}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{i.toggle}}" aria-label="Actions for {{i.email}}" aria-haspopup="menu" aria-expanded="{{i.menuOpen}}" style="display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 8px; border: 1px solid {{i.btnBorder}}; background: {{i.btnBg}}; color: #0b2159; cursor: pointer"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="19" cy="12" r="2"></circle></svg></button><sc-if value="{{i.menuOpen}}" hint-placeholder-val="{{false}}"><span role="menu" aria-label="Actions for {{i.email}}" style="position: absolute; right: 20px; {{i.menuPlace}}; z-index: 2; width: 220px; box-sizing: border-box; padding: 6px; display: flex; flex-direction: column; background: #ffffff; border: 1px solid #e2e5ee; border-radius: 10px; box-shadow: 0 16px 40px -16px rgba(11, 33, 89, 0.35); text-align: left"><sc-for list="{{i.items}}" as="m" hint-placeholder-count="2"><button type="button" role="menuitem" onClick="{{m.pick}}" style="min-height: 40px; padding: 8px 12px; border: 0; border-radius: 8px; background: transparent; color: {{m.color}}; font-size: 14px; font-weight: {{m.weight}}; text-align: left; cursor: pointer">{{m.label}}</button></sc-for></span></sc-if></sc-if></td>
               </tr>
             </sc-for>
           </tbody>
@@ -92,7 +81,7 @@ a:focus-visible,button:focus-visible,input:focus,select:focus{outline:2px solid 
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { copied: false, revoked: false };
+    this.state = { copied: false, revoked: false, menu: 'avi' };
   }
   renderVals() {
     var self = this;
@@ -102,20 +91,38 @@ class Component extends DCLogic {
       var on = it[0] === active;
       return { label: it[1], href: it[2], badge: it[3] || 0, hasBadge: !!it[3], weight: on ? '700' : '500', bg: on ? '#faeef3' : 'transparent' };
     });
+    // Row menus, one open at a time: the "⋯" button opens the row's actions.
+    var openMenu = this.state.menu;
+    function withMenu(row, key, items, up) {
+      var on = openMenu === key;
+      row.hasMenu = items.length > 0;
+      row.menuOpen = on;
+      row.menuPlace = up ? 'bottom: 50px' : 'top: 50px';
+      row.btnBg = on ? '#f1f3f8' : 'transparent';
+      row.btnBorder = on ? '#e2e5ee' : 'transparent';
+      row.toggle = function () { self.setState({ menu: on ? null : key }); };
+      row.items = items.map(function (it) {
+        return { label: it[0], color: it[2] ? '#a1173b' : '#0b2159', weight: it[2] ? '700' : '500',
+          pick: function () { self.setState(Object.assign({ menu: null }, it[1] || {})); } };
+      });
+      return row;
+    }
     var team = [
-      { name: 'Ruth Klein (you)', email: 'rklein@[school domain]', role: 'School admin', status: 'Active · two-factor on', actions: 'Only admin — can’t remove' },
-      { name: 'Avi Sasson', email: 'asasson@[school domain]', role: 'Reviewer', status: 'Active · two-factor on', actions: 'Change role · Remove' }
+      { name: 'Ruth Klein (you)', email: 'rklein@[school domain]', role: 'School admin', status: 'Active · two-factor on', locked: true, hasMenu: false },
+      withMenu({ name: 'Avi Sasson', email: 'asasson@[school domain]', role: 'Reviewer', status: 'Active · two-factor on', locked: false }, 'avi',
+        [['Change role to School admin'], ['Remove', null, true]], true)
     ];
     var revoked = this.state.revoked;
     var invites = [
-      { email: 'croy@[school domain]', by: 'Invited by Ruth Klein', role: 'Reviewer',
+      withMenu({ email: 'croy@[school domain]', by: 'Invited by Ruth Klein', role: 'Reviewer',
         status: revoked ? 'Revoked' : 'Sent', when: revoked ? 'Just now · link no longer works' : 'Nov 2 · expires Nov 9',
         chipBg: revoked ? '#eef0f4' : '#e3eefc', chipFg: revoked ? '#3a4a70' : '#123e7a', fg: revoked ? '#4a5575' : '#0b2159',
-        open: !revoked, expired: false, revoke: function () { self.setState({ revoked: true }); } },
-      { email: 'dcohen@[school domain]', by: 'Invited by Ruth Klein', role: 'School admin', status: 'Expired', when: 'Oct 24 · expired Oct 31',
-        chipBg: '#fff4dc', chipFg: '#7a4b00', fg: '#0b2159', open: false, expired: true, revoke: null },
-      { email: 'jtremblay@[school domain]', by: 'Revoked by Ruth Klein', role: 'Reviewer', status: 'Revoked', when: 'Oct 30',
-        chipBg: '#eef0f4', chipFg: '#3a4a70', fg: '#4a5575', open: false, expired: false, revoke: null }
+        open: !revoked, expired: false, revoke: function () { self.setState({ revoked: true }); } }, 'croy',
+        revoked ? [] : [['Resend invitation'], ['Revoke', { revoked: true }, true]]),
+      withMenu({ email: 'dcohen@[school domain]', by: 'Invited by Ruth Klein', role: 'School admin', status: 'Expired', when: 'Oct 24 · expired Oct 31',
+        chipBg: '#fff4dc', chipFg: '#7a4b00', fg: '#0b2159', open: false, expired: true, revoke: null }, 'dcohen', [['Send a new invitation']]),
+      withMenu({ email: 'jtremblay@[school domain]', by: 'Revoked by Ruth Klein', role: 'Reviewer', status: 'Revoked', when: 'Oct 30',
+        chipBg: '#eef0f4', chipFg: '#3a4a70', fg: '#4a5575', open: false, expired: false, revoke: null }, 'jtremblay', [])
     ];
     return {
       nav: nav, team: team, invites: invites,

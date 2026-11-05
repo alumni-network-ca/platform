@@ -2,16 +2,12 @@
 import { useActionState } from "react";
 import { errorMessage, type ActionResult, type AdminCopy } from "@/lib/admin/forms";
 import { CopyLink } from "./CopyLink";
-const BUTTON = { primary: "btnPrimary", light: "btnLight", danger: "btnDangerText" } as const;
-
 export function ActionForm({
   action,
   children,
   label,
   t,
   confirm,
-  variant = "primary",
-  compact = false,
   disabled = false,
 }: {
   action: (state: ActionResult, form: FormData) => Promise<ActionResult>;
@@ -19,10 +15,6 @@ export function ActionForm({
   label: string;
   t: AdminCopy;
   confirm?: string;
-  /** primary: school colour (page-level saves); light: white outlined; danger: red text (design's row actions). */
-  variant?: "primary" | "light" | "danger";
-  /** Smaller button for table rows. */
-  compact?: boolean;
   disabled?: boolean;
 }) {
   const [state, formAction, pending] = useActionState(action, { error: null });
@@ -60,10 +52,7 @@ export function ActionForm({
         </div>
       )}
       <div className="formActions">
-        <button
-          className={`btn ${BUTTON[variant]}${compact ? " btnCompact" : ""}`}
-          disabled={pending || disabled}
-        >
+        <button className="btn btnPrimary" disabled={pending || disabled}>
           {label}
         </button>
       </div>
