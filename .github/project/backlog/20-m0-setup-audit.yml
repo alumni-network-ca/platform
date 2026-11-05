@@ -35,6 +35,7 @@ items:
   - key: SETUP-03
     status: In review
     title: "GitHub Project, labels, milestones and backlog seeding"
+    state: closed
     epic: EPIC-SETUP
     labels: [type:chore, area:process, P0]
     size: M
@@ -52,6 +53,7 @@ items:
   - key: SETUP-04
     status: In review
     title: "Contribution workflow: CONTRIBUTING, PR/issue templates, CODEOWNERS, Dependabot"
+    state: closed
     epic: EPIC-SETUP
     labels: [type:docs, area:process, P0]
     size: S
@@ -63,6 +65,7 @@ items:
   - key: SETUP-05
     status: Ready
     title: "Developer tooling: ESLint, Prettier, Vitest, Playwright, git hooks, npm scripts"
+    state: closed
     epic: EPIC-SETUP
     labels: [type:chore, area:ci, P0]
     size: M
@@ -77,6 +80,7 @@ items:
 
   - key: SETUP-06
     title: "CI pipeline (GitHub Actions)"
+    state: closed
     epic: EPIC-SETUP
     labels: [type:chore, area:ci, P0, launch-blocker]
     size: M
@@ -98,6 +102,7 @@ items:
   - key: SETUP-07
     status: Ready
     title: "Local Supabase development environment"
+    state: closed
     epic: EPIC-SETUP
     labels: [type:chore, area:db, area:ci, P0, launch-blocker]
     size: S
@@ -171,6 +176,7 @@ items:
   - key: AUDIT-06
     status: In review
     title: "Architecture decision records and decision register"
+    state: closed
     epic: EPIC-AUDIT
     labels: [type:docs, area:process, P0]
     size: S
@@ -203,6 +209,7 @@ items:
   - key: AUDIT-09
     status: Ready
     title: "Target architecture and data model v2 design"
+    state: closed
     epic: EPIC-AUDIT
     labels: [type:docs, area:db, P0]
     size: M

@@ -7,6 +7,7 @@ items:
   # ---------------------------------------------------------------- admin (WS2)
   - key: ADM-01
     title: "Admin shell: tenant-scoped, permission-aware navigation"
+    state: closed
     epic: EPIC-ADM
     labels: [type:feature, area:admin, area:ui, P0, launch-blocker]
     size: S
@@ -21,6 +22,7 @@ items:
 
   - key: ADM-02
     title: "Admin dashboard: lifecycle counts and contacts initiated, with date filters"
+    state: closed
     epic: EPIC-ADM
     labels: [type:feature, area:admin, P1, launch-blocker]
     size: M
@@ -35,6 +37,7 @@ items:
 
   - key: ADM-03
     title: "Alumni roster: server-side search, filters, pagination, record detail"
+    state: closed
     epic: EPIC-ADM
     labels: [type:feature, area:admin, P0, launch-blocker]
     size: L
@@ -50,6 +53,7 @@ items:
 
   - key: ADM-04
     title: "Record actions: edit, suspend/reactivate, archive, mark deceased"
+    state: closed
     epic: EPIC-ADM
     labels: [type:feature, area:admin, P0, launch-blocker]
     size: L
@@ -63,6 +67,7 @@ items:
 
   - key: ADM-05
     title: "Approval queue UI (access requests and claim conflicts)"
+    state: closed
     epic: EPIC-ADM
     labels: [type:feature, area:admin, area:onboarding, P0, launch-blocker]
     size: M
@@ -76,6 +81,7 @@ items:
 
   - key: ADM-06
     title: "Staff management: invite staff, assign school admin/reviewer, remove access"
+    state: closed
     epic: EPIC-ADM
     labels: [type:feature, area:admin, area:auth, P1, launch-blocker]
     size: M
@@ -89,6 +95,7 @@ items:
 
   - key: ADM-07
     title: "Audit log viewer"
+    state: closed
     epic: EPIC-ADM
     labels: [type:feature, area:admin, P1, launch-blocker]
     size: S
@@ -100,6 +107,7 @@ items:
 
   - key: ADM-08
     title: "Institution settings: branding, sender, reply-to, default locale, options"
+    state: closed
     epic: EPIC-ADM
     labels: [type:feature, area:admin, area:platform, P1, launch-blocker]
     size: M
@@ -283,6 +291,7 @@ items:
   # ---------------------------------------------------------------- platform (WS4)
   - key: SA-01
     title: "Platform console: list, create, configure and suspend institutions"
+    state: closed
     epic: EPIC-SA
     labels: [type:feature, area:platform, P0, launch-blocker]
     size: L
@@ -304,6 +313,7 @@ items:
 
   - key: SA-02
     title: "Invite school staff from the console"
+    state: closed
     epic: EPIC-SA
     labels: [type:feature, area:platform, area:onboarding, P0, launch-blocker]
     size: S
