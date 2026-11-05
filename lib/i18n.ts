@@ -300,11 +300,22 @@ export const translations = {
       addReason: "Add a reason to continue",
       staffIntro: "People who can manage the school’s network.",
       inviteStaff: "Invite a staff member",
-      inviteLead:
-        "They get a link to create a staff account or sign in, then accept. The link works once, only for that address, for 7 days.",
+      inviteLead: "They get a link to create a staff account or sign in, then accept.",
       backToStaff: "← Staff",
       theirEmail: "Their email address",
       theirEmailHint: "Only this address can accept. Use the one they’ll sign in with.",
+      whatTheyReceive: "What they’ll receive",
+      inviteFrom: "From {sender}",
+      inviteLinkTermsBefore: "The link works once, only for ",
+      inviteLinkTermsAfter: ", for 7 days. You can resend or revoke it from the Staff page.",
+      inviteAddressFallback: "the address you enter",
+      inviteNotEmailedYet:
+        "Emails aren’t sent yet: after you send, you get the link to pass on yourself.",
+      seeTheEmail: "See the email →",
+      beforeAccessTitle: "Before they get access",
+      beforeAccess1:
+        "They sign in with the invited address and accept. Admin pages stay closed until they do.",
+      beforeAccess2: "Invitations, acceptances and role changes are recorded in the audit log.",
       reviewerSummary: "For staff who check who is a graduate.",
       schoolAdminSummary: "For the people who run the network for the school.",
       canLabel: "Can",
@@ -1090,11 +1101,25 @@ export const translations = {
       staffIntro: "Personnes pouvant gérer le réseau de l’école.",
       inviteStaff: "Inviter un membre du personnel",
       inviteLead:
-        "La personne reçoit un lien pour créer un compte du personnel ou se connecter, puis accepter. Le lien fonctionne une seule fois, seulement pour cette adresse, pendant 7 jours.",
+        "La personne reçoit un lien pour créer un compte du personnel ou se connecter, puis accepter.",
       backToStaff: "← Personnel",
       theirEmail: "Son adresse courriel",
       theirEmailHint:
         "Seule cette adresse peut accepter. Utilisez celle avec laquelle la personne se connectera.",
+      whatTheyReceive: "Ce que la personne recevra",
+      inviteFrom: "De {sender}",
+      inviteLinkTermsBefore: "Le lien fonctionne une seule fois, seulement pour ",
+      inviteLinkTermsAfter:
+        ", pendant 7 jours. Vous pouvez le renvoyer ou le révoquer depuis la page Personnel.",
+      inviteAddressFallback: "l’adresse saisie",
+      inviteNotEmailedYet:
+        "Les courriels ne sont pas encore envoyés : après l’envoi, vous obtenez le lien à transmettre vous-même.",
+      seeTheEmail: "Voir le courriel →",
+      beforeAccessTitle: "Avant d’avoir accès",
+      beforeAccess1:
+        "La personne se connecte avec l’adresse invitée et accepte. Les pages d’administration restent fermées d’ici là.",
+      beforeAccess2:
+        "Les invitations, les acceptations et les changements de rôle sont consignés au journal d’audit.",
       reviewerSummary: "Pour le personnel qui vérifie qui est diplômé.",
       schoolAdminSummary: "Pour les personnes qui gèrent le réseau au nom de l’école.",
       canLabel: "Peut",
