@@ -235,7 +235,7 @@ items:
 
   # ---------------------------------------------------------------- email (WS1)
   - key: EML-01
-    title: "Email outbox and worker (idempotent, retrying, Mailpit locally)"
+    title: "Email outbox and worker (idempotent, retrying, Resend everywhere)"
     epic: EPIC-EML
     labels: [type:feature, area:email, P0, launch-blocker]
     size: L
@@ -248,10 +248,12 @@ items:
       - **Worker:** sends immediately via after(). A cron sweeper (/api/cron/email, CRON_SECRET) retries with
         exponential backoff (5 attempts).
       - **No double sends:** Resend's idempotency key is the outbox id. Suppressed recipients are skipped.
-      - **Transport:** Mailpit locally and in CI, Resend in staging and production.
+      - **Transport:** Resend in every environment, each with its own key (decided with Gab on 2026-11-05).
+        RESEND_API_KEY, EMAIL_FROM_DOMAIN and CRON_SECRET are required: a missing one fails the send, and the
+        row stays queued for the sweeper.
       - **Logs:** ids and statuses only.
-      Built with EML-08 (2026-11-05): lib/email/ (renderer, Resend or SMTP transport, worker), claim_email_outbox,
-      after() sends from the server actions and /api/cron/email. Resend is used once RESEND_API_KEY is set (EML-02).
+      Built with EML-08 (2026-11-05): lib/email/ (renderer, Resend transport, worker), settings in config/email.ts,
+      claim_email_outbox, after() sends from the server actions and /api/cron/email.
       Still open here: emailing staff invitations (the link is shown to copy for now, TODO(EML-01)), scheduling
       the sweeper on Vercel, and showing failed sends to admins.
     ac:
@@ -385,7 +387,7 @@ items:
         Archived and deceased send nothing.
       - **Sending:** server actions call the outbox worker with after(), so the email leaves right away.
     ac:
-      - Each transition above queues exactly one email to the person, in their language, and it arrives in Mailpit.
+      - Each transition above queues exactly one email to the person, in their language, and Resend delivers it.
       - Archiving or marking a record deceased sends nothing.
       - A school that has not approved a template gets the row as skipped_no_template, not a send.
       - No email shows the suspension reason or any other internal note.

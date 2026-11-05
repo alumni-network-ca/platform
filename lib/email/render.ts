@@ -1,3 +1,5 @@
+import { DEFAULT_EMAIL_COLOR, EMAIL_FOOTER } from "@/config/email";
+
 // Turns an approved template (plain text with {placeholders}, EML-03) into the email that is sent: the subject,
 // a plain-text part and a branded HTML part. Pure, so it is unit-tested; lib/email/outbox.ts loads the data.
 
@@ -65,11 +67,6 @@ function paragraphHtml(paragraph: string, color: string): string {
   return html.replace(/\n/g, "<br>");
 }
 
-const FOOTER = {
-  en: "You receive this email because of your request or membership with the {network}. Reply to reach the alumni office.",
-  fr: "Vous recevez ce courriel en lien avec votre demande ou votre adhésion au {network}. Répondez pour joindre le bureau des anciens.",
-};
-
 const HEX = /^#[0-9a-f]{6}$/i;
 
 export function renderEmail(
@@ -80,8 +77,8 @@ export function renderEmail(
   // Subjects are one line: a value with a line break must not add a header.
   const subject = fillPlaceholders(template.subject, values).replace(/\s+/g, " ");
   const text = fillPlaceholders(template.body, values);
-  const color = HEX.test(brand.primaryColor) ? brand.primaryColor : "#1f3a5f";
-  const footer = FOOTER[brand.locale].replace("{network}", brand.networkName);
+  const color = HEX.test(brand.primaryColor) ? brand.primaryColor : DEFAULT_EMAIL_COLOR;
+  const footer = EMAIL_FOOTER[brand.locale].replace("{network}", brand.networkName);
   const paragraphs = text
     .split(/\n{2,}/)
     .map(

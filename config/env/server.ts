@@ -1,5 +1,6 @@
 // Server and proxy variables that are not secret. No `server-only` marker, because proxy.ts imports this file; a
 // browser import would only see the defaults. Secrets go in ./secrets.ts.
+import { required } from "./read";
 
 export const serverEnv = {
   /** The domain schools are subdomains of (ADR 0001): herzliah.<rootDomain>. */
@@ -20,6 +21,6 @@ export const serverEnv = {
   },
   /** Emails are sent from noreply@<emailFromDomain>, verified in Resend (DEC-12, EML-02). */
   get emailFromDomain() {
-    return process.env.EMAIL_FROM_DOMAIN || "alumninetwork.ca";
+    return required("EMAIL_FROM_DOMAIN", process.env.EMAIL_FROM_DOMAIN);
   },
 };

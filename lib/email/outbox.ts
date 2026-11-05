@@ -1,11 +1,19 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import {
+  IMMEDIATE_BATCH,
+  MAX_ATTEMPTS,
+  MAX_ERROR_LENGTH,
+  RETRY_MINUTES,
+  SENDABLE_TEMPLATES,
+  SIGN_IN_PATH,
+} from "@/config/email";
 import type { Database, Enums, Tables } from "@/lib/database";
 import { schoolBranding } from "@/lib/school";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { schoolUrl, type Origin } from "@/lib/tenant/address";
 import { renderEmail, type Placeholders } from "./render";
-import { configuredTransport, PermanentEmailError, type Transport } from "./transport";
+import { PermanentEmailError, resendTransport, type Transport } from "./transport";
 
 // The outbox worker (EML-01, ADR 0007). Business events queue a row in email_outbox in their own transaction;
 // this sends the rows: right after the action (lib/email/send.ts) and from the cron sweeper (/api/cron/email).
@@ -14,25 +22,6 @@ import { configuredTransport, PermanentEmailError, type Transport } from "./tran
 type Client = SupabaseClient<Database>;
 type OutboxRow = Tables<"email_outbox">;
 type TemplateKey = Enums<"email_template_key">;
-
-/**
- * The templates this worker can fill. Staff invitations and the annual confirmation emails need a one-time link
- * that only exists when it is created (the database keeps its hash), so their senders come with their own issues.
- */
-export const SENDABLE_TEMPLATES = [
-  "access_received",
-  "access_approved",
-  "access_needs_info",
-  "access_rejected",
-  "access_withdrawn",
-  "membership_suspended",
-  "membership_reactivated",
-  "welcome",
-] as const satisfies readonly TemplateKey[];
-
-/** Wait before attempt 2, 3, 4 and 5; after the fifth failure the row is failed for good. */
-export const RETRY_MINUTES = [1, 5, 30, 120];
-export const MAX_ATTEMPTS = RETRY_MINUTES.length + 1;
 
 export type DeliveryResult = { sent: number; retried: number; failed: number; skipped: number };
 
@@ -45,19 +34,15 @@ export async function deliverOutbox(
   deps?: Partial<Deps>,
 ): Promise<DeliveryResult> {
   const result: DeliveryResult = { sent: 0, retried: 0, failed: 0, skipped: 0 };
-  const transport = deps?.transport ?? configuredTransport();
-  if (!transport) {
-    // No Resend key and no SMTP server (e.g. `next dev` on the shared cloud database): the rows wait.
-    console.info("[email] no transport configured; outbox rows stay queued");
-    return result;
-  }
+  // Throws when RESEND_API_KEY or EMAIL_FROM_DOMAIN is missing, before any row is claimed.
+  const transport = deps?.transport ?? resendTransport();
   const client = deps?.client ?? createAdminClient();
   const now = deps?.now ?? (() => new Date());
 
   const { data: rows, error } = await client.rpc("claim_email_outbox", {
     p_keys: [...SENDABLE_TEMPLATES],
     p_subject: options.subjectId,
-    p_limit: options.limit ?? 20,
+    p_limit: options.limit ?? IMMEDIATE_BATCH,
   });
   if (error) throw new Error(`[email] could not claim outbox rows: ${error.code}`);
 
@@ -96,7 +81,10 @@ async function deliverOne(
     return "sent";
   } catch (cause) {
     const permanent = cause instanceof PermanentEmailError || cause instanceof PermanentDataError;
-    const message = (cause instanceof Error ? cause.message : String(cause)).slice(0, 500);
+    const message = (cause instanceof Error ? cause.message : String(cause)).slice(
+      0,
+      MAX_ERROR_LENGTH,
+    );
     if (permanent || row.attempts >= MAX_ATTEMPTS) {
       await update(client, row.id, { status: "failed", last_error: message });
       return "failed";
@@ -145,12 +133,12 @@ async function buildEmail(client: Client, row: OutboxRow, origin: Origin) {
   const values: Placeholders = {
     ...person,
     school_name: brand.shortName,
-    sign_in_link: schoolUrl(origin, school.data.slug, "/login"),
+    sign_in_link: schoolUrl(origin, school.data.slug, SIGN_IN_PATH),
     // Sign-in sends each person to the right page (onboarding, the needs-info answer); these keep the old links.
-    onboarding_link: schoolUrl(origin, school.data.slug, "/login"),
+    onboarding_link: schoolUrl(origin, school.data.slug, SIGN_IN_PATH),
     action_link:
       row.template_key === "access_needs_info"
-        ? schoolUrl(origin, school.data.slug, "/login")
+        ? schoolUrl(origin, school.data.slug, SIGN_IN_PATH)
         : null,
   };
   const rendered = renderEmail(template.data, values, {

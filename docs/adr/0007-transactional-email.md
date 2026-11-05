@@ -35,4 +35,4 @@ Signed Resend webhooks for delivered, bounced and complained update the outbox a
 
 ### Environments
 
-Local and CI send through **Mailpit** (bundled with the Supabase CLI). Staging can send only to an allow-list of addresses (S8).
+App emails go through **Resend in every environment**, local included, each environment with its own API key (2026-11-05). `RESEND_API_KEY`, `EMAIL_FROM_DOMAIN` and `CRON_SECRET` are required: a missing one fails the send loudly, and the row stays in the outbox for the sweeper. Supabase Auth emails still use **Mailpit** locally and in CI until the auth email hook (EML-04) routes them through the outbox. Staging can send only to an allow-list of addresses (S8).

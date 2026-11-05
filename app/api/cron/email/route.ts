@@ -1,4 +1,5 @@
 import { timingSafeEqual } from "node:crypto";
+import { SWEEP_BATCH } from "@/config/email";
 import { secrets } from "@/config/env/secrets";
 import { deliverOutbox } from "@/lib/email/outbox";
 import { getOrigin } from "@/lib/tenant/server";
@@ -15,6 +16,6 @@ function authorized(request: Request) {
 
 export async function GET(request: Request) {
   if (!authorized(request)) return new Response("Unauthorized", { status: 401 });
-  const result = await deliverOutbox({ origin: await getOrigin(), limit: 50 });
+  const result = await deliverOutbox({ origin: await getOrigin(), limit: SWEEP_BATCH });
   return Response.json(result);
 }

@@ -3,8 +3,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 vi.mock("@/lib/supabase/admin", () => ({ createAdminClient: vi.fn() }));
 
-import { deliverOutbox, MAX_ATTEMPTS, SENDABLE_TEMPLATES } from "./outbox";
-import { PermanentEmailError, type OutgoingEmail } from "./transport";
+import { MAX_ATTEMPTS, RESEND_API_URL, SENDABLE_TEMPLATES } from "@/config/email";
+import { deliverOutbox } from "./outbox";
+import { PermanentEmailError, resendTransport, type OutgoingEmail } from "./transport";
 
 const origin = {
   protocol: "http:",
@@ -161,19 +162,19 @@ describe("deliverOutbox", () => {
 
   it("retries a failure later with backoff", async () => {
     const { client, updates } = fakeClient([row({ attempts: 2 })]);
-    const failing = vi.fn().mockRejectedValue(new Error("SMTP down"));
+    const failing = vi.fn().mockRejectedValue(new Error("network error"));
     const result = await deliverOutbox({ origin }, { client, transport: failing, now: () => now });
     expect(result.retried).toBe(1);
     expect(updates[0]!.patch).toEqual({
       status: "queued",
-      last_error: "SMTP down",
+      last_error: "network error",
       next_attempt_at: new Date(now.getTime() + 5 * 60_000).toISOString(),
     });
   });
 
   it("gives up after the last attempt, or at once on a permanent error", async () => {
     for (const [attempts, error] of [
-      [MAX_ATTEMPTS, new Error("SMTP down")],
+      [MAX_ATTEMPTS, new Error("network error")],
       [1, new PermanentEmailError("Resend responded 422")],
     ] as const) {
       const { client, updates } = fakeClient([row({ attempts })]);
@@ -195,13 +196,70 @@ describe("deliverOutbox", () => {
     expect(updates[0]!.patch).toMatchObject({ status: "skipped_no_template" });
   });
 
-  it("leaves everything queued when no transport is configured", async () => {
-    vi.stubEnv("RESEND_API_KEY", "");
-    vi.stubEnv("EMAIL_SMTP_URL", "");
+  it.each([
+    ["RESEND_API_KEY", { RESEND_API_KEY: "", EMAIL_FROM_DOMAIN: "alumninetwork.ca" }],
+    ["EMAIL_FROM_DOMAIN", { RESEND_API_KEY: "re_test", EMAIL_FROM_DOMAIN: "" }],
+  ])("fails without %s, before claiming anything", async (name, env) => {
+    for (const [key, value] of Object.entries(env)) vi.stubEnv(key, value);
     const { client, rpc } = fakeClient([row()]);
-    const result = await deliverOutbox({ origin }, { client, now: () => now });
-    expect(result).toEqual({ sent: 0, retried: 0, failed: 0, skipped: 0 });
+    await expect(deliverOutbox({ origin }, { client, now: () => now })).rejects.toThrow(
+      `${name} is not set`,
+    );
     expect(rpc).not.toHaveBeenCalled();
+    vi.unstubAllEnvs();
+  });
+});
+
+describe("resendTransport", () => {
+  it("posts to Resend with the outbox id as idempotency key and the school's sender", async () => {
+    vi.stubEnv("RESEND_API_KEY", "re_test");
+    vi.stubEnv("EMAIL_FROM_DOMAIN", "alumninetwork.ca");
+    const fetchMock = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(Response.json({ id: "resend-1" }));
+    const send = resendTransport();
+    const result = await send({
+      id: "outbox-1",
+      to: "ari@example.test",
+      fromName: 'Herzliah "Alumni" Network',
+      replyTo: "alumni@herzliah.test",
+      subject: "s",
+      text: "t",
+      html: "h",
+    });
+    expect(result).toEqual({ providerId: "resend-1" });
+    const [url, init] = fetchMock.mock.calls[0]!;
+    expect(url).toBe(RESEND_API_URL);
+    expect((init!.headers as Record<string, string>)["Idempotency-Key"]).toBe("outbox-1");
+    expect(JSON.parse(String(init!.body))).toMatchObject({
+      from: '"Herzliah Alumni Network" <noreply@alumninetwork.ca>',
+      to: ["ari@example.test"],
+      reply_to: "alumni@herzliah.test",
+    });
+    fetchMock.mockRestore();
+    vi.unstubAllEnvs();
+  });
+
+  it("marks a rejected address as permanent and a server error as retryable", async () => {
+    vi.stubEnv("RESEND_API_KEY", "re_test");
+    vi.stubEnv("EMAIL_FROM_DOMAIN", "alumninetwork.ca");
+    const fetchMock = vi.spyOn(globalThis, "fetch");
+    const email = {
+      id: "o",
+      to: "a@b.test",
+      fromName: "n",
+      replyTo: null,
+      subject: "s",
+      text: "t",
+      html: "h",
+    };
+    fetchMock.mockResolvedValueOnce(new Response("{}", { status: 422 }));
+    await expect(resendTransport()(email)).rejects.toBeInstanceOf(PermanentEmailError);
+    fetchMock.mockResolvedValueOnce(new Response("{}", { status: 503 }));
+    const retryable = resendTransport()(email);
+    await expect(retryable).rejects.toThrow("Resend responded 503");
+    await expect(retryable).rejects.not.toBeInstanceOf(PermanentEmailError);
+    fetchMock.mockRestore();
     vi.unstubAllEnvs();
   });
 });
