@@ -93,7 +93,7 @@ select throws_ok(
 select is((select count(*)::int from public.role_permissions where role = 'alumni'), 1, 'alumni hold only directory.use');
 select is(
   (select count(*)::int from public.email_templates where institution_id is null),
-  16, 'platform defaults exist for 8 templates in EN and FR'
+  24, 'platform defaults exist for 12 templates in EN and FR'
 );
 
 select * from finish();

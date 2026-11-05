@@ -250,6 +250,10 @@ items:
       - **No double sends:** Resend's idempotency key is the outbox id. Suppressed recipients are skipped.
       - **Transport:** Mailpit locally and in CI, Resend in staging and production.
       - **Logs:** ids and statuses only.
+      Built with EML-08 (2026-11-05): lib/email/ (renderer, Resend or SMTP transport, worker), claim_email_outbox,
+      after() sends from the server actions and /api/cron/email. Resend is used once RESEND_API_KEY is set (EML-02).
+      Still open here: emailing staff invitations (the link is shown to copy for now, TODO(EML-01)), scheduling
+      the sweeper on Vercel, and showing failed sends to admins.
     ac:
       - Killing the worker mid-batch and re-running never double-sends.
       - Failures are visible to admins.
@@ -358,6 +362,36 @@ items:
       - Checked on staging before LCH-01, and on production before LCH-03.
     tests:
       - "Manual, with real inboxes, on staging then production. Mailpit covers the same flows locally and in CI (e2e/auth.spec.ts)."
+
+  - key: EML-08
+    title: "Status emails: request received, withdrawn, access suspended and reactivated"
+    state: closed
+    epic: EPIC-EML
+    labels: [type:feature, area:email, P1]
+    size: M
+    depends: [EML-01, EML-03]
+    reqs: [E1, E2]
+    related: [ONB-06]
+    summary: |
+      The school's decisions (approved, needs more info, declined) already queue an email. Every other status change
+      now tells the person too, through the same outbox, in their language, branded per school.
+      - **New templates:** access_received, access_withdrawn, membership_suspended, membership_reactivated, with
+        platform defaults in EN and FR. Schools that already exist get them as drafts; like every template, a
+        school admin approves them in /admin/templates before they are sent (DEC-06).
+      - **Request received:** request_access and reply_to_info_request queue access_received (status pending).
+      - **Withdrawn:** withdraw_access_request queues access_withdrawn (no UI yet, ONB-06; the cron sweeper sends it).
+      - **Suspended / reactivated:** set_profile_status queues membership_suspended on active → suspended and
+        membership_reactivated on suspended → active. The admin's reason is internal and never in the email.
+        Archived and deceased send nothing.
+      - **Sending:** server actions call the outbox worker with after(), so the email leaves right away.
+    ac:
+      - Each transition above queues exactly one email to the person, in their language, and it arrives in Mailpit.
+      - Archiving or marking a record deceased sends nothing.
+      - A school that has not approved a template gets the row as skipped_no_template, not a send.
+      - No email shows the suspension reason or any other internal note.
+    tests:
+      - "pgTAP: 02_rpcs asserts the template key queued by each transition, and nothing for archived or deceased."
+      - "Vitest: lib/email render (placeholders, escaping, EN/FR) and outbox (sent, retry backoff, failed after 5)."
 
   # ---------------------------------------------------------------- profile (WS3)
   - key: PRF-01

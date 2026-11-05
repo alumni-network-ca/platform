@@ -1,6 +1,7 @@
 "use server";
 
 import { requireAccess } from "@/lib/auth/account";
+import { sendQueuedEmails } from "@/lib/email/send";
 
 /** The applicant's answer to the school's question; the request goes back to the queue as pending. */
 export async function replyToInfoRequest(form: FormData) {
@@ -21,6 +22,7 @@ export async function replyToInfoRequest(form: FormData) {
       p_reply: reply,
     });
     if (error) throw new Error(`Could not send the answer: ${error.message}`);
+    await sendQueuedEmails(request.id);
   }
   return { error: false, next: "/account/pending" };
 }

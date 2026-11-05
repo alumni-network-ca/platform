@@ -82,7 +82,7 @@ select results_eq(
   'an alumnus reads only their own access request'
 );
 select is_empty('select id from public.audit_log', 'an alumnus cannot read the audit log');
-select is((select count(*)::int from public.email_templates), 16, 'an alumnus sees only the platform default texts');
+select is((select count(*)::int from public.email_templates), 24, 'an alumnus sees only the platform default texts');
 select is(
   (select max(total_count)::int from public.search_directory('aaaaaaaa-0000-4000-8000-000000000001')),
   200, 'the directory search returns the 200 published profiles'
@@ -134,7 +134,7 @@ select is(
   (select count(*)::int from public.search_directory('aaaaaaaa-0000-4000-8000-000000000001')),
   0, 'staff without an alumni profile cannot browse the directory'
 );
-select is((select count(*)::int from public.email_templates), 16, 'a reviewer cannot read the school''s templates');
+select is((select count(*)::int from public.email_templates), 24, 'a reviewer cannot read the school''s templates');
 select throws_ok(
   $$ select public.admin_update_profile('00000000-0000-4000-8000-000000000002', '{"city": "Paris"}') $$,
   '42501', null, 'a reviewer cannot edit records'
@@ -152,7 +152,7 @@ select is_empty(
   $$ select id from public.alumni_profiles where institution_id = 'aaaaaaaa-0000-4000-8000-000000000002' $$,
   'a school admin sees nothing of another school'
 );
-select is((select count(*)::int from public.email_templates), 32, 'a school admin reads the defaults and the school''s templates');
+select is((select count(*)::int from public.email_templates), 48, 'a school admin reads the defaults and the school''s templates');
 select throws_ok(
   $$ select public.admin_update_profile('22222222-2222-4222-8222-000000000003', '{"city": "Paris"}') $$,
   '42501', null, 'a school admin cannot edit another school''s record'

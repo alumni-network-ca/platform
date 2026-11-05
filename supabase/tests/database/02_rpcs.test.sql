@@ -191,6 +191,99 @@ select is_empty('select id from public.profile_contact_channels where type = ''l
   'a suspended alumnus loses directory access on the next request');
 reset role;
 
+-- Status emails (EML-08) ----------------------------------------------------------------------------
+select is(
+  (select string_agg(template_key || '/' || status::text, ',') from public.email_outbox
+   where to_email = 'alumni@herzliah.test'),
+  'membership_suspended/queued', 'suspending queues one suspension email, and no reason is stored with it'
+);
+select pg_temp.login('11111111-1111-4111-8111-000000000001');
+select lives_ok(
+  $$ select public.set_profile_status('00000000-0000-4000-8000-000000000001', 'active') $$,
+  'a school admin reactivates the record'
+);
+select lives_ok(
+  $$ select public.set_profile_status('00000000-0000-4000-8000-000000000001', 'archived', 'Asked to leave') $$,
+  'a school admin archives the record'
+);
+select lives_ok(
+  $$ select public.set_profile_status('00000000-0000-4000-8000-000000000001', 'active') $$,
+  'a school admin restores the archived record'
+);
+select lives_ok(
+  $$ select public.set_profile_status('00000000-0000-4000-8000-000000000001', 'deceased', 'Family told us') $$,
+  'a school admin marks the record deceased'
+);
+reset role;
+select is(
+  (select string_agg(template_key, ',' order by template_key) from public.email_outbox
+   where to_email = 'alumni@herzliah.test'),
+  'membership_reactivated,membership_suspended',
+  'only suspended → active sends a reactivation email; archiving, restoring an archive and deceased send nothing'
+);
+-- Back to suspended, as the tests below expect.
+select pg_temp.login('11111111-1111-4111-8111-000000000001');
+select public.set_profile_status('00000000-0000-4000-8000-000000000001', 'active');
+select public.set_profile_status('00000000-0000-4000-8000-000000000001', 'suspended', 'Reported abuse');
+reset role;
+
+select pg_temp.login('11111111-1111-4111-8111-000000000012');
+select lives_ok(
+  $$ select public.reply_to_info_request('33333333-3333-4333-8333-000000000003', 'Mrs. Cohen''s homeroom') $$,
+  'the applicant answers the school''s question'
+);
+select lives_ok(
+  $$ select public.withdraw_access_request('33333333-3333-4333-8333-000000000003') $$,
+  'the applicant then withdraws the request'
+);
+reset role;
+select is(
+  (select string_agg(template_key, ',' order by template_key) from public.email_outbox
+   where to_email = 'needsinfo@herzliah.test'),
+  'access_received,access_withdrawn', 'answering queues a received email, and withdrawing a withdrawn email'
+);
+
+select pg_temp.login('11111111-1111-4111-8111-000000000013');
+select lives_ok(
+  $$ select public.request_access('aaaaaaaa-0000-4000-8000-000000000001', 'Rob', 'Rejected', null, 2001, 'I graduated in 2001.') $$,
+  'a declined applicant sends a new request'
+);
+reset role;
+select is(
+  (select string_agg(template_key || '/' || status::text, ',') from public.email_outbox
+   where to_email = 'rejected@herzliah.test'),
+  'access_received/queued', 'a new request queues a received email'
+);
+select is(
+  (select count(*)::int from public.email_outbox
+   where to_email = 'pending@herzliah.test' and template_key = 'access_received'),
+  0, 'editing an open request sends nothing'
+);
+
+-- The outbox worker's claim (EML-01) ------------------------------------------------------------------
+select pg_temp.login('11111111-1111-4111-8111-000000000001');
+select throws_ok(
+  $$ select * from public.claim_email_outbox(array['access_received']) $$,
+  '42501', null, 'a school admin cannot claim outbox rows'
+);
+reset role;
+set local role service_role;
+select is(
+  (select string_agg(to_email || '/' || attempts::text, ',' order by to_email)
+   from public.claim_email_outbox(array['access_received'], '33333333-3333-4333-8333-000000000003')),
+  'needsinfo@herzliah.test/1', 'the worker claims the queued rows of one event, for the templates it can send'
+);
+select is_empty(
+  $$ select * from public.claim_email_outbox(array['access_received'], '33333333-3333-4333-8333-000000000003') $$,
+  'a claimed row is not claimed again while it is being sent'
+);
+select is(
+  (select status::text from public.email_outbox
+   where to_email = 'needsinfo@herzliah.test' and template_key = 'access_withdrawn'),
+  'queued', 'templates the worker was not asked about stay queued'
+);
+reset role;
+
 -- Staff management ----------------------------------------------------------------------------------
 select pg_temp.login('11111111-1111-4111-8111-000000000001');
 select throws_ok(
