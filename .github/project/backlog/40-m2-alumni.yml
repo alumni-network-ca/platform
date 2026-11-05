@@ -90,6 +90,7 @@ items:
 
   - key: ONB-05
     title: "Onboarding wizard v2 with an atomic save_my_profile"
+    state: closed
     epic: EPIC-ONB
     labels: [type:feature, area:onboarding, area:profile, P0, launch-blocker]
     size: L
@@ -266,6 +267,7 @@ items:
 
   - key: EML-03
     title: "Per-school email templates in the database (EN/FR), with defaults and approval"
+    state: closed
     epic: EPIC-EML
     labels: [type:feature, area:email, area:i18n, P0, launch-blocker]
     size: L
@@ -356,18 +358,22 @@ items:
 
   # ---------------------------------------------------------------- profile (WS3)
   - key: PRF-01
-    title: "Profile field schema and validation (Zod, EN/FR errors)"
+    title: "Profile field schema and validation (EN/FR errors)"
+    state: closed
     epic: EPIC-PRF
     labels: [type:feature, area:profile, P0, launch-blocker]
     size: S
     depends: [DEC-02, FND-04]
     reqs: [F1, F2]
-    summary: Shared Zod schemas for profile, education, experience, channels and preferences. The same rules apply in save_my_profile (the SQL checks). Errors are localized.
+    summary: |
+      Shared validation for profile, education, experience, channels and preferences (lib/profile/fields.ts, plain
+      functions; Zod was left out, see PR 246). The same rules apply in save_my_profile (the SQL checks). Errors are localized.
     ac:
       - Invalid input is rejected server-side even when the client is bypassed.
 
   - key: PRF-02
     title: "My profile editor v2 (/me)"
+    state: closed
     epic: EPIC-PRF
     labels: [type:feature, area:profile, P0, launch-blocker]
     size: L
@@ -384,22 +390,25 @@ items:
       - /me redirects to /onboarding only when the ONB-05 check succeeds and says incomplete; a failed query shows an error, so the two pages can't redirect to each other in a loop.
 
   - key: PRF-03
-    title: "Contact channels editor (at least one to publish)"
+    title: "Contact channels editor"
+    state: closed
     epic: EPIC-PRF
     labels: [type:feature, area:profile, area:contact, P0, launch-blocker]
     size: M
-    depends: [PRF-01, DEC-03]
+    depends: [PRF-01, DEC-02, DEC-03]
     reqs: [F10, S5]
     adr: "0006"
     summary: |
       Per-channel value plus a public toggle: email (defaults to the account email, can differ), phone (E.164),
-      LinkedIn, Facebook, Instagram and website (https URLs only, validated per platform).
+      LinkedIn, Facebook, Instagram and website (https URLs only, validated per platform). Channels are optional
+      (DEC-02): a profile can be published with none and then shows "No contact details shared".
     ac:
-      - You can't publish with zero public channels.
-      - Unpublishing the last channel unpublishes the profile, with a warning.
+      - A profile with no public channels can be published and shows "No contact details shared".
+      - Email and phone values are never sent to other alumni until revealed through initiate_contact.
 
   - key: PRF-04
     title: "Networking preferences (offer types)"
+    state: closed
     epic: EPIC-PRF
     labels: [type:feature, area:profile, P1, launch-blocker]
     size: S
@@ -414,6 +423,7 @@ items:
 
   - key: PRF-05
     title: "Publish / unpublish with explicit opt-in and consent record"
+    state: closed
     epic: EPIC-PRF
     labels: [type:feature, area:profile, P0, launch-blocker]
     size: S
@@ -471,6 +481,7 @@ items:
 
   - key: DIR-02
     title: "Directory UI: filters, chips, reset, empty states, pagination, mobile"
+    state: closed
     epic: EPIC-DIR
     labels: [type:feature, area:directory, area:ui, P0, launch-blocker]
     size: L
@@ -487,6 +498,7 @@ items:
 
   - key: DIR-03
     title: "Profile page v2"
+    state: closed
     epic: EPIC-DIR
     labels: [type:feature, area:directory, P0, launch-blocker]
     size: M
@@ -529,6 +541,7 @@ items:
 
   - key: DIR-06
     title: "Alumni home page (/home)"
+    state: closed
     epic: EPIC-DIR
     labels: [type:feature, area:directory, P1]
     size: M
@@ -549,6 +562,7 @@ items:
   # ---------------------------------------------------------------- contact (WS3)
   - key: CON-01
     title: "initiate_contact RPC: checks, reveal, dedupe, contact_events"
+    state: closed
     epic: EPIC-CON
     labels: [type:feature, area:contact, area:db, P0, launch-blocker]
     size: M
@@ -570,6 +584,7 @@ items:
 
   - key: CON-02
     title: "Contact UI on profiles"
+    state: closed
     epic: EPIC-CON
     labels: [type:feature, area:contact, area:ui, P1, launch-blocker]
     size: S
