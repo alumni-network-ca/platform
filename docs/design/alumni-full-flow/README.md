@@ -44,7 +44,7 @@ Two new rows on the **School admin** page take a staff member from the invitatio
 
 | Design | Purpose |
 |---|---|
-| `AdmStaff` (A4.1, revised) | Team and Invitations tables; **Invite a staff member** opens A5.1. Invitations show sent, expired and revoked states. |
+| `AdmStaff` (A4.1, revised) | Team and Invitations tables; **Invite a staff member** opens A5.1. Invitations show sent, expired and revoked states. Each row's actions sit in a "⋯" menu (November 4, repo copy and `StaffInviteSent`). |
 | `StaffInviteNew` (A5.1) | Invited email plus a choice between Reviewer and School admin, each listing what it can and can't do. |
 | `StaffInviteSent` (A5.2) | The Staff page after sending: "Invitation emailed" banner, or the copy-link fallback while email delivery is missing (tweak `delivery`). |
 | `StaffInviteEmail` (A5.3) | The invitation email: inviter, role, one-time link, expiry date. |

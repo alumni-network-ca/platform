@@ -17,9 +17,9 @@ stored:
 
 | State | When | Admin sees (A4.1) | Invitee sees (A6) |
 |---|---|---|---|
-| open | not accepted, not revoked, `expires_at` in the future | "Sent" · "{sent} · expires {date}" · Resend, Copy link, Revoke | A6.1 or A6.4 |
-| expired | not accepted, not revoked, `expires_at` passed | "Expired" · "{sent} · expired {date}" · Send a new invitation | A6.7 `expired` |
-| revoked | `revoked_at` set | "Revoked" (greyed) · "Revoked by {name}" · no action | A6.7 `revoked` |
+| open | not accepted, not revoked, `expires_at` in the future | "Sent" · "{sent} · expires {date}" · ⋯ menu: Resend invitation, Revoke | A6.1 or A6.4 |
+| expired | not accepted, not revoked, `expires_at` passed | "Expired" · "{sent} · expired {date}" · ⋯ menu: Send a new invitation | A6.7 `expired` |
+| revoked | `revoked_at` set | "Revoked" (greyed) · "Revoked by {name}" · no menu | A6.7 `revoked` |
 | accepted | `accepted_at` set | moves to the Team table | A6.7 `used` |
 | unknown link | no row matches the token hash (typo, or replaced by a newer link) | — | A6.7 `invalid` |
 
@@ -35,9 +35,14 @@ see the staff list there read-only; those invitees follow the same A6 screens. A
 **A4.1 Staff** (`/admin/staff`)
 - Title "Staff", intro "People at {School} who can manage the network.", and an **Invite a staff member** button
   (primary, top right, wraps under the title on phones) → `/admin/staff/invite`. No inline invite form.
-- **Team** table: Person (name + email; "(you)"), Role, Status chip ("Active"), actions (Change role, Remove;
-  the last school admin shows "Only admin — can't remove").
-- **Invitations** table: Invited address + "Invited by {name}", Role, Status chip + date line, actions per §1.
+- **Team** table: Person (name + email; "(you)"), Role as plain text, Status chip ("Active"), and a "⋯" menu
+  per row (revised November 4, 2026): **Change role to {other role}** and **Remove** (red). Both ask to confirm.
+  The last school admin has no menu and shows "Only admin — can't remove".
+- **Invitations** table: Invited address + "Invited by {name}", Role, Status chip + date line, and the same "⋯"
+  menu with the actions per §1. Revoke asks to confirm. Resend's new link shows in the row under the menu, with
+  Copy link.
+- Row menus: the button is named "Actions for {person}"; the Actions column header is visually hidden. The menu
+  is a WAI-ARIA menu button like the account menu (arrows, Home, End, Escape).
   Footnote: "Resend emails a fresh link and restarts the 7 days; the previous link stops working. Accepted
   invitations move to Team."
 - Keep the two role cards and the last-admin note at the bottom.

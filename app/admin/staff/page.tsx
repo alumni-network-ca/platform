@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { requireStaff } from "@/lib/auth/staff";
 import { adminCopy, dateLabel, read } from "@/lib/admin/data";
-import { ActionForm } from "@/components/admin/ActionForm";
+import { RowMenu } from "@/components/admin/RowMenu";
 import { format } from "@/lib/i18n";
 import { manageStaff } from "./actions";
 
@@ -51,65 +51,53 @@ export default async function Staff() {
               <th>{t.name}</th>
               <th>{t.role}</th>
               <th>{t.status}</th>
-              <th>{t.actions}</th>
+              <th className="cellActions">
+                <span className="srOnly">{t.actions}</span>
+              </th>
             </tr>
           </thead>
           <tbody>
             {staff.map((s) => {
               const last = s.role === "school_admin" && admins === 1;
+              const name = s.name || s.email || "";
+              const other = s.role === "school_admin" ? "reviewer" : "school_admin";
               return (
                 <tr key={s.user_id}>
                   <td>
                     <strong>
-                      {s.name || s.email} {s.user_id === user.id ? t.you : ""}
+                      {name} {s.user_id === user.id ? t.you : ""}
                     </strong>
                     {s.name && <span className="cellSub">{s.email}</span>}
                   </td>
-                  <td>
-                    <ActionForm
-                      action={manageStaff}
-                      label={t.changeRole}
-                      disabled={last}
-                      t={t}
-                      variant="light"
-                      compact
-                    >
-                      <input type="hidden" name="operation" value="role" />
-                      <input type="hidden" name="user" value={s.user_id} />
-                      <label className="field">
-                        {t.role}
-                        <select
-                          className="input"
-                          name="role"
-                          aria-label={t.role + " · " + (s.name || s.email)}
-                          defaultValue={s.role}
-                          disabled={last}
-                        >
-                          <option value="reviewer">{t.reviewer}</option>
-                          <option value="school_admin">{t.schoolAdmin}</option>
-                        </select>
-                      </label>
-                    </ActionForm>
-                  </td>
+                  <td>{roleLabel(s.role)}</td>
                   <td>
                     <span className="tag tagGood">{t.active}</span>
                     <span className="cellSub">{date(s.joined_at)}</span>
                   </td>
-                  <td>
+                  <td className="cellActions">
                     {last ? (
                       <p className="fieldHint">{t.onlyAdmin}</p>
                     ) : (
-                      <ActionForm
+                      <RowMenu
                         action={manageStaff}
-                        label={t.remove}
+                        label={format(t.actionsFor, { name })}
                         t={t}
-                        variant="danger"
-                        compact
-                        confirm={t.confirmRemove}
-                      >
-                        <input type="hidden" name="operation" value="remove" />
-                        <input type="hidden" name="user" value={s.user_id} />
-                      </ActionForm>
+                        items={[
+                          {
+                            key: "role",
+                            label: format(t.changeRoleTo, { role: roleLabel(other) }),
+                            fields: { operation: "role", user: s.user_id, role: other },
+                            confirm: format(t.confirmRoleChange, { name, role: roleLabel(other) }),
+                          },
+                          {
+                            key: "remove",
+                            label: t.remove,
+                            fields: { operation: "remove", user: s.user_id },
+                            danger: true,
+                            confirm: t.confirmRemove,
+                          },
+                        ]}
+                      />
                     )}
                   </td>
                 </tr>
@@ -129,7 +117,9 @@ export default async function Staff() {
                 <th>{t.invitedAddress}</th>
                 <th>{t.role}</th>
                 <th>{t.status}</th>
-                <th>{t.actions}</th>
+                <th className="cellActions">
+                  <span className="srOnly">{t.actions}</span>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -179,42 +169,37 @@ export default async function Staff() {
                         </>
                       )}
                     </td>
-                    <td>
-                      {state === "open" && (
-                        <div className="panelGrid">
-                          <ActionForm
-                            action={manageStaff}
-                            label={t.resend}
-                            t={t}
-                            variant="light"
-                            compact
-                          >
-                            <input type="hidden" name="operation" value="resend" />
-                            <input type="hidden" name="invitation" value={inv.id} />
-                          </ActionForm>
-                          <ActionForm
-                            action={manageStaff}
-                            label={t.revoke}
-                            t={t}
-                            variant="danger"
-                            compact
-                          >
-                            <input type="hidden" name="operation" value="revoke" />
-                            <input type="hidden" name="invitation" value={inv.id} />
-                          </ActionForm>
-                        </div>
-                      )}
-                      {state === "expired" && (
-                        <ActionForm
+                    <td className="cellActions">
+                      {state !== "revoked" && (
+                        <RowMenu
                           action={manageStaff}
-                          label={t.sendNewInvitation}
+                          label={format(t.actionsFor, { name: inv.email })}
                           t={t}
-                          variant="light"
-                          compact
-                        >
-                          <input type="hidden" name="operation" value="reinvite" />
-                          <input type="hidden" name="invitation" value={inv.id} />
-                        </ActionForm>
+                          items={
+                            state === "open"
+                              ? [
+                                  {
+                                    key: "resend",
+                                    label: t.resend,
+                                    fields: { operation: "resend", invitation: inv.id },
+                                  },
+                                  {
+                                    key: "revoke",
+                                    label: t.revoke,
+                                    fields: { operation: "revoke", invitation: inv.id },
+                                    danger: true,
+                                    confirm: format(t.confirmRevoke, { email: inv.email }),
+                                  },
+                                ]
+                              : [
+                                  {
+                                    key: "reinvite",
+                                    label: t.sendNewInvitation,
+                                    fields: { operation: "reinvite", invitation: inv.id },
+                                  },
+                                ]
+                          }
+                        />
                       )}
                     </td>
                   </tr>
