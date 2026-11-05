@@ -17,3 +17,6 @@ next-env.d.ts
 !.env.example
 # Dev settings for the shared cloud dev database: a URL and a publishable key, no secrets.
 !.env.development
+
+# Demo recordings (npm run demo -- --record)
+scripts/demo/videos/
