@@ -20,6 +20,7 @@ export type Database = {
           maiden_name: string | null;
           note: string | null;
           profile_id: string | null;
+          school_student_id: string | null;
           source: Database["public"]["Enums"]["request_source"];
           status: Database["public"]["Enums"]["request_status"];
           updated_at: string;
@@ -42,6 +43,7 @@ export type Database = {
           maiden_name?: string | null;
           note?: string | null;
           profile_id?: string | null;
+          school_student_id?: string | null;
           source?: Database["public"]["Enums"]["request_source"];
           status?: Database["public"]["Enums"]["request_status"];
           updated_at?: string;
@@ -63,6 +65,7 @@ export type Database = {
           maiden_name?: string | null;
           note?: string | null;
           profile_id?: string | null;
+          school_student_id?: string | null;
           source?: Database["public"]["Enums"]["request_source"];
           status?: Database["public"]["Enums"]["request_status"];
           updated_at?: string;
@@ -1245,9 +1248,11 @@ export type Database = {
           claimed: boolean;
           first_name: string;
           grad_year: number;
+          id_match: boolean;
           last_name: string;
           profile_id: string;
           request_id: string;
+          school_student_id: string;
           score: number;
         }[];
       };
@@ -1370,6 +1375,17 @@ export type Database = {
       is_member: { Args: { p_inst: string }; Returns: boolean };
       is_system_admin: { Args: Record<PropertyKey, never>; Returns: boolean };
       issue_staff_invitation_link: { Args: { p_invitation: string }; Returns: string };
+      list_school_staff: {
+        Args: { p_inst: string };
+        Returns: {
+          email: string;
+          joined_at: string;
+          name: string;
+          role: Database["public"]["Enums"]["member_role"];
+          status: Database["public"]["Enums"]["member_status"];
+          user_id: string;
+        }[];
+      };
       log_audit: {
         Args: {
           p_action: string;
@@ -1386,6 +1402,7 @@ export type Database = {
         Args: { p_inst: string };
         Returns: Database["public"]["Enums"]["member_role"];
       };
+      normalize_student_id: { Args: { p_value: string }; Returns: string };
       owns_profile: { Args: { p_profile: string }; Returns: boolean };
       permitted_institutions: { Args: { p_perm: string }; Returns: string[] };
       person_name: { Args: { p_inst: string; p_user: string }; Returns: string };
@@ -1409,11 +1426,30 @@ export type Database = {
         };
         Returns: string;
       };
+      platform_invite_staff: {
+        Args: {
+          p_email: string;
+          p_inst: string;
+          p_role: Database["public"]["Enums"]["member_role"];
+        };
+        Returns: string;
+      };
       platform_open_grant: {
         Args: { p_hours?: number; p_inst: string; p_reason: string };
         Returns: string;
       };
       platform_revoke_grant: { Args: { p_grant: string }; Returns: undefined };
+      platform_school_staff: {
+        Args: { p_inst: string };
+        Returns: {
+          email: string;
+          joined_at: string;
+          name: string;
+          role: Database["public"]["Enums"]["member_role"];
+          status: Database["public"]["Enums"]["member_status"];
+          user_id: string;
+        }[];
+      };
       platform_school_summaries: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -1460,6 +1496,7 @@ export type Database = {
           p_last_name: string;
           p_maiden_name: string;
           p_note: string;
+          p_school_student_id?: string;
         };
         Returns: undefined;
       };

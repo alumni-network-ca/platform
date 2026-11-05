@@ -21,7 +21,7 @@ export default async function AccountStatePage({ params }: { params: Promise<{ s
   const fr = locale === "fr";
   const { data: request, error } = await supabase
     .from("access_requests")
-    .select("first_name, last_name, grad_year, info_request, decision_reason")
+    .select("first_name, last_name, grad_year, school_student_id, info_request, decision_reason")
     .eq("institution_id", school.id)
     .eq("user_id", user.id)
     .order("created_at", { ascending: false })
@@ -113,6 +113,8 @@ export default async function AccountStatePage({ params }: { params: Promise<{ s
                     <p>
                       {request?.first_name} {request?.last_name} · {fr ? "Promotion" : "Class of"}{" "}
                       {request?.grad_year}
+                      {request?.school_student_id &&
+                        ` · ${fr ? "Matricule" : "Student ID"} ${request.school_student_id}`}
                     </p>
                   </div>
                 </li>

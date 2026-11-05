@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Browser, type Page } from "@playwright/test";
 import { blockingViolations } from "./fixtures/a11y";
 import { accounts, LOCAL_PASSWORD } from "./fixtures/accounts";
 import { authLinkFor, newAddress } from "./fixtures/mailpit";
@@ -20,6 +20,43 @@ async function createSchool(page: Page, baseURL: string, name: string) {
   await expect(page).toHaveURL(root(baseURL, `/console/schools/${slug}`));
   await expect(page.getByRole("heading", { level: 1, name })).toBeVisible();
   return slug;
+}
+
+/** A new invitee opens the link, creates a staff account with the invited address, confirms it and accepts. */
+async function acceptAsNewStaff(
+  browser: Browser,
+  baseURL: string,
+  slug: string,
+  link: string,
+  email: string,
+  firstName: string,
+) {
+  const theirs = await browser.newContext();
+  const invited = await theirs.newPage();
+  await invited.goto(link);
+  await expect(invited.getByRole("heading", { level: 1 })).toContainText(
+    "Alumni Network invited you to join the",
+  );
+  await invited.getByRole("link", { name: "Create my staff account", exact: true }).click();
+  await expect(invited.getByLabel("Email address")).toHaveValue(email);
+  await invited.getByLabel("First name").fill(firstName);
+  await invited.getByLabel("Last name").fill("Staff");
+  await invited.getByLabel("Create a password", { exact: true }).fill(LOCAL_PASSWORD);
+  await invited.getByLabel("Confirm password", { exact: true }).fill(LOCAL_PASSWORD);
+  await invited.getByRole("button", { name: "Create my account", exact: true }).click();
+  await expect(
+    invited.getByRole("heading", { name: "Check your inbox", exact: true }),
+  ).toBeVisible();
+  await invited.goto(await authLinkFor(email, "signup"));
+  await expect(invited).toHaveURL(link);
+  await expect(invited.getByText("Matches the invitation", { exact: true })).toBeVisible();
+  expect(await blockingViolations(invited)).toEqual([]);
+  await invited.getByRole("button", { name: "Accept and continue" }).click();
+  await expect(invited).toHaveURL(addressOf(baseURL, slug, "/admin?welcome=1"));
+  await expect(
+    invited.getByRole("heading", { name: `Welcome to the team, ${firstName}`, exact: true }),
+  ).toBeVisible();
+  return { context: theirs, page: invited };
 }
 
 test.describe("platform console", () => {
@@ -62,41 +99,52 @@ test.describe("platform console", () => {
 
     const head = newAddress("head");
     await page.getByLabel("Email", { exact: true }).fill(head);
-    await page.getByRole("button", { name: "Invite school admin" }).click();
+    await expect(page.getByLabel("Role")).toHaveValue("school_admin");
+    await page.getByRole("button", { name: "Send invitation" }).click();
     const link = await page.getByLabel("Invitation link").inputValue();
     expect(link.startsWith(addressOf(baseURL!, slug, "/staff/accept?token="))).toBe(true);
 
     // A new invitee sees the invitation first, creates a password account with the invited address,
     // confirms their email, then resumes the invitation (docs/design/staff-invite.md §3).
-    const theirs = await browser.newContext();
-    const invited = await theirs.newPage();
-    await invited.goto(link);
-    await expect(invited.getByRole("heading", { level: 1 })).toContainText(
-      "Alumni Network invited you to join the",
-    );
-    await invited.getByRole("link", { name: "Create my staff account", exact: true }).click();
-    await expect(invited.getByLabel("Email address")).toHaveValue(head);
-    await invited.getByLabel("First name").fill("Hannah");
-    await invited.getByLabel("Last name").fill("Head");
-    await invited.getByLabel("Create a password", { exact: true }).fill(LOCAL_PASSWORD);
-    await invited.getByLabel("Confirm password", { exact: true }).fill(LOCAL_PASSWORD);
-    await invited.getByRole("button", { name: "Create my account", exact: true }).click();
-    await expect(
-      invited.getByRole("heading", { name: "Check your inbox", exact: true }),
-    ).toBeVisible();
-    await invited.goto(await authLinkFor(head, "signup"));
-    await expect(invited).toHaveURL(link);
-    await expect(invited.getByText("Matches the invitation", { exact: true })).toBeVisible();
-    expect(await blockingViolations(invited)).toEqual([]);
-    await invited.getByRole("button", { name: "Accept and continue" }).click();
-    await expect(invited).toHaveURL(addressOf(baseURL!, slug, "/admin?welcome=1"));
-    await expect(
-      invited.getByRole("heading", { name: "Welcome to the team, Hannah", exact: true }),
-    ).toBeVisible();
-    await theirs.close();
+    const theirs = await acceptAsNewStaff(browser, baseURL!, slug, link, head, "Hannah");
+    await theirs.context.close();
 
     await page.reload();
-    await expect(page.getByRole("row", { name: new RegExp(head) })).toContainText("Accepted");
+    const invitations = page.getByRole("table", { name: "Invitations" });
+    await expect(invitations.getByRole("row", { name: new RegExp(head) })).toContainText(
+      "Accepted",
+    );
+    const team = page.getByRole("table", { name: "Current staff" });
+    await expect(team.getByRole("row", { name: new RegExp(head) })).toContainText("School admin");
+  });
+
+  test("a platform admin invites a reviewer, who can't manage staff", async ({
+    page,
+    context,
+    browser,
+    baseURL,
+  }) => {
+    await signInAs(context, root(baseURL!), accounts.system);
+    const slug = await createSchool(page, baseURL!, "Birchwood College");
+
+    const reviewer = newAddress("reviewer");
+    await page.getByLabel("Email", { exact: true }).fill(reviewer);
+    await page.getByLabel("Role").selectOption("reviewer");
+    await page.getByRole("button", { name: "Send invitation" }).click();
+    await expect(page.getByRole("status")).toContainText(
+      `Send this link to ${reviewer} (reviewer)`,
+    );
+    const link = await page.getByLabel("Invitation link").inputValue();
+
+    const theirs = await acceptAsNewStaff(browser, baseURL!, slug, link, reviewer, "Rita");
+    const staffPage = await theirs.page.goto(addressOf(baseURL!, slug, "/admin/staff"));
+    expect(staffPage?.status()).toBe(403);
+    await theirs.context.close();
+
+    await page.reload();
+    const team = page.getByRole("table", { name: "Current staff" });
+    await expect(team.getByRole("row", { name: /Rita Staff/ })).toContainText("Reviewer");
+    expect(await blockingViolations(page)).toEqual([]);
   });
 
   test("a platform admin suspends and reactivates a school", async ({ page, context, baseURL }) => {

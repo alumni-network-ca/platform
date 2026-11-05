@@ -23,6 +23,19 @@ Implemented flow: **Join now → Create account → Confirm email by link → Re
 | `Approved`, `AccessApproved` | School approval notification and the transition to the existing onboarding designs. |
 | `SignIn` | Existing-account email/password sign-in only. In the prototype, ordinary sign-in previews a pending applicant; the approval email previews an approved applicant. The app must route from the authenticated account state. |
 
+## Student ID · November 4, 2026
+
+The cloud canvas and these copies were changed together (ONB-09). The ID is optional, self-reported and a matching hint only; a reviewer still approves every request.
+
+| Design | Change |
+|---|---|
+| `Request`, `RequestEdit` | Optional **Student ID** field after the graduation year, with the hint "If you remember it. It only helps the school find you faster." |
+| `Pending` | "Your request" lists the student ID. |
+| `AdmReview` | "What they told us" lists the student ID; the suggested record shows its own ID with a **Same student ID** chip. Tweak `idState`: `match`, `different` (amber "Different student ID: check before linking" chip) or `none` ("Not given"). |
+| `SignupReview` | Applicant's student ID in the request table; "Same student ID" chip on the school record. |
+| `AdmQueue` | An ID match reads "Dana Benhamou, 2014 · same student ID" in the possible-match column. |
+| `AdmRoster` | Search placeholder: "Name, name at school, email or student ID". |
+
 ## Staff invitation flow · November 2, 2026
 
 Drawn on the cloud canvas and copied here. The cloud canvas now also holds the November 1 revision above, so the two copies match again. Spec: [`../staff-invite.md`](../staff-invite.md).
@@ -75,7 +88,7 @@ Signed-out pages use the `guest` role: FR, Sign in and the proposed Join now act
 |---|---|---|---|
 | **Built** · S1.1 Console: all schools (`SaSchools`) | `/console` | SA-01 | `platform_school_summaries()`, counts only |
 | **Built** · S1.2 Create a school (`SaCreate`) | `/console/schools/new` | SA-01 | `platform_create_school` with branding (`clean_branding`) |
-| **Built** except the checklist · S1.3 School setup: first admin, launch checklist (`SaSetup`) | `/console/schools/[slug]` | SA-01, SA-02, SA-05 | `platform_appoint_school_admin`, `issue_staff_invitation_link`, `revoke_staff_invitation`. "Open sign-ups" needs the "in setup" status (SA-05) |
+| **Built** except the checklist · S1.3 School setup: staff invitations (school admin or reviewer), read-only staff list, launch checklist (`SaSetup`) | `/console/schools/[slug]` | SA-01, SA-02, SA-05 | `platform_invite_staff`, `platform_school_staff`, `issue_staff_invitation_link`, `revoke_staff_invitation`. "Open sign-ups" needs the "in setup" status (SA-05) |
 | **Built** · S2.1 Support access (`SaSupport`) | `/console/support` | FND-13 (done), SA-01 | `platform_open_grant`, `platform_revoke_grant` |
 | **Built** · S2.2 Suspend or offboard (`SaSuspend`) | `/console/schools/[slug]/status` | SA-01, SA-03 | `platform_set_school_status`. Offboarding waits for the retention job (DEC-08, SA-05) |
 | S2.3 Platform health (`SaHealth`) | `/console/health` | SA-04 | needs job heartbeats (FND-17) and the email outbox worker (EML-01) |

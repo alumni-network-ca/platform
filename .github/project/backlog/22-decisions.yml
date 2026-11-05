@@ -29,7 +29,7 @@ items:
     title: "Decision: profile field list, required fields and visibility"
     labels: [type:decision, area:profile, P0, launch-blocker, needs-noah]
     reqs: [F1, F2, F7, S5]
-    outcome: "Decided 2026-10-26: the proposal is approved, except contact channels are optional. A profile can be published with none and then shows \"No contact details shared\"."
+    outcome: "Decided 2026-10-26: the proposal is approved, except contact channels are optional. A profile can be published with none and then shows \"No contact details shared\". Amended 2026-11-04 (ONB-09): the school student ID is visible to staff and the owner, since the owner typed it and may access their own data (Law 25)."
     summary: |
       Proposal:
       - **Required:** first and last name, graduation year, city/country, at least one contact channel to publish.
@@ -64,7 +64,7 @@ items:
     labels: [type:decision, area:admin, P0, launch-blocker, needs-noah]
     reqs: [F13, MT5]
     adr: "0005"
-    outcome: "Decided 2026-10-26: no Owner role. Roles are system admin (Gab, Noah; platform level, time-boxed audited data access), school admin (everything in the school, including staff and settings; several per school) and reviewer (view and approve/reject/needs-info only)."
+    outcome: "Decided 2026-10-26: no Owner role. Roles are system admin (Gab, Noah; platform level, time-boxed audited data access), school admin (everything in the school, including staff and settings; several per school) and reviewer (view and approve/reject/needs-info only). Amended 2026-11-04: system admins invite staff of either role from the console and read each school's staff list (never alumni); role changes and removals stay with the school."
     summary: |
       Recommendation: **owner** (everything, including staff and settings), **admin** (records, invites, import, export,
       approvals) and **reviewer** (view and approve/reject only, with no export and no role changes). Platform admins

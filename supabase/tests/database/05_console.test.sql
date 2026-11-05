@@ -135,5 +135,59 @@ select throws_ok($$ select public.issue_staff_invitation_link(current_setting('t
   'a revoked invitation has no link');
 reset role;
 
+-- Platform admins invite either staff role and read the staff list (ADR 0005, amended 2026-11-04) ------------
+select pg_temp.login('11111111-1111-4111-8111-000000000001'); -- a school admin, even for their own school
+select throws_ok($$ select public.platform_invite_staff('aaaaaaaa-0000-4000-8000-000000000001', 'x@herzliah.test', 'reviewer') $$,
+  '42501', null, 'a school admin cannot use the console invitation');
+select throws_ok($$ select * from public.platform_school_staff('aaaaaaaa-0000-4000-8000-000000000001') $$,
+  '42501', null, 'a school admin cannot use the console staff list');
+reset role;
+select pg_temp.login('11111111-1111-4111-8111-000000000004'); -- a reviewer
+select throws_ok($$ select public.platform_invite_staff('aaaaaaaa-0000-4000-8000-000000000001', 'x@herzliah.test', 'school_admin') $$,
+  '42501', null, 'a reviewer cannot use the console invitation');
+reset role;
+select pg_temp.login('11111111-1111-4111-8111-000000000011'); -- another school's admin by now
+select throws_ok($$ select * from public.platform_school_staff('aaaaaaaa-0000-4000-8000-000000000001') $$,
+  '42501', null, 'an outsider cannot read a school''s staff');
+reset role;
+
+select pg_temp.login('11111111-1111-4111-8111-000000000006');
+select throws_ok($$ select public.platform_invite_staff('aaaaaaaa-0000-4000-8000-000000000001', 'x@herzliah.test', 'alumni') $$,
+  '22023', null, 'the console only invites staff roles');
+select results_eq(
+  $$ select user_id, role::text from public.platform_school_staff('aaaaaaaa-0000-4000-8000-000000000001') order by user_id $$,
+  $$ values ('11111111-1111-4111-8111-000000000001'::uuid, 'school_admin'), ('11111111-1111-4111-8111-000000000004'::uuid, 'reviewer') $$,
+  'a system admin reads the school''s staff, and no alumni'
+);
+select set_config('test.console_reviewer', public.platform_invite_staff(
+  'aaaaaaaa-0000-4000-8000-000000000001', 'Outsider@AlumniNetwork.test', 'reviewer')::text, true);
+select set_config('test.console_reviewer_token', public.issue_staff_invitation_link(current_setting('test.console_reviewer')::uuid), true);
+reset role;
+select is(
+  (select email || '/' || role::text from public.staff_invitations where id = current_setting('test.console_reviewer')::uuid),
+  'outsider@alumninetwork.test/reviewer', 'the invitation is for a reviewer, with the email lowercased'
+);
+select is(
+  (select actor_kind::text from public.audit_log where action = 'staff.invited' and target_id = current_setting('test.console_reviewer')),
+  'system_admin', 'the school''s audit log shows a platform admin sent it'
+);
+
+select pg_temp.login('11111111-1111-4111-8111-000000000011');
+select is(public.accept_staff_invitation(current_setting('test.console_reviewer_token')), 'aaaaaaaa-0000-4000-8000-000000000001'::uuid,
+  'the invited person accepts');
+reset role;
+select is(
+  (select role::text from public.institution_memberships
+   where institution_id = 'aaaaaaaa-0000-4000-8000-000000000001' and user_id = '11111111-1111-4111-8111-000000000011' and status = 'active'),
+  'reviewer', 'and becomes a reviewer'
+);
+select pg_temp.login('11111111-1111-4111-8111-000000000006');
+select ok(
+  exists(select 1 from public.platform_school_staff('aaaaaaaa-0000-4000-8000-000000000001')
+         where user_id = '11111111-1111-4111-8111-000000000011' and role = 'reviewer'),
+  'the console staff list shows the new reviewer'
+);
+reset role;
+
 select * from finish();
 rollback;

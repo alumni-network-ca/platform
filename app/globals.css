@@ -699,6 +699,10 @@ textarea:focus {
 .authForm .microcopy {
   margin: 0;
 }
+/* A hint under the field above it: the form's 16px gap less 9px matches the label's own 7px gap. */
+.authForm .joinFieldHint {
+  margin-top: -9px;
+}
 /* Six-box code entry (components/CodeInput.tsx): the real input lies invisible over the boxes. */
 .codeInput {
   position: relative;
@@ -1190,6 +1194,11 @@ textarea:focus {
 .panel p {
   margin: 0;
 }
+.panel h3 {
+  margin: 6px 0 0;
+  font-size: 15px;
+  font-weight: 700;
+}
 .panelWarn {
   background: #fff8e8;
   border-color: #f0d9a8;
@@ -1293,6 +1302,26 @@ textarea:focus {
 .rowMenuLink .field {
   flex: 1 1 100%;
   min-width: 0;
+}
+/* A table row that opens a page: its one link is stretched over the whole row (design: SaSchools). */
+.dataTable tr.rowLink {
+  position: relative;
+  cursor: pointer;
+}
+.dataTable tr.rowLink:hover td {
+  background: #f7f8fb;
+}
+.dataTable a.rowLinkTarget {
+  color: #4b2a8a;
+}
+.dataTable a.rowLinkTarget:hover,
+.dataTable a.rowLinkTarget:focus-visible {
+  text-decoration: underline;
+}
+.dataTable a.rowLinkTarget::after {
+  content: "";
+  position: absolute;
+  inset: 0;
 }
 .cellSub {
   display: block;

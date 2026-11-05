@@ -86,7 +86,12 @@ export default async function Approvals({ searchParams }: { searchParams: Search
                       {match
                         ? match.claimed
                           ? t.alreadyMember
-                          : match.first_name + " " + match.last_name + ", " + match.grad_year
+                          : match.first_name +
+                            " " +
+                            match.last_name +
+                            ", " +
+                            match.grad_year +
+                            (match.id_match ? " · " + t.sameStudentId : "")
                         : t.noMatch}
                     </span>
                   </td>

@@ -53,10 +53,11 @@ button:focus-visible,input:focus{outline:2px solid #4b2a8a;outline-offset:1px}
         </section>
         <aside style="flex: 1 1 280px; display: flex; flex-direction: column; gap: 14px">
           <section style="background: #ffffff; border: 1px solid #e4e4ec; border-radius: 12px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px">
-            <h2 style="margin: 0; font-size: 15px; font-weight: 700">First school admin</h2>
+            <h2 style="margin: 0; font-size: 15px; font-weight: 700">Staff</h2>
             <div style="display: flex; flex-direction: column; gap: 7px"><label for="fa-email" style="font-size: 13px; font-weight: 600">Email</label><input id="fa-email" value="[principal or alumni office email]" style="padding: 10px 12px; border: 1px solid #8b8ca8; border-radius: 7px; color: #15172b; font-size: 14px"></div>
-            <button type="button" style="padding: 10px 16px; border-radius: 7px; border: 0; background: #4b2a8a; color: #ffffff; font-weight: 700; font-size: 14px; cursor: pointer">Send staff invitation</button>
-            <span style="font-size: 13px; line-height: 1.45; color: #55587a">They set up two-factor sign-in, then invite the rest of their staff themselves.</span>
+            <div style="display: flex; flex-direction: column; gap: 7px"><label for="fa-role" style="font-size: 13px; font-weight: 600">Role</label><select id="fa-role" style="padding: 10px 12px; border: 1px solid #8b8ca8; border-radius: 7px; background: #ffffff; color: #15172b; font-size: 14px"><option>School admin</option><option>Reviewer</option></select></div>
+            <button type="button" style="padding: 10px 16px; border-radius: 7px; border: 0; background: #4b2a8a; color: #ffffff; font-weight: 700; font-size: 14px; cursor: pointer">Send invitation</button>
+            <span style="font-size: 13px; line-height: 1.45; color: #55587a">Invite a school admin or a reviewer. Current staff are listed read-only; the school's admins change roles and remove staff themselves.</span>
           </section>
           <section style="background: #ffffff; border: 1px solid #e4e4ec; border-radius: 12px; padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; font-size: 14px">
             <h2 style="margin: 0; font-size: 15px; font-weight: 700">Counts</h2>
