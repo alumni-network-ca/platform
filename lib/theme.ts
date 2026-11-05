@@ -58,25 +58,37 @@ function custom(branding: Record<string, Json | undefined>, key: string, fallbac
     : null;
 }
 
+const asObject = (branding: Json | undefined) =>
+  branding && typeof branding === "object" && !Array.isArray(branding) ? branding : {};
+
+/** A custom primary colour darkened until white text stays readable on it, also under the bar's highlights. */
+function brandShade(primary: string) {
+  return nearest(
+    primary,
+    BLACK,
+    (shade) => (contrastRatio(mix(shade, WHITE, BAR_HIGHLIGHT), WHITE) ?? 0) >= 4.5,
+  );
+}
+
+/** The school's brand colour as the site shows it (--brand): emails use it for their header rule and links. */
+export function schoolPrimary(branding: Json | undefined): string {
+  const primary = custom(asObject(branding), "primary_color", DEFAULT_PRIMARY);
+  return primary ? brandShade(primary) : DEFAULT_PRIMARY;
+}
+
 /**
  * The CSS variables that differ from the default theme for this branding, for the page's root element; undefined
  * when the school uses the default colours. The names are those of app/globals.css :root.
  */
 export function schoolTheme(branding: Json | undefined): CSSProperties | undefined {
-  const b = branding && typeof branding === "object" && !Array.isArray(branding) ? branding : {};
+  const b = asObject(branding);
   const primary = custom(b, "primary_color", DEFAULT_PRIMARY);
   const accent = custom(b, "accent_color", DEFAULT_ACCENT);
   if (!primary && !accent) return undefined;
 
   // Surfaces (the nav bar, banners) carry white text, also under the bar's highlights. Body text stays near black:
   // Herzliah's navy is 15:1.
-  const brand = primary
-    ? nearest(
-        primary,
-        BLACK,
-        (shade) => (contrastRatio(mix(shade, WHITE, BAR_HIGHLIGHT), WHITE) ?? 0) >= 4.5,
-      )
-    : DEFAULT_PRIMARY;
+  const brand = primary ? brandShade(primary) : DEFAULT_PRIMARY;
   const vars: Record<string, string> = {};
   if (primary) {
     const deep = mix(brand, BLACK, 0.22);

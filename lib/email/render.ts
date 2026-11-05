@@ -1,4 +1,4 @@
-import { DEFAULT_EMAIL_COLOR, EMAIL_FOOTER } from "@/config/email";
+import { EMAIL_FOOTER, LINK_PLACEHOLDERS } from "@/config/email";
 
 // Turns an approved template (plain text with {placeholders}, EML-03) into the email that is sent: the subject,
 // a plain-text part and a branded HTML part. Pure, so it is unit-tested; lib/email/outbox.ts loads the data.
@@ -23,7 +23,7 @@ export type EmailBrand = {
   networkName: string;
   /** Absolute https URL of the school's logo, or null to show the name only. */
   logoUrl: string | null;
-  /** #RRGGBB for the header rule and the links. */
+  /** #RRGGBB for the header rule and the links: lib/theme.ts schoolPrimary(), already validated. */
   primaryColor: string;
   locale: "en" | "fr";
 };
@@ -51,13 +51,14 @@ const escapeHtml = (value: string) =>
 
 const URL_PATTERN = /https?:\/\/[^\s<>"']+/g;
 
-/** One escaped paragraph, with each http(s) address turned into a link. */
-function paragraphHtml(paragraph: string, color: string): string {
+/** One escaped paragraph, with each of the app's own links (and only those) made clickable. */
+function paragraphHtml(paragraph: string, color: string, links: ReadonlySet<string>): string {
   let html = "";
   let last = 0;
   for (const match of paragraph.matchAll(URL_PATTERN)) {
     // A sentence's final period or bracket is not part of the address.
     const url = match[0].replace(/[.,;:!?)]+$/, "");
+    if (!links.has(url)) continue;
     const start = match.index;
     html += escapeHtml(paragraph.slice(last, start));
     html += `<a href="${escapeHtml(url)}" style="color:${color};word-break:break-all;">${escapeHtml(url)}</a>`;
@@ -67,8 +68,6 @@ function paragraphHtml(paragraph: string, color: string): string {
   return html.replace(/\n/g, "<br>");
 }
 
-const HEX = /^#[0-9a-f]{6}$/i;
-
 export function renderEmail(
   template: { subject: string; body: string },
   values: Placeholders,
@@ -77,13 +76,16 @@ export function renderEmail(
   // Subjects are one line: a value with a line break must not add a header.
   const subject = fillPlaceholders(template.subject, values).replace(/\s+/g, " ");
   const text = fillPlaceholders(template.body, values);
-  const color = HEX.test(brand.primaryColor) ? brand.primaryColor : DEFAULT_EMAIL_COLOR;
+  const color = brand.primaryColor;
+  const links = new Set(
+    LINK_PLACEHOLDERS.map((key) => values[key]).filter((link): link is string => !!link),
+  );
   const footer = EMAIL_FOOTER[brand.locale].replace("{network}", brand.networkName);
   const paragraphs = text
     .split(/\n{2,}/)
     .map(
       (p) =>
-        `<p style="margin:0 0 16px;font-size:16px;line-height:1.5;">${paragraphHtml(p, color)}</p>`,
+        `<p style="margin:0 0 16px;font-size:16px;line-height:1.5;">${paragraphHtml(p, color, links)}</p>`,
     )
     .join("");
   const header = brand.logoUrl

@@ -10,6 +10,7 @@ import {
 } from "@/config/email";
 import type { Database, Enums, Tables } from "@/lib/database";
 import { schoolBranding } from "@/lib/school";
+import { schoolPrimary } from "@/lib/theme";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { schoolUrl, type Origin } from "@/lib/tenant/address";
 import { renderEmail, type Placeholders } from "./render";
@@ -129,7 +130,6 @@ async function buildEmail(client: Client, row: OutboxRow, origin: Origin) {
   if (!template.data) return null;
 
   const brand = schoolBranding(school.data);
-  const branding = (school.data.branding ?? {}) as Record<string, unknown>;
   const values: Placeholders = {
     ...person,
     school_name: brand.shortName,
@@ -144,7 +144,7 @@ async function buildEmail(client: Client, row: OutboxRow, origin: Origin) {
   const rendered = renderEmail(template.data, values, {
     networkName: brand.networkName,
     logoUrl: brand.logo ? schoolUrl(origin, school.data.slug, brand.logo) : null,
-    primaryColor: typeof branding.primary_color === "string" ? branding.primary_color : "",
+    primaryColor: schoolPrimary(school.data.branding),
     locale: row.locale,
   });
   return {

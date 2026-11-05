@@ -58,9 +58,29 @@ describe("renderEmail", () => {
   });
 
   it("keeps a sentence's final period out of the link", () => {
-    const { html } = renderEmail({ subject: "s", body: "Go to https://a.test/login." }, {}, brand);
+    const { html } = renderEmail(
+      { subject: "s", body: "Go to {sign_in_link}." },
+      { sign_in_link: "https://a.test/login" },
+      brand,
+    );
     expect(html).toContain('href="https://a.test/login"');
     expect(html).toContain("</a>.");
+  });
+
+  it("links only the app's own addresses, never one a person typed", () => {
+    const { html } = renderEmail(
+      { subject: "s", body: "Hi {first_name}. {reason} {sign_in_link}" },
+      {
+        first_name: "https://evil.example",
+        reason: "See https://other.example/x",
+        sign_in_link: "https://herzliah.alumninetwork.ca/login",
+      },
+      brand,
+    );
+    expect(html).toContain('href="https://herzliah.alumninetwork.ca/login"');
+    expect(html).not.toContain('href="https://evil.example"');
+    expect(html).not.toContain('href="https://other.example/x"');
+    expect(html).toContain("Hi https://evil.example.");
   });
 
   it("keeps the subject on one line", () => {
@@ -72,16 +92,10 @@ describe("renderEmail", () => {
     expect(subject).toBe("Hi A Bcc: x");
   });
 
-  it("uses the French footer and falls back to the name and default colour", () => {
-    const { html } = renderEmail(template, values, {
-      ...brand,
-      locale: "fr",
-      logoUrl: null,
-      primaryColor: "red;background:url(x)",
-    });
+  it("uses the French footer and shows the name when there is no logo", () => {
+    const { html } = renderEmail(template, values, { ...brand, locale: "fr", logoUrl: null });
     expect(html).toContain('<html lang="fr">');
     expect(html).toContain("Vous recevez ce courriel");
     expect(html).toContain(">Herzliah Alumni Network</span>");
-    expect(html).toContain("border-top:4px solid #1f3a5f");
   });
 });

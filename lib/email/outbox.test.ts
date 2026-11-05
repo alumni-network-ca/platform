@@ -262,4 +262,30 @@ describe("resendTransport", () => {
     fetchMock.mockRestore();
     vi.unstubAllEnvs();
   });
+
+  it("counts a 409 for a key Resend already accepted as sent, and retries one still in progress", async () => {
+    vi.stubEnv("RESEND_API_KEY", "re_test");
+    vi.stubEnv("EMAIL_FROM_DOMAIN", "alumninetwork.ca");
+    const fetchMock = vi.spyOn(globalThis, "fetch");
+    const email = {
+      id: "o",
+      to: "a@b.test",
+      fromName: "n",
+      replyTo: null,
+      subject: "s",
+      text: "t",
+      html: "h",
+    };
+    fetchMock.mockResolvedValueOnce(
+      Response.json({ name: "invalid_idempotent_request" }, { status: 409 }),
+    );
+    await expect(resendTransport()(email)).resolves.toEqual({ providerId: null });
+    fetchMock.mockResolvedValueOnce(
+      Response.json({ name: "concurrent_idempotent_requests" }, { status: 409 }),
+    );
+    await expect(resendTransport()(email)).rejects.toThrow("Resend responded 409");
+    expect(fetchMock.mock.calls[0]![1]!.signal).toBeInstanceOf(AbortSignal);
+    fetchMock.mockRestore();
+    vi.unstubAllEnvs();
+  });
 });

@@ -5,6 +5,16 @@ import type { Enums } from "@/lib/database";
 /** Resend's send endpoint. The outbox id goes in the Idempotency-Key header, so a retry is never delivered twice. */
 export const RESEND_API_URL = "https://api.resend.com/emails";
 
+/** A Resend call that takes longer is abandoned and retried later, so a hung connection never holds a row. */
+export const RESEND_TIMEOUT_MS = 10_000;
+
+/**
+ * Resend's 409 answers for a reused Idempotency-Key. "Different payload" means Resend already accepted this outbox
+ * row (a retry re-rendered it after the template or the address changed), so the row counts as sent. "Still in
+ * progress" is retried like any other temporary failure.
+ */
+export const RESEND_ALREADY_ACCEPTED = "invalid_idempotent_request";
+
 /** Resend answers that retrying can't fix (bad request, unverified domain, invalid address): the row fails at once. */
 export const RESEND_PERMANENT_STATUSES: readonly number[] = [400, 403, 422];
 
@@ -37,11 +47,17 @@ export const SWEEP_BATCH = 50;
 /** last_error is cut to this length: an error message, never an address or a body. */
 export const MAX_ERROR_LENGTH = 500;
 
+/** The placeholders that hold links the app builds. Only these become clickable in the HTML part; an address typed
+ * by a person (a name, a reason) stays plain text, so nobody can slip a link into a school-branded email. */
+export const LINK_PLACEHOLDERS = [
+  "sign_in_link",
+  "action_link",
+  "onboarding_link",
+  "confirm_link",
+] as const;
+
 /** Where every link in the emails lands; sign-in sends each person on to the right page. */
 export const SIGN_IN_PATH = "/login";
-
-/** Header rule and link colour when the school has not set a valid primary_color. */
-export const DEFAULT_EMAIL_COLOR = "#1f3a5f";
 
 /** Under every email. {network} is the school's network name. */
 export const EMAIL_FOOTER = {

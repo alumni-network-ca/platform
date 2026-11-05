@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { contrastRatio } from "@/lib/admin/contrast";
-import { BAR_HIGHLIGHT, DEFAULT_ACCENT, DEFAULT_PRIMARY, mix, schoolTheme } from "./theme";
+import {
+  BAR_HIGHLIGHT,
+  DEFAULT_ACCENT,
+  DEFAULT_PRIMARY,
+  mix,
+  schoolPrimary,
+  schoolTheme,
+} from "./theme";
 
 const vars = (branding: Record<string, string>) =>
   schoolTheme(branding) as Record<string, string> | undefined;
@@ -74,5 +81,12 @@ describe("school colours", () => {
     const primaryOnly = vars({ primary_color: "#0D51A1" })!;
     expect(primaryOnly["--accent"]).toBeUndefined();
     expect(ratio(primaryOnly["--on-brand-accent"]!, "#0D51A1")).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it("gives emails the same brand colour as the site", () => {
+    expect(schoolPrimary(undefined)).toBe(DEFAULT_PRIMARY);
+    expect(schoolPrimary({ primary_color: "red;background:url(x)" })).toBe(DEFAULT_PRIMARY);
+    for (const primary_color of ["#0D51A1", "#2E8B57"])
+      expect(schoolPrimary({ primary_color })).toBe(vars({ primary_color })!["--brand"]);
   });
 });
