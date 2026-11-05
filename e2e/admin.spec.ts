@@ -148,9 +148,15 @@ test("school admin invites and revokes staff", async ({ page, context, baseURL }
 
   const invitation = page.getByRole("row", { name: new RegExp(email) });
   await expect(invitation).toContainText("Sent");
-  await invitation.getByRole("button", { name: "Resend invitation", exact: true }).click();
+  // Row actions sit behind the "⋯" menu (A4.1).
+  const actions = invitation.getByRole("button", { name: `Actions for ${email}`, exact: true });
+  await actions.click();
+  await invitation.getByRole("menuitem", { name: "Resend invitation", exact: true }).click();
   await expect(invitation.getByLabel("Invitation link")).toHaveValue(/token=/);
-  await invitation.getByRole("button", { name: "Revoke", exact: true }).click();
+  await actions.click();
+  expect(await blockingViolations(page)).toEqual([]);
+  page.once("dialog", (dialog) => dialog.accept());
+  await invitation.getByRole("menuitem", { name: "Revoke", exact: true }).click();
   await expect(invitation).toContainText("Revoked");
   await expect(invitation.getByRole("button")).toHaveCount(0);
   expect(await blockingViolations(page)).toEqual([]);
