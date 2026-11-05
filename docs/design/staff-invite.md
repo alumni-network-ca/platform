@@ -26,8 +26,8 @@ stored:
 Each new link replaces the previous one (`issue_staff_invitation_link`), so an old link reads as unknown.
 
 Who does what (ADR 0005): only `school_admin` (`staff.manage`) sees `/admin/staff` and invites, at their own
-school. Platform admins invite a school's first admin from the console (S1.3); that invitee follows the same
-A6 screens. Anyone holding a link can open A6; only the session whose email matches can accept
+school. Platform admins invite school admins and reviewers from the console (S1.3, `platform_invite_staff`) and
+see the staff list there read-only; those invitees follow the same A6 screens. Anyone holding a link can open A6; only the session whose email matches can accept
 (`accept_staff_invitation`).
 
 ## 2. Admin side

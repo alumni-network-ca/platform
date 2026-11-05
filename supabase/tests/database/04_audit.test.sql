@@ -177,6 +177,11 @@ select is(
   array['staff.invited'], 'platform_appoint_school_admin writes one audit row'
 );
 select is(
+  pg_temp.audited($$ select public.platform_invite_staff((select id from public.institutions where slug = 'third-school'), 'reviewer@third.test', 'reviewer') $$,
+                  '11111111-1111-4111-8111-000000000006'),
+  array['staff.invited'], 'platform_invite_staff writes one audit row'
+);
+select is(
   pg_temp.audited($$ select public.platform_open_grant('aaaaaaaa-0000-4000-8000-000000000001', 'Support ticket 31', 1) $$,
                   '11111111-1111-4111-8111-000000000006'),
   array['platform.grant_opened'], 'platform_open_grant writes one audit row'
@@ -241,6 +246,7 @@ select is(
 );
 
 select is(pg_temp.audited($$ select * from public.school_staff('aaaaaaaa-0000-4000-8000-000000000001') $$, '11111111-1111-4111-8111-000000000001'), '{}'::text[], 'console reader 1 does not write an audit row');
+select is(pg_temp.audited($$ select * from public.platform_school_staff('aaaaaaaa-0000-4000-8000-000000000001') $$, '11111111-1111-4111-8111-000000000006'), '{}'::text[], 'the platform staff list does not write an audit row');
 select is(pg_temp.audited($$ select * from public.audit_people('aaaaaaaa-0000-4000-8000-000000000001') $$, '11111111-1111-4111-8111-000000000001'), '{}'::text[], 'console reader 2 does not write an audit row');
 select is(pg_temp.audited($$ select public.admin_dashboard('aaaaaaaa-0000-4000-8000-000000000001') $$, '11111111-1111-4111-8111-000000000001'), '{}'::text[], 'console reader 3 does not write an audit row');
 select is(pg_temp.audited($$ select * from public.admin_roster('aaaaaaaa-0000-4000-8000-000000000001') $$, '11111111-1111-4111-8111-000000000001'), '{}'::text[], 'console reader 4 does not write an audit row');
@@ -268,12 +274,12 @@ select set_eq(
     'withdraw_consent', 'delete_my_profile', 'confirm_still_accurate',
     'admin_update_profile', 'set_profile_status', 'invite_staff', 'accept_staff_invitation', 'change_staff_role',
     'remove_staff', 'approve_email_template_version', 'save_email_template', 'approve_email_template', 'update_school_settings',
-    'platform_create_school', 'platform_appoint_school_admin', 'platform_open_grant', 'platform_revoke_grant',
-    'platform_set_school_status', 'issue_staff_invitation_link', 'revoke_staff_invitation',
+    'platform_create_school', 'platform_appoint_school_admin', 'platform_invite_staff', 'platform_open_grant',
+    'platform_revoke_grant', 'platform_set_school_status', 'issue_staff_invitation_link', 'revoke_staff_invitation',
     -- not audited on purpose: reads, preferences, and contact reveals (contact_events)
     'public_school', 'school_config', 'search_directory', 'set_my_locale', 'initiate_contact', 'directory_facets',
     'profile_contact_types',
-    'platform_school_summaries', 'platform_admin_emails',
+    'platform_school_summaries', 'platform_admin_emails', 'platform_school_staff',
     'school_staff', 'audit_people', 'admin_dashboard', 'admin_roster', 'admin_profile_email', 'access_request_matches',
     'staff_invitation_preview', 'my_staff_invitation',
     -- RLS helpers used inside policies (and by search_directory, which runs as the caller)

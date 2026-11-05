@@ -75,7 +75,7 @@ Signed-out pages use the `guest` role: FR, Sign in and the proposed Join now act
 |---|---|---|---|
 | **Built** · S1.1 Console: all schools (`SaSchools`) | `/console` | SA-01 | `platform_school_summaries()`, counts only |
 | **Built** · S1.2 Create a school (`SaCreate`) | `/console/schools/new` | SA-01 | `platform_create_school` with branding (`clean_branding`) |
-| **Built** except the checklist · S1.3 School setup: first admin, launch checklist (`SaSetup`) | `/console/schools/[slug]` | SA-01, SA-02, SA-05 | `platform_appoint_school_admin`, `issue_staff_invitation_link`, `revoke_staff_invitation`. "Open sign-ups" needs the "in setup" status (SA-05) |
+| **Built** except the checklist · S1.3 School setup: staff invitations (school admin or reviewer), read-only staff list, launch checklist (`SaSetup`) | `/console/schools/[slug]` | SA-01, SA-02, SA-05 | `platform_invite_staff`, `platform_school_staff`, `issue_staff_invitation_link`, `revoke_staff_invitation`. "Open sign-ups" needs the "in setup" status (SA-05) |
 | **Built** · S2.1 Support access (`SaSupport`) | `/console/support` | FND-13 (done), SA-01 | `platform_open_grant`, `platform_revoke_grant` |
 | **Built** · S2.2 Suspend or offboard (`SaSuspend`) | `/console/schools/[slug]/status` | SA-01, SA-03 | `platform_set_school_status`. Offboarding waits for the retention job (DEC-08, SA-05) |
 | S2.3 Platform health (`SaHealth`) | `/console/health` | SA-04 | needs job heartbeats (FND-17) and the email outbox worker (EML-01) |

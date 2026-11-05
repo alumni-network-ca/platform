@@ -312,7 +312,7 @@ items:
       - A suspended school's address answers 404; reactivating it restores access.
 
   - key: SA-02
-    title: "Appoint the first school admin"
+    title: "Invite school staff from the console"
     state: closed
     epic: EPIC-SA
     labels: [type:feature, area:platform, area:onboarding, P0, launch-blocker]
@@ -320,13 +320,16 @@ items:
     depends: [SA-01, ADM-06]
     reqs: [MT6]
     summary: |
-      Design S1.3. From the school's console page, invite a school admin with a staff invitation. Until emails go out
+      Design S1.3. From the school's console page, invite a school admin or a reviewer with a staff invitation, and see
+      the school's current staff (read only; role changes and removals stay with the school). Until emails go out
       (EML-01), the console shows the invitation link to copy and send; each new link cancels the previous one, and
       invitations can be revoked. The link leads to /staff/accept on the school's address: the person signs in (with
       a code if new) and accepts while signed in with the invited email. MFA enrolment comes with FND-11.
     ac:
       - The invited person signs in on the school's address, accepts, and lands on /admin.
       - The link works only for the invited email, only once, and stops working when a new link is issued.
+      - A platform admin can invite either staff role; an invited reviewer can't manage staff.
+      - The console lists the school's school admins and reviewers, never alumni, with no role or removal actions.
 
   - key: SA-03
     title: "Provisioning and offboarding runbook + script"
