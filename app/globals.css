@@ -1190,6 +1190,11 @@ textarea:focus {
 .panel p {
   margin: 0;
 }
+.panel h3 {
+  margin: 6px 0 0;
+  font-size: 15px;
+  font-weight: 700;
+}
 .panelWarn {
   background: #fff8e8;
   border-color: #f0d9a8;
