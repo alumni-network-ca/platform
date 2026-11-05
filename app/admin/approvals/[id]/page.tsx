@@ -46,6 +46,8 @@ export default async function Review({ params }: { params: Promise<{ id: string 
             <dd>{r.maiden_name || "—"}</dd>
             <dt>{t.class}</dt>
             <dd>{r.grad_year}</dd>
+            <dt>{t.school_student_id}</dt>
+            <dd>{r.school_student_id || t.notGiven}</dd>
             <dt>{t.email}</dt>
             <dd>{r.email}</dd>
             <dt>{t.applicantNote}</dt>
@@ -65,6 +67,14 @@ export default async function Review({ params }: { params: Promise<{ id: string 
               {m.first_name} {m.last_name}, {m.grad_year}
             </Link>
             <p>{m.claimed ? t.alreadyMember : t.unclaimed}</p>
+            <p>
+              {t.school_student_id}: <strong>{m.school_student_id || "—"}</strong>{" "}
+              {m.id_match ? (
+                <span className="tag tagGood">✓ {t.sameStudentId}</span>
+              ) : r.school_student_id && m.school_student_id ? (
+                <span className="tag tagWarn">{t.differentStudentId}</span>
+              ) : null}
+            </p>
           </section>
         ))}
       </div>

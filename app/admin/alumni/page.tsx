@@ -44,7 +44,13 @@ export default async function Roster({ searchParams }: { searchParams: Search })
       <form className="adminFilters">
         <label className="field">
           {t.search}
-          <input className="input" name="q" defaultValue={query} maxLength={200} />
+          <input
+            className="input"
+            name="q"
+            defaultValue={query}
+            maxLength={200}
+            placeholder={t.rosterSearchHint}
+          />
         </label>
         <label className="field">
           {t.status}

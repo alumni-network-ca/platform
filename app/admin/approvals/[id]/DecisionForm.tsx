@@ -57,6 +57,7 @@ export function DecisionForm({
                 {linkable.map((m) => (
                   <option key={m.profile_id} value={m.profile_id}>
                     {m.first_name} {m.last_name}, {m.grad_year}
+                    {m.id_match ? " · " + t.sameStudentId : ""}
                   </option>
                 ))}
                 <option value="">{t.createRecord}</option>

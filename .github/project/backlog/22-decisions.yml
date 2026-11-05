@@ -29,7 +29,7 @@ items:
     title: "Decision: profile field list, required fields and visibility"
     labels: [type:decision, area:profile, P0, launch-blocker, needs-noah]
     reqs: [F1, F2, F7, S5]
-    outcome: "Decided 2026-10-26: the proposal is approved, except contact channels are optional. A profile can be published with none and then shows \"No contact details shared\"."
+    outcome: "Decided 2026-10-26: the proposal is approved, except contact channels are optional. A profile can be published with none and then shows \"No contact details shared\". Amended 2026-11-04 (ONB-09): the school student ID is visible to staff and the owner, since the owner typed it and may access their own data (Law 25)."
     summary: |
       Proposal:
       - **Required:** first and last name, graduation year, city/country, at least one contact channel to publish.

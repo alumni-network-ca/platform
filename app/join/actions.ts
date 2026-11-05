@@ -24,7 +24,8 @@ async function submitRequest(path: string, form: FormData): Promise<JoinResult> 
     gradYear < 1900 ||
     gradYear > new Date().getFullYear() + 1 ||
     ["first_name", "last_name", "maiden_name"].some((name) => field(name).length > 80) ||
-    field("note").length > 1000
+    field("note").length > 1000 ||
+    field("school_student_id").length > 40
   )
     return { error: "missing" };
 
@@ -35,6 +36,7 @@ async function submitRequest(path: string, form: FormData): Promise<JoinResult> 
     p_maiden_name: field("maiden_name"),
     p_grad_year: gradYear,
     p_note: field("note"),
+    p_school_student_id: field("school_student_id"),
   });
   if (error) return { error: error.code === "54000" ? "tooMany" : "failed" };
   return { error: null, next: "/account/pending" };
