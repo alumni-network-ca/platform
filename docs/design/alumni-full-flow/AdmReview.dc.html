@@ -33,12 +33,12 @@ button:focus-visible,select:focus,textarea:focus,input:focus-visible{outline:2px
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px">
         <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; font-size: 14px">
           <h2 style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #3a4a70">What they told us</h2>
-          <div style="display: grid; grid-template-columns: 120px 1fr; row-gap: 8px"><span style="color: #4a5575">Name</span><strong>Dana Levy</strong><span style="color: #4a5575">At Herzliah</span><strong>Dana Benhamou</strong><span style="color: #4a5575">Class</span><strong>2014</strong><span style="color: #4a5575">Email</span><span>dana.levy@gmail.com</span></div>
+          <div style="display: grid; grid-template-columns: 120px 1fr; row-gap: 8px"><span style="color: #4a5575">Name</span><strong>Dana Levy</strong><span style="color: #4a5575">At Herzliah</span><strong>Dana Benhamou</strong><span style="color: #4a5575">Class</span><strong>2014</strong><span style="color: #4a5575">Student ID</span><strong>{{askedId}}</strong><span style="color: #4a5575">Email</span><span>dana.levy@gmail.com</span></div>
           <p style="margin: 0; padding: 12px 14px; border-radius: 8px; background: #f2f4f8; line-height: 1.5">“Homeroom with Mme Tremblay in Sec 5. My brother Ari graduated in 2011.”</p>
         </section>
         <section style="background: #ffffff; border: 2px solid #2e8b57; border-radius: 12px; padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; font-size: 14px">
           <h2 style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1b5e33">Suggested school record</h2>
-          <div style="display: grid; grid-template-columns: 120px 1fr; row-gap: 8px"><span style="color: #4a5575">Name</span><strong>Dana Benhamou</strong><span style="color: #4a5575">Class</span><strong>2014</strong><span style="color: #4a5575">Status</span><span>Not claimed</span><span style="color: #4a5575">Why matched</span><span>Name at school + class year</span></div>
+          <div style="display: grid; grid-template-columns: 120px 1fr; row-gap: 8px"><span style="color: #4a5575">Name</span><strong>Dana Benhamou</strong><span style="color: #4a5575">Class</span><strong>2014</strong><span style="color: #4a5575">Student ID</span><span style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px"><strong>{{recordId}}</strong><sc-if value="{{hasIdChip}}" hint-placeholder-val="true"><span style="padding: 3px 9px; border-radius: 999px; background: {{idChipBg}}; color: {{idChipFg}}; font-size: 12px; font-weight: 700">{{idChip}}</span></sc-if></span><span style="color: #4a5575">Status</span><span>Not claimed</span><span style="color: #4a5575">Why matched</span><span>{{whyMatched}}</span></div>
           <a href="AdmDuplicate.dc.html" style="font-size: 13px; font-weight: 600">See other possible records (1)</a>
         </section>
       </div>
@@ -79,7 +79,7 @@ button:focus-visible,select:focus,textarea:focus,input:focus-visible{outline:2px
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":960}}'>
+<script type="text/x-dc" data-dc-script data-props='{"idState":{"editor":"enum","options":["match","different","none"],"default":"match"},"$preview":{"width":1280,"height":960}}'>
 class Component extends DCLogic {
   constructor(props) {
     super(props);
@@ -99,7 +99,13 @@ class Component extends DCLogic {
       return { label: c[1], checked: on ? 'true' : 'false', border: on ? '2px solid #0b2159' : '1px solid #8a93ab', bg: on ? '#0b2159' : '#ffffff', fg: on ? '#ffffff' : '#0b2159', pick: function () { self.setState({ decision: c[0] }); } };
     });
     var cta = { approve: ['Approve and send email', '#1b6b3f'], info: ['Send question', '#0b2159'], reject: ['Reject request', '#a1173b'] }[d];
-    return { nav: nav, choices: choices, isApprove: d === 'approve', isInfo: d === 'info', isReject: d === 'reject', ctaLabel: cta[0], ctaBg: cta[1] };
+    var idState = this.props.idState || 'match';
+    var ids = {
+      match: { askedId: '12345', recordId: '12345', idChip: '✓ Same student ID', idChipBg: '#e3f3e8', idChipFg: '#1b5e33', whyMatched: 'Same student ID + name at school + class year' },
+      different: { askedId: '12345', recordId: '12354', idChip: 'Different student ID: check before linking', idChipBg: '#fff4dc', idChipFg: '#7a4b00', whyMatched: 'Name at school + class year' },
+      none: { askedId: 'Not given', recordId: '12345', idChip: '', idChipBg: '', idChipFg: '', whyMatched: 'Name at school + class year' }
+    }[idState];
+    return { askedId: ids.askedId, recordId: ids.recordId, hasIdChip: !!ids.idChip, idChip: ids.idChip, idChipBg: ids.idChipBg, idChipFg: ids.idChipFg, whyMatched: ids.whyMatched, nav: nav, choices: choices, isApprove: d === 'approve', isInfo: d === 'info', isReject: d === 'reject', ctaLabel: cta[0], ctaBg: cta[1] };
   }
 }
 </script>

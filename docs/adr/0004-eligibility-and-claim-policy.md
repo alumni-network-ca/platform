@@ -18,6 +18,10 @@ Rules:
 - Responses never reveal whether an email or person exists (S4). The applicant never sees duplicate flags.
 - Pending, needs-info and rejected users get no private-directory access, from pages or from the API.
 
+## Student ID (ONB-09, 2026-11-04)
+
+The request form asks for the school's student ID (matricule), optionally. It is self-reported and only a matching hint: an exact ID match within the same school puts that record first for the reviewer, but a person still approves every request, and nothing is approved, linked or merged on an ID alone. An ID from another school never matches. Approving copies the ID to a new record, or to a linked record that has none; an ID staff entered is never overwritten. Auto-approval on a matching ID would need a school list (IMP-*), a new ADR and LEGAL-01.
+
 ## Future: CSV import
 
 `access_requests.source` and the approval RPCs are written so a later CSV import (IMP-* in Future) creates requests or pre-filled records with `source = 'import'` that flow through the same queue. Per-person invitation links (ONB-01/02) come with it.

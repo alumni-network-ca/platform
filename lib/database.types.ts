@@ -20,6 +20,7 @@ export type Database = {
           maiden_name: string | null;
           note: string | null;
           profile_id: string | null;
+          school_student_id: string | null;
           source: Database["public"]["Enums"]["request_source"];
           status: Database["public"]["Enums"]["request_status"];
           updated_at: string;
@@ -42,6 +43,7 @@ export type Database = {
           maiden_name?: string | null;
           note?: string | null;
           profile_id?: string | null;
+          school_student_id?: string | null;
           source?: Database["public"]["Enums"]["request_source"];
           status?: Database["public"]["Enums"]["request_status"];
           updated_at?: string;
@@ -63,6 +65,7 @@ export type Database = {
           maiden_name?: string | null;
           note?: string | null;
           profile_id?: string | null;
+          school_student_id?: string | null;
           source?: Database["public"]["Enums"]["request_source"];
           status?: Database["public"]["Enums"]["request_status"];
           updated_at?: string;
@@ -1245,9 +1248,11 @@ export type Database = {
           claimed: boolean;
           first_name: string;
           grad_year: number;
+          id_match: boolean;
           last_name: string;
           profile_id: string;
           request_id: string;
+          school_student_id: string;
           score: number;
         }[];
       };
@@ -1397,6 +1402,7 @@ export type Database = {
         Args: { p_inst: string };
         Returns: Database["public"]["Enums"]["member_role"];
       };
+      normalize_student_id: { Args: { p_value: string }; Returns: string };
       owns_profile: { Args: { p_profile: string }; Returns: boolean };
       permitted_institutions: { Args: { p_perm: string }; Returns: string[] };
       person_name: { Args: { p_inst: string; p_user: string }; Returns: string };
@@ -1490,6 +1496,7 @@ export type Database = {
           p_last_name: string;
           p_maiden_name: string;
           p_note: string;
+          p_school_student_id?: string;
         };
         Returns: undefined;
       };

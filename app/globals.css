@@ -699,6 +699,10 @@ textarea:focus {
 .authForm .microcopy {
   margin: 0;
 }
+/* A hint under the field above it: the form's 16px gap less 9px matches the label's own 7px gap. */
+.authForm .joinFieldHint {
+  margin-top: -9px;
+}
 /* Six-box code entry (components/CodeInput.tsx): the real input lies invisible over the boxes. */
 .codeInput {
   position: relative;

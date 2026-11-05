@@ -106,16 +106,19 @@ test("signup confirms email on another device, waits for a reviewer and unlocks 
     }
     await applicant.getByRole("link", { name: "Edit my request", exact: true }).click();
     await applicant.getByLabel("Graduation year").fill("2011");
+    await applicant.getByLabel("Student ID (optional)", { exact: true }).fill("ts-1");
     await applicant.getByRole("button", { name: "Save request details" }).click();
     await expect(applicant).toHaveURL(/\/account\/pending$/);
+    await expect(applicant.getByText("Jo Iner · Class of 2011 · Student ID TS1")).toBeVisible();
     const owner = adminClient(stack);
     const { data: requests, error } = await owner
       .from("access_requests")
-      .select("id, grad_year")
+      .select("id, grad_year, school_student_id")
       .eq("email", email);
     expect(error).toBeNull();
     expect(requests).toHaveLength(1);
     expect(requests![0]!.grad_year).toBe(2011);
+    expect(requests![0]!.school_student_id).toBe("TS1");
     await signInAs(reviewerContext, baseURL!, accounts.reviewer);
     await reviewer.goto("/admin/approvals/" + requests![0]!.id);
     await reviewer.getByRole("radio", { name: "Ask for more info", exact: true }).check();

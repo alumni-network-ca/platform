@@ -9,7 +9,7 @@ export default async function EditRequestPage() {
   const fr = (await getServerLocale()) === "fr";
   const { data, error } = await supabase
     .from("access_requests")
-    .select("first_name, last_name, maiden_name, grad_year, note")
+    .select("first_name, last_name, maiden_name, grad_year, school_student_id, note")
     .eq("institution_id", school.id)
     .eq("user_id", user.id)
     .in("status", ["pending", "needs_info"])
