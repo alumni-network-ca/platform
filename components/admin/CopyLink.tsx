@@ -7,7 +7,7 @@ export function CopyLink({ value, label, done }: { value: string; label: string;
   return (
     <button
       type="button"
-      className="btn btnGhost"
+      className="btn btnLight"
       onClick={async () => {
         try {
           await navigator.clipboard.writeText(value);
