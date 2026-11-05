@@ -26,12 +26,14 @@ items:
     milestone: M0
     labels: [type:infra, area:ops, P0, launch-blocker, needs-noah]
     size: XS
+    state: closed
     summary: |
-      Buy alumninetwork.ca with the shared admin address as registrant contact and auto-renew on.
-      Point the nameservers to Vercel (required for wildcard subdomains such as herzliah.alumninetwork.ca, ADR 0001).
-      Fallback names if it's taken: alumninetwork.ca or alumni-network.app.
+      Done 2026-11-05. alumninetwork.ca is registered at Wix, with nameservers on Vercel (required for wildcard
+      subdomains such as herzliah.alumninetwork.ca, ADR 0001). The Vercel project serves alumninetwork.ca,
+      *.alumninetwork.ca and www (308 to the root) from production, and staging.alumninetwork.ca and
+      *.staging.alumninetwork.ca from the dev branch, all over HTTPS. The registrant contact and auto-renew moved to
+      BIZ-03, which creates the admin@ address.
     ac:
-      - The domain is owned by the business account, with auto-renew on.
       - Nameservers are on Vercel.
 
   - key: BIZ-03
@@ -46,8 +48,11 @@ items:
       Create admin@alumninetwork.ca, forwarding to both partners (free, via Vercel/ImprovMX/Zoho), to own every service
       account (requirements §8 handover: no dependence on one person's credentials). Also create support@ for alumni
       and school support.
+      Progress 2026-11-05: ImprovMX forwards alumninetwork.ca (MX and SPF on Vercel DNS), with a catch-all to Gab.
+      The Resend account was created under admin@.
     ac:
       - Both partners receive mail sent to admin@ and support@.
+      - The registrar (Wix) lists admin@ as the registrant contact for alumninetwork.ca, with auto-renew on.
 
   - key: BIZ-04
     title: "Create business-owned service accounts (Supabase, Vercel, Resend, Sentry, Turnstile, uptime)"
