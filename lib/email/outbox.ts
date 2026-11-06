@@ -5,29 +5,16 @@ import {
   MAX_ERROR_LENGTH,
   RETRY_MINUTES,
   SENDABLE_TEMPLATES,
-  SIGN_IN_PATH,
 } from "@/config/email";
-import { schoolBranding } from "@/lib/school";
-import { schoolPrimary } from "@/lib/theme";
+import { buildEmail, resendTransport } from "@/factories/email";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { schoolUrl, type Origin } from "@/lib/tenant/address";
-import type {
-  DeliveryResult,
-  EmailTemplateKey,
-  OutboxClient,
-  OutboxDeps,
-  OutboxRow,
-  Placeholders,
-  Transport,
-} from "@/types/email";
-import { renderEmail } from "./render";
-import { PermanentEmailError, resendTransport } from "./transport";
+import type { Origin } from "@/lib/tenant/address";
+import type { DeliveryResult, OutboxClient, OutboxDeps, OutboxRow, Transport } from "@/types/email";
+import { PermanentDataError, PermanentEmailError } from "./errors";
 
 // The outbox worker (EML-01, ADR 0007). Business events queue a row in email_outbox in their own transaction;
 // this sends the rows: right after the action (lib/email/send.ts) and from the cron sweeper (/api/cron/email).
 // Logs carry ids and statuses only, never addresses, bodies or links.
-
-class PermanentDataError extends Error {}
 
 export async function deliverOutbox(
   options: { origin: Origin; subjectId?: string; limit?: number },
@@ -103,85 +90,4 @@ async function deliverOne(
 async function update(client: OutboxClient, id: string, patch: Partial<OutboxRow>) {
   const { error } = await client.from("email_outbox").update(patch).eq("id", id);
   if (error) throw new Error(`[email] could not update outbox row ${id}: ${error.code}`);
-}
-
-/** Loads the template, the school and the event the row is about, and renders the email. Null: no template. */
-async function buildEmail(client: OutboxClient, row: OutboxRow, origin: Origin) {
-  if (!row.institution_id) throw new PermanentDataError("outbox row has no school");
-  const [template, school, person] = await Promise.all([
-    client
-      .from("email_templates")
-      .select("subject, body")
-      .eq("institution_id", row.institution_id)
-      .eq("key", row.template_key as EmailTemplateKey)
-      .eq("locale", row.locale)
-      .eq("status", "approved")
-      .maybeSingle(),
-    client
-      .from("institutions")
-      .select("id, name, slug, default_locale, branding, reply_to_email, email_display_name")
-      .eq("id", row.institution_id)
-      .single(),
-    loadSubject(client, row),
-  ]);
-  if (template.error) throw new Error(`template lookup failed: ${template.error.code}`);
-  if (school.error) throw new Error(`school lookup failed: ${school.error.code}`);
-  if (!template.data) return null;
-
-  const brand = schoolBranding(school.data);
-  const values: Placeholders = {
-    ...person,
-    school_name: brand.shortName,
-    sign_in_link: schoolUrl(origin, school.data.slug, SIGN_IN_PATH),
-    // Sign-in sends each person to the right page (onboarding, the needs-info answer); these keep the old links.
-    onboarding_link: schoolUrl(origin, school.data.slug, SIGN_IN_PATH),
-    action_link:
-      row.template_key === "access_needs_info"
-        ? schoolUrl(origin, school.data.slug, SIGN_IN_PATH)
-        : null,
-  };
-  const rendered = renderEmail(template.data, values, {
-    networkName: brand.networkName,
-    logoUrl: brand.logo ? schoolUrl(origin, school.data.slug, brand.logo) : null,
-    primaryColor: schoolPrimary(school.data.branding),
-    locale: row.locale,
-  });
-  return {
-    id: row.id,
-    to: row.to_email,
-    fromName: school.data.email_display_name?.trim() || brand.networkName,
-    replyTo: school.data.reply_to_email,
-    ...rendered,
-  };
-}
-
-/** The person's first name, and the school's question or reason, from the request or the record. */
-async function loadSubject(client: OutboxClient, row: OutboxRow): Promise<Placeholders> {
-  if (!row.subject_id) throw new PermanentDataError("outbox row has no subject");
-  if (row.template_key.startsWith("access_")) {
-    const { data, error } = await client
-      .from("access_requests")
-      .select("first_name, grad_year, info_request, decision_reason")
-      .eq("id", row.subject_id)
-      .maybeSingle();
-    if (error) throw new Error(`request lookup failed: ${error.code}`);
-    if (!data) throw new PermanentDataError("the access request no longer exists");
-    return {
-      first_name: data.first_name,
-      graduation_year: String(data.grad_year),
-      message: row.template_key === "access_needs_info" ? data.info_request : null,
-      reason: row.template_key === "access_rejected" ? data.decision_reason : null,
-    };
-  }
-  const { data, error } = await client
-    .from("alumni_profiles")
-    .select("first_name, preferred_name, grad_year")
-    .eq("id", row.subject_id)
-    .maybeSingle();
-  if (error) throw new Error(`profile lookup failed: ${error.code}`);
-  if (!data) throw new PermanentDataError("the profile no longer exists");
-  return {
-    first_name: data.preferred_name?.trim() || data.first_name,
-    graduation_year: String(data.grad_year),
-  };
 }
