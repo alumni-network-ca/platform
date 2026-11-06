@@ -56,6 +56,15 @@ export const LINK_PLACEHOLDERS = [
   "confirm_link",
 ] as const;
 
+/** A {placeholder} in a template's subject or body. */
+export const PLACEHOLDER_PATTERN = /\{([a-z_]+)\}/g;
+
+/** An http(s) address in an email's text, for utils/html.ts linkifyText(). */
+export const URL_PATTERN = /https?:\/\/[^\s<>"']+/g;
+
+/** Punctuation that ends a sentence, not an address: kept outside the link. */
+export const LINK_TRAILING_PUNCTUATION = /[.,;:!?)]+$/;
+
 /** Where every link in the emails lands; sign-in sends each person on to the right page. */
 export const SIGN_IN_PATH = "/login";
 

@@ -1,5 +1,6 @@
-import { EMAIL_FOOTER, LINK_PLACEHOLDERS } from "@/config/email";
+import { EMAIL_FOOTER, LINK_PLACEHOLDERS, PLACEHOLDER_PATTERN } from "@/config/email";
 import type { EmailBrand, Placeholders, RenderedEmail } from "@/types/email";
+import { escapeHtml, linkifyText } from "@/utils/html";
 
 // Turns an approved template (plain text with {placeholders}, EML-03) into the email that is sent: the subject,
 // a plain-text part and a branded HTML part. Pure, so it is unit-tested; lib/email/outbox.ts loads the data.
@@ -8,38 +9,11 @@ import type { EmailBrand, Placeholders, RenderedEmail } from "@/types/email";
 export function fillPlaceholders(template: string, values: Placeholders): string {
   return template
     .replace(
-      /\{([a-z_]+)\}/g,
+      PLACEHOLDER_PATTERN,
       (_, key: string) => (values as Record<string, string | null>)[key] ?? "",
     )
     .replace(/\n{3,}/g, "\n\n")
     .trim();
-}
-
-const escapeHtml = (value: string) =>
-  value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-
-const URL_PATTERN = /https?:\/\/[^\s<>"']+/g;
-
-/** One escaped paragraph, with each of the app's own links (and only those) made clickable. */
-function paragraphHtml(paragraph: string, color: string, links: ReadonlySet<string>): string {
-  let html = "";
-  let last = 0;
-  for (const match of paragraph.matchAll(URL_PATTERN)) {
-    // A sentence's final period or bracket is not part of the address.
-    const url = match[0].replace(/[.,;:!?)]+$/, "");
-    if (!links.has(url)) continue;
-    const start = match.index;
-    html += escapeHtml(paragraph.slice(last, start));
-    html += `<a href="${escapeHtml(url)}" style="color:${color};word-break:break-all;">${escapeHtml(url)}</a>`;
-    last = start + url.length;
-  }
-  html += escapeHtml(paragraph.slice(last));
-  return html.replace(/\n/g, "<br>");
 }
 
 export function renderEmail(
@@ -59,7 +33,7 @@ export function renderEmail(
     .split(/\n{2,}/)
     .map(
       (p) =>
-        `<p style="margin:0 0 16px;font-size:16px;line-height:1.5;">${paragraphHtml(p, color, links)}</p>`,
+        `<p style="margin:0 0 16px;font-size:16px;line-height:1.5;">${linkifyText(p, links, color)}</p>`,
     )
     .join("");
   const header = brand.logoUrl
