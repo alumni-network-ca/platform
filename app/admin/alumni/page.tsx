@@ -71,49 +71,52 @@ export default async function Roster({ searchParams }: { searchParams: Search })
         <Button>{t.apply}</Button>
       </form>
       {/* TODO(FRS-04): freshness filter. TODO(EML-05): email state. TODO(EXP-01): export results. */}
-      <div className="tableBox">
-        <table className="dataTable">
-          <thead>
-            <tr>
-              <th>{t.name}</th>
-              <th>{t.class}</th>
-              <th>{t.status}</th>
-              <th>{t.lastConfirmed}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r) => (
-              <tr key={r.id}>
-                <td>
-                  <Link href={"/admin/alumni/" + r.id}>
-                    {r.preferred_name || r.first_name} {r.last_name}
-                  </Link>
-                  <span className="cellSub">
-                    {[r.job_title, r.city].filter(Boolean).join(" · ")}
-                  </span>
-                </td>
-                <td>{r.grad_year}</td>
-                <td>
-                  <span
-                    className={
-                      "tag " +
-                      (r.state === "published"
-                        ? "tagGood"
-                        : r.state === "suspended"
-                          ? "tagBad"
-                          : "")
-                    }
-                  >
-                    {t[r.state]}
-                  </span>
-                </td>
-                <td>{dateLabel(r.last_confirmed_at, locale)}</td>
+      {rows.length ? (
+        <div className="tableBox">
+          <table className="dataTable">
+            <thead>
+              <tr>
+                <th>{t.name}</th>
+                <th>{t.class}</th>
+                <th>{t.status}</th>
+                <th>{t.lastConfirmed}</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        {!rows.length && <p className="panel">{t.empty}</p>}
-      </div>
+            </thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr key={r.id}>
+                  <td>
+                    <Link href={"/admin/alumni/" + r.id}>
+                      {r.preferred_name || r.first_name} {r.last_name}
+                    </Link>
+                    <span className="cellSub">
+                      {[r.job_title, r.city].filter(Boolean).join(" · ")}
+                    </span>
+                  </td>
+                  <td>{r.grad_year}</td>
+                  <td>
+                    <span
+                      className={
+                        "tag " +
+                        (r.state === "published"
+                          ? "tagGood"
+                          : r.state === "suspended"
+                            ? "tagBad"
+                            : "")
+                      }
+                    >
+                      {t[r.state]}
+                    </span>
+                  </td>
+                  <td>{dateLabel(r.last_confirmed_at, locale)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <p className="panel">{t.empty}</p>
+      )}
       <div className="shellTitle">
         <p>
           {format(t.recordsRange, {

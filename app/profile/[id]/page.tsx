@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { ContactReveal } from "@/components/directory/ContactReveal";
-import { requireAccess } from "@/lib/auth/account";
+import { publishedProfile } from "@/lib/directory/profile";
 import { format, translations } from "@/lib/i18n";
 import { getServerLocale } from "@/lib/i18n-server";
 import { initials, optionsFor, repeatsCurrentRole } from "@/lib/profile/fields";
@@ -10,11 +9,10 @@ import { schoolConfig } from "@/lib/tenant/config";
 import { BackArrow } from "@/components/icons";
 
 // An alumnus's profile as other alumni see it (DIR-03, CON-02; design Profile). Only a published profile at this
-// school opens: anything else is a 404, even for staff whose RLS could read hidden records. Email and phone are
-// never in the page: they come one at a time through initiate_contact. The design's relayed message form is a
-// future module (ADR 0006, FUT-11), so contact works by reveal as decided in DEC-03.
+// school opens, checked in lib/directory/profile.ts. Email and phone are never in the page: they come one at a time
+// through initiate_contact. The design's relayed message form is a future module (ADR 0006, FUT-11), so contact works
+// by reveal as decided in DEC-03.
 
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const LINKS = ["linkedin", "facebook", "instagram", "website"] as const;
 
 async function read<T>(query: PromiseLike<{ data: T; error: { message: string } | null }>) {
@@ -36,24 +34,10 @@ type Role = {
 
 export default async function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const { school, supabase, user } = await requireAccess(`/profile/${id}`);
-  if (!UUID.test(id)) notFound();
+  const { school, supabase, user, profile: p } = await publishedProfile(id);
   const locale = await getServerLocale();
   const t = translations[locale].profile;
   const o = translations[locale].onboarding;
-  const p = await read(
-    supabase
-      .from("alumni_profiles")
-      .select(
-        "id, user_id, first_name, last_name, preferred_name, grad_year, city, country, bio, job_title, employer, career_field_id, languages, last_confirmed_at",
-      )
-      .eq("id", id)
-      .eq("institution_id", school.id)
-      .eq("status", "active")
-      .eq("visibility", "members")
-      .maybeSingle(),
-  );
-  if (!p) notFound();
 
   const [education, experience, offerIds, links, contactTypes, config] = await Promise.all([
     read(

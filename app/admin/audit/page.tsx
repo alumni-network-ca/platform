@@ -80,35 +80,38 @@ export default async function Audit({ searchParams }: { searchParams: Search }) 
           </Link>
         ))}
       </nav>
-      <div className="tableBox">
-        <table className="dataTable">
-          <thead>
-            <tr>
-              <th>{t.when}</th>
-              <th>{t.who}</th>
-              <th>{t.what}</th>
-              <th>{t.details}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => {
-              const d = describeAudit(row, people, t);
-              return (
-                <tr
-                  key={row.id}
-                  className={row.actor_kind === "system_admin" ? "adminSupport" : undefined}
-                >
-                  <td>{dateLabel(row.created_at, locale)}</td>
-                  <td>{d.actor}</td>
-                  <td>{d.targetHref ? <Link href={d.targetHref}>{d.what}</Link> : d.what}</td>
-                  <td>{d.details || "—"}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        {!rows.length && <p className="panel">{t.empty}</p>}
-      </div>
+      {rows.length ? (
+        <div className="tableBox">
+          <table className="dataTable">
+            <thead>
+              <tr>
+                <th>{t.when}</th>
+                <th>{t.who}</th>
+                <th>{t.what}</th>
+                <th>{t.details}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row) => {
+                const d = describeAudit(row, people, t);
+                return (
+                  <tr
+                    key={row.id}
+                    className={row.actor_kind === "system_admin" ? "adminSupport" : undefined}
+                  >
+                    <td>{dateLabel(row.created_at, locale)}</td>
+                    <td>{d.actor}</td>
+                    <td>{d.targetHref ? <Link href={d.targetHref}>{d.what}</Link> : d.what}</td>
+                    <td>{d.details || "—"}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <p className="panel">{t.empty}</p>
+      )}
       <div className="formActions">
         {page > 1 && <Link href={url(type, page - 1)}>{t.previous}</Link>}
         {page * 25 < (count ?? 0) && <Link href={url(type, page + 1)}>{t.next}</Link>}

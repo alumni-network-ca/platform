@@ -56,56 +56,59 @@ export default async function Approvals({ searchParams }: { searchParams: Search
           </Link>
         ))}
       </nav>
-      <div className="tableBox">
-        <table className="dataTable">
-          <thead>
-            <tr>
-              <th>{t.applicant}</th>
-              <th>{t.class}</th>
-              <th>{t.match}</th>
-              <th>{t.waiting}</th>
-              <th>{t.actions}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r) => {
-              const match = matches.find((m) => m.request_id === r.id);
-              return (
-                <tr key={r.id}>
-                  <td>
-                    <strong>
-                      {r.first_name} {r.last_name}
-                    </strong>
-                    <span className="cellSub">{r.email}</span>
-                  </td>
-                  <td>{r.grad_year}</td>
-                  <td>
-                    <span
-                      className={"tag " + (match?.claimed ? "tagWarn" : match ? "tagGood" : "")}
-                    >
-                      {match
-                        ? match.claimed
-                          ? t.alreadyMember
-                          : match.first_name +
-                            " " +
-                            match.last_name +
-                            ", " +
-                            match.grad_year +
-                            (match.id_match ? " · " + t.sameStudentId : "")
-                        : t.noMatch}
-                    </span>
-                  </td>
-                  <td>{dateLabel(r.created_at, locale)}</td>
-                  <td>
-                    <Link href={"/admin/approvals/" + r.id}>{t.review}</Link>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        {!rows.length && <p className="panel">{t.empty}</p>}
-      </div>
+      {rows.length ? (
+        <div className="tableBox">
+          <table className="dataTable">
+            <thead>
+              <tr>
+                <th>{t.applicant}</th>
+                <th>{t.class}</th>
+                <th>{t.match}</th>
+                <th>{t.waiting}</th>
+                <th>{t.actions}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r) => {
+                const match = matches.find((m) => m.request_id === r.id);
+                return (
+                  <tr key={r.id}>
+                    <td>
+                      <strong>
+                        {r.first_name} {r.last_name}
+                      </strong>
+                      <span className="cellSub">{r.email}</span>
+                    </td>
+                    <td>{r.grad_year}</td>
+                    <td>
+                      <span
+                        className={"tag " + (match?.claimed ? "tagWarn" : match ? "tagGood" : "")}
+                      >
+                        {match
+                          ? match.claimed
+                            ? t.alreadyMember
+                            : match.first_name +
+                              " " +
+                              match.last_name +
+                              ", " +
+                              match.grad_year +
+                              (match.id_match ? " · " + t.sameStudentId : "")
+                          : t.noMatch}
+                      </span>
+                    </td>
+                    <td>{dateLabel(r.created_at, locale)}</td>
+                    <td>
+                      <Link href={"/admin/approvals/" + r.id}>{t.review}</Link>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <p className="panel">{t.empty}</p>
+      )}
       <div className="formActions">
         {page > 1 && <Link href={"?tab=" + tab + "&page=" + (page - 1)}>{t.previous}</Link>}
         {page * 25 < total && <Link href={"?tab=" + tab + "&page=" + (page + 1)}>{t.next}</Link>}
