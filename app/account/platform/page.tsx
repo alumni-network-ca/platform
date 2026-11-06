@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Nav } from "@/components/Nav";
 import { SignOutButton } from "@/components/SignOutButton";
 import { requireAccess } from "@/lib/auth/account";
 import { schoolBranding } from "@/lib/school";
@@ -35,36 +34,33 @@ export default async function PlatformAdminHere() {
   const consoleUrl = rootUrl(await getOrigin(), `/console/support?school=${school.slug}`);
 
   return (
-    <>
-      <Nav />
-      <main className="authPage">
-        <section className="authCard">
-          <h1>You are signed in as a platform admin</h1>
-          <p className="muted">
-            Platform admins don&apos;t see {shortName}&apos;s alumni data. To help the school, open
-            support access from the console: it is read-only, ends on its own, and the school&apos;s
-            admins see it in their audit log.
+    <main className="authPage">
+      <section className="authCard">
+        <h1>You are signed in as a platform admin</h1>
+        <p className="muted">
+          Platform admins don&apos;t see {shortName}&apos;s alumni data. To help the school, open
+          support access from the console: it is read-only, ends on its own, and the school&apos;s
+          admins see it in their audit log.
+        </p>
+        {grant ? (
+          <p className="notice noticeGood" role="status">
+            Your support access to {shortName} is open until {time(grant.expires_at)}.
           </p>
-          {grant ? (
-            <p className="notice noticeGood" role="status">
-              Your support access to {shortName} is open until {time(grant.expires_at)}.
-            </p>
-          ) : (
-            <p className="notice" role="status">
-              You have no support access open for {shortName}.
-            </p>
-          )}
-          <div className="authForm">
-            <Button asChild size="lg" className="w-full">
-              <a href={consoleUrl}>Open the console</a>
-            </Button>
-            <Link className="textButton" href="/join">
-              I am a {shortName} graduate: join the network
-            </Link>
-            <SignOutButton />
-          </div>
-        </section>
-      </main>
-    </>
+        ) : (
+          <p className="notice" role="status">
+            You have no support access open for {shortName}.
+          </p>
+        )}
+        <div className="authForm">
+          <Button asChild size="lg" className="w-full">
+            <a href={consoleUrl}>Open the console</a>
+          </Button>
+          <Link className="textButton" href="/join">
+            I am a {shortName} graduate: join the network
+          </Link>
+          <SignOutButton />
+        </div>
+      </section>
+    </main>
   );
 }

@@ -1,4 +1,3 @@
-import { Nav } from "@/components/Nav";
 import { requireAccess } from "@/lib/auth/account";
 import { EmailChange } from "./EmailChange";
 
@@ -6,13 +5,10 @@ import { EmailChange } from "./EmailChange";
 export default async function ChangeEmailPage() {
   const { user } = await requireAccess("/account/email");
   return (
-    <>
-      <Nav />
-      <main className="authPage">
-        <section className="authCard">
-          <EmailChange currentEmail={user.email ?? ""} />
-        </section>
-      </main>
-    </>
+    <main className="authPage">
+      <section className="authCard">
+        <EmailChange currentEmail={user.email ?? ""} />
+      </section>
+    </main>
   );
 }

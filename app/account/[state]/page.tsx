@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Nav } from "@/components/Nav";
 import { JoinProgress } from "@/components/JoinProgress";
 import { requireAccess } from "@/lib/auth/account";
 import { getServerLocale } from "@/lib/i18n-server";
@@ -84,105 +83,102 @@ export default async function AccountStatePage({ params }: { params: Promise<{ s
   };
   const t = content[state];
   return (
-    <>
-      <Nav />
-      <main className="joinPage">
-        {state === "pending" && <JoinProgress step={2} locale={locale} />}
-        <section className="joinCard joinCentered">
-          <span className={"tag" + (state === "pending" ? " tagWarn" : "")}>{t.badge}</span>
-          <h1>{t.title}</h1>
-          <p className="muted">{t.body}</p>
-          {state === "pending" && (
-            <>
-              <ol className="joinJourney">
-                <li>
-                  <span className="joinDot joinDone" aria-hidden="true">
-                    <Check className="size-4" strokeWidth={3} />
-                  </span>
-                  <div>
-                    <h3>{fr ? "Compte créé" : "Account created"}</h3>
-                    <p>
-                      {fr ? "Courriel confirmé" : "Email confirmed"} · {user.email}
-                    </p>
-                  </div>
-                </li>
-                <li>
-                  <span className="joinDot joinDone" aria-hidden="true">
-                    <Check className="size-4" strokeWidth={3} />
-                  </span>
-                  <div>
-                    <h3>{fr ? "Demande envoyée" : "Alumni request submitted"}</h3>
-                    <p>
-                      {request?.first_name} {request?.last_name} · {fr ? "Promotion" : "Class of"}{" "}
-                      {request?.grad_year}
-                      {request?.school_student_id &&
-                        ` · ${fr ? "Matricule" : "Student ID"} ${request.school_student_id}`}
-                    </p>
-                  </div>
-                </li>
-                <li aria-current="step">
-                  <span className="joinDot joinWaiting" aria-hidden="true">
-                    3
-                  </span>
-                  <div>
-                    <h3>{fr ? "Vérification par l'école en attente" : "School review pending"}</h3>
-                    <p>
-                      {fr
-                        ? "Un réviseur approuvera la demande ou demandera plus de renseignements."
-                        : "A school reviewer will approve your request or ask for more details."}
-                    </p>
-                  </div>
-                </li>
-                <li>
-                  <span className="joinDot" aria-hidden="true">
-                    4
-                  </span>
-                  <div>
-                    <h3 className="muted">
-                      {fr
-                        ? "Accès au réseau et création du profil"
-                        : "Alumni access and profile setup"}
-                    </h3>
-                    <p>
-                      {fr
-                        ? "Disponible après l'approbation de l'école."
-                        : "Available after school approval."}
-                    </p>
-                  </div>
-                </li>
-              </ol>
-              <div className="joinNotice">
-                <strong>
-                  {fr ? "L'annuaire est encore verrouillé." : "The alumni directory is locked."}
-                </strong>
-                <br />
-                {fr
-                  ? "Vous pourrez utiliser le réseau après l'approbation de votre demande."
-                  : "You'll be able to use the network once a reviewer approves you."}
-              </div>
-              <p className="muted microcopy">
-                {fr
-                  ? "Vous pouvez fermer cette page. Connectez-vous de nouveau pour consulter votre demande."
-                  : "You can close this page. Sign in again anytime to check your request."}
-              </p>
-              <div className="joinActions">
-                <Button asChild variant="secondary">
-                  <Link href="/join/edit">{fr ? "Modifier ma demande" : "Edit my request"}</Link>
-                </Button>
-                <Button asChild>
-                  <a href="/auth/home">
-                    {fr ? "Vérifier l'état de ma demande" : "Check request status"}
-                  </a>
-                </Button>
-              </div>
-            </>
-          )}
-          {state === "needs-info" && <ReplyForm question={request?.info_request} />}
-          {state === "rejected" && request?.decision_reason && (
-            <blockquote className="joinNotice">{request.decision_reason}</blockquote>
-          )}
-        </section>
-      </main>
-    </>
+    <main className="joinPage">
+      {state === "pending" && <JoinProgress step={2} locale={locale} />}
+      <section className="joinCard joinCentered">
+        <span className={"tag" + (state === "pending" ? " tagWarn" : "")}>{t.badge}</span>
+        <h1>{t.title}</h1>
+        <p className="muted">{t.body}</p>
+        {state === "pending" && (
+          <>
+            <ol className="joinJourney">
+              <li>
+                <span className="joinDot joinDone" aria-hidden="true">
+                  <Check className="size-4" strokeWidth={3} />
+                </span>
+                <div>
+                  <h3>{fr ? "Compte créé" : "Account created"}</h3>
+                  <p>
+                    {fr ? "Courriel confirmé" : "Email confirmed"} · {user.email}
+                  </p>
+                </div>
+              </li>
+              <li>
+                <span className="joinDot joinDone" aria-hidden="true">
+                  <Check className="size-4" strokeWidth={3} />
+                </span>
+                <div>
+                  <h3>{fr ? "Demande envoyée" : "Alumni request submitted"}</h3>
+                  <p>
+                    {request?.first_name} {request?.last_name} · {fr ? "Promotion" : "Class of"}{" "}
+                    {request?.grad_year}
+                    {request?.school_student_id &&
+                      ` · ${fr ? "Matricule" : "Student ID"} ${request.school_student_id}`}
+                  </p>
+                </div>
+              </li>
+              <li aria-current="step">
+                <span className="joinDot joinWaiting" aria-hidden="true">
+                  3
+                </span>
+                <div>
+                  <h3>{fr ? "Vérification par l'école en attente" : "School review pending"}</h3>
+                  <p>
+                    {fr
+                      ? "Un réviseur approuvera la demande ou demandera plus de renseignements."
+                      : "A school reviewer will approve your request or ask for more details."}
+                  </p>
+                </div>
+              </li>
+              <li>
+                <span className="joinDot" aria-hidden="true">
+                  4
+                </span>
+                <div>
+                  <h3 className="muted">
+                    {fr
+                      ? "Accès au réseau et création du profil"
+                      : "Alumni access and profile setup"}
+                  </h3>
+                  <p>
+                    {fr
+                      ? "Disponible après l'approbation de l'école."
+                      : "Available after school approval."}
+                  </p>
+                </div>
+              </li>
+            </ol>
+            <div className="joinNotice">
+              <strong>
+                {fr ? "L'annuaire est encore verrouillé." : "The alumni directory is locked."}
+              </strong>
+              <br />
+              {fr
+                ? "Vous pourrez utiliser le réseau après l'approbation de votre demande."
+                : "You'll be able to use the network once a reviewer approves you."}
+            </div>
+            <p className="muted microcopy">
+              {fr
+                ? "Vous pouvez fermer cette page. Connectez-vous de nouveau pour consulter votre demande."
+                : "You can close this page. Sign in again anytime to check your request."}
+            </p>
+            <div className="joinActions">
+              <Button asChild variant="secondary">
+                <Link href="/join/edit">{fr ? "Modifier ma demande" : "Edit my request"}</Link>
+              </Button>
+              <Button asChild>
+                <a href="/auth/home">
+                  {fr ? "Vérifier l'état de ma demande" : "Check request status"}
+                </a>
+              </Button>
+            </div>
+          </>
+        )}
+        {state === "needs-info" && <ReplyForm question={request?.info_request} />}
+        {state === "rejected" && request?.decision_reason && (
+          <blockquote className="joinNotice">{request.decision_reason}</blockquote>
+        )}
+      </section>
+    </main>
   );
 }

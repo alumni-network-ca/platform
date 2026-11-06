@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { Nav } from "@/components/Nav";
 import { CancelLink, FormAlert, ProfileForm, SubmitButton } from "@/components/profile/ProfileForm";
 import { SectionFields } from "@/components/profile/SectionFields";
 import { format, translations } from "@/lib/i18n";
@@ -32,35 +31,32 @@ export default async function EditSectionPage({
   const [title, intro] = titles[section];
 
   return (
-    <>
-      <Nav />
-      <main className="onb meNarrow">
-        <ProfileForm
-          className="onbContents"
-          action={saveSection.bind(null, section)}
-          t={t}
-          unsavedWarning={m.unsaved}
-        >
-          <section className="onbCard">
-            <div className="onbBody">
-              <div className="onbHead">
-                <Link className="meBackLink" href="/me">
-                  <BackArrow />
-                  {m.backToProfile}
-                </Link>
-                <h1>{title}</h1>
-                <p>{intro}</p>
-              </div>
-              <FormAlert />
-              <SectionFields section={section} me={me} />
+    <main className="onb meNarrow">
+      <ProfileForm
+        className="onbContents"
+        action={saveSection.bind(null, section)}
+        t={t}
+        unsavedWarning={m.unsaved}
+      >
+        <section className="onbCard">
+          <div className="onbBody">
+            <div className="onbHead">
+              <Link className="meBackLink" href="/me">
+                <BackArrow />
+                {m.backToProfile}
+              </Link>
+              <h1>{title}</h1>
+              <p>{intro}</p>
             </div>
-            <div className="onbFooter">
-              <CancelLink href="/me" label={m.cancel} />
-              <SubmitButton label={m.save} />
-            </div>
-          </section>
-        </ProfileForm>
-      </main>
-    </>
+            <FormAlert />
+            <SectionFields section={section} me={me} />
+          </div>
+          <div className="onbFooter">
+            <CancelLink href="/me" label={m.cancel} />
+            <SubmitButton label={m.save} />
+          </div>
+        </section>
+      </ProfileForm>
+    </main>
   );
 }

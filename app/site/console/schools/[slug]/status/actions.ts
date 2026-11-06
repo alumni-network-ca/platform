@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requirePlatformAdmin } from "@/lib/auth/platform";
 import { refreshSchoolConfig } from "@/lib/tenant/config";
@@ -30,5 +31,7 @@ export async function setSchoolStatus(_: StatusResult, form: FormData): Promise<
   if (error) return { error: "The school's status did not change. Reload the page and try again." };
   // A suspended school has no config; a reactivated one must not wait for the cached "none" to expire.
   refreshSchoolConfig(school.id);
+  // The nav bar, in the root layout, lists the live schools.
+  revalidatePath("/", "layout");
   redirect(`/console/schools/${slug}`);
 }

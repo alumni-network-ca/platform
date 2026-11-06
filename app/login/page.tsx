@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { Nav } from "@/components/Nav";
 import { SignInForm } from "@/components/SignInForm";
 import { schoolBranding } from "@/lib/school";
 import { requireSchool } from "@/lib/tenant/server";
@@ -8,15 +7,12 @@ import { requireSchool } from "@/lib/tenant/server";
 export default async function LoginPage() {
   const { networkName } = schoolBranding(await requireSchool());
   return (
-    <>
-      <Nav />
-      <main className="authPage">
-        <section className="authCard joinAuth">
-          <Suspense fallback={null}>
-            <SignInForm networkName={networkName} audience="school" />
-          </Suspense>
-        </section>
-      </main>
-    </>
+    <main className="authPage">
+      <section className="authCard joinAuth">
+        <Suspense fallback={null}>
+          <SignInForm networkName={networkName} audience="school" />
+        </Suspense>
+      </section>
+    </main>
   );
 }

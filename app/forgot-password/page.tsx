@@ -1,4 +1,3 @@
-import { Nav } from "@/components/Nav";
 import { RecoveryForm } from "./RecoveryForm";
 
 export default async function ForgotPasswordPage({
@@ -8,13 +7,10 @@ export default async function ForgotPasswordPage({
 }) {
   const expired = (await searchParams).error === "expired";
   return (
-    <>
-      <Nav />
-      <main className="authPage">
-        <section className="authCard joinAuth">
-          <RecoveryForm expired={expired} />
-        </section>
-      </main>
-    </>
+    <main className="authPage">
+      <section className="authCard joinAuth">
+        <RecoveryForm expired={expired} />
+      </section>
+    </main>
   );
 }

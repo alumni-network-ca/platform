@@ -1032,7 +1032,8 @@ textarea:focus {
 
 /* Console and school admin shell (docs/design/alumni-full-flow, S1–S2 and A1–A4) */
 .shell {
-  min-height: 100vh;
+  /* Below the nav bar, which the root layout renders. */
+  min-height: calc(100vh - 66px);
   display: flex;
   flex-direction: column;
   background: var(--paper);

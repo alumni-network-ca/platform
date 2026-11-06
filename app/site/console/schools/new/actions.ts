@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requirePlatformAdmin } from "@/lib/auth/platform";
 import { isSlug } from "@/lib/tenant/host";
@@ -39,5 +40,7 @@ export async function createSchool(
       return { error: `${error.message[0]?.toUpperCase()}${error.message.slice(1)}.` };
     return { error: "Could not create the school. Please try again." };
   }
+  // The nav bar, in the root layout, lists the live schools.
+  revalidatePath("/", "layout");
   redirect(`/console/schools/${slug}`);
 }

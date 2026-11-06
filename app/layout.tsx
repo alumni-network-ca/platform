@@ -26,7 +26,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en" data-scroll-behavior="smooth" style={schoolTheme(school?.branding)}>
       <body>
         <SchoolProvider school={school}>
-          <LanguageProvider>{children}</LanguageProvider>
+          <LanguageProvider>
+            {/* The one nav bar (docs/design/nav-bar.md). In the layout, it stays put while a page loads; actions
+                that change what it shows revalidate the root layout. */}
+            {children}
+          </LanguageProvider>
         </SchoolProvider>
       </body>
     </html>
