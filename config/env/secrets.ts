@@ -8,4 +8,12 @@ export const secrets = {
   get supabaseSecretKey() {
     return required("SUPABASE_SECRET_KEY", process.env.SUPABASE_SECRET_KEY);
   },
+  /** Resend API key (EML-01, ADR 0007). Every environment sends through Resend, with its own key. */
+  get resendApiKey() {
+    return required("RESEND_API_KEY", process.env.RESEND_API_KEY);
+  },
+  /** Bearer token the cron routes require (EML-01). */
+  get cronSecret() {
+    return required("CRON_SECRET", process.env.CRON_SECRET);
+  },
 };

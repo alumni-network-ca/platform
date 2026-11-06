@@ -1324,6 +1324,32 @@ export type Database = {
         };
         Returns: undefined;
       };
+      claim_email_outbox: {
+        Args: { p_keys: string[]; p_limit?: number; p_subject?: string };
+        Returns: {
+          attempts: number;
+          created_at: string;
+          id: string;
+          institution_id: string | null;
+          last_error: string | null;
+          locale: Database["public"]["Enums"]["locale"];
+          next_attempt_at: string;
+          provider_message_id: string | null;
+          sent_at: string | null;
+          status: Database["public"]["Enums"]["email_status"];
+          subject_id: string | null;
+          template_key: string;
+          to_email: string;
+          to_user_id: string | null;
+          updated_at: string;
+        }[];
+        SetofOptions: {
+          from: "*";
+          to: "email_outbox";
+          isOneToOne: false;
+          isSetofReturn: true;
+        };
+      };
       clean_branding: { Args: { p_branding: Json }; Returns: Json };
       confirm_still_accurate: { Args: { p_token: string }; Returns: boolean };
       confirm_still_accurate_in_app: { Args: { p_inst: string }; Returns: undefined };
@@ -1618,7 +1644,11 @@ export type Database = {
         | "staff_invitation"
         | "annual_confirmation"
         | "confirmation_reminder_1"
-        | "confirmation_reminder_2";
+        | "confirmation_reminder_2"
+        | "access_received"
+        | "access_withdrawn"
+        | "membership_suspended"
+        | "membership_reactivated";
       locale: "en" | "fr";
       member_role: "school_admin" | "reviewer" | "alumni" | "student";
       member_status: "active" | "suspended" | "revoked";
@@ -1761,6 +1791,10 @@ export const Constants = {
         "annual_confirmation",
         "confirmation_reminder_1",
         "confirmation_reminder_2",
+        "access_received",
+        "access_withdrawn",
+        "membership_suspended",
+        "membership_reactivated",
       ],
       locale: ["en", "fr"],
       member_role: ["school_admin", "reviewer", "alumni", "student"],

@@ -1,6 +1,7 @@
 "use server";
 
 import { requireAccess } from "@/lib/auth/account";
+import { sendQueuedEmails } from "@/lib/email/send";
 
 export type JoinResult = { error: "missing" | "tooMany" | "failed" | null; next?: string };
 
@@ -14,7 +15,7 @@ export async function updateRequest(_: JoinResult, form: FormData): Promise<Join
 }
 
 async function submitRequest(path: string, form: FormData): Promise<JoinResult> {
-  const { school, supabase } = await requireAccess(path);
+  const { school, supabase, user } = await requireAccess(path);
   const field = (name: string) => String(form.get(name) ?? "").trim();
   const gradYear = Number(field("grad_year"));
   if (
@@ -39,5 +40,14 @@ async function submitRequest(path: string, form: FormData): Promise<JoinResult> 
     p_school_student_id: field("school_student_id"),
   });
   if (error) return { error: error.code === "54000" ? "tooMany" : "failed" };
+  // A new request queues a "we received it" email (EML-08); editing an open one queues nothing.
+  const { data: request } = await supabase
+    .from("access_requests")
+    .select("id")
+    .eq("institution_id", school.id)
+    .eq("user_id", user.id)
+    .eq("status", "pending")
+    .maybeSingle();
+  if (request) await sendQueuedEmails(request.id);
   return { error: null, next: "/account/pending" };
 }

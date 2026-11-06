@@ -3,6 +3,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { staffRecord } from "@/lib/admin/records";
 import { actionError, field, type ActionResult } from "@/lib/admin/forms";
+import { sendQueuedEmails } from "@/lib/email/send";
 export async function changeStatus(
   id: string,
   _: ActionResult,
@@ -25,6 +26,7 @@ export async function changeStatus(
     p_reason: reason,
   });
   if (error) return actionError(error);
+  await sendQueuedEmails(id);
   revalidatePath("/admin", "layout");
   redirect("/admin/alumni/" + id + "?tab=history");
 }

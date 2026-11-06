@@ -2,6 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { requireStaff } from "@/lib/auth/staff";
 import { actionError, field, type ActionResult } from "@/lib/admin/forms";
+import { sendQueuedEmails } from "@/lib/email/send";
 export async function decideRequest(
   id: string,
   _: ActionResult,
@@ -32,6 +33,7 @@ export async function decideRequest(
     p_link_profile: decision === "approve" ? field(form, "profile") || undefined : undefined,
   });
   if (error) return actionError(error);
+  await sendQueuedEmails(id);
   revalidatePath("/admin", "layout");
   return {
     error: null,
