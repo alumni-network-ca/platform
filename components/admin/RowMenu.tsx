@@ -4,6 +4,7 @@ import { errorMessage, type ActionResult, type AdminCopy } from "@/lib/admin/for
 import { createPortal } from "react-dom";
 import { CopyLink } from "./CopyLink";
 import { Input } from "@/components/ui/input";
+import { Ellipsis } from "lucide-react";
 
 export type RowMenuItem = {
   key: string;
@@ -148,11 +149,7 @@ export function RowMenu({
         disabled={pending}
         onClick={() => (open ? setOpen(false) : openOn("first"))}
       >
-        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-          <circle cx="5" cy="12" r="2" />
-          <circle cx="12" cy="12" r="2" />
-          <circle cx="19" cy="12" r="2" />
-        </svg>
+        <Ellipsis aria-hidden size={18} strokeWidth={3} />
       </button>
       {open &&
         createPortal(

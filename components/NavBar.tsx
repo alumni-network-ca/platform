@@ -7,6 +7,7 @@ import type { NavLink, NavModel } from "@/lib/auth/nav";
 import { createClient } from "@/lib/supabase/client";
 import { AccountMenu } from "./AccountMenu";
 import { useLanguage } from "./LanguageProvider";
+import { Shield } from "lucide-react";
 
 /** The link for the current page: the one whose activeOn path matches most closely. */
 function currentLink(links: NavLink[], pathname: string) {
@@ -96,19 +97,7 @@ export function NavBar({ model }: { model: NavModel }) {
           <>
             {pill && (
               <span className={`rolePill rolePill-${pill.role}`}>
-                <svg
-                  aria-hidden="true"
-                  width="13"
-                  height="13"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.4"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z" />
-                </svg>
+                <Shield aria-hidden size={13} strokeWidth={2.4} />
                 {pill.label}
               </span>
             )}

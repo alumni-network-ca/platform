@@ -9,6 +9,7 @@ import { format } from "@/lib/i18n";
 import { STEPS, initials, isStep, resumeStep, type Step } from "@/lib/profile/fields";
 import { loadMyProfile } from "@/lib/profile/server";
 import { finish, saveStep } from "../actions";
+import { Check } from "lucide-react";
 
 // One step of the onboarding wizard (ONB-05; design OnbAbout, OnbCareer, OnbNetwork, OnbPublish). The welcome,
 // education and contact steps are not drawn on the canvas: they reuse the drawn steps' layout.
@@ -175,18 +176,5 @@ export default async function OnboardingStepPage({
 }
 
 function CheckIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="3"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M5 12l5 5 9-10" />
-    </svg>
-  );
+  return <Check size={13} strokeWidth={3} />;
 }

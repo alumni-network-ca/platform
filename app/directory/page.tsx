@@ -11,7 +11,7 @@ import { schoolBranding } from "@/lib/school";
 import { schoolConfig } from "@/lib/tenant/config";
 import { Button } from "@/components/ui/button";
 import { NativeSelect } from "@/components/ui/native-select";
-import { X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { BackArrow, ForwardArrow } from "@/components/icons";
 
 // The alumni directory (DIR-02; design Directory). Every filter is in the URL; search_directory returns only
@@ -91,19 +91,12 @@ export default async function DirectoryPage({
 
         <DirectoryForm>
           <div className="dirSearch" role="search">
-            <svg
-              aria-hidden="true"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#4a5575"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-            >
-              <circle cx="11" cy="11" r="7" />
-              <path d="M20 20l-3.5-3.5" />
-            </svg>
+            <Search
+              aria-hidden
+              size={20}
+              strokeWidth={2.2}
+              className="shrink-0 text-muted-foreground"
+            />
             <label htmlFor="dir-q" className="srOnly">
               {t.searchLabel}
             </label>

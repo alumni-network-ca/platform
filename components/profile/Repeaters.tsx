@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { EducationRow } from "@/lib/profile/fields";
 import { TextInput, type ProfileCopy } from "./ProfileForm";
+import { Plus } from "lucide-react";
 
 type Role = {
   job_title: string;
@@ -157,18 +158,5 @@ export function RoleRows({ initial, t }: { initial: Role[]; t: ProfileCopy }) {
 }
 
 function PlusIcon() {
-  return (
-    <svg
-      aria-hidden="true"
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.4"
-      strokeLinecap="round"
-    >
-      <path d="M12 5v14M5 12h14" />
-    </svg>
-  );
+  return <Plus aria-hidden size={16} strokeWidth={2.4} />;
 }
