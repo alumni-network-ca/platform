@@ -81,7 +81,7 @@ export function InvitationLanding({
               required
             />
           </label>
-          <Button size="lg" className="w-full" disabled={busy}>
+          <Button size="lg" className="w-full" loading={busy}>
             {busy ? t.signingIn : t.signInButton}
           </Button>
           {message && (

@@ -90,7 +90,9 @@ export function DirectorySkeleton({ label }: { label: string }) {
         <Skeleton className="mb-1.5 h-4 w-28" />
       </div>
       <div className="dirForm" aria-hidden="true">
-        <Skeleton className="h-14 rounded-lg" />
+        <div className="flex h-14 items-center justify-end rounded-lg border border-border bg-card px-1.5">
+          <Skeleton className="h-10 w-24" />
+        </div>
         <div className="dirBody">
           <div className="dirFilters">
             <Skeleton className="h-10 w-28 min-[721px]:hidden" />

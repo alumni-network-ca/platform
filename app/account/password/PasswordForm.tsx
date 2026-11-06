@@ -125,7 +125,7 @@ export function PasswordForm({
             required
           />
         </label>
-        <Button size="lg" className="w-full" disabled={busy}>
+        <Button size="lg" className="w-full" loading={busy}>
           {busy ? t.saving : t.save}
         </Button>
       </form>

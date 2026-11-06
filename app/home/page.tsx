@@ -1,3 +1,4 @@
+import Form from "next/form";
 import Link from "next/link";
 import { AVATAR_TINTS } from "@/config/ui";
 import { requireAccess } from "@/lib/auth/account";
@@ -16,6 +17,8 @@ import { schoolConfig } from "@/lib/tenant/config";
 import { confirmStillAccurate } from "./actions";
 import { Button } from "@/components/ui/button";
 import { ForwardArrow } from "@/components/icons";
+import { SubmitButton } from "@/components/ui/submit-button";
+import { LinkPending } from "@/components/LinkPending";
 
 // The alumni home page (DIR-06; design Home): the reader's own status first, then ways into the network. Every
 // read goes through RLS: search_directory returns only members-visible profiles, and contact_events only the
@@ -137,7 +140,7 @@ export default async function HomePage({
     </span>
   );
   const card = (p: Card, meta: string, extra?: string) => (
-    <Link key={p.id} className="homeCard" href={`/profile/${p.id}`}>
+    <Link key={p.id} className="homeCard relative" href={`/profile/${p.id}`} prefetch={false}>
       <span className="homeCardHead">
         {avatar(p)}
         <span className="homeCardName">
@@ -147,6 +150,7 @@ export default async function HomePage({
       </span>
       {roleLine(p) && <span className="homeCardRole">{roleLine(p)}</span>}
       {extra && <span className="homeTag">{extra}</span>}
+      <LinkPending className="inset-x-[18px] bottom-2 text-primary" />
     </Link>
   );
 
@@ -176,7 +180,7 @@ export default async function HomePage({
           </div>
           <div className="homeActions">
             <form action={confirmStillAccurate}>
-              <Button type="submit">{t.stillAccurate}</Button>
+              <SubmitButton>{t.stillAccurate}</SubmitButton>
             </form>
             <Button asChild variant="secondary">
               <Link href="/me">{t.updateProfile}</Link>
@@ -194,13 +198,13 @@ export default async function HomePage({
         <div className="homeMain">
           <section className="homePanel">
             <h2>{t.findTitle}</h2>
-            <form action="/directory" className="homeSearch" role="search">
+            <Form action="/directory" className="homeSearch" role="search">
               <label htmlFor="home-q" className="srOnly">
                 {t.searchLabel}
               </label>
               <input id="home-q" name="q" type="search" placeholder={t.searchPlaceholder} />
-              <Button type="submit">{t.search}</Button>
-            </form>
+              <SubmitButton>{t.search}</SubmitButton>
+            </Form>
             {offers.length > 0 && (
               <div className="homeOffers">
                 <span>{t.openTo}</span>
@@ -288,7 +292,7 @@ export default async function HomePage({
               <ul className="homeContacts">
                 {contacted.map((c) => (
                   <li key={c.recipient_profile_id}>
-                    <Link href={`/profile/${c.person.id}`}>
+                    <Link className="relative" href={`/profile/${c.person.id}`} prefetch={false}>
                       {avatar(c.person, true)}
                       <span>
                         <strong>{displayName(c.person)}</strong>
@@ -299,6 +303,7 @@ export default async function HomePage({
                           · {shortDate.format(new Date(c.created_at))}
                         </small>
                       </span>
+                      <LinkPending className="inset-x-0 -bottom-1 text-primary" />
                     </Link>
                   </li>
                 ))}

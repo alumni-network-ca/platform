@@ -81,7 +81,7 @@ export function AdminDashboardSkeleton({ label }: { label: string }) {
       <LoadingStatus label={label} />
       <Title action />
       <Skeleton className="h-[88px] rounded-lg" />
-      <Stats count={5} />
+      <Stats count={4} />
       <Panel lines={5} />
     </>
   );

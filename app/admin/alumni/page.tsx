@@ -1,11 +1,12 @@
+import Form from "next/form";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireStaff } from "@/lib/auth/staff";
 import { adminCopy, dateLabel, read, pageNumber, type Search } from "@/lib/admin/data";
 import { format } from "@/lib/i18n";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
+import { SubmitButton } from "@/components/ui/submit-button";
 const states = ["published", "hidden", "onboarding", "suspended", "archived", "deceased"] as const;
 export default async function Roster({ searchParams }: { searchParams: Search }) {
   const { supabase, school } = await requireStaff("/admin/alumni", "records.read");
@@ -44,7 +45,7 @@ export default async function Roster({ searchParams }: { searchParams: Search })
           <p>{t.rosterIntro}</p>
         </div>
       </div>
-      <form className="adminFilters">
+      <Form action="/admin/alumni" className="adminFilters">
         <label className="field">
           {t.search}
           <Input name="q" defaultValue={query} maxLength={200} placeholder={t.rosterSearchHint} />
@@ -68,8 +69,8 @@ export default async function Roster({ searchParams }: { searchParams: Search })
           {t.classMax}
           <Input name="max" type="number" min={1900} max={2100} defaultValue={p.max} />
         </label>
-        <Button>{t.apply}</Button>
-      </form>
+        <SubmitButton>{t.apply}</SubmitButton>
+      </Form>
       {/* TODO(FRS-04): freshness filter. TODO(EML-05): email state. TODO(EXP-01): export results. */}
       {rows.length ? (
         <div className="tableBox">

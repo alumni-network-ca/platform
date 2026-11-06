@@ -41,7 +41,7 @@ export function ActiveGrants({ grants }: { grants: ActiveGrant[] }) {
                 <form action={action}>
                   <input type="hidden" name="intent" value="end" />
                   <input type="hidden" name="grant" value={g.id} />
-                  <Button variant="destructive" disabled={pending}>
+                  <Button variant="destructive" loading={pending}>
                     End now
                   </Button>
                 </form>
@@ -117,7 +117,7 @@ export function OpenGrantForm({
           </div>
         )}
         <div className="formActions">
-          <Button disabled={pending}>{pending ? "Opening…" : "Open grant"}</Button>
+          <Button loading={pending}>{pending ? "Opening…" : "Open grant"}</Button>
         </div>
       </form>
     </section>

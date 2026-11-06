@@ -300,103 +300,103 @@
     "count": 1
   },
   {
-    "file": "app/site/console/page.tsx",
+    "file": "app/site/console/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Active members",
     "count": 1
   },
   {
-    "file": "app/site/console/page.tsx",
+    "file": "app/site/console/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Each school is a private network at its own address. Counts only, no alumni data here.",
     "count": 1
   },
   {
-    "file": "app/site/console/page.tsx",
+    "file": "app/site/console/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Find a school",
     "count": 1
   },
   {
-    "file": "app/site/console/page.tsx",
+    "file": "app/site/console/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "invited, not accepted",
     "count": 1
   },
   {
-    "file": "app/site/console/page.tsx",
+    "file": "app/site/console/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Live schools",
     "count": 1
   },
   {
-    "file": "app/site/console/page.tsx",
+    "file": "app/site/console/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Live",
     "count": 1
   },
   {
-    "file": "app/site/console/page.tsx",
+    "file": "app/site/console/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Members",
     "count": 1
   },
   {
-    "file": "app/site/console/page.tsx",
+    "file": "app/site/console/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Name or address",
     "count": 1
   },
   {
-    "file": "app/site/console/page.tsx",
+    "file": "app/site/console/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "New school",
     "count": 1
   },
   {
-    "file": "app/site/console/page.tsx",
+    "file": "app/site/console/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "No school matches “",
     "count": 1
   },
   {
-    "file": "app/site/console/page.tsx",
+    "file": "app/site/console/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Open support grants",
     "count": 1
   },
   {
-    "file": "app/site/console/page.tsx",
+    "file": "app/site/console/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Pending sign-ups",
     "count": 1
   },
   {
-    "file": "app/site/console/page.tsx",
+    "file": "app/site/console/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "School",
     "count": 1
   },
   {
-    "file": "app/site/console/page.tsx",
+    "file": "app/site/console/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Schools",
     "count": 1
   },
   {
-    "file": "app/site/console/page.tsx",
+    "file": "app/site/console/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Staff",
     "count": 1
   },
   {
-    "file": "app/site/console/page.tsx",
+    "file": "app/site/console/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Status",
     "count": 1
   },
   {
-    "file": "app/site/console/page.tsx",
+    "file": "app/site/console/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Suspended",
     "count": 2

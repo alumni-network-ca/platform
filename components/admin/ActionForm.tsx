@@ -49,7 +49,9 @@ export function ActionForm({
         </div>
       )}
       <div className="formActions">
-        <Button disabled={pending || disabled}>{label}</Button>
+        <Button loading={pending} disabled={disabled}>
+          {label}
+        </Button>
       </div>
     </form>
   );

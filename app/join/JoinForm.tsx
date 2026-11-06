@@ -6,6 +6,7 @@ import { requestAccess, updateRequest, type JoinResult } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { leaveTo } from "@/lib/leave";
 
 const TEXT = {
   en: {
@@ -64,7 +65,7 @@ export function JoinForm({ initial }: { initial?: RequestDetails }) {
   const [result, action, pending] = useActionState<JoinResult, FormData>(
     async (previous, form) => {
       const result = await (initial ? updateRequest : requestAccess)(previous, form);
-      if (result.next) window.location.assign(result.next);
+      if (result.next) return leaveTo(result.next);
       return result;
     },
     {
@@ -129,7 +130,7 @@ export function JoinForm({ initial }: { initial?: RequestDetails }) {
         <Textarea name="note" rows={3} maxLength={1000} defaultValue={initial?.note ?? ""} />
       </label>
       <p className="microcopy muted">{t.privacy}</p>
-      <Button size="lg" className="w-full" disabled={pending}>
+      <Button size="lg" className="w-full" loading={pending}>
         {pending ? t.sending : initial ? t.save : t.submit}
       </Button>
       {result.error && (

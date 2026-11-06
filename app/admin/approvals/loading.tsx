@@ -3,5 +3,5 @@ import { getServerTranslations } from "@/lib/i18n-server";
 
 export default async function Loading() {
   const { t } = await getServerTranslations();
-  return <AdminTableSkeleton label={t.common.loading} tabs />;
+  return <AdminTableSkeleton label={t.common.loading} tabs columns={5} />;
 }

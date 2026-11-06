@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { DirectoryForm, FilterPanel } from "@/components/directory/DirectoryForm";
+import { DirectoryForm, DirectoryResults, FilterPanel } from "@/components/directory/DirectoryForm";
 import { AVATAR_TINTS } from "@/config/ui";
 import { requireAccess } from "@/lib/auth/account";
 import { PAGE_SIZE, activeChips, pages, readFilters, rpcFilters } from "@/lib/directory/filters";
@@ -12,6 +12,8 @@ import { Button } from "@/components/ui/button";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Search, X } from "lucide-react";
 import { BackArrow, ForwardArrow } from "@/components/icons";
+import { LinkPending } from "@/components/LinkPending";
+import { SubmitButton } from "@/components/ui/submit-button";
 
 // The alumni directory (DIR-02; design Directory). Every filter is in the URL; search_directory returns only
 // published profiles at this school, and only to someone who may use the directory (RLS and has_permission).
@@ -104,9 +106,7 @@ export default async function DirectoryPage({
             defaultValue={f.q}
             placeholder={t.searchPlaceholder}
           />
-          <Button type="submit" className="h-10 rounded-sm">
-            {t.search}
-          </Button>
+          <SubmitButton className="h-10 rounded-sm">{t.search}</SubmitButton>
         </div>
 
         <div className="dirBody">
@@ -169,12 +169,12 @@ export default async function DirectoryPage({
                 ))}
               </div>
             </fieldset>
-            <Button type="submit" variant="secondary" className="dirApply">
+            <SubmitButton variant="secondary" className="dirApply">
               {t.apply}
-            </Button>
+            </SubmitButton>
           </FilterPanel>
 
-          <section className="dirResults" aria-label={t.results}>
+          <DirectoryResults label={t.results}>
             <div className="dirResultsHead">
               <span role="status">
                 {total
@@ -217,7 +217,8 @@ export default async function DirectoryPage({
                   const shown = p.offers.slice(0, 2);
                   return (
                     <li key={p.id}>
-                      <Link className="dirCard" href={`/profile/${p.id}`}>
+                      {/* Not prefetched: a profile checks access in its layout, one read per card. */}
+                      <Link className="dirCard relative" href={`/profile/${p.id}`} prefetch={false}>
                         <span className="dirCardHead">
                           <span
                             className="dirAvatar"
@@ -244,6 +245,7 @@ export default async function DirectoryPage({
                             )}
                           </span>
                         )}
+                        <LinkPending className="inset-x-[18px] bottom-2 text-primary" />
                       </Link>
                     </li>
                   );
@@ -281,7 +283,7 @@ export default async function DirectoryPage({
                 )}
               </nav>
             )}
-          </section>
+          </DirectoryResults>
         </div>
       </DirectoryForm>
     </main>

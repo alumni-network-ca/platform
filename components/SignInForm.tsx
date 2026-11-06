@@ -93,7 +93,7 @@ export function SignInForm({
             required
           />
         </label>
-        <Button size="lg" className="w-full" disabled={busy}>
+        <Button size="lg" className="w-full" loading={busy}>
           {busy ? (fr ? "Connexion…" : "Signing in…") : fr ? "Se connecter" : "Sign in"}
         </Button>
       </form>

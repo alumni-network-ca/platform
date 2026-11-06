@@ -4,7 +4,7 @@ import { errorMessage, type ActionResult, type AdminCopy } from "@/lib/admin/for
 import { createPortal } from "react-dom";
 import { CopyLink } from "./CopyLink";
 import { Input } from "@/components/ui/input";
-import { Ellipsis } from "lucide-react";
+import { Ellipsis, Loader2 } from "lucide-react";
 
 export type RowMenuItem = {
   key: string;
@@ -147,9 +147,14 @@ export function RowMenu({
         aria-controls={open ? `${id}menu` : undefined}
         aria-label={label}
         disabled={pending}
+        aria-busy={pending || undefined}
         onClick={() => (open ? setOpen(false) : openOn("first"))}
       >
-        <Ellipsis aria-hidden size={18} strokeWidth={3} />
+        {pending ? (
+          <Loader2 aria-hidden size={18} className="animate-spin" />
+        ) : (
+          <Ellipsis aria-hidden size={18} strokeWidth={3} />
+        )}
       </button>
       {open &&
         createPortal(

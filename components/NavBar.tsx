@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import { AccountMenu } from "./AccountMenu";
 import { useLanguage } from "./LanguageProvider";
 import { Shield } from "lucide-react";
+import { LinkPending } from "./LinkPending";
 
 /** The link for the current page: the one whose activeOn path matches most closely. */
 function currentLink(links: NavLink[], pathname: string) {
@@ -80,8 +81,9 @@ export function NavBar({ model }: { model: NavModel }) {
             );
             const ariaCurrent = link.key === current ? "page" : undefined;
             return link.href.startsWith("/") ? (
-              <Link key={link.key} href={link.href} aria-current={ariaCurrent}>
+              <Link key={link.key} className="relative" href={link.href} aria-current={ariaCurrent}>
                 {content}
+                <LinkPending />
               </Link>
             ) : (
               <a key={link.key} href={link.href} aria-current={ariaCurrent}>

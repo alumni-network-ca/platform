@@ -76,7 +76,8 @@ export function StatusForm({ slug, suspended }: { slug: string; suspended: boole
         </Button>
         <Button
           variant={suspended ? "default" : "destructive"}
-          disabled={pending || typed.trim() !== slug}
+          loading={pending}
+          disabled={typed.trim() !== slug}
         >
           {pending ? "Saving…" : label}
         </Button>

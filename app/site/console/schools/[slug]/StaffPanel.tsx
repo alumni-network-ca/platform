@@ -70,7 +70,7 @@ export function StaffPanel({
           </NativeSelect>
         </label>
         <div className="formActions" style={{ alignSelf: "end", justifyContent: "flex-start" }}>
-          <Button disabled={pending}>{pending ? "Sending…" : "Send invitation"}</Button>
+          <Button loading={pending}>{pending ? "Sending…" : "Send invitation"}</Button>
         </div>
       </form>
 

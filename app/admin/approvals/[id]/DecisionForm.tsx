@@ -7,6 +7,7 @@ import { decideRequest } from "./actions";
 import { Button } from "@/components/ui/button";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Textarea } from "@/components/ui/textarea";
+import { leaveTo } from "@/lib/leave";
 type Match = Database["public"]["Functions"]["access_request_matches"]["Returns"][number];
 export function DecisionForm({
   id,
@@ -24,7 +25,7 @@ export function DecisionForm({
   const [state, action, pending] = useActionState(
     async (previous: ActionResult, form: FormData) => {
       const result = await decideRequest(id, previous, form);
-      if (result.next) window.location.assign(result.next);
+      if (result.next) return leaveTo(result.next);
       return result;
     },
     { error: null },
@@ -115,7 +116,7 @@ export function DecisionForm({
       )}
       <div className="formActions">
         <span className="fieldHint">{t.logged}</span>
-        <Button disabled={pending}>
+        <Button loading={pending}>
           {choice === "approve" ? t.approve : choice === "needs_info" ? t.needsInfo : t.reject}
         </Button>
       </div>

@@ -11,6 +11,7 @@ export function SignOutButton({ to = "/", label = "Sign out" }: { to?: string; l
       type="button"
       className="textButton"
       disabled={busy}
+      aria-busy={busy || undefined}
       onClick={async () => {
         setBusy(true);
         await createClient().auth.signOut({ scope: "local" });

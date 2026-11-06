@@ -34,7 +34,7 @@ export function RecoveryForm({ expired }: { expired: boolean }) {
           {fr ? "Adresse courriel" : "Email address"}
           <Input name="email" type="email" autoComplete="email" maxLength={254} required />
         </label>
-        <Button size="lg" className="w-full" disabled={pending}>
+        <Button size="lg" className="w-full" loading={pending}>
           {pending
             ? fr
               ? "Envoi…"

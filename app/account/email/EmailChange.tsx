@@ -100,7 +100,7 @@ export function EmailChange({ currentEmail }: { currentEmail: string }) {
               required
             />
           </label>
-          <Button size="lg" className="w-full" disabled={busy}>
+          <Button size="lg" className="w-full" loading={busy}>
             {busy ? t.working : t.send}
           </Button>
         </form>
@@ -116,7 +116,7 @@ export function EmailChange({ currentEmail }: { currentEmail: string }) {
             value={codeCurrent}
             onChange={setCodeCurrent}
           />
-          <Button size="lg" className="w-full" disabled={busy}>
+          <Button size="lg" className="w-full" loading={busy}>
             {busy ? t.working : t.confirm}
           </Button>
         </form>

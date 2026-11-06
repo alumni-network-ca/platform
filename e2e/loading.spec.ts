@@ -69,4 +69,26 @@ test.describe("loading states", () => {
     await expect(page.getByRole("heading", { level: 1, name: "Alumni" })).toBeVisible();
     await expect(loading(page)).toHaveCount(0);
   });
+
+  test("changing a directory filter keeps the filters and marks the results busy", async ({
+    page,
+    context,
+    baseURL,
+  }) => {
+    await signInAs(context, baseURL!, accounts.alumni);
+    await page.goto("/directory");
+    const results = page.getByRole("region", { name: "Results" });
+    await expect(results).toBeVisible();
+    await page.waitForLoadState("networkidle");
+    const release = await holdNavigations(page);
+
+    await page.getByRole("combobox", { name: "Sort by" }).selectOption("name");
+    await expect(results).toHaveAttribute("aria-busy", "true");
+    await expect(page.getByRole("searchbox", { name: "Search alumni" })).toBeVisible();
+    await expect(loading(page)).toHaveCount(0);
+
+    release();
+    await expect(page).toHaveURL(/sort=name/);
+    await expect(results).not.toHaveAttribute("aria-busy");
+  });
 });

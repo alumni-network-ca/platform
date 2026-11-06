@@ -1,10 +1,11 @@
+import Form from "next/form";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireStaff } from "@/lib/auth/staff";
 import { adminCopy, dateLabel, read, pageNumber, type Search } from "@/lib/admin/data";
 import { describeAudit } from "@/lib/admin/audit";
-import { Button } from "@/components/ui/button";
 import { NativeSelect } from "@/components/ui/native-select";
+import { SubmitButton } from "@/components/ui/submit-button";
 export default async function Audit({ searchParams }: { searchParams: Search }) {
   const { supabase, school } = await requireStaff("/admin/audit", "audit.read");
   const { t, locale } = await adminCopy();
@@ -50,7 +51,7 @@ export default async function Audit({ searchParams }: { searchParams: Search }) 
           <p>{t.auditIntro}</p>
         </div>
       </div>
-      <form className="adminFilters">
+      <Form action="/admin/audit" className="adminFilters">
         <label className="field">
           {t.who}
           <NativeSelect name="who" defaultValue={who ?? ""}>
@@ -63,8 +64,8 @@ export default async function Audit({ searchParams }: { searchParams: Search }) 
           </NativeSelect>
         </label>
         {type && <input type="hidden" name="type" value={type} />}
-        <Button>{t.apply}</Button>
-      </form>
+        <SubmitButton>{t.apply}</SubmitButton>
+      </Form>
       <nav className="adminChips" aria-label={t.type}>
         <Link className="tag" href={url(undefined)} aria-current={!type ? "page" : undefined}>
           {t.allTypes}

@@ -1,5 +1,6 @@
 "use client";
 
+import { Loader2 } from "lucide-react";
 import { useState, useTransition } from "react";
 import { revealContact } from "@/app/profile/[id]/actions";
 
@@ -53,6 +54,7 @@ export function ContactReveal({
         type="button"
         className="profShow"
         disabled={pending}
+        aria-busy={pending || undefined}
         onClick={() =>
           startTransition(async () => {
             const result = await revealContact(profileId, channel);
@@ -61,6 +63,9 @@ export function ContactReveal({
           })
         }
       >
+        {pending && (
+          <Loader2 aria-hidden className="mr-1.5 inline-block size-4 animate-spin align-[-0.2em]" />
+        )}
         {label}
       </button>
       {failed && (

@@ -5,6 +5,7 @@ import { format, translations } from "@/lib/i18n";
 import { CHANNELS, initials, type Channel, repeatsCurrentRole } from "@/lib/profile/fields";
 import { loadMyProfile } from "@/lib/profile/server";
 import { confirmStillAccurate } from "./actions";
+import { SubmitButton } from "@/components/ui/submit-button";
 
 // The alumnus's own profile (PRF-02; design Me): what other alumni see, each section with its edit page, and
 // the visibility, contact, freshness and data controls beside it.
@@ -194,7 +195,9 @@ export default async function MyProfilePage({
                   : format(t.dueOn, { date: dateLabel(p.confirmation_due_at, me.locale) })}
               </span>
               <form action={confirmStillAccurate}>
-                <button className="onbButton">{t.stillAccurate}</button>
+                <SubmitButton variant="secondary" size="sm">
+                  {t.stillAccurate}
+                </SubmitButton>
               </form>
             </>
           )}

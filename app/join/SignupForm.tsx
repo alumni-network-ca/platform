@@ -9,6 +9,7 @@ import { ConfirmationResend } from "./verify/ConfirmationResend";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mail } from "lucide-react";
+import { leaveTo } from "@/lib/leave";
 
 export function SignupForm({
   shortName,
@@ -28,7 +29,7 @@ export function SignupForm({
     async (previous, form) => {
       const result = await createAccount(previous, form);
       // A full load lets the proxy resolve the school's host with the newly written auth cookies.
-      if (result.next) window.location.assign(result.next);
+      if (result.next) return leaveTo(result.next);
       return result;
     },
     {
@@ -205,7 +206,7 @@ export function SignupForm({
             {errors[result.error]}
           </div>
         )}
-        <Button size="lg" className="w-full" disabled={pending}>
+        <Button size="lg" className="w-full" loading={pending}>
           {pending
             ? fr
               ? "Création…"
