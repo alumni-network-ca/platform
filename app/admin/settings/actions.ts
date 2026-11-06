@@ -19,6 +19,7 @@ export async function saveSettings(_: ActionResult, form: FormData): Promise<Act
     p_patch: { email_display_name: name, reply_to_email: replyTo, default_locale: locale },
   });
   if (error) return actionError(error);
-  revalidatePath("/admin", "layout");
+  // The nav bar, in the root layout, links to the reply-to address.
+  revalidatePath("/", "layout");
   return { error: null, saved: true };
 }

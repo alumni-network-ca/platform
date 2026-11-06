@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Nav } from "@/components/Nav";
 import { requireAccess } from "@/lib/auth/account";
 import { getServerLocale } from "@/lib/i18n-server";
 import { JoinForm } from "../JoinForm";
@@ -17,23 +16,20 @@ export default async function EditRequestPage() {
     .single();
   if (error) throw new Error(`Could not load the request: ${error.message}`);
   return (
-    <>
-      <Nav />
-      <main className="joinPage">
-        <section className="joinCard joinCentered">
-          <Link className="backLink" href="/auth/home">
-            <BackArrow />
-            {fr ? "Ma demande" : "My request"}
-          </Link>
-          <h1>{fr ? "Modifiez votre demande" : "Edit your request"}</h1>
-          <p className="muted">
-            {fr
-              ? "Corrigez vos renseignements pendant la vérification par l'école. Votre compte reste le même."
-              : "Correct your details while your request is awaiting a school decision. Your sign-in account stays the same."}
-          </p>
-          <JoinForm initial={data} />
-        </section>
-      </main>
-    </>
+    <main className="joinPage">
+      <section className="joinCard joinCentered">
+        <Link className="backLink" href="/auth/home">
+          <BackArrow />
+          {fr ? "Ma demande" : "My request"}
+        </Link>
+        <h1>{fr ? "Modifiez votre demande" : "Edit your request"}</h1>
+        <p className="muted">
+          {fr
+            ? "Corrigez vos renseignements pendant la vérification par l'école. Votre compte reste le même."
+            : "Correct your details while your request is awaiting a school decision. Your sign-in account stays the same."}
+        </p>
+        <JoinForm initial={data} />
+      </section>
+    </main>
   );
 }

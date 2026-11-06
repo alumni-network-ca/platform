@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Fragment } from "react";
-import { Nav } from "@/components/Nav";
 import { PublishChoices } from "@/components/profile/Choices";
 import { ProfileForm } from "@/components/profile/ProfileForm";
 import { format, translations } from "@/lib/i18n";
@@ -35,44 +34,41 @@ export default async function VisibilityPage() {
     );
 
   return (
-    <>
-      <Nav />
-      <main className="onb meNarrow">
-        <ProfileForm className="onbContents" action={saveVisibility} t={t}>
-          <PublishChoices
-            t={t}
-            school={school}
-            initial={p.visibility}
-            consentText={consentText}
-            preview={{
-              initials: initials(p.preferred_name || p.first_name, p.last_name),
-              name: `${p.preferred_name || p.first_name} ${p.last_name}`,
-              classOf: format(t.classOf, { year: p.grad_year }),
-              line: [p.job_title, p.employer, p.city].filter(Boolean).join(" · "),
-              tags: me.offerTypes.filter((o) => me.offers.includes(o.key)).map((o) => o.label),
-            }}
-            head={
-              <div className="onbHead">
-                <Link className="meBackLink" href="/me">
-                  <BackArrow />
-                  {m.backToProfile}
-                </Link>
-                <h1>{m.visibilityTitle}</h1>
-                <p>{p.visibility === "members" ? m.visibilityMembers : m.visibilityHidden}</p>
-              </div>
-            }
-            back={
-              <Link className="onbBack" href="/me">
-                {m.cancel}
+    <main className="onb meNarrow">
+      <ProfileForm className="onbContents" action={saveVisibility} t={t}>
+        <PublishChoices
+          t={t}
+          school={school}
+          initial={p.visibility}
+          consentText={consentText}
+          preview={{
+            initials: initials(p.preferred_name || p.first_name, p.last_name),
+            name: `${p.preferred_name || p.first_name} ${p.last_name}`,
+            classOf: format(t.classOf, { year: p.grad_year }),
+            line: [p.job_title, p.employer, p.city].filter(Boolean).join(" · "),
+            tags: me.offerTypes.filter((o) => me.offers.includes(o.key)).map((o) => o.label),
+          }}
+          head={
+            <div className="onbHead">
+              <Link className="meBackLink" href="/me">
+                <BackArrow />
+                {m.backToProfile}
               </Link>
-            }
-            settings={{
-              saveLabel: m.saveVisibility,
-              hasConsent: me.consents.some((c) => c.document === "directory_publication"),
-            }}
-          />
-        </ProfileForm>
-      </main>
-    </>
+              <h1>{m.visibilityTitle}</h1>
+              <p>{p.visibility === "members" ? m.visibilityMembers : m.visibilityHidden}</p>
+            </div>
+          }
+          back={
+            <Link className="onbBack" href="/me">
+              {m.cancel}
+            </Link>
+          }
+          settings={{
+            saveLabel: m.saveVisibility,
+            hasConsent: me.consents.some((c) => c.document === "directory_publication"),
+          }}
+        />
+      </ProfileForm>
+    </main>
   );
 }

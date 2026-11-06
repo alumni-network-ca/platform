@@ -24,7 +24,7 @@ export function ConfirmationResend({ retryIn }: { retryIn: number }) {
   }, [wait]);
   return (
     <form action={action}>
-      <Button variant="secondary" disabled={pending || wait > 0}>
+      <Button variant="secondary" loading={pending} disabled={wait > 0}>
         {wait > 0
           ? fr
             ? `Renvoyer dans ${wait} s`

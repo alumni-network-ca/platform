@@ -67,7 +67,7 @@ export function StatusForm({
       )}
       <div className="formActions">
         <Link href={"/admin/alumni/" + id}>{t.cancel}</Link>
-        <Button variant="destructive" disabled={!reason.trim() || pending}>
+        <Button variant="destructive" loading={pending} disabled={!reason.trim()}>
           {choices.find(([key]) => key === status)?.[1]}
         </Button>
       </div>

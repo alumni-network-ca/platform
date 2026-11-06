@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Nav } from "@/components/Nav";
 import { SignOutButton } from "@/components/SignOutButton";
 import { dateLabel } from "@/lib/admin/data";
 import { getAccount } from "@/lib/auth/account";
@@ -39,19 +38,16 @@ export default async function AcceptStaffPage({
 
   if (invitation.status === "invalid") {
     return (
-      <>
-        <Nav />
-        <main className="joinPage">
-          <section className="joinCard joinCentered" aria-labelledby="invite-title">
-            <span className="tag">{t.invalidChip}</span>
-            <h1 id="invite-title">{t.invalidTitle}</h1>
-            <p className="muted">{t.invalidBody}</p>
-            <div className="authFooter">
-              <Link href="/">{t.home}</Link>
-            </div>
-          </section>
-        </main>
-      </>
+      <main className="joinPage">
+        <section className="joinCard joinCentered" aria-labelledby="invite-title">
+          <span className="tag">{t.invalidChip}</span>
+          <h1 id="invite-title">{t.invalidTitle}</h1>
+          <p className="muted">{t.invalidBody}</p>
+          <div className="authFooter">
+            <Link href="/">{t.home}</Link>
+          </div>
+        </section>
+      </main>
     );
   }
 
@@ -108,80 +104,74 @@ export default async function AcceptStaffPage({
       },
     }[problem];
     return (
-      <>
-        <Nav />
-        <main className="joinPage">
-          <section className="joinCard joinCentered" aria-labelledby="invite-title">
-            <span className={`tag ${copy.tone}`}>{copy.chip}</span>
-            <h1 id="invite-title">{copy.title}</h1>
-            <p className="muted">{copy.body}</p>
-            {facts}
-            {problem === "expired" && <p>{format(t.expiredAction, { inviter })}</p>}
-            {problem === "revoked" && <p>{format(t.revokedAction, { inviter })}</p>}
-            {(problem === "wrong_account" || (problem === "used" && user)) && (
-              <div className="formActions">
-                <SignOutButton to={problem === "used" ? "/login" : self} label={t.wrongAction} />
-              </div>
-            )}
-            {problem === "used" && !user && (
-              <Button asChild>
-                <Link href="/login">{t.usedAction}</Link>
-              </Button>
-            )}
-            {problem === "wrong_account" && <p className="microcopy muted">{t.wrongFine}</p>}
-          </section>
-        </main>
-      </>
+      <main className="joinPage">
+        <section className="joinCard joinCentered" aria-labelledby="invite-title">
+          <span className={`tag ${copy.tone}`}>{copy.chip}</span>
+          <h1 id="invite-title">{copy.title}</h1>
+          <p className="muted">{copy.body}</p>
+          {facts}
+          {problem === "expired" && <p>{format(t.expiredAction, { inviter })}</p>}
+          {problem === "revoked" && <p>{format(t.revokedAction, { inviter })}</p>}
+          {(problem === "wrong_account" || (problem === "used" && user)) && (
+            <div className="formActions">
+              <SignOutButton to={problem === "used" ? "/login" : self} label={t.wrongAction} />
+            </div>
+          )}
+          {problem === "used" && !user && (
+            <Button asChild>
+              <Link href="/login">{t.usedAction}</Link>
+            </Button>
+          )}
+          {problem === "wrong_account" && <p className="microcopy muted">{t.wrongFine}</p>}
+        </section>
+      </main>
     );
   }
 
   if (!user) {
     return (
-      <>
-        <Nav />
-        <main className="joinPage joinSignupPage">
-          <div className="joinSplit">
-            <section className="joinIntro">
-              <span className="joinEyebrow">{format(t.eyebrow, { school: shortName })}</span>
-              <h1>{format(t.invitedYou, { inviter, school: shortName })}</h1>
-              <p className="joinLead">
-                {format(reviewer ? t.leadReviewer : t.leadSchoolAdmin, { school: shortName })}
-              </p>
-              <dl className="inviteFacts">
-                <dt>{t.factRole}</dt>
-                <dd>{reviewer ? t.roleReviewerTitle : t.roleSchoolAdminTitle}</dd>
-                <dt>{t.factInvitedBy}</dt>
-                <dd>{inviter}</dd>
-                <dt>{t.factFor}</dt>
-                <dd>{invitation.email}</dd>
-                <dt>{t.factValidUntil}</dt>
-                <dd>{date(invitation.expiresAt)}</dd>
-              </dl>
-              <ol className="joinJourney">
-                <li>
-                  <span className="joinDot joinCurrent" aria-hidden="true">
-                    1
-                  </span>
-                  <div>
-                    <h3>{t.stepOne}</h3>
-                    <p>{t.stepOneHelp}</p>
-                  </div>
-                </li>
-                <li>
-                  <span className="joinDot" aria-hidden="true">
-                    2
-                  </span>
-                  <div>
-                    <h3>{t.stepTwo}</h3>
-                    <p>{t.stepTwoHelp}</p>
-                  </div>
-                </li>
-              </ol>
-            </section>
-            <InvitationLanding t={t} email={invitation.email} inviter={inviter} next={self} />
-          </div>
-        </main>
-      </>
+      <main className="joinPage joinSignupPage">
+        <div className="joinSplit">
+          <section className="joinIntro">
+            <span className="joinEyebrow">{format(t.eyebrow, { school: shortName })}</span>
+            <h1>{format(t.invitedYou, { inviter, school: shortName })}</h1>
+            <p className="joinLead">
+              {format(reviewer ? t.leadReviewer : t.leadSchoolAdmin, { school: shortName })}
+            </p>
+            <dl className="inviteFacts">
+              <dt>{t.factRole}</dt>
+              <dd>{reviewer ? t.roleReviewerTitle : t.roleSchoolAdminTitle}</dd>
+              <dt>{t.factInvitedBy}</dt>
+              <dd>{inviter}</dd>
+              <dt>{t.factFor}</dt>
+              <dd>{invitation.email}</dd>
+              <dt>{t.factValidUntil}</dt>
+              <dd>{date(invitation.expiresAt)}</dd>
+            </dl>
+            <ol className="joinJourney">
+              <li>
+                <span className="joinDot joinCurrent" aria-hidden="true">
+                  1
+                </span>
+                <div>
+                  <h3>{t.stepOne}</h3>
+                  <p>{t.stepOneHelp}</p>
+                </div>
+              </li>
+              <li>
+                <span className="joinDot" aria-hidden="true">
+                  2
+                </span>
+                <div>
+                  <h3>{t.stepTwo}</h3>
+                  <p>{t.stepTwoHelp}</p>
+                </div>
+              </li>
+            </ol>
+          </section>
+          <InvitationLanding t={t} email={invitation.email} inviter={inviter} next={self} />
+        </div>
+      </main>
     );
   }
 
@@ -190,72 +180,69 @@ export default async function AcceptStaffPage({
     : [t.schoolAdminCan1, t.schoolAdminCan2, t.schoolAdminCan3];
   const cannot = reviewer ? [t.reviewerCant1, t.reviewerCant2] : [t.schoolAdminCant1];
   return (
-    <>
-      <Nav />
-      <main className="joinPage">
-        <ol className="joinProgress" aria-label={t.steps}>
-          <li>
-            <span className="joinDot joinDone" aria-hidden="true">
-              1
-            </span>
-            {t.stepOne}
-          </li>
-          <li aria-current="step">
-            <span className="joinDot joinCurrent" aria-hidden="true">
-              2
-            </span>
-            {t.stepTwo}
-          </li>
-        </ol>
-        <section className="joinCard joinCentered" aria-labelledby="invite-title">
-          <div className="joinStack">
-            <span className="joinEyebrow">{format(t.eyebrow, { school: shortName })}</span>
-            <h1 id="invite-title">{format(t.acceptTitle, { school: shortName, role })}</h1>
-            <p className="muted">
-              {format(t.invitedOn, { inviter, date: date(invitation.invitedAt) })}
-            </p>
-          </div>
-          <dl className="inviteFacts">
-            <dt>{t.signedInAs}</dt>
-            <dd>
-              {invitation.email} <span className="tag tagGood">{t.matches}</span>
-            </dd>
-            <dt>{t.factRole}</dt>
-            <dd>{reviewer ? t.roleReviewerTitle : t.roleSchoolAdminTitle}</dd>
-            <dt>{t.factSchool}</dt>
-            <dd>{school.name}</dd>
-          </dl>
-          <div className="inviteLists">
-            <div>
-              <h3>{format(t.canTitle, { role })}</h3>
-              <ul className="inviteCan">
-                {can.map((line) => (
-                  <li key={line}>{line}</li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h3>{t.cantTitle}</h3>
-              <ul className="inviteCant">
-                {cannot.map((line) => (
-                  <li key={line}>{line}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          <p className="joinNotice">{format(t.personalData, { school: shortName })}</p>
-          <AcceptForm
-            token={token}
-            t={{ accept: t.acceptButton, accepting: t.accepting, failed: t.acceptFailed }}
-          />
-          <p className="joinDivider">
-            {t.notYou} <SignOutButton to={self} label={t.switchAccount} />
+    <main className="joinPage">
+      <ol className="joinProgress" aria-label={t.steps}>
+        <li>
+          <span className="joinDot joinDone" aria-hidden="true">
+            1
+          </span>
+          {t.stepOne}
+        </li>
+        <li aria-current="step">
+          <span className="joinDot joinCurrent" aria-hidden="true">
+            2
+          </span>
+          {t.stepTwo}
+        </li>
+      </ol>
+      <section className="joinCard joinCentered" aria-labelledby="invite-title">
+        <div className="joinStack">
+          <span className="joinEyebrow">{format(t.eyebrow, { school: shortName })}</span>
+          <h1 id="invite-title">{format(t.acceptTitle, { school: shortName, role })}</h1>
+          <p className="muted">
+            {format(t.invitedOn, { inviter, date: date(invitation.invitedAt) })}
           </p>
-          <p className="microcopy muted">
-            {format(t.staysOpen, { date: date(invitation.expiresAt) })}
-          </p>
-        </section>
-      </main>
-    </>
+        </div>
+        <dl className="inviteFacts">
+          <dt>{t.signedInAs}</dt>
+          <dd>
+            {invitation.email} <span className="tag tagGood">{t.matches}</span>
+          </dd>
+          <dt>{t.factRole}</dt>
+          <dd>{reviewer ? t.roleReviewerTitle : t.roleSchoolAdminTitle}</dd>
+          <dt>{t.factSchool}</dt>
+          <dd>{school.name}</dd>
+        </dl>
+        <div className="inviteLists">
+          <div>
+            <h3>{format(t.canTitle, { role })}</h3>
+            <ul className="inviteCan">
+              {can.map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h3>{t.cantTitle}</h3>
+            <ul className="inviteCant">
+              {cannot.map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <p className="joinNotice">{format(t.personalData, { school: shortName })}</p>
+        <AcceptForm
+          token={token}
+          t={{ accept: t.acceptButton, accepting: t.accepting, failed: t.acceptFailed }}
+        />
+        <p className="joinDivider">
+          {t.notYou} <SignOutButton to={self} label={t.switchAccount} />
+        </p>
+        <p className="microcopy muted">
+          {format(t.staysOpen, { date: date(invitation.expiresAt) })}
+        </p>
+      </section>
+    </main>
   );
 }

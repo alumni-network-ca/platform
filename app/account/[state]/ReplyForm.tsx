@@ -5,6 +5,7 @@ import { useLanguage } from "@/components/LanguageProvider";
 import { replyToInfoRequest } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { leaveTo } from "@/lib/leave";
 
 export function ReplyForm({ question }: { question: string | null | undefined }) {
   const { locale } = useLanguage();
@@ -12,7 +13,7 @@ export function ReplyForm({ question }: { question: string | null | undefined })
   const [state, action, pending] = useActionState(
     async (_: { error: boolean }, form: FormData) => {
       const result = await replyToInfoRequest(form);
-      if (result.next) window.location.assign(result.next);
+      if (result.next) return leaveTo(result.next);
       return result;
     },
     { error: false },
@@ -31,7 +32,7 @@ export function ReplyForm({ question }: { question: string | null | undefined })
             : "Please enter a reply between 1 and 1,000 characters."}
         </p>
       )}
-      <Button size="lg" className="w-full" disabled={pending}>
+      <Button size="lg" className="w-full" loading={pending}>
         {pending
           ? fr
             ? "Envoi…"

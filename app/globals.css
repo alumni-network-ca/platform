@@ -191,6 +191,17 @@
   --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
   --default-transition-duration: 150ms;
   --default-transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* A link's pending bar (components/LinkPending.tsx): a short segment sweeping across. */
+  --animate-link-pending: link-pending 1.1s ease-in-out infinite;
+  @keyframes link-pending {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(300%);
+    }
+  }
 }
 
 @layer base {

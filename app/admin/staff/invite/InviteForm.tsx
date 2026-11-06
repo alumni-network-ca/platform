@@ -125,7 +125,7 @@ export function InviteForm({
           </p>
         )}
         <div className="formActions inviteActions">
-          <Button disabled={pending}>{t.invite}</Button>
+          <Button loading={pending}>{t.invite}</Button>
           <Button asChild variant="secondary">
             <Link href="/admin/staff">{t.cancel}</Link>
           </Button>

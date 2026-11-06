@@ -1,11 +1,12 @@
+import Form from "next/form";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireStaff } from "@/lib/auth/staff";
 import { adminCopy, dateLabel, read, pageNumber, type Search } from "@/lib/admin/data";
 import { format } from "@/lib/i18n";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
+import { SubmitButton } from "@/components/ui/submit-button";
 const states = ["published", "hidden", "onboarding", "suspended", "archived", "deceased"] as const;
 export default async function Roster({ searchParams }: { searchParams: Search }) {
   const { supabase, school } = await requireStaff("/admin/alumni", "records.read");
@@ -44,7 +45,7 @@ export default async function Roster({ searchParams }: { searchParams: Search })
           <p>{t.rosterIntro}</p>
         </div>
       </div>
-      <form className="adminFilters">
+      <Form action="/admin/alumni" className="adminFilters">
         <label className="field">
           {t.search}
           <Input name="q" defaultValue={query} maxLength={200} placeholder={t.rosterSearchHint} />
@@ -68,52 +69,55 @@ export default async function Roster({ searchParams }: { searchParams: Search })
           {t.classMax}
           <Input name="max" type="number" min={1900} max={2100} defaultValue={p.max} />
         </label>
-        <Button>{t.apply}</Button>
-      </form>
+        <SubmitButton>{t.apply}</SubmitButton>
+      </Form>
       {/* TODO(FRS-04): freshness filter. TODO(EML-05): email state. TODO(EXP-01): export results. */}
-      <div className="tableBox">
-        <table className="dataTable">
-          <thead>
-            <tr>
-              <th>{t.name}</th>
-              <th>{t.class}</th>
-              <th>{t.status}</th>
-              <th>{t.lastConfirmed}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r) => (
-              <tr key={r.id}>
-                <td>
-                  <Link href={"/admin/alumni/" + r.id}>
-                    {r.preferred_name || r.first_name} {r.last_name}
-                  </Link>
-                  <span className="cellSub">
-                    {[r.job_title, r.city].filter(Boolean).join(" · ")}
-                  </span>
-                </td>
-                <td>{r.grad_year}</td>
-                <td>
-                  <span
-                    className={
-                      "tag " +
-                      (r.state === "published"
-                        ? "tagGood"
-                        : r.state === "suspended"
-                          ? "tagBad"
-                          : "")
-                    }
-                  >
-                    {t[r.state]}
-                  </span>
-                </td>
-                <td>{dateLabel(r.last_confirmed_at, locale)}</td>
+      {rows.length ? (
+        <div className="tableBox">
+          <table className="dataTable">
+            <thead>
+              <tr>
+                <th>{t.name}</th>
+                <th>{t.class}</th>
+                <th>{t.status}</th>
+                <th>{t.lastConfirmed}</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        {!rows.length && <p className="panel">{t.empty}</p>}
-      </div>
+            </thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr key={r.id}>
+                  <td>
+                    <Link href={"/admin/alumni/" + r.id}>
+                      {r.preferred_name || r.first_name} {r.last_name}
+                    </Link>
+                    <span className="cellSub">
+                      {[r.job_title, r.city].filter(Boolean).join(" · ")}
+                    </span>
+                  </td>
+                  <td>{r.grad_year}</td>
+                  <td>
+                    <span
+                      className={
+                        "tag " +
+                        (r.state === "published"
+                          ? "tagGood"
+                          : r.state === "suspended"
+                            ? "tagBad"
+                            : "")
+                      }
+                    >
+                      {t[r.state]}
+                    </span>
+                  </td>
+                  <td>{dateLabel(r.last_confirmed_at, locale)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <p className="panel">{t.empty}</p>
+      )}
       <div className="shellTitle">
         <p>
           {format(t.recordsRange, {

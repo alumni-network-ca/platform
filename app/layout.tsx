@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { LanguageProvider } from "@/components/LanguageProvider";
+import { Nav } from "@/components/Nav";
 import { SchoolProvider } from "@/components/SchoolProvider";
 import { schoolBranding } from "@/lib/school";
 import { getSchool } from "@/lib/tenant/server";
@@ -37,7 +38,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     >
       <body>
         <SchoolProvider school={school}>
-          <LanguageProvider>{children}</LanguageProvider>
+          <LanguageProvider>
+            {/* The one nav bar (docs/design/nav-bar.md). In the layout, it stays put while a page loads; actions
+                that change what it shows revalidate the root layout. */}
+            <Nav />
+            {children}
+          </LanguageProvider>
         </SchoolProvider>
       </body>
     </html>

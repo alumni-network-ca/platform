@@ -1,8 +1,6 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { ContactReveal } from "@/components/directory/ContactReveal";
-import { Nav } from "@/components/Nav";
-import { requireAccess } from "@/lib/auth/account";
+import { publishedProfile } from "@/lib/directory/profile";
 import { format, translations } from "@/lib/i18n";
 import { getServerLocale } from "@/lib/i18n-server";
 import { initials, optionsFor, repeatsCurrentRole } from "@/lib/profile/fields";
@@ -11,11 +9,10 @@ import { schoolConfig } from "@/lib/tenant/config";
 import { BackArrow } from "@/components/icons";
 
 // An alumnus's profile as other alumni see it (DIR-03, CON-02; design Profile). Only a published profile at this
-// school opens: anything else is a 404, even for staff whose RLS could read hidden records. Email and phone are
-// never in the page: they come one at a time through initiate_contact. The design's relayed message form is a
-// future module (ADR 0006, FUT-11), so contact works by reveal as decided in DEC-03.
+// school opens, checked in lib/directory/profile.ts. Email and phone are never in the page: they come one at a time
+// through initiate_contact. The design's relayed message form is a future module (ADR 0006, FUT-11), so contact works
+// by reveal as decided in DEC-03.
 
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const LINKS = ["linkedin", "facebook", "instagram", "website"] as const;
 
 async function read<T>(query: PromiseLike<{ data: T; error: { message: string } | null }>) {
@@ -37,24 +34,10 @@ type Role = {
 
 export default async function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const { school, supabase, user } = await requireAccess(`/profile/${id}`);
-  if (!UUID.test(id)) notFound();
+  const { school, supabase, user, profile: p } = await publishedProfile(id);
   const locale = await getServerLocale();
   const t = translations[locale].profile;
   const o = translations[locale].onboarding;
-  const p = await read(
-    supabase
-      .from("alumni_profiles")
-      .select(
-        "id, user_id, first_name, last_name, preferred_name, grad_year, city, country, bio, job_title, employer, career_field_id, languages, last_confirmed_at",
-      )
-      .eq("id", id)
-      .eq("institution_id", school.id)
-      .eq("status", "active")
-      .eq("visibility", "members")
-      .maybeSingle(),
-  );
-  if (!p) notFound();
 
   const [education, experience, offerIds, links, contactTypes, config] = await Promise.all([
     read(
@@ -121,135 +104,132 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
     parts.filter((part) => part !== null && part !== undefined && part !== "").join(separator);
 
   return (
-    <>
-      <Nav />
-      <main className="me profPage">
-        <Link className="meBackLink profBack" href="/directory">
-          <BackArrow />
-          {t.back}
-        </Link>
-        <div className="meMain">
-          {own && (
-            <p className="notice noticeGood">
-              {t.yours} <Link href="/me">{t.editMine}</Link>
-            </p>
-          )}
-          <section className="meCard profHead">
-            <div className="profBanner" aria-hidden="true" />
-            <div className="profHeadBody">
-              <span className="meAvatar profAvatar" aria-hidden="true">
-                {initials(p.preferred_name || p.first_name, p.last_name)}
+    <main className="me profPage">
+      <Link className="meBackLink profBack" href="/directory">
+        <BackArrow />
+        {t.back}
+      </Link>
+      <div className="meMain">
+        {own && (
+          <p className="notice noticeGood">
+            {t.yours} <Link href="/me">{t.editMine}</Link>
+          </p>
+        )}
+        <section className="meCard profHead">
+          <div className="profBanner" aria-hidden="true" />
+          <div className="profHeadBody">
+            <span className="meAvatar profAvatar" aria-hidden="true">
+              {initials(p.preferred_name || p.first_name, p.last_name)}
+            </span>
+            <div className="meWho">
+              <h1>{name}</h1>
+              {(p.job_title || p.employer) && <span>{join([p.job_title, p.employer])}</span>}
+              <span className="meSub">
+                {join([
+                  format(t.classOf, { year: p.grad_year }),
+                  join([p.city, p.country], ", "),
+                  p.languages
+                    .map((code) => o.languageNames[code as keyof typeof o.languageNames] ?? code)
+                    .join(", "),
+                ])}
               </span>
-              <div className="meWho">
-                <h1>{name}</h1>
-                {(p.job_title || p.employer) && <span>{join([p.job_title, p.employer])}</span>}
-                <span className="meSub">
-                  {join([
-                    format(t.classOf, { year: p.grad_year }),
-                    join([p.city, p.country], ", "),
-                    p.languages
-                      .map((code) => o.languageNames[code as keyof typeof o.languageNames] ?? code)
-                      .join(", "),
-                  ])}
-                </span>
-              </div>
-              {offers.length > 0 && (
-                <div className="meTags">
-                  {offers.map((offer) => (
-                    <span key={offer.key}>{label(offer)}</span>
-                  ))}
-                </div>
-              )}
             </div>
-          </section>
-
-          {p.bio && (
-            <section className="meCard meSection" aria-label={t.about}>
-              <h2 className="profH2">{t.about}</h2>
-              <p className="meText">{p.bio}</p>
-            </section>
-          )}
-
-          {(p.job_title || p.employer || (experience ?? []).length > 0) && (
-            <section className="meCard meSection" aria-label={t.workHistory}>
-              <h2 className="profH2">{t.workHistory}</h2>
-              {(p.job_title || p.employer) && (
-                <Row
-                  title={join([p.job_title, p.employer])}
-                  sub={join([field && label(field), p.city])}
-                />
-              )}
-              {(experience ?? [])
-                .filter((role) => !repeatsCurrentRole(role, p))
-                .map((role, i) => (
-                  <Row
-                    key={i}
-                    title={join([role.job_title, role.employer])}
-                    sub={join([role.location, dates(role)])}
-                  />
+            {offers.length > 0 && (
+              <div className="meTags">
+                {offers.map((offer) => (
+                  <span key={offer.key}>{label(offer)}</span>
                 ))}
-            </section>
-          )}
-
-          <section className="meCard meSection" aria-label={t.education}>
-            <h2 className="profH2">{t.education}</h2>
-            {(education ?? []).map((row, i) => (
-              <Row
-                key={i}
-                title={row.school}
-                sub={join([row.degree, row.field_of_study, row.graduation_year])}
-              />
-            ))}
-            <Row title={school.name} sub={format(t.classOf, { year: p.grad_year })} />
-          </section>
-        </div>
-
-        <aside className="meSide">
-          <section className="meCard meBox" aria-labelledby="contact-title">
-            <h2 id="contact-title">{format(t.contactTitle, { name: first })}</h2>
-            {reveal.length === 0 && shared.length === 0 ? (
-              <span>{t.noContact}</span>
-            ) : (
-              <>
-                <p className="profNote">
-                  {format(t.contactNote, { school: schoolBranding(school).shortName })}
-                </p>
-                {reveal.map((type) => (
-                  <ContactReveal
-                    key={type}
-                    profileId={p.id}
-                    channel={type as "email" | "phone"}
-                    label={type === "email" ? t.showEmail : t.showPhone}
-                    copyLabel={t.copy}
-                    copiedLabel={t.copied}
-                    failedLabel={t.revealFailed}
-                  />
-                ))}
-                {shared.map((link) => (
-                  <a key={link.type} href={link.value} target="_blank" rel="noopener noreferrer">
-                    {o.channels[link.type as (typeof LINKS)[number]]}
-                    <span className="srOnly"> {t.opensNewTab}</span>
-                  </a>
-                ))}
-              </>
+              </div>
             )}
+          </div>
+        </section>
+
+        {p.bio && (
+          <section className="meCard meSection" aria-label={t.about}>
+            <h2 className="profH2">{t.about}</h2>
+            <p className="meText">{p.bio}</p>
           </section>
-          {p.last_confirmed_at && (
-            <section className="meCard meBox">
-              <span>
-                {format(t.confirmed, {
-                  date: new Intl.DateTimeFormat(locale === "fr" ? "fr-CA" : "en-CA", {
-                    month: "long",
-                    year: "numeric",
-                    timeZone: "America/Toronto",
-                  }).format(new Date(p.last_confirmed_at)),
-                })}
-              </span>
-            </section>
+        )}
+
+        {(p.job_title || p.employer || (experience ?? []).length > 0) && (
+          <section className="meCard meSection" aria-label={t.workHistory}>
+            <h2 className="profH2">{t.workHistory}</h2>
+            {(p.job_title || p.employer) && (
+              <Row
+                title={join([p.job_title, p.employer])}
+                sub={join([field && label(field), p.city])}
+              />
+            )}
+            {(experience ?? [])
+              .filter((role) => !repeatsCurrentRole(role, p))
+              .map((role, i) => (
+                <Row
+                  key={i}
+                  title={join([role.job_title, role.employer])}
+                  sub={join([role.location, dates(role)])}
+                />
+              ))}
+          </section>
+        )}
+
+        <section className="meCard meSection" aria-label={t.education}>
+          <h2 className="profH2">{t.education}</h2>
+          {(education ?? []).map((row, i) => (
+            <Row
+              key={i}
+              title={row.school}
+              sub={join([row.degree, row.field_of_study, row.graduation_year])}
+            />
+          ))}
+          <Row title={school.name} sub={format(t.classOf, { year: p.grad_year })} />
+        </section>
+      </div>
+
+      <aside className="meSide">
+        <section className="meCard meBox" aria-labelledby="contact-title">
+          <h2 id="contact-title">{format(t.contactTitle, { name: first })}</h2>
+          {reveal.length === 0 && shared.length === 0 ? (
+            <span>{t.noContact}</span>
+          ) : (
+            <>
+              <p className="profNote">
+                {format(t.contactNote, { school: schoolBranding(school).shortName })}
+              </p>
+              {reveal.map((type) => (
+                <ContactReveal
+                  key={type}
+                  profileId={p.id}
+                  channel={type as "email" | "phone"}
+                  label={type === "email" ? t.showEmail : t.showPhone}
+                  copyLabel={t.copy}
+                  copiedLabel={t.copied}
+                  failedLabel={t.revealFailed}
+                />
+              ))}
+              {shared.map((link) => (
+                <a key={link.type} href={link.value} target="_blank" rel="noopener noreferrer">
+                  {o.channels[link.type as (typeof LINKS)[number]]}
+                  <span className="srOnly"> {t.opensNewTab}</span>
+                </a>
+              ))}
+            </>
           )}
-        </aside>
-      </main>
-    </>
+        </section>
+        {p.last_confirmed_at && (
+          <section className="meCard meBox">
+            <span>
+              {format(t.confirmed, {
+                date: new Intl.DateTimeFormat(locale === "fr" ? "fr-CA" : "en-CA", {
+                  month: "long",
+                  year: "numeric",
+                  timeZone: "America/Toronto",
+                }).format(new Date(p.last_confirmed_at)),
+              })}
+            </span>
+          </section>
+        )}
+      </aside>
+    </main>
   );
 }
 

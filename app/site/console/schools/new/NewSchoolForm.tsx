@@ -111,7 +111,7 @@ export function NewSchoolForm({ origin }: { origin: Origin }) {
         <Button asChild variant="secondary">
           <Link href="/console">Cancel</Link>
         </Button>
-        <Button disabled={pending}>{pending ? "Creating…" : "Create school"}</Button>
+        <Button loading={pending}>{pending ? "Creating…" : "Create school"}</Button>
       </div>
     </form>
   );

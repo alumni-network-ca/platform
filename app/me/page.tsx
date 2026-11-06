@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Nav } from "@/components/Nav";
 import { dateLabel } from "@/lib/admin/data";
 import { format, translations } from "@/lib/i18n";
 import { CHANNELS, initials, type Channel, repeatsCurrentRole } from "@/lib/profile/fields";
 import { loadMyProfile } from "@/lib/profile/server";
 import { confirmStillAccurate } from "./actions";
+import { SubmitButton } from "@/components/ui/submit-button";
 
 // The alumnus's own profile (PRF-02; design Me): what other alumni see, each section with its edit page, and
 // the visibility, contact, freshness and data controls beside it.
@@ -73,150 +73,149 @@ export default async function MyProfilePage({
     );
 
   return (
-    <>
-      <Nav />
-      <main className="me">
-        <div className="meMain">
-          {(saved || confirmed) && (
-            <p className="notice noticeGood" role="status">
-              {confirmed ? t.confirmed : t.saved}
-            </p>
-          )}
-          <section className="meCard meHead">
-            <span className="meAvatar" aria-hidden="true">
-              {initials(p.preferred_name || p.first_name, p.last_name)}
+    <main className="me">
+      <div className="meMain">
+        {(saved || confirmed) && (
+          <p className="notice noticeGood" role="status">
+            {confirmed ? t.confirmed : t.saved}
+          </p>
+        )}
+        <section className="meCard meHead">
+          <span className="meAvatar" aria-hidden="true">
+            {initials(p.preferred_name || p.first_name, p.last_name)}
+          </span>
+          <div className="meWho">
+            <h1>
+              {name} {me.maidenName && <span>({me.maidenName})</span>}
+            </h1>
+            {(p.job_title || p.employer) && <span>{join([p.job_title, p.employer])}</span>}
+            <span className="meSub">
+              {join([
+                format(o.classOf, { year: p.grad_year }),
+                join([p.city, p.country], ", "),
+                p.languages
+                  .map((code) => o.languageNames[code as keyof typeof o.languageNames] ?? code)
+                  .join(", "),
+              ])}
             </span>
-            <div className="meWho">
-              <h1>
-                {name} {me.maidenName && <span>({me.maidenName})</span>}
-              </h1>
-              {(p.job_title || p.employer) && <span>{join([p.job_title, p.employer])}</span>}
-              <span className="meSub">
-                {join([
-                  format(o.classOf, { year: p.grad_year }),
-                  join([p.city, p.country], ", "),
-                  p.languages
-                    .map((code) => o.languageNames[code as keyof typeof o.languageNames] ?? code)
-                    .join(", "),
-                ])}
-              </span>
-            </div>
-            <Link className="onbBack" href="/me/edit/about">
-              {t.edit}
-            </Link>
-          </section>
+          </div>
+          <Link className="onbBack" href="/me/edit/about">
+            {t.edit}
+          </Link>
+        </section>
 
-          <Section title={t.about} edit="/me/edit/about" t={t}>
-            <p className="meText">{p.bio || <span className="meEmpty">{t.noBio}</span>}</p>
-          </Section>
+        <Section title={t.about} edit="/me/edit/about" t={t}>
+          <p className="meText">{p.bio || <span className="meEmpty">{t.noBio}</span>}</p>
+        </Section>
 
-          <Section title={t.career} edit="/me/edit/career" t={t}>
-            {p.job_title || p.employer || me.experience.length ? (
-              <>
-                {(p.job_title || p.employer) && (
-                  <Row title={join([p.job_title, p.employer])} sub={join([field, p.city])} />
-                )}
-                {me.experience
-                  .filter((role) => !repeatsCurrentRole(role, p))
-                  .map((role, i) => (
-                    <Row
-                      key={i}
-                      title={join([role.job_title, role.employer])}
-                      sub={join([role.location, dates(role, me.locale, t.now)])}
-                    />
-                  ))}
-              </>
-            ) : (
-              <p className="meEmpty">{t.noCareer}</p>
-            )}
-          </Section>
-
-          <Section title={t.education} edit="/me/edit/education" t={t}>
-            {me.education.map((row, i) => (
-              <Row
-                key={i}
-                title={row.school}
-                sub={join([row.degree, row.field_of_study, row.graduation_year])}
-              />
-            ))}
-            {me.education.length === 0 && (
-              <p className="meEmpty">{format(t.noEducation, { school })}</p>
-            )}
-            <Row title={me.school.name} sub={format(o.classOf, { year: p.grad_year })} />
-          </Section>
-
-          <Section title={t.openTo} edit="/me/edit/networking" t={t}>
-            {offers.length ? (
-              <div className="meTags">
-                {offers.map((offer) => (
-                  <span key={offer.key}>{offer.label}</span>
+        <Section title={t.career} edit="/me/edit/career" t={t}>
+          {p.job_title || p.employer || me.experience.length ? (
+            <>
+              {(p.job_title || p.employer) && (
+                <Row title={join([p.job_title, p.employer])} sub={join([field, p.city])} />
+              )}
+              {me.experience
+                .filter((role) => !repeatsCurrentRole(role, p))
+                .map((role, i) => (
+                  <Row
+                    key={i}
+                    title={join([role.job_title, role.employer])}
+                    sub={join([role.location, dates(role, me.locale, t.now)])}
+                  />
                 ))}
-              </div>
-            ) : (
-              <p className="meEmpty">{t.noOffers}</p>
-            )}
-          </Section>
-        </div>
+            </>
+          ) : (
+            <p className="meEmpty">{t.noCareer}</p>
+          )}
+        </Section>
 
-        <aside className="meSide">
-          <section className="meCard meBox">
-            <h2>{t.visibility}</h2>
-            <span className="meState">
-              <span
-                className={p.visibility === "members" ? "meDot meDotOn" : "meDot"}
-                aria-hidden="true"
-              />
-              {p.visibility === "members" ? format(t.visibleMembers, { school }) : t.visibleHidden}
-            </span>
-            <Link href="/me/visibility">{t.changeVisibility}</Link>
-          </section>
+        <Section title={t.education} edit="/me/edit/education" t={t}>
+          {me.education.map((row, i) => (
+            <Row
+              key={i}
+              title={row.school}
+              sub={join([row.degree, row.field_of_study, row.graduation_year])}
+            />
+          ))}
+          {me.education.length === 0 && (
+            <p className="meEmpty">{format(t.noEducation, { school })}</p>
+          )}
+          <Row title={me.school.name} sub={format(o.classOf, { year: p.grad_year })} />
+        </Section>
 
-          <section className="meCard meBox">
-            <h2>{t.reach}</h2>
-            {shared.length === 0 && <span>{t.reachNone}</span>}
-            <ul className="meList">
-              {channels.map((c) => (
-                <li key={c.type}>{reach(c.type, c.public)}</li>
+        <Section title={t.openTo} edit="/me/edit/networking" t={t}>
+          {offers.length ? (
+            <div className="meTags">
+              {offers.map((offer) => (
+                <span key={offer.key}>{offer.label}</span>
               ))}
-            </ul>
-            <Link href="/me/edit/contact">{t.editContact}</Link>
-          </section>
+            </div>
+          ) : (
+            <p className="meEmpty">{t.noOffers}</p>
+          )}
+        </Section>
+      </div>
 
-          <section className="meCard meBox">
-            <h2>{t.current}</h2>
-            <span>
-              {p.last_confirmed_at
-                ? format(t.confirmedOn, { date: dateLabel(p.last_confirmed_at, me.locale) })
-                : t.notConfirmed}
-            </span>
-            {due !== null && due <= soon && (
-              <>
-                <span className="meWarn">
-                  {due <= soon - 30 * 24 * 60 * 60 * 1000
-                    ? t.overdue
-                    : format(t.dueOn, { date: dateLabel(p.confirmation_due_at, me.locale) })}
-                </span>
-                <form action={confirmStillAccurate}>
-                  <button className="onbButton">{t.stillAccurate}</button>
-                </form>
-              </>
-            )}
-          </section>
+      <aside className="meSide">
+        <section className="meCard meBox">
+          <h2>{t.visibility}</h2>
+          <span className="meState">
+            <span
+              className={p.visibility === "members" ? "meDot meDotOn" : "meDot"}
+              aria-hidden="true"
+            />
+            {p.visibility === "members" ? format(t.visibleMembers, { school }) : t.visibleHidden}
+          </span>
+          <Link href="/me/visibility">{t.changeVisibility}</Link>
+        </section>
 
-          <section className="meCard meBox" id="your-data">
-            <h2>{t.data}</h2>
-            {/* A POST, so a link scanner or a prefetch never makes an export (each one is audited). */}
-            <form method="post" action="/me/export">
-              <button className="meLinkButton">{t.download}</button>
-            </form>
-            <Link href="/account/email">{t.signIn}</Link>
-            <Link href="/me/delete" className="meDanger">
-              {t.deleteAccount}
-            </Link>
-          </section>
-        </aside>
-      </main>
-    </>
+        <section className="meCard meBox">
+          <h2>{t.reach}</h2>
+          {shared.length === 0 && <span>{t.reachNone}</span>}
+          <ul className="meList">
+            {channels.map((c) => (
+              <li key={c.type}>{reach(c.type, c.public)}</li>
+            ))}
+          </ul>
+          <Link href="/me/edit/contact">{t.editContact}</Link>
+        </section>
+
+        <section className="meCard meBox">
+          <h2>{t.current}</h2>
+          <span>
+            {p.last_confirmed_at
+              ? format(t.confirmedOn, { date: dateLabel(p.last_confirmed_at, me.locale) })
+              : t.notConfirmed}
+          </span>
+          {due !== null && due <= soon && (
+            <>
+              <span className="meWarn">
+                {due <= soon - 30 * 24 * 60 * 60 * 1000
+                  ? t.overdue
+                  : format(t.dueOn, { date: dateLabel(p.confirmation_due_at, me.locale) })}
+              </span>
+              <form action={confirmStillAccurate}>
+                <SubmitButton variant="secondary" size="sm">
+                  {t.stillAccurate}
+                </SubmitButton>
+              </form>
+            </>
+          )}
+        </section>
+
+        <section className="meCard meBox" id="your-data">
+          <h2>{t.data}</h2>
+          {/* A POST, so a link scanner or a prefetch never makes an export (each one is audited). */}
+          <form method="post" action="/me/export">
+            <button className="meLinkButton">{t.download}</button>
+          </form>
+          <Link href="/account/email">{t.signIn}</Link>
+          <Link href="/me/delete" className="meDanger">
+            {t.deleteAccount}
+          </Link>
+        </section>
+      </aside>
+    </main>
   );
 }
 

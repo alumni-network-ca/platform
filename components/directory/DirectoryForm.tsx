@@ -2,6 +2,7 @@
 
 import Form from "next/form";
 import { useState, type ReactNode } from "react";
+import { useFormStatus } from "react-dom";
 
 /**
  * The directory's search and filters as one GET form (DIR-02): the URL holds every filter, so a search can be
@@ -50,5 +51,23 @@ export function FilterPanel({
         {children}
       </aside>
     </div>
+  );
+}
+
+/**
+ * The results beside the filters. While a new search loads they fade back and say they are busy, and the filters stay
+ * as they are: the page's skeleton is for arriving at the directory, not for changing a filter.
+ */
+export function DirectoryResults({ label, children }: { label: string; children: ReactNode }) {
+  const { pending } = useFormStatus();
+  return (
+    <section
+      className="dirResults transition-opacity data-pending:opacity-50 data-pending:delay-150"
+      aria-label={label}
+      aria-busy={pending || undefined}
+      data-pending={pending || undefined}
+    >
+      {children}
+    </section>
   );
 }

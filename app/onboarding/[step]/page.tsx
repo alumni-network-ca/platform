@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { Fragment } from "react";
-import { Nav } from "@/components/Nav";
 import { PublishChoices } from "@/components/profile/Choices";
 import { FormAlert, ProfileForm, SubmitButton } from "@/components/profile/ProfileForm";
 import { SectionFields } from "@/components/profile/SectionFields";
@@ -117,61 +116,55 @@ export default async function OnboardingStepPage({
         ),
       );
     return (
-      <>
-        <Nav />
-        <main className="onb">
-          {rail}
-          <ProfileForm className="onbContents" action={finish} t={t}>
-            <PublishChoices
-              t={t}
-              school={school}
-              initial={p.visibility}
-              consentText={consentText}
-              preview={{
-                initials: initials(p.preferred_name || p.first_name, p.last_name),
-                name,
-                classOf: format(t.classOf, { year: p.grad_year }),
-                line: [p.job_title, p.employer, p.city].filter(Boolean).join(" · "),
-                tags: me.offerTypes.filter((o) => me.offers.includes(o.key)).map((o) => o.label),
-              }}
-              progress={progress}
-              head={heading}
-              back={back}
-            />
-          </ProfileForm>
-        </main>
-      </>
+      <main className="onb">
+        {rail}
+        <ProfileForm className="onbContents" action={finish} t={t}>
+          <PublishChoices
+            t={t}
+            school={school}
+            initial={p.visibility}
+            consentText={consentText}
+            preview={{
+              initials: initials(p.preferred_name || p.first_name, p.last_name),
+              name,
+              classOf: format(t.classOf, { year: p.grad_year }),
+              line: [p.job_title, p.employer, p.city].filter(Boolean).join(" · "),
+              tags: me.offerTypes.filter((o) => me.offers.includes(o.key)).map((o) => o.label),
+            }}
+            progress={progress}
+            head={heading}
+            back={back}
+          />
+        </ProfileForm>
+      </main>
     );
   }
 
   return (
-    <>
-      <Nav />
-      <main className="onb">
-        {rail}
-        <ProfileForm
-          className="onbContents"
-          action={saveStep.bind(null, step)}
-          t={t}
-          syncLocale={step === "welcome"}
-        >
-          <section className="onbCard">
-            <div className="onbProgress">
-              <span style={{ width: `${progress}%` }} />
-            </div>
-            <div className="onbBody">
-              {heading}
-              <FormAlert />
-              <SectionFields section={step} me={me} />
-            </div>
-            <div className="onbFooter">
-              {back}
-              <SubmitButton label={step === "welcome" ? t.start : t.saveAndContinue} />
-            </div>
-          </section>
-        </ProfileForm>
-      </main>
-    </>
+    <main className="onb">
+      {rail}
+      <ProfileForm
+        className="onbContents"
+        action={saveStep.bind(null, step)}
+        t={t}
+        syncLocale={step === "welcome"}
+      >
+        <section className="onbCard">
+          <div className="onbProgress">
+            <span style={{ width: `${progress}%` }} />
+          </div>
+          <div className="onbBody">
+            {heading}
+            <FormAlert />
+            <SectionFields section={step} me={me} />
+          </div>
+          <div className="onbFooter">
+            {back}
+            <SubmitButton label={step === "welcome" ? t.start : t.saveAndContinue} />
+          </div>
+        </section>
+      </ProfileForm>
+    </main>
   );
 }
 

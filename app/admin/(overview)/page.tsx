@@ -1,3 +1,4 @@
+import Form from "next/form";
 import Link from "next/link";
 import { requireStaff } from "@/lib/auth/staff";
 import { adminCopy, dateLabel, read, type Search } from "@/lib/admin/data";
@@ -7,6 +8,7 @@ import { format } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { NativeSelect } from "@/components/ui/native-select";
 import { ForwardArrow } from "@/components/icons";
+import { SubmitButton } from "@/components/ui/submit-button";
 export default async function Dashboard({ searchParams }: { searchParams: Search }) {
   const { supabase, school, user, role, can } = await requireStaff("/admin", "metrics.read");
   const { t, locale } = await adminCopy();
@@ -82,7 +84,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Search
           <h1>{t.dashboard}</h1>
           <p>{name ? format(t.greetingName, { name }) : t.greeting}</p>
         </div>
-        <form className="adminFilters">
+        <Form action="/admin" className="adminFilters">
           <label className="field">
             {t.period}
             <NativeSelect name="period" defaultValue={period}>
@@ -91,8 +93,8 @@ export default async function Dashboard({ searchParams }: { searchParams: Search
               <option value="all">{t.periodAll}</option>
             </NativeSelect>
           </label>
-          <Button variant="secondary">{t.apply}</Button>
-        </form>
+          <SubmitButton variant="secondary">{t.apply}</SubmitButton>
+        </Form>
       </div>
       {params.welcome === "1" && (
         <section className="welcomeBanner" aria-labelledby="welcome-title">

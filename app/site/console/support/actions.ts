@@ -12,7 +12,7 @@ export async function manageGrant(_: GrantResult, form: FormData): Promise<Grant
     const { error } = await supabase.rpc("platform_revoke_grant", {
       p_grant: String(form.get("grant") ?? ""),
     });
-    revalidatePath("/console", "layout");
+    revalidatePath("/", "layout");
     return { error: error ? "Only the person who opened a grant can end it." : null };
   }
 
@@ -27,6 +27,7 @@ export async function manageGrant(_: GrantResult, form: FormData): Promise<Grant
     p_hours: hours,
   });
   if (error) return { error: "Could not open the grant. Please try again." };
-  revalidatePath("/console", "layout");
+  // The nav bar, in the root layout, counts the open grants.
+  revalidatePath("/", "layout");
   return { error: null, opened: school };
 }

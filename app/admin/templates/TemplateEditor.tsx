@@ -90,7 +90,7 @@ export function TemplateEditor({
       )}
       {/* TODO(EML-01): email preview requires the renderer. */}
       <div className="formActions">
-        <Button disabled={pending}>{t.approveVersion}</Button>
+        <Button loading={pending}>{t.approveVersion}</Button>
       </div>
     </form>
   );
