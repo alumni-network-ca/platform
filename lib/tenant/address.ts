@@ -7,23 +7,35 @@ export type Origin = {
   /** The request's Host header, port included. */
   host: string;
   rootDomain: string;
-  /** True only when VERCEL_ENV is "preview": one host for everything, the school picked by ?tenant=. */
+  /** True when VERCEL_ENV is "preview": PR previews, but also staging, which has its own root domain. */
   isPreview: boolean;
 };
+
+/**
+ * True when this host picks its school with ?tenant= (a PR preview on *.vercel.app). A preview deployment served
+ * from the root domain or one of its schools (staging) uses subdomains like production, as proxy.ts resolves them.
+ */
+export function usesTenantSelector(origin: Origin): boolean {
+  if (!origin.isPreview) return false;
+  const hostname = origin.host.toLowerCase().replace(/:\d+$/, "").replace(/\.$/, "");
+  const root = origin.rootDomain.toLowerCase();
+  return hostname !== root && !hostname.endsWith(`.${root}`);
+}
 
 const port = (host: string) => host.match(/:\d+$/)?.[0] ?? "";
 const withTenant = (path: string, tenant: string) =>
   `${path}${path.includes("?") ? "&" : "?"}${PREVIEW_COOKIE}=${tenant}`;
 
-/** A school's address: https://herzliah.alumninetwork.ca/path, or ?tenant=herzliah on a preview. */
+/** A school's address: https://herzliah.alumninetwork.ca/path, or ?tenant=herzliah on a PR preview. */
 export function schoolUrl(origin: Origin, slug: string, path = "/"): string {
-  if (origin.isPreview) return `${origin.protocol}//${origin.host}${withTenant(path, slug)}`;
+  if (usesTenantSelector(origin))
+    return `${origin.protocol}//${origin.host}${withTenant(path, slug)}`;
   return `${origin.protocol}//${slug}.${origin.rootDomain}${port(origin.host)}${path}`;
 }
 
-/** The root site: https://alumninetwork.ca/path, or ?tenant=root on a preview. */
+/** The root site: https://alumninetwork.ca/path, or ?tenant=root on a PR preview. */
 export function rootUrl(origin: Origin, path = "/"): string {
-  if (origin.isPreview)
+  if (usesTenantSelector(origin))
     return `${origin.protocol}//${origin.host}${withTenant(path, PREVIEW_ROOT)}`;
   return `${origin.protocol}//${origin.rootDomain}${port(origin.host)}${path}`;
 }
