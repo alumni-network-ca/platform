@@ -333,7 +333,7 @@ test("a request with a known student ID shows the matching record first", async 
     await page.goto("/admin/approvals/" + fixture.data.id);
     const match = page.locator(".adminMatch").first();
     await expect(match.getByRole("link", { name: "Imported Unclaimed, 2010" })).toBeVisible();
-    await expect(match.getByText("✓ Same student ID")).toBeVisible();
+    await expect(match.getByText("Same student ID", { exact: true })).toBeVisible();
     await expect(page.getByRole("combobox", { name: "Link to the record" })).toHaveValue(
       "22222222-2222-4222-8222-000000000001",
     );
