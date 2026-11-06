@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { fillPlaceholders, renderEmail, type EmailBrand } from "./render";
+import type { EmailBrand } from "@/types/email";
+import { fillPlaceholders, renderEmail } from "./render";
 
 const brand: EmailBrand = {
   networkName: "Herzliah Alumni Network",

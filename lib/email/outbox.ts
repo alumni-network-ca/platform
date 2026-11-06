@@ -1,5 +1,4 @@
 import "server-only";
-import type { SupabaseClient } from "@supabase/supabase-js";
 import {
   IMMEDIATE_BATCH,
   MAX_ATTEMPTS,
@@ -8,31 +7,31 @@ import {
   SENDABLE_TEMPLATES,
   SIGN_IN_PATH,
 } from "@/config/email";
-import type { Database, Enums, Tables } from "@/lib/database";
 import { schoolBranding } from "@/lib/school";
 import { schoolPrimary } from "@/lib/theme";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { schoolUrl, type Origin } from "@/lib/tenant/address";
-import { renderEmail, type Placeholders } from "./render";
-import { PermanentEmailError, resendTransport, type Transport } from "./transport";
+import type {
+  DeliveryResult,
+  EmailTemplateKey,
+  OutboxClient,
+  OutboxDeps,
+  OutboxRow,
+  Placeholders,
+  Transport,
+} from "@/types/email";
+import { renderEmail } from "./render";
+import { PermanentEmailError, resendTransport } from "./transport";
 
 // The outbox worker (EML-01, ADR 0007). Business events queue a row in email_outbox in their own transaction;
 // this sends the rows: right after the action (lib/email/send.ts) and from the cron sweeper (/api/cron/email).
 // Logs carry ids and statuses only, never addresses, bodies or links.
 
-type Client = SupabaseClient<Database>;
-type OutboxRow = Tables<"email_outbox">;
-type TemplateKey = Enums<"email_template_key">;
-
-export type DeliveryResult = { sent: number; retried: number; failed: number; skipped: number };
-
-type Deps = { client: Client; transport: Transport; now: () => Date };
-
 class PermanentDataError extends Error {}
 
 export async function deliverOutbox(
   options: { origin: Origin; subjectId?: string; limit?: number },
-  deps?: Partial<Deps>,
+  deps?: Partial<OutboxDeps>,
 ): Promise<DeliveryResult> {
   const result: DeliveryResult = { sent: 0, retried: 0, failed: 0, skipped: 0 };
   // Throws when RESEND_API_KEY or EMAIL_FROM_DOMAIN is missing, before any row is claimed.
@@ -56,7 +55,7 @@ export async function deliverOutbox(
 }
 
 async function deliverOne(
-  client: Client,
+  client: OutboxClient,
   transport: Transport,
   row: OutboxRow,
   origin: Origin,
@@ -101,20 +100,20 @@ async function deliverOne(
   }
 }
 
-async function update(client: Client, id: string, patch: Partial<OutboxRow>) {
+async function update(client: OutboxClient, id: string, patch: Partial<OutboxRow>) {
   const { error } = await client.from("email_outbox").update(patch).eq("id", id);
   if (error) throw new Error(`[email] could not update outbox row ${id}: ${error.code}`);
 }
 
 /** Loads the template, the school and the event the row is about, and renders the email. Null: no template. */
-async function buildEmail(client: Client, row: OutboxRow, origin: Origin) {
+async function buildEmail(client: OutboxClient, row: OutboxRow, origin: Origin) {
   if (!row.institution_id) throw new PermanentDataError("outbox row has no school");
   const [template, school, person] = await Promise.all([
     client
       .from("email_templates")
       .select("subject, body")
       .eq("institution_id", row.institution_id)
-      .eq("key", row.template_key as TemplateKey)
+      .eq("key", row.template_key as EmailTemplateKey)
       .eq("locale", row.locale)
       .eq("status", "approved")
       .maybeSingle(),
@@ -157,7 +156,7 @@ async function buildEmail(client: Client, row: OutboxRow, origin: Origin) {
 }
 
 /** The person's first name, and the school's question or reason, from the request or the record. */
-async function loadSubject(client: Client, row: OutboxRow): Promise<Placeholders> {
+async function loadSubject(client: OutboxClient, row: OutboxRow): Promise<Placeholders> {
   if (!row.subject_id) throw new PermanentDataError("outbox row has no subject");
   if (row.template_key.startsWith("access_")) {
     const { data, error } = await client

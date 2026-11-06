@@ -1,6 +1,6 @@
 // Transactional email settings (EML-01, EML-08, ADR 0007). Environment values (the Resend key, the sender domain,
 // the cron secret) are read through config/env/; everything fixed lives here.
-import type { Enums } from "@/lib/database";
+import type { EmailTemplateKey } from "@/types/email";
 
 /** Resend's send endpoint. The outbox id goes in the Idempotency-Key header, so a retry is never delivered twice. */
 export const RESEND_API_URL = "https://api.resend.com/emails";
@@ -34,7 +34,7 @@ export const SENDABLE_TEMPLATES = [
   "membership_suspended",
   "membership_reactivated",
   "welcome",
-] as const satisfies readonly Enums<"email_template_key">[];
+] as const satisfies readonly EmailTemplateKey[];
 
 /** Wait before attempt 2, 3, 4 and 5; after the fifth failure the row is failed for good. */
 export const RETRY_MINUTES = [1, 5, 30, 120] as const;

@@ -8,26 +8,13 @@ import {
 } from "@/config/email";
 import { serverEnv } from "@/config/env/server";
 import { secrets } from "@/config/env/secrets";
+import type { Transport } from "@/types/email";
 
 // Every email goes through Resend (ADR 0007), in every environment. A missing RESEND_API_KEY or EMAIL_FROM_DOMAIN
 // throws on first use instead of leaving emails queued.
 
-export type OutgoingEmail = {
-  /** The outbox id: Resend's idempotency key, so a retried row is never delivered twice (E2). */
-  id: string;
-  to: string;
-  /** "Herzliah Alumni Network": the sender's display name. */
-  fromName: string;
-  replyTo: string | null;
-  subject: string;
-  text: string;
-  html: string;
-};
-
 /** A failure that retrying cannot fix, such as an address the provider rejects. */
 export class PermanentEmailError extends Error {}
-
-export type Transport = (email: OutgoingEmail) => Promise<{ providerId: string | null }>;
 
 /** Resend, with the key and sender domain read now, so a missing one fails before anything is claimed. */
 export function resendTransport(): Transport {

@@ -5,7 +5,8 @@ vi.mock("@/lib/supabase/admin", () => ({ createAdminClient: vi.fn() }));
 
 import { MAX_ATTEMPTS, RESEND_API_URL, SENDABLE_TEMPLATES } from "@/config/email";
 import { deliverOutbox } from "./outbox";
-import { PermanentEmailError, resendTransport, type OutgoingEmail } from "./transport";
+import type { OutgoingEmail } from "@/types/email";
+import { PermanentEmailError, resendTransport } from "./transport";
 
 const origin = {
   protocol: "http:",

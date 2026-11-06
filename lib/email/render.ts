@@ -1,34 +1,8 @@
 import { EMAIL_FOOTER, LINK_PLACEHOLDERS } from "@/config/email";
+import type { EmailBrand, Placeholders, RenderedEmail } from "@/types/email";
 
 // Turns an approved template (plain text with {placeholders}, EML-03) into the email that is sent: the subject,
 // a plain-text part and a branded HTML part. Pure, so it is unit-tested; lib/email/outbox.ts loads the data.
-
-export type Placeholders = Partial<
-  Record<
-    | "first_name"
-    | "school_name"
-    | "sign_in_link"
-    | "action_link"
-    | "confirm_link"
-    | "reason"
-    | "message"
-    | "graduation_year"
-    | "onboarding_link",
-    string | null
-  >
->;
-
-export type EmailBrand = {
-  /** "Herzliah Alumni Network": the header and the sender's display name. */
-  networkName: string;
-  /** Absolute https URL of the school's logo, or null to show the name only. */
-  logoUrl: string | null;
-  /** #RRGGBB for the header rule and the links: lib/theme.ts schoolPrimary(), already validated. */
-  primaryColor: string;
-  locale: "en" | "fr";
-};
-
-export type RenderedEmail = { subject: string; text: string; html: string };
 
 /** Replaces each {placeholder}. A missing value becomes empty text, never the raw "{reason}". */
 export function fillPlaceholders(template: string, values: Placeholders): string {
