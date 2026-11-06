@@ -3,6 +3,7 @@ import { useActionState, useEffect, useState } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
 import { SIGNUP_CONFIRMATION } from "@/config/auth";
 import { resendConfirmation, type ResendResult } from "../signup-actions";
+import { Button } from "@/components/ui/button";
 
 export function ConfirmationResend({ retryIn }: { retryIn: number }) {
   const { locale } = useLanguage();
@@ -23,7 +24,7 @@ export function ConfirmationResend({ retryIn }: { retryIn: number }) {
   }, [wait]);
   return (
     <form action={action}>
-      <button className="btn btnLight" disabled={pending || wait > 0}>
+      <Button variant="secondary" disabled={pending || wait > 0}>
         {wait > 0
           ? fr
             ? `Renvoyer dans ${wait} s`
@@ -35,7 +36,7 @@ export function ConfirmationResend({ retryIn }: { retryIn: number }) {
             : fr
               ? "Renvoyer le courriel de confirmation"
               : "Resend confirmation email"}
-      </button>
+      </Button>
       {result.sent && (
         <p className="notice noticeGood" role="status">
           {fr

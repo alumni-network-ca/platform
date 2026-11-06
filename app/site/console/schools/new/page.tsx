@@ -2,6 +2,7 @@ import Link from "next/link";
 import { requirePlatformAdmin } from "@/lib/auth/platform";
 import { getOrigin } from "@/lib/tenant/server";
 import { NewSchoolForm } from "./NewSchoolForm";
+import { BackArrow } from "@/components/icons";
 
 // S1.2 Create a school.
 export default async function NewSchoolPage() {
@@ -9,7 +10,8 @@ export default async function NewSchoolPage() {
   return (
     <>
       <Link className="backLink" href="/console">
-        ← Schools
+        <BackArrow />
+        Schools
       </Link>
       <div className="shellTitle">
         <div>

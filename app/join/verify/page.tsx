@@ -9,6 +9,7 @@ import { homeFor } from "@/lib/auth/home";
 import { signupDestination } from "@/lib/auth/next";
 import { getServerLocale } from "@/lib/i18n-server";
 import { ConfirmationResend } from "./ConfirmationResend";
+import { Mail } from "lucide-react";
 
 const COOKIE = SIGNUP_CONFIRMATION.cookies;
 
@@ -43,7 +44,7 @@ export default async function VerifySignupPage() {
         {destination === "/join" && <JoinProgress step={0} locale={locale} />}
         <section className="joinCard joinCentered">
           <span className="joinIcon" aria-hidden="true">
-            ✉
+            <Mail className="size-6" />
           </span>
           <span className="joinEyebrow">
             {fr ? "Terminez la création de votre compte" : "Finish creating your account"}

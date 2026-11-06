@@ -3,6 +3,7 @@ import { Nav } from "@/components/Nav";
 import { requireAccess } from "@/lib/auth/account";
 import { getServerLocale } from "@/lib/i18n-server";
 import { JoinForm } from "../JoinForm";
+import { BackArrow } from "@/components/icons";
 
 export default async function EditRequestPage() {
   const { school, supabase, user } = await requireAccess("/join/edit");
@@ -21,7 +22,8 @@ export default async function EditRequestPage() {
       <main className="joinPage">
         <section className="joinCard joinCentered">
           <Link className="backLink" href="/auth/home">
-            {fr ? "← Ma demande" : "← My request"}
+            <BackArrow />
+            {fr ? "Ma demande" : "My request"}
           </Link>
           <h1>{fr ? "Modifiez votre demande" : "Edit your request"}</h1>
           <p className="muted">

@@ -3,6 +3,9 @@ import { redirect } from "next/navigation";
 import { requireStaff } from "@/lib/auth/staff";
 import { adminCopy, dateLabel, read, pageNumber, type Search } from "@/lib/admin/data";
 import { format } from "@/lib/i18n";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { NativeSelect } from "@/components/ui/native-select";
 const states = ["published", "hidden", "onboarding", "suspended", "archived", "deceased"] as const;
 export default async function Roster({ searchParams }: { searchParams: Search }) {
   const { supabase, school } = await requireStaff("/admin/alumni", "records.read");
@@ -44,48 +47,28 @@ export default async function Roster({ searchParams }: { searchParams: Search })
       <form className="adminFilters">
         <label className="field">
           {t.search}
-          <input
-            className="input"
-            name="q"
-            defaultValue={query}
-            maxLength={200}
-            placeholder={t.rosterSearchHint}
-          />
+          <Input name="q" defaultValue={query} maxLength={200} placeholder={t.rosterSearchHint} />
         </label>
         <label className="field">
           {t.status}
-          <select className="input" name="state" defaultValue={state ?? ""}>
+          <NativeSelect name="state" defaultValue={state ?? ""}>
             <option value="">{t.allStatuses}</option>
             {states.map((s) => (
               <option key={s} value={s}>
                 {t[s]}
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </label>
         <label className="field">
           {t.classMin}
-          <input
-            className="input"
-            name="min"
-            type="number"
-            min={1900}
-            max={2100}
-            defaultValue={p.min}
-          />
+          <Input name="min" type="number" min={1900} max={2100} defaultValue={p.min} />
         </label>
         <label className="field">
           {t.classMax}
-          <input
-            className="input"
-            name="max"
-            type="number"
-            min={1900}
-            max={2100}
-            defaultValue={p.max}
-          />
+          <Input name="max" type="number" min={1900} max={2100} defaultValue={p.max} />
         </label>
-        <button className="btn btnPrimary">{t.apply}</button>
+        <Button>{t.apply}</Button>
       </form>
       {/* TODO(FRS-04): freshness filter. TODO(EML-05): email state. TODO(EXP-01): export results. */}
       <div className="tableBox">

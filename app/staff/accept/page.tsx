@@ -11,6 +11,7 @@ import { schoolBranding } from "@/lib/school";
 import { previewInvitation } from "@/lib/staff/invitation";
 import { AcceptForm } from "./AcceptForm";
 import { InvitationLanding } from "./InvitationLanding";
+import { Button } from "@/components/ui/button";
 
 type Problem = "wrong_account" | "expired" | "revoked" | "used";
 
@@ -123,9 +124,9 @@ export default async function AcceptStaffPage({
               </div>
             )}
             {problem === "used" && !user && (
-              <Link className="btn btnPrimary" href="/login">
-                {t.usedAction}
-              </Link>
+              <Button asChild>
+                <Link href="/login">{t.usedAction}</Link>
+              </Button>
             )}
             {problem === "wrong_account" && <p className="microcopy muted">{t.wrongFine}</p>}
           </section>

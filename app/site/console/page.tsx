@@ -2,6 +2,8 @@ import Link from "next/link";
 import { requirePlatformAdmin } from "@/lib/auth/platform";
 import { schoolUrl } from "@/lib/tenant/address";
 import { getOrigin } from "@/lib/tenant/server";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 // S1.1 Console: all schools. Counts only, never alumni data (ADR 0005).
 export default async function SchoolsPage({
@@ -32,9 +34,9 @@ export default async function SchoolsPage({
             Each school is a private network at its own address. Counts only, no alumni data here.
           </p>
         </div>
-        <Link className="btn btnPrimary" href="/console/schools/new">
-          New school
-        </Link>
+        <Button asChild>
+          <Link href="/console/schools/new">New school</Link>
+        </Button>
       </div>
 
       <div className="statGrid">
@@ -61,7 +63,7 @@ export default async function SchoolsPage({
       <form className="formRow" role="search">
         <label className="field">
           Find a school
-          <input className="input" name="q" defaultValue={q} placeholder="Name or address" />
+          <Input name="q" defaultValue={q} placeholder="Name or address" />
         </label>
       </form>
 

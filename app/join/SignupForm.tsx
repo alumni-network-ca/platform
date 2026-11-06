@@ -6,6 +6,9 @@ import { useLanguage } from "@/components/LanguageProvider";
 import { MIN_PASSWORD_LENGTH, SIGNUP_CONFIRMATION } from "@/config/auth";
 import { createAccount, type SignupResult } from "./signup-actions";
 import { ConfirmationResend } from "./verify/ConfirmationResend";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Mail } from "lucide-react";
 
 export function SignupForm({
   shortName,
@@ -54,7 +57,7 @@ export function SignupForm({
       <section className="joinCard" aria-labelledby="confirmation-sent-title">
         <div role="status" className="joinStack">
           <span className="joinIcon" aria-hidden="true">
-            ✉
+            <Mail className="size-6" />
           </span>
           <h2 id="confirmation-sent-title">
             {fr ? "Vérifiez votre boîte de réception" : "Check your inbox"}
@@ -113,23 +116,11 @@ export function SignupForm({
             <div className="signupPasswords">
               <label>
                 {fr ? "Prénom" : "First name"}
-                <input
-                  className="input"
-                  name="first_name"
-                  autoComplete="given-name"
-                  maxLength={100}
-                  required
-                />
+                <Input name="first_name" autoComplete="given-name" maxLength={100} required />
               </label>
               <label>
                 {fr ? "Nom" : "Last name"}
-                <input
-                  className="input"
-                  name="last_name"
-                  autoComplete="family-name"
-                  maxLength={100}
-                  required
-                />
+                <Input name="last_name" autoComplete="family-name" maxLength={100} required />
               </label>
             </div>
             <p className="microcopy muted">
@@ -142,8 +133,7 @@ export function SignupForm({
         <div className="signupField">
           <label>
             {fr ? "Adresse courriel" : "Email address"}
-            <input
-              className="input"
+            <Input
               name="email"
               type="email"
               autoComplete="email"
@@ -169,8 +159,7 @@ export function SignupForm({
           <div className="signupField">
             <label>
               {fr ? "Créer un mot de passe" : "Create a password"}
-              <input
-                className="input"
+              <Input
                 name="password"
                 type="password"
                 autoComplete="new-password"
@@ -187,8 +176,7 @@ export function SignupForm({
           </div>
           <label>
             {fr ? "Confirmer le mot de passe" : "Confirm password"}
-            <input
-              className="input"
+            <Input
               name="confirm_password"
               type="password"
               autoComplete="new-password"
@@ -217,7 +205,7 @@ export function SignupForm({
             {errors[result.error]}
           </div>
         )}
-        <button className="btn btnPrimary btnWide" disabled={pending}>
+        <Button size="lg" className="w-full" disabled={pending}>
           {pending
             ? fr
               ? "Création…"
@@ -225,7 +213,7 @@ export function SignupForm({
             : fr
               ? "Créer mon compte"
               : "Create my account"}
-        </button>
+        </Button>
       </form>
       <p className="joinDivider">
         {fr ? "Vous avez déjà un compte ?" : "Already have an account?"}{" "}

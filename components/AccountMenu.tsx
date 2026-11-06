@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import type { NavAccount, NavItem } from "@/lib/auth/nav";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 /**
  * The avatar button and the account menu (WAI-ARIA menu button pattern). Enter, Space or ArrowDown open it on
@@ -118,19 +119,11 @@ export function AccountMenu({
         <span className={`navAvatar navAvatar-${account.avatar}`} aria-hidden="true">
           {account.initials}
         </span>
-        <svg
-          aria-hidden="true"
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d={open ? "M6 15l6-6 6 6" : "M6 9l6 6 6-6"} />
-        </svg>
+        {open ? (
+          <ChevronUp aria-hidden size={14} strokeWidth={2.6} />
+        ) : (
+          <ChevronDown aria-hidden size={14} strokeWidth={2.6} />
+        )}
       </button>
 
       {open && (

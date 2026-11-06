@@ -3,6 +3,9 @@
 import { useActionState } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
 import { requestAccess, updateRequest, type JoinResult } from "./actions";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 const TEXT = {
   en: {
@@ -73,8 +76,7 @@ export function JoinForm({ initial }: { initial?: RequestDetails }) {
     <form action={action} className="authForm">
       <label>
         {t.firstName}
-        <input
-          className="input"
+        <Input
           name="first_name"
           defaultValue={initial?.first_name}
           autoComplete="given-name"
@@ -84,8 +86,7 @@ export function JoinForm({ initial }: { initial?: RequestDetails }) {
       </label>
       <label>
         {t.lastName}
-        <input
-          className="input"
+        <Input
           name="last_name"
           defaultValue={initial?.last_name}
           autoComplete="family-name"
@@ -95,17 +96,11 @@ export function JoinForm({ initial }: { initial?: RequestDetails }) {
       </label>
       <label>
         {t.maidenName}
-        <input
-          className="input"
-          name="maiden_name"
-          maxLength={80}
-          defaultValue={initial?.maiden_name ?? ""}
-        />
+        <Input name="maiden_name" maxLength={80} defaultValue={initial?.maiden_name ?? ""} />
       </label>
       <label>
         {t.gradYear}
-        <input
-          className="input"
+        <Input
           name="grad_year"
           defaultValue={initial?.grad_year}
           type="number"
@@ -117,8 +112,7 @@ export function JoinForm({ initial }: { initial?: RequestDetails }) {
       </label>
       <label>
         {t.studentId}
-        <input
-          className="input"
+        <Input
           name="school_student_id"
           maxLength={40}
           autoComplete="off"
@@ -132,18 +126,12 @@ export function JoinForm({ initial }: { initial?: RequestDetails }) {
       </p>
       <label>
         {t.note}
-        <textarea
-          className="input"
-          name="note"
-          rows={3}
-          maxLength={1000}
-          defaultValue={initial?.note ?? ""}
-        />
+        <Textarea name="note" rows={3} maxLength={1000} defaultValue={initial?.note ?? ""} />
       </label>
       <p className="microcopy muted">{t.privacy}</p>
-      <button className="btn btnPrimary btnWide" disabled={pending}>
+      <Button size="lg" className="w-full" disabled={pending}>
         {pending ? t.sending : initial ? t.save : t.submit}
-      </button>
+      </Button>
       {result.error && (
         <div className="notice" role="alert">
           {t.errors[result.error]}

@@ -8,6 +8,7 @@ import { format, translations } from "@/lib/i18n";
 import { initials } from "@/lib/profile/fields";
 import { loadMyProfile } from "@/lib/profile/server";
 import { saveVisibility } from "../actions";
+import { BackArrow } from "@/components/icons";
 
 // Publishing or hiding the profile (PRF-05), with the onboarding step's choices and directory preview.
 export default async function VisibilityPage() {
@@ -53,7 +54,8 @@ export default async function VisibilityPage() {
             head={
               <div className="onbHead">
                 <Link className="meBackLink" href="/me">
-                  ← {m.backToProfile}
+                  <BackArrow />
+                  {m.backToProfile}
                 </Link>
                 <h1>{m.visibilityTitle}</h1>
                 <p>{p.visibility === "members" ? m.visibilityMembers : m.visibilityHidden}</p>

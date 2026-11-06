@@ -5,6 +5,9 @@ import { useSearchParams } from "next/navigation";
 import { useLanguage } from "./LanguageProvider";
 import { safeNext, signupDestination } from "@/lib/auth/next";
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { BackArrow } from "@/components/icons";
 
 // Password sign-in only while code sign-in is unavailable. Signup is a separate school flow.
 export function SignInForm({
@@ -72,8 +75,7 @@ export function SignInForm({
       <form onSubmit={signIn} className="authForm">
         <label>
           {fr ? "Adresse courriel" : "Email address"}
-          <input
-            className="input"
+          <Input
             type="email"
             autoComplete="username"
             value={email}
@@ -83,8 +85,7 @@ export function SignInForm({
         </label>
         <label>
           {fr ? "Mot de passe" : "Password"}
-          <input
-            className="input"
+          <Input
             type="password"
             autoComplete="current-password"
             value={password}
@@ -92,9 +93,9 @@ export function SignInForm({
             required
           />
         </label>
-        <button className="btn btnPrimary btnWide" disabled={busy}>
+        <Button size="lg" className="w-full" disabled={busy}>
           {busy ? (fr ? "Connexion…" : "Signing in…") : fr ? "Se connecter" : "Sign in"}
-        </button>
+        </Button>
       </form>
       {message && (
         <div className="notice" role="alert">
@@ -128,7 +129,10 @@ export function SignInForm({
         </>
       )}
       <div className="authFooter">
-        <Link href="/">{fr ? "← Accueil" : "← Home"}</Link>
+        <Link href="/">
+          <BackArrow />
+          {fr ? "Accueil" : "Home"}
+        </Link>
       </div>
     </>
   );

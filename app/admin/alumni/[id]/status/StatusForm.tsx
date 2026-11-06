@@ -3,6 +3,8 @@ import Link from "next/link";
 import { useActionState, useState } from "react";
 import { errorMessage, type AdminCopy } from "@/lib/admin/forms";
 import { changeStatus } from "../actions";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 export function StatusForm({
   id,
   active,
@@ -49,8 +51,7 @@ export function StatusForm({
       </fieldset>
       <label className="field">
         {t.reason}
-        <textarea
-          className="input"
+        <Textarea
           name="reason"
           required
           maxLength={2000}
@@ -66,9 +67,9 @@ export function StatusForm({
       )}
       <div className="formActions">
         <Link href={"/admin/alumni/" + id}>{t.cancel}</Link>
-        <button className="btn btnDanger" disabled={!reason.trim() || pending}>
+        <Button variant="destructive" disabled={!reason.trim() || pending}>
           {choices.find(([key]) => key === status)?.[1]}
-        </button>
+        </Button>
       </div>
       {!reason.trim() && <p className="fieldHint">{t.addReason}</p>}
     </form>

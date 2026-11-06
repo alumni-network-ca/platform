@@ -2,6 +2,9 @@
 
 import { useActionState, useState } from "react";
 import { manageInvitation, type InvitationResult } from "./actions";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { NativeSelect } from "@/components/ui/native-select";
 
 export type Invitation = {
   id: string;
@@ -57,25 +60,17 @@ export function StaffPanel({
         <input type="hidden" name="intent" value="invite" />
         <label className="field">
           Email
-          <input
-            className="input"
-            type="email"
-            name="email"
-            placeholder="name@school.ca"
-            required
-          />
+          <Input type="email" name="email" placeholder="name@school.ca" required />
         </label>
         <label className="field">
           Role
-          <select className="input" name="role" defaultValue="school_admin">
+          <NativeSelect name="role" defaultValue="school_admin">
             <option value="school_admin">School admin</option>
             <option value="reviewer">Reviewer</option>
-          </select>
+          </NativeSelect>
         </label>
         <div className="formActions" style={{ alignSelf: "end", justifyContent: "flex-start" }}>
-          <button className="btn btnPrimary" disabled={pending}>
-            {pending ? "Sending…" : "Send invitation"}
-          </button>
+          <Button disabled={pending}>{pending ? "Sending…" : "Send invitation"}</Button>
         </div>
       </form>
 
@@ -87,22 +82,17 @@ export function StaffPanel({
             this one.
           </p>
           <div className="copyBox">
-            <input
-              className="input"
-              readOnly
-              value={result.link.url}
-              aria-label="Invitation link"
-            />
-            <button
+            <Input readOnly value={result.link.url} aria-label="Invitation link" />
+            <Button
               type="button"
-              className="btn btnLight"
+              variant="secondary"
               onClick={async () => {
                 await navigator.clipboard.writeText(result.link!.url);
                 setCopied(true);
               }}
             >
               {copied ? "Copied" : "Copy link"}
-            </button>
+            </Button>
           </div>
         </div>
       )}

@@ -4,6 +4,9 @@ import { adminCopy, dateLabel, read, type Search } from "@/lib/admin/data";
 import { describeAudit } from "@/lib/admin/audit";
 import { periodSince } from "@/lib/admin/period";
 import { format } from "@/lib/i18n";
+import { Button } from "@/components/ui/button";
+import { NativeSelect } from "@/components/ui/native-select";
+import { ForwardArrow } from "@/components/icons";
 export default async function Dashboard({ searchParams }: { searchParams: Search }) {
   const { supabase, school, user, role, can } = await requireStaff("/admin", "metrics.read");
   const { t, locale } = await adminCopy();
@@ -82,13 +85,13 @@ export default async function Dashboard({ searchParams }: { searchParams: Search
         <form className="adminFilters">
           <label className="field">
             {t.period}
-            <select className="input" name="period" defaultValue={period}>
+            <NativeSelect name="period" defaultValue={period}>
               <option value="30d">{t.period30}</option>
               <option value="year">{t.periodYear}</option>
               <option value="all">{t.periodAll}</option>
-            </select>
+            </NativeSelect>
           </label>
-          <button className="btn btnSecondary">{t.apply}</button>
+          <Button variant="secondary">{t.apply}</Button>
         </form>
       </div>
       {params.welcome === "1" && (
@@ -105,9 +108,9 @@ export default async function Dashboard({ searchParams }: { searchParams: Search
                 })}
               </p>
             </div>
-            <Link className="btn btnLight" href="/admin">
-              {t.dismiss}
-            </Link>
+            <Button asChild variant="secondary">
+              <Link href="/admin">{t.dismiss}</Link>
+            </Button>
           </div>
           <div className="welcomeCards">
             {welcomeStarts.map((start) => (
@@ -126,7 +129,10 @@ export default async function Dashboard({ searchParams }: { searchParams: Search
             {metrics.pending ? format(t.hero, { count: metrics.pending, days }) : t.noPending}
           </strong>
         </span>
-        <span>{t.reviewQueue}</span>
+        <span>
+          {t.reviewQueue}
+          <ForwardArrow />
+        </span>
       </Link>
       <div className="statGrid">
         {cards.map(({ key, href }) => (
@@ -140,7 +146,10 @@ export default async function Dashboard({ searchParams }: { searchParams: Search
       <section className="panel">
         <div className="shellTitle">
           <h2>{t.recent}</h2>
-          <Link href="/admin/audit">{t.audit} →</Link>
+          <Link href="/admin/audit">
+            {t.audit}
+            <ForwardArrow />
+          </Link>
         </div>
         {activity.length ? (
           activity.map((row) => {

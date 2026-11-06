@@ -26,8 +26,15 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const school = await getSchool();
   // The school's colours as CSS variables, rendered here so pages never flash the default theme (ADR 0019).
+  // data-scroll-behavior: globals.css scrolls smoothly for in-page links; Next.js 16 then also glides to the top on
+  // every navigation unless told to jump.
   return (
-    <html lang="en" className={inter.variable} style={schoolTheme(school?.branding)}>
+    <html
+      lang="en"
+      className={inter.variable}
+      data-scroll-behavior="smooth"
+      style={schoolTheme(school?.branding)}
+    >
       <body>
         <SchoolProvider school={school}>
           <LanguageProvider>{children}</LanguageProvider>

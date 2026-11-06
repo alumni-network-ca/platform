@@ -4,6 +4,7 @@ import { adminCopy, dateLabel, read } from "@/lib/admin/data";
 import { RowMenu } from "@/components/admin/RowMenu";
 import { format } from "@/lib/i18n";
 import { manageStaff } from "./actions";
+import { Button } from "@/components/ui/button";
 
 const DAY = 86_400_000;
 
@@ -37,9 +38,9 @@ export default async function Staff() {
           <h1>{t.staff}</h1>
           <p>{t.staffIntro}</p>
         </div>
-        <Link className="btn btnPrimary" href="/admin/staff/invite">
-          {t.inviteStaff}
-        </Link>
+        <Button asChild>
+          <Link href="/admin/staff/invite">{t.inviteStaff}</Link>
+        </Button>
       </div>
       <section className="tableBox" aria-labelledby="staff-team">
         <h2 id="staff-team" className="tableTitle">

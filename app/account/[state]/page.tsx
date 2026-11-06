@@ -6,6 +6,8 @@ import { requireAccess } from "@/lib/auth/account";
 import { getServerLocale } from "@/lib/i18n-server";
 import { schoolBranding } from "@/lib/school";
 import { ReplyForm } from "./ReplyForm";
+import { Button } from "@/components/ui/button";
+import { Check } from "lucide-react";
 
 const STATES = ["pending", "needs-info", "rejected", "suspended"] as const;
 type AccountPage = (typeof STATES)[number];
@@ -95,7 +97,7 @@ export default async function AccountStatePage({ params }: { params: Promise<{ s
               <ol className="joinJourney">
                 <li>
                   <span className="joinDot joinDone" aria-hidden="true">
-                    ✓
+                    <Check className="size-4" strokeWidth={3} />
                   </span>
                   <div>
                     <h3>{fr ? "Compte créé" : "Account created"}</h3>
@@ -106,7 +108,7 @@ export default async function AccountStatePage({ params }: { params: Promise<{ s
                 </li>
                 <li>
                   <span className="joinDot joinDone" aria-hidden="true">
-                    ✓
+                    <Check className="size-4" strokeWidth={3} />
                   </span>
                   <div>
                     <h3>{fr ? "Demande envoyée" : "Alumni request submitted"}</h3>
@@ -164,12 +166,14 @@ export default async function AccountStatePage({ params }: { params: Promise<{ s
                   : "You can close this page. Sign in again anytime to check your request."}
               </p>
               <div className="joinActions">
-                <Link className="btn btnLight" href="/join/edit">
-                  {fr ? "Modifier ma demande" : "Edit my request"}
-                </Link>
-                <a className="btn btnPrimary" href="/auth/home">
-                  {fr ? "Vérifier l'état de ma demande" : "Check request status"}
-                </a>
+                <Button asChild variant="secondary">
+                  <Link href="/join/edit">{fr ? "Modifier ma demande" : "Edit my request"}</Link>
+                </Button>
+                <Button asChild>
+                  <a href="/auth/home">
+                    {fr ? "Vérifier l'état de ma demande" : "Check request status"}
+                  </a>
+                </Button>
               </div>
             </>
           )}

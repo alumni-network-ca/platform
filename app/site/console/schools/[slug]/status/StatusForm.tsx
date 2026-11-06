@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { useActionState, useState } from "react";
 import { setSchoolStatus, type StatusResult } from "./actions";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 export function StatusForm({ slug, suspended }: { slug: string; suspended: boolean }) {
   const [result, action, pending] = useActionState<StatusResult, FormData>(setSchoolStatus, {
@@ -49,13 +52,12 @@ export function StatusForm({ slug, suspended }: { slug: string; suspended: boole
       )}
       <label className="field">
         Reason{suspended ? " (optional)" : ""}
-        <textarea name="reason" rows={2} maxLength={500} required={!suspended} />
+        <Textarea name="reason" rows={2} maxLength={500} required={!suspended} />
         <span className="fieldHint">Kept in the school&apos;s audit log.</span>
       </label>
       <label className="field">
         Type {slug} to confirm
-        <input
-          className="input"
+        <Input
           name="confirm"
           value={typed}
           onChange={(e) => setTyped(e.target.value)}
@@ -69,15 +71,15 @@ export function StatusForm({ slug, suspended }: { slug: string; suspended: boole
         </div>
       )}
       <div className="formActions">
-        <Link className="btn btnLight" href={`/console/schools/${slug}`}>
-          Cancel
-        </Link>
-        <button
-          className={`btn ${suspended ? "btnPrimary" : "btnDanger"}`}
+        <Button asChild variant="secondary">
+          <Link href={`/console/schools/${slug}`}>Cancel</Link>
+        </Button>
+        <Button
+          variant={suspended ? "default" : "destructive"}
           disabled={pending || typed.trim() !== slug}
         >
           {pending ? "Saving…" : label}
-        </button>
+        </Button>
       </div>
     </form>
   );

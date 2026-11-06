@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { requireStaff } from "@/lib/auth/staff";
 import { adminCopy, dateLabel, read } from "@/lib/admin/data";
 import { DecisionForm } from "./DecisionForm";
+import { Check } from "lucide-react";
+import { BackArrow } from "@/components/icons";
 export default async function Review({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const { supabase, school } = await requireStaff("/admin/approvals/" + id, "requests.read");
@@ -19,7 +21,8 @@ export default async function Review({ params }: { params: Promise<{ id: string 
   return (
     <>
       <Link className="backLink" href="/admin/approvals">
-        ← {t.approvals}
+        <BackArrow />
+        {t.approvals}
       </Link>
       <div className="shellTitle">
         <div>
@@ -70,7 +73,14 @@ export default async function Review({ params }: { params: Promise<{ id: string 
             <p>
               {t.school_student_id}: <strong>{m.school_student_id || "—"}</strong>{" "}
               {m.id_match ? (
-                <span className="tag tagGood">✓ {t.sameStudentId}</span>
+                <span className="tag tagGood">
+                  <Check
+                    aria-hidden
+                    className="mr-1 inline-block size-3.5 align-[-0.15em]"
+                    strokeWidth={3}
+                  />
+                  {t.sameStudentId}
+                </span>
               ) : r.school_student_id && m.school_student_id ? (
                 <span className="tag tagWarn">{t.differentStudentId}</span>
               ) : null}

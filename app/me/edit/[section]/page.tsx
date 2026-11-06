@@ -7,6 +7,7 @@ import { format, translations } from "@/lib/i18n";
 import { isSection } from "@/lib/profile/fields";
 import { loadMyProfile } from "@/lib/profile/server";
 import { saveSection } from "../../actions";
+import { BackArrow } from "@/components/icons";
 
 // One section of the profile, edited with the onboarding wizard's fields (PRF-02: the sections mirror it).
 export default async function EditSectionPage({
@@ -44,7 +45,8 @@ export default async function EditSectionPage({
             <div className="onbBody">
               <div className="onbHead">
                 <Link className="meBackLink" href="/me">
-                  ← {m.backToProfile}
+                  <BackArrow />
+                  {m.backToProfile}
                 </Link>
                 <h1>{title}</h1>
                 <p>{intro}</p>

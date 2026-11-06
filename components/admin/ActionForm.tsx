@@ -2,6 +2,8 @@
 import { useActionState } from "react";
 import { errorMessage, type ActionResult, type AdminCopy } from "@/lib/admin/forms";
 import { CopyLink } from "./CopyLink";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 export function ActionForm({
   action,
   children,
@@ -41,20 +43,13 @@ export function ActionForm({
         <div className="linkRow">
           <label className="field">
             {t.invitationLink}
-            <input
-              className="input"
-              readOnly
-              value={state.link}
-              onFocus={(e) => e.target.select()}
-            />
+            <Input readOnly value={state.link} onFocus={(e) => e.target.select()} />
           </label>
           <CopyLink value={state.link} label={t.copyLink} done={t.linkCopied} />
         </div>
       )}
       <div className="formActions">
-        <button className="btn btnPrimary" disabled={pending || disabled}>
-          {label}
-        </button>
+        <Button disabled={pending || disabled}>{label}</Button>
       </div>
     </form>
   );

@@ -4,6 +4,9 @@ import type { Enums } from "@/lib/database";
 import { templatePlaceholders } from "@/lib/admin/templates";
 import { errorMessage, type AdminCopy } from "@/lib/admin/forms";
 import { approveTemplate } from "./actions";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 export function TemplateEditor({
   templateKey,
   locale,
@@ -43,8 +46,7 @@ export function TemplateEditor({
     <form action={action} className="adminStack">
       <div className="field">
         <label htmlFor="template-subject">{t.subject}</label>
-        <input
-          className="input"
+        <Input
           id="template-subject"
           name="subject"
           required
@@ -56,8 +58,7 @@ export function TemplateEditor({
       </div>
       <div className="field">
         <label htmlFor="template-body">{t.message}</label>
-        <textarea
-          className="input"
+        <Textarea
           ref={bodyRef}
           id="template-body"
           name="body"
@@ -89,9 +90,7 @@ export function TemplateEditor({
       )}
       {/* TODO(EML-01): email preview requires the renderer. */}
       <div className="formActions">
-        <button className="btn btnPrimary" disabled={pending}>
-          {t.approveVersion}
-        </button>
+        <Button disabled={pending}>{t.approveVersion}</Button>
       </div>
     </form>
   );

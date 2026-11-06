@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { acceptInvitation, type AcceptResult } from "./actions";
+import { Button } from "@/components/ui/button";
 
 export function AcceptForm({
   token,
@@ -24,9 +25,7 @@ export function AcceptForm({
   return (
     <form action={action} className="authForm">
       <input type="hidden" name="token" value={token} />
-      <button className="btn btnPrimary" disabled={pending}>
-        {pending ? t.accepting : t.accept}
-      </button>
+      <Button disabled={pending}>{pending ? t.accepting : t.accept}</Button>
       {result.failed && (
         <div className="notice" role="alert">
           {t.failed}

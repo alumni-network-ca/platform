@@ -3,6 +3,9 @@ import { useActionState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
 import { sendPasswordReset, type RecoveryResult } from "./actions";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { BackArrow } from "@/components/icons";
 
 export function RecoveryForm({ expired }: { expired: boolean }) {
   const { locale } = useLanguage();
@@ -29,16 +32,9 @@ export function RecoveryForm({ expired }: { expired: boolean }) {
       <form action={action} className="authForm">
         <label>
           {fr ? "Adresse courriel" : "Email address"}
-          <input
-            className="input"
-            name="email"
-            type="email"
-            autoComplete="email"
-            maxLength={254}
-            required
-          />
+          <Input name="email" type="email" autoComplete="email" maxLength={254} required />
         </label>
-        <button className="btn btnPrimary btnWide" disabled={pending}>
+        <Button size="lg" className="w-full" disabled={pending}>
           {pending
             ? fr
               ? "Envoi…"
@@ -46,7 +42,7 @@ export function RecoveryForm({ expired }: { expired: boolean }) {
             : fr
               ? "Envoyer le lien de réinitialisation"
               : "Send password reset link"}
-        </button>
+        </Button>
       </form>
       {result.sent && (
         <p className="notice noticeGood" role="status">
@@ -71,7 +67,10 @@ export function RecoveryForm({ expired }: { expired: boolean }) {
         </p>
       )}
       <div className="authFooter">
-        <Link href="/login">{fr ? "← Se connecter" : "← Sign in"}</Link>
+        <Link href="/login">
+          <BackArrow />
+          {fr ? "Se connecter" : "Sign in"}
+        </Link>
       </div>
     </>
   );
