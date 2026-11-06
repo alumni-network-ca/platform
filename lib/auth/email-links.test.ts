@@ -45,6 +45,17 @@ describe("auth email destinations", () => {
     expect(url.searchParams.get("flow")).toBe("recovery");
   });
 
+  it("leaves the selector off on staging, which picks the school by subdomain", async () => {
+    origin({
+      host: "maimonide.staging.alumninetwork.ca",
+      rootDomain: "staging.alumninetwork.ca",
+      isPreview: true,
+    });
+    expect(await authEmailRedirect("signup")).toBe(
+      "https://maimonide.staging.alumninetwork.ca/auth/confirm?flow=signup",
+    );
+  });
+
   it("preserves local hosts and ports", async () => {
     origin({ protocol: "http:", host: "herzliah.localhost:3001" });
     expect(await authEmailRedirect("signup")).toBe(
