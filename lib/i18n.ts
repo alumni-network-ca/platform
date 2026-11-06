@@ -100,6 +100,22 @@ export const translations = {
       no: "No",
     },
 
+    // The 404 and error pages (FND-14).
+    errors: {
+      forbiddenEyebrow: "No access",
+      notFoundEyebrow: "Page not found",
+      notFoundTitle: "We can’t find this page",
+      notFoundBody:
+        "The link may be out of date, or the page has moved. If someone sent it to you, ask them for a new one.",
+      errorEyebrow: "Error",
+      errorTitle: "Something went wrong",
+      errorBody:
+        "This page didn’t load. Try again in a moment; if it keeps happening, contact your school’s alumni office.",
+      tryAgain: "Try again",
+      goHome: "Go to the home page",
+      reference: "Reference: {digest}",
+    },
+
     // An alumnus's profile as other alumni see it (DIR-03, CON-02).
     profile: {
       back: "Back to directory",
@@ -912,6 +928,21 @@ export const translations = {
       search: "Rechercher",
       yes: "Oui",
       no: "Non",
+    },
+
+    errors: {
+      forbiddenEyebrow: "Accès refusé",
+      notFoundEyebrow: "Page introuvable",
+      notFoundTitle: "Nous ne trouvons pas cette page",
+      notFoundBody:
+        "Le lien est peut-être périmé, ou la page a été déplacée. Si quelqu’un vous l’a envoyé, demandez-lui un nouveau lien.",
+      errorEyebrow: "Erreur",
+      errorTitle: "Une erreur est survenue",
+      errorBody:
+        "Cette page ne s’est pas chargée. Réessayez dans un instant ; si le problème persiste, communiquez avec le bureau des anciens de votre école.",
+      tryAgain: "Réessayer",
+      goHome: "Aller à la page d’accueil",
+      reference: "Référence : {digest}",
     },
 
     profile: {
