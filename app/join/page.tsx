@@ -10,6 +10,7 @@ import { schoolBranding } from "@/lib/school";
 import { previewInvitation } from "@/lib/staff/invitation";
 import { JoinForm } from "./JoinForm";
 import { SignupForm } from "./SignupForm";
+import { Check } from "lucide-react";
 
 // The same public entry point is shared in school emails and in the guest navigation.
 export default async function JoinPage({
@@ -43,7 +44,12 @@ export default async function JoinPage({
           <div className="joinRequestLayout">
             <section className="joinCard">
               <span className="tag tagGood">
-                {fr ? "✓ Compte créé · Courriel confirmé" : "✓ Account created · Email confirmed"}
+                <Check
+                  aria-hidden
+                  className="mr-1 inline-block size-3.5 align-[-0.15em]"
+                  strokeWidth={3}
+                />
+                {fr ? "Compte créé · Courriel confirmé" : "Account created · Email confirmed"}
               </span>
               <span className="joinEyebrow">{fr ? "Étape 2 de 3" : "Step 2 of 3"}</span>
               <h1>{fr ? "Demandez l'accès au réseau" : "Request alumni access"}</h1>

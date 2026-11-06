@@ -5,6 +5,7 @@ import { schoolBranding } from "@/lib/school";
 import { schoolUrl } from "@/lib/tenant/address";
 import { getOrigin } from "@/lib/tenant/server";
 import { StaffPanel, type Invitation, type StaffMember } from "./StaffPanel";
+import { BackArrow, ForwardArrow } from "@/components/icons";
 
 const day = (iso: string) =>
   new Date(iso).toLocaleDateString("en-CA", { month: "short", day: "numeric", year: "numeric" });
@@ -71,7 +72,8 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
   return (
     <>
       <Link className="backLink" href="/console">
-        ← Schools
+        <BackArrow />
+        Schools
       </Link>
       <div className="shellTitle">
         <div>
@@ -125,7 +127,10 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
         <section className="panel">
           <h2>Support and status</h2>
           <p>
-            <Link href={`/console/support?school=${school.slug}`}>Open support access →</Link>
+            <Link href={`/console/support?school=${school.slug}`}>
+              Open support access
+              <ForwardArrow />
+            </Link>
           </p>
           <p>
             <Link href={`/console/schools/${school.slug}/status`}>

@@ -3,6 +3,8 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
 import { replyToInfoRequest } from "./actions";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
 export function ReplyForm({ question }: { question: string | null | undefined }) {
   const { locale } = useLanguage();
@@ -20,7 +22,7 @@ export function ReplyForm({ question }: { question: string | null | undefined })
       {question && <blockquote className="joinNotice">{question}</blockquote>}
       <label>
         {fr ? "Votre réponse" : "Your answer"}
-        <textarea className="input" name="reply" rows={4} maxLength={1000} required />
+        <Textarea name="reply" rows={4} maxLength={1000} required />
       </label>
       {state.error && (
         <p role="alert" className="notice">
@@ -29,7 +31,7 @@ export function ReplyForm({ question }: { question: string | null | undefined })
             : "Please enter a reply between 1 and 1,000 characters."}
         </p>
       )}
-      <button className="btn btnPrimary btnWide" disabled={pending}>
+      <Button size="lg" className="w-full" disabled={pending}>
         {pending
           ? fr
             ? "Envoi…"
@@ -37,7 +39,7 @@ export function ReplyForm({ question }: { question: string | null | undefined })
           : fr
             ? "Envoyer la réponse au réviseur"
             : "Send reply to the reviewer"}
-      </button>
+      </Button>
       <Link className="backLink" href="/join/edit">
         {fr ? "Modifier les renseignements de ma demande" : "Edit my request details"}
       </Link>

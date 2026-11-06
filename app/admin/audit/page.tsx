@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { requireStaff } from "@/lib/auth/staff";
 import { adminCopy, dateLabel, read, pageNumber, type Search } from "@/lib/admin/data";
 import { describeAudit } from "@/lib/admin/audit";
+import { Button } from "@/components/ui/button";
+import { NativeSelect } from "@/components/ui/native-select";
 export default async function Audit({ searchParams }: { searchParams: Search }) {
   const { supabase, school } = await requireStaff("/admin/audit", "audit.read");
   const { t, locale } = await adminCopy();
@@ -51,17 +53,17 @@ export default async function Audit({ searchParams }: { searchParams: Search }) 
       <form className="adminFilters">
         <label className="field">
           {t.who}
-          <select className="input" name="who" defaultValue={who ?? ""}>
+          <NativeSelect name="who" defaultValue={who ?? ""}>
             <option value="">{t.anyone}</option>
             {people.map((person) => (
               <option key={person.user_id} value={person.user_id}>
                 {person.kind === "support" ? t.support : person.label}
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </label>
         {type && <input type="hidden" name="type" value={type} />}
-        <button className="btn btnPrimary">{t.apply}</button>
+        <Button>{t.apply}</Button>
       </form>
       <nav className="adminChips" aria-label={t.type}>
         <Link className="tag" href={url(undefined)} aria-current={!type ? "page" : undefined}>

@@ -6,6 +6,8 @@ import { DEFAULT_ACCENT, DEFAULT_PRIMARY } from "@/lib/theme";
 import { schoolBranding } from "@/lib/school";
 import { ActionForm } from "@/components/admin/ActionForm";
 import { saveSettings } from "./actions";
+import { Input } from "@/components/ui/input";
+import { NativeSelect } from "@/components/ui/native-select";
 export default async function Settings() {
   const { supabase, school } = await requireStaff("/admin/settings", "settings.manage");
   const { t } = await adminCopy();
@@ -57,7 +59,7 @@ export default async function Settings() {
               <div key={c.label} className="adminStack">
                 <label className="field">
                   {c.label}
-                  <input className="input" readOnly value={c.hex} />
+                  <Input readOnly value={c.hex} />
                 </label>
                 <span className={"tag " + (ratio !== null && ratio >= 4.5 ? "tagGood" : "tagWarn")}>
                   {ratio !== null && ratio >= 4.5 ? t.contrastPass : t.contrastFail}
@@ -74,17 +76,11 @@ export default async function Settings() {
         <ActionForm action={saveSettings} label={t.save} t={t}>
           <label className="field">
             {t.senderName}
-            <input
-              className="input"
-              name="sender"
-              maxLength={120}
-              defaultValue={settings.email_display_name ?? ""}
-            />
+            <Input name="sender" maxLength={120} defaultValue={settings.email_display_name ?? ""} />
           </label>
           <label className="field">
             {t.replyTo}
-            <input
-              className="input"
+            <Input
               name="reply_to"
               type="email"
               maxLength={254}
@@ -93,10 +89,10 @@ export default async function Settings() {
           </label>
           <label className="field">
             {t.defaultLanguage}
-            <select className="input" name="locale" defaultValue={settings.default_locale}>
+            <NativeSelect name="locale" defaultValue={settings.default_locale}>
               <option value="en">{t.english}</option>
               <option value="fr">{t.french}</option>
-            </select>
+            </NativeSelect>
           </label>
         </ActionForm>
       </section>

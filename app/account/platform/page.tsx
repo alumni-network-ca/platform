@@ -5,6 +5,7 @@ import { requireAccess } from "@/lib/auth/account";
 import { schoolBranding } from "@/lib/school";
 import { rootUrl } from "@/lib/tenant/address";
 import { getOrigin } from "@/lib/tenant/server";
+import { Button } from "@/components/ui/button";
 
 const time = (iso: string) =>
   new Date(iso).toLocaleString("en-CA", {
@@ -54,9 +55,9 @@ export default async function PlatformAdminHere() {
             </p>
           )}
           <div className="authForm">
-            <a className="btn btnPrimary btnWide" href={consoleUrl}>
-              Open the console
-            </a>
+            <Button asChild size="lg" className="w-full">
+              <a href={consoleUrl}>Open the console</a>
+            </Button>
             <Link className="textButton" href="/join">
               I am a {shortName} graduate: join the network
             </Link>

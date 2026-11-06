@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requirePlatformAdmin } from "@/lib/auth/platform";
 import { StatusForm } from "./StatusForm";
+import { BackArrow } from "@/components/icons";
 
 // S2.2 Suspend or reactivate a school.
 export default async function SchoolStatusPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -17,7 +18,8 @@ export default async function SchoolStatusPage({ params }: { params: Promise<{ s
   return (
     <>
       <Link className="backLink" href={`/console/schools/${school.slug}`}>
-        ← {school.name}
+        <BackArrow />
+        {school.name}
       </Link>
       <div className="shellTitle">
         <div>

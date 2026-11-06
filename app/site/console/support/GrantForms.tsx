@@ -2,6 +2,9 @@
 
 import { useActionState } from "react";
 import { manageGrant, type GrantResult } from "./actions";
+import { Button } from "@/components/ui/button";
+import { NativeSelect } from "@/components/ui/native-select";
+import { Textarea } from "@/components/ui/textarea";
 
 export type ActiveGrant = {
   id: string;
@@ -31,16 +34,16 @@ export function ActiveGrants({ grants }: { grants: ActiveGrant[] }) {
               </p>
             </div>
             <div className="formActions">
-              <a className="btn btnLight" href={g.address}>
-                Go to the school
-              </a>
+              <Button asChild variant="secondary">
+                <a href={g.address}>Go to the school</a>
+              </Button>
               {g.mine && (
                 <form action={action}>
                   <input type="hidden" name="intent" value="end" />
                   <input type="hidden" name="grant" value={g.id} />
-                  <button className="btn btnDanger" disabled={pending}>
+                  <Button variant="destructive" disabled={pending}>
                     End now
-                  </button>
+                  </Button>
                 </form>
               )}
             </div>
@@ -75,26 +78,26 @@ export function OpenGrantForm({
         <div className="formRow">
           <label className="field">
             School
-            <select className="select" name="school" defaultValue={selected} required>
+            <NativeSelect name="school" defaultValue={selected} required>
               {schools.map((s) => (
                 <option key={s.id} value={s.id}>
                   {s.name}
                 </option>
               ))}
-            </select>
+            </NativeSelect>
           </label>
           <label className="field">
             For how long
-            <select className="select" name="hours" defaultValue="1">
+            <NativeSelect name="hours" defaultValue="1">
               <option value="1">1 hour</option>
               <option value="4">4 hours</option>
               <option value="8">8 hours (maximum)</option>
-            </select>
+            </NativeSelect>
           </label>
         </div>
         <label className="field">
           Reason (required; the school sees this)
-          <textarea
+          <Textarea
             name="reason"
             rows={3}
             minLength={5}
@@ -114,9 +117,7 @@ export function OpenGrantForm({
           </div>
         )}
         <div className="formActions">
-          <button className="btn btnPrimary" disabled={pending}>
-            {pending ? "Opening…" : "Open grant"}
-          </button>
+          <Button disabled={pending}>{pending ? "Opening…" : "Open grant"}</Button>
         </div>
       </form>
     </section>

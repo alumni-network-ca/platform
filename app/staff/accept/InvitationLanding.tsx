@@ -4,6 +4,8 @@ import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { format, type Locale, type translations } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 type Copy = (typeof translations)[Locale]["staffInvite"];
 
@@ -67,12 +69,11 @@ export function InvitationLanding({
         <form onSubmit={signIn} className="authForm">
           <label>
             {t.email}
-            <input className="input" type="email" autoComplete="username" readOnly value={email} />
+            <Input type="email" autoComplete="username" readOnly value={email} />
           </label>
           <label>
             {t.password}
-            <input
-              className="input"
+            <Input
               type="password"
               autoComplete="current-password"
               value={password}
@@ -80,9 +81,9 @@ export function InvitationLanding({
               required
             />
           </label>
-          <button className="btn btnPrimary btnWide" disabled={busy}>
+          <Button size="lg" className="w-full" disabled={busy}>
             {busy ? t.signingIn : t.signInButton}
-          </button>
+          </Button>
           {message && (
             <div className="notice" role="alert">
               {message}
@@ -96,20 +97,14 @@ export function InvitationLanding({
         <div className="authForm">
           <label>
             {t.email}
-            <input
-              className="input"
-              type="email"
-              readOnly
-              value={email}
-              aria-describedby="invite-fixed-email"
-            />
+            <Input type="email" readOnly value={email} aria-describedby="invite-fixed-email" />
           </label>
           <p id="invite-fixed-email" className="microcopy muted">
             {format(t.fixedEmail, { inviter })}
           </p>
-          <Link className="btn btnPrimary btnWide" href={`/join?next=${encodeURIComponent(next)}`}>
-            {t.createButton}
-          </Link>
+          <Button asChild size="lg" className="w-full">
+            <Link href={`/join?next=${encodeURIComponent(next)}`}>{t.createButton}</Link>
+          </Button>
         </div>
       )}
       <p className="joinNotice">{format(t.onlyFor, { email })}</p>

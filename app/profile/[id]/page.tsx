@@ -8,6 +8,7 @@ import { getServerLocale } from "@/lib/i18n-server";
 import { initials, optionsFor, repeatsCurrentRole } from "@/lib/profile/fields";
 import { schoolBranding } from "@/lib/school";
 import { schoolConfig } from "@/lib/tenant/config";
+import { BackArrow } from "@/components/icons";
 
 // An alumnus's profile as other alumni see it (DIR-03, CON-02; design Profile). Only a published profile at this
 // school opens: anything else is a 404, even for staff whose RLS could read hidden records. Email and phone are
@@ -124,7 +125,8 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
       <Nav />
       <main className="me profPage">
         <Link className="meBackLink profBack" href="/directory">
-          ← {t.back}
+          <BackArrow />
+          {t.back}
         </Link>
         <div className="meMain">
           {own && (

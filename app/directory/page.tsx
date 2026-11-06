@@ -9,6 +9,10 @@ import { getServerLocale } from "@/lib/i18n-server";
 import { initials, optionsFor } from "@/lib/profile/fields";
 import { schoolBranding } from "@/lib/school";
 import { schoolConfig } from "@/lib/tenant/config";
+import { Button } from "@/components/ui/button";
+import { NativeSelect } from "@/components/ui/native-select";
+import { X } from "lucide-react";
+import { BackArrow, ForwardArrow } from "@/components/icons";
 
 // The alumni directory (DIR-02; design Directory). Every filter is in the URL; search_directory returns only
 // published profiles at this school, and only to someone who may use the directory (RLS and has_permission).
@@ -110,9 +114,9 @@ export default async function DirectoryPage({
               defaultValue={f.q}
               placeholder={t.searchPlaceholder}
             />
-            <button type="submit" className="btn btnPrimary">
+            <Button type="submit" className="h-10 rounded-sm">
               {t.search}
-            </button>
+            </Button>
           </div>
 
           <div className="dirBody">
@@ -177,9 +181,9 @@ export default async function DirectoryPage({
                   ))}
                 </div>
               </fieldset>
-              <button type="submit" className="btn btnLight dirApply">
+              <Button type="submit" variant="secondary" className="dirApply">
                 {t.apply}
-              </button>
+              </Button>
             </FilterPanel>
 
             <section className="dirResults" aria-label={t.results}>
@@ -191,10 +195,10 @@ export default async function DirectoryPage({
                 </span>
                 <label className="dirSort">
                   {t.sort}
-                  <select name="sort" defaultValue={f.sort} className="dirSelect">
+                  <NativeSelect name="sort" defaultValue={f.sort} wrapperClassName="w-auto">
                     <option value="recent">{t.sortRecent}</option>
                     <option value="name">{t.sortName}</option>
-                  </select>
+                  </NativeSelect>
                 </label>
               </div>
 
@@ -205,7 +209,7 @@ export default async function DirectoryPage({
                       <li key={chip.key}>
                         <Link href={chip.href}>
                           {chip.label}
-                          <span aria-hidden="true"> ×</span>
+                          <X aria-hidden className="ml-1 inline-block size-3.5 align-[-0.15em]" />
                           <span className="srOnly"> ({t.removeFilter})</span>
                         </Link>
                       </li>
@@ -261,18 +265,32 @@ export default async function DirectoryPage({
                 <div className="dirEmpty">
                   <p>{t.noResults}</p>
                   {chips.length > 0 && (
-                    <Link href="/directory" className="btn btnLight">
-                      {t.resetAll}
-                    </Link>
+                    <Button asChild variant="secondary">
+                      <Link href="/directory">{t.resetAll}</Link>
+                    </Button>
                   )}
                 </div>
               )}
 
               {page.last > 1 && (
                 <nav className="dirPages" aria-label={t.pagination}>
-                  {page.previous ? <Link href={page.previous}>← {t.previous}</Link> : <span />}
+                  {page.previous ? (
+                    <Link href={page.previous}>
+                      <BackArrow />
+                      {t.previous}
+                    </Link>
+                  ) : (
+                    <span />
+                  )}
                   <span>{format(t.pageOf, { page: f.page, pages: page.last })}</span>
-                  {page.next ? <Link href={page.next}>{t.next} →</Link> : <span />}
+                  {page.next ? (
+                    <Link href={page.next}>
+                      {t.next}
+                      <ForwardArrow />
+                    </Link>
+                  ) : (
+                    <span />
+                  )}
                 </nav>
               )}
             </section>
@@ -305,14 +323,14 @@ function Select({
   return (
     <div className="dirField">
       <label htmlFor={id}>{label}</label>
-      <select id={id} name={name} defaultValue={value} className="dirSelect">
+      <NativeSelect id={id} name={name} defaultValue={value}>
         <option value="">{any}</option>
         {all.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>
         ))}
-      </select>
+      </NativeSelect>
     </div>
   );
 }

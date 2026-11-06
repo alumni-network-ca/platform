@@ -104,13 +104,13 @@
   {
     "file": "app/page.tsx",
     "rule": "ui-literal",
-    "text": "✦ Built for useful connections",
+    "text": "Built for useful connections",
     "count": 1
   },
   {
     "file": "app/page.tsx",
     "rule": "ui-literal",
-    "text": "✦ Private network · Verified graduates only",
+    "text": "Private network · Verified graduates only",
     "count": 1
   },
   {
@@ -170,7 +170,7 @@
   {
     "file": "app/page.tsx",
     "rule": "ui-literal",
-    "text": "Explore the directory →",
+    "text": "Explore the directory",
     "count": 1
   },
   {
@@ -416,7 +416,7 @@
   {
     "file": "app/site/console/schools/[slug]/page.tsx",
     "rule": "ui-literal",
-    "text": "← Schools",
+    "text": "Schools",
     "count": 1
   },
   {
@@ -476,7 +476,7 @@
   {
     "file": "app/site/console/schools/[slug]/page.tsx",
     "rule": "ui-literal",
-    "text": "Open support access →",
+    "text": "Open support access",
     "count": 1
   },
   {
@@ -944,7 +944,7 @@
   {
     "file": "app/site/console/schools/new/page.tsx",
     "rule": "ui-literal",
-    "text": "← Schools",
+    "text": "Schools",
     "count": 1
   },
   {

@@ -3,6 +3,7 @@ import { useActionState, useEffect, useId, useRef, useState, type KeyboardEvent 
 import { errorMessage, type ActionResult, type AdminCopy } from "@/lib/admin/forms";
 import { createPortal } from "react-dom";
 import { CopyLink } from "./CopyLink";
+import { Input } from "@/components/ui/input";
 
 export type RowMenuItem = {
   key: string;
@@ -205,12 +206,7 @@ export function RowMenu({
         <div className="linkRow rowMenuLink">
           <label className="field">
             {t.invitationLink}
-            <input
-              className="input"
-              readOnly
-              value={state.link}
-              onFocus={(e) => e.target.select()}
-            />
+            <Input readOnly value={state.link} onFocus={(e) => e.target.select()} />
           </label>
           <CopyLink value={state.link} label={t.copyLink} done={t.linkCopied} />
         </div>

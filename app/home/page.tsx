@@ -15,6 +15,8 @@ import { initials, optionsFor } from "@/lib/profile/fields";
 import { schoolBranding } from "@/lib/school";
 import { schoolConfig } from "@/lib/tenant/config";
 import { confirmStillAccurate } from "./actions";
+import { Button } from "@/components/ui/button";
+import { ForwardArrow } from "@/components/icons";
 
 // The alumni home page (DIR-06; design Home): the reader's own status first, then ways into the network. Every
 // read goes through RLS: search_directory returns only members-visible profiles, and contact_events only the
@@ -177,13 +179,11 @@ export default async function HomePage({
             </div>
             <div className="homeActions">
               <form action={confirmStillAccurate}>
-                <button type="submit" className="btn btnPrimary">
-                  {t.stillAccurate}
-                </button>
+                <Button type="submit">{t.stillAccurate}</Button>
               </form>
-              <Link className="btn btnLight" href="/me">
-                {t.updateProfile}
-              </Link>
+              <Button asChild variant="secondary">
+                <Link href="/me">{t.updateProfile}</Link>
+              </Button>
             </div>
           </section>
         )}
@@ -202,9 +202,7 @@ export default async function HomePage({
                   {t.searchLabel}
                 </label>
                 <input id="home-q" name="q" type="search" placeholder={t.searchPlaceholder} />
-                <button type="submit" className="btn btnPrimary">
-                  {t.search}
-                </button>
+                <Button type="submit">{t.search}</Button>
               </form>
               {offers.length > 0 && (
                 <div className="homeOffers">
@@ -231,6 +229,7 @@ export default async function HomePage({
                 {classTotal > 0 && (
                   <Link href={`/directory?grad_year=${me.grad_year}`}>
                     {classTotal === 1 ? t.seeClassOne : format(t.seeClass, { count: classTotal })}
+                    <ForwardArrow />
                   </Link>
                 )}
               </div>
@@ -248,7 +247,10 @@ export default async function HomePage({
             <section className="homeSection" aria-labelledby="home-new">
               <div className="homeSectionHead">
                 <h2 id="home-new">{t.newTitle}</h2>
-                <Link href="/directory">{t.browse}</Link>
+                <Link href="/directory">
+                  {t.browse}
+                  <ForwardArrow />
+                </Link>
               </div>
               {newCards.length ? (
                 <div className="homeGrid">

@@ -5,6 +5,9 @@ import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
 import { MIN_PASSWORD_LENGTH } from "@/config/auth";
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ForwardArrow } from "@/components/icons";
 
 // Also used after an email recovery link. Supabase requires a recent sign-in for a password change.
 
@@ -98,8 +101,7 @@ export function PasswordForm({
         <input type="email" autoComplete="username" value={email} readOnly hidden />
         <label>
           {t.password}
-          <input
-            className="input"
+          <Input
             type="password"
             autoComplete="new-password"
             minLength={MIN_PASSWORD_LENGTH}
@@ -114,8 +116,7 @@ export function PasswordForm({
         </p>
         <label>
           {t.confirm}
-          <input
-            className="input"
+          <Input
             type="password"
             autoComplete="new-password"
             minLength={MIN_PASSWORD_LENGTH}
@@ -124,9 +125,9 @@ export function PasswordForm({
             required
           />
         </label>
-        <button className="btn btnPrimary btnWide" disabled={busy}>
+        <Button size="lg" className="w-full" disabled={busy}>
           {busy ? t.saving : t.save}
-        </button>
+        </Button>
       </form>
       {saved && (
         <p className="notice" role="status">
@@ -134,7 +135,10 @@ export function PasswordForm({
           {recovery && (
             <>
               {" "}
-              <Link href={continueTo}>{locale === "fr" ? "Continuer →" : "Continue →"}</Link>
+              <Link href={continueTo}>
+                {locale === "fr" ? "Continuer" : "Continue"}
+                <ForwardArrow />
+              </Link>
             </>
           )}
         </p>

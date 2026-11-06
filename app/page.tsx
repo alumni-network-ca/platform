@@ -5,6 +5,8 @@ import { getAccount } from "@/lib/auth/account";
 import { homeFor } from "@/lib/auth/home";
 import { getServerLocale } from "@/lib/i18n-server";
 import { schoolBranding } from "@/lib/school";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, UserRound } from "lucide-react";
 
 // This page is public, so it never carries alumni names: only approved members see them.
 const recent: [year: string, role: string, offer: string][] = [
@@ -25,7 +27,7 @@ export default async function Home() {
       <main>
         <section className="hero">
           <div>
-            <div className="eyebrow">✦ Private network · Verified graduates only</div>
+            <div className="eyebrow">Private network · Verified graduates only</div>
             <h1>
               Every class,
               <br />
@@ -36,12 +38,15 @@ export default async function Home() {
               mentorship, advice, internships, introductions and opportunities.
             </p>
             <div className="ctas">
-              <Link className="btn btnPrimary" href="/join">
-                Join the network
-              </Link>
-              <Link className="btn btnLight" href="/directory">
-                Explore the directory →
-              </Link>
+              <Button asChild>
+                <Link href="/join">Join the network</Link>
+              </Button>
+              <Button asChild variant="secondary">
+                <Link href="/directory">
+                  Explore the directory
+                  <ArrowRight aria-hidden />
+                </Link>
+              </Button>
             </div>
             <div className="microcopy">
               Alumni control their own information. The school approves every member before they can
@@ -57,7 +62,7 @@ export default async function Home() {
               <div className="ledgerRow" key={role}>
                 <div className="year">{year}</div>
                 <div className="avatar avatarInitials" aria-hidden="true">
-                  ✦
+                  <UserRound className="size-5" />
                 </div>
                 <div style={{ flex: 1 }}>
                   {/* A blurred placeholder, not a real name, so nothing leaks via page source. */}
@@ -95,7 +100,7 @@ export default async function Home() {
           </div>
         </section>
         <section className="section">
-          <div className="eyebrow">✦ Built for useful connections</div>
+          <div className="eyebrow">Built for useful connections</div>
           <h2>More than an alumni list.</h2>
           <div className="grid3">
             <div className="card">

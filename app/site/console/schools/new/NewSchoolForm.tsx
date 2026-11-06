@@ -5,6 +5,9 @@ import { useActionState, useState } from "react";
 import { schoolUrl, slugFromName, type Origin } from "@/lib/tenant/address";
 import { DEFAULT_ACCENT, DEFAULT_PRIMARY } from "@/lib/theme";
 import { createSchool, type CreateSchoolResult } from "./actions";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { NativeSelect } from "@/components/ui/native-select";
 
 export function NewSchoolForm({ origin }: { origin: Origin }) {
   const [result, action, pending] = useActionState<CreateSchoolResult, FormData>(createSchool, {
@@ -21,8 +24,7 @@ export function NewSchoolForm({ origin }: { origin: Origin }) {
         <h2>Identity</h2>
         <label className="field">
           School name
-          <input
-            className="input"
+          <Input
             name="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -33,15 +35,14 @@ export function NewSchoolForm({ origin }: { origin: Origin }) {
         <div className="formRow">
           <label className="field">
             Short name
-            <input className="input" name="short_name" placeholder={shortName} maxLength={40} />
+            <Input name="short_name" placeholder={shortName} maxLength={40} />
             <span className="fieldHint">
               Used in “{shortName || "Short name"} Alumni Network”. Empty: the full name.
             </span>
           </label>
           <label className="field">
             Web address
-            <input
-              className="input"
+            <Input
               name="slug"
               value={address}
               onChange={(e) => setSlug(e.target.value.toLowerCase())}
@@ -60,46 +61,35 @@ export function NewSchoolForm({ origin }: { origin: Origin }) {
         <div className="formRow">
           <label className="field">
             Logo
-            <input className="input" name="logo" placeholder="/school-logo.png or https://…" />
+            <Input name="logo" placeholder="/school-logo.png or https://…" />
             <span className="fieldHint">
               A path on this site or an https address. Upload comes later.
             </span>
           </label>
           <label className="field">
             Primary colour
-            <input
-              className="input"
-              type="color"
-              name="primary_color"
-              defaultValue={DEFAULT_PRIMARY}
-            />
+            <Input type="color" name="primary_color" defaultValue={DEFAULT_PRIMARY} />
           </label>
           <label className="field">
             Accent colour
-            <input
-              className="input"
-              type="color"
-              name="accent_color"
-              defaultValue={DEFAULT_ACCENT}
-            />
+            <Input type="color" name="accent_color" defaultValue={DEFAULT_ACCENT} />
           </label>
         </div>
         <div className="formRow">
           <label className="field">
             Default language
-            <select className="select" name="locale" defaultValue="en">
+            <NativeSelect name="locale" defaultValue="en">
               <option value="en">English</option>
               <option value="fr">Français</option>
-            </select>
+            </NativeSelect>
           </label>
           <label className="field">
             Replies go to
-            <input className="input" type="email" name="reply_to" placeholder="alumni@school.ca" />
+            <Input type="email" name="reply_to" placeholder="alumni@school.ca" />
           </label>
           <label className="field">
             Email sender name
-            <input
-              className="input"
+            <Input
               name="sender_name"
               placeholder={`${shortName || "School"} Alumni Network`}
               maxLength={80}
@@ -118,12 +108,10 @@ export function NewSchoolForm({ origin }: { origin: Origin }) {
         </div>
       )}
       <div className="formActions">
-        <Link className="btn btnLight" href="/console">
-          Cancel
-        </Link>
-        <button className="btn btnPrimary" disabled={pending}>
-          {pending ? "Creating…" : "Create school"}
-        </button>
+        <Button asChild variant="secondary">
+          <Link href="/console">Cancel</Link>
+        </Button>
+        <Button disabled={pending}>{pending ? "Creating…" : "Create school"}</Button>
       </div>
     </form>
   );

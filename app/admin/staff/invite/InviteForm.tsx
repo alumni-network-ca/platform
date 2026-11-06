@@ -5,6 +5,9 @@ import { CopyLink } from "@/components/admin/CopyLink";
 import { errorMessage, type AdminCopy } from "@/lib/admin/forms";
 import { format } from "@/lib/i18n";
 import { inviteStaff, type InviteResult } from "./actions";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ForwardArrow } from "@/components/icons";
 
 export function InviteForm({
   t,
@@ -51,18 +54,18 @@ export function InviteForm({
         <div className="linkRow">
           <label className="field">
             {t.invitationLink}
-            <input className="input" readOnly value={link} onFocus={(e) => e.target.select()} />
+            <Input readOnly value={link} onFocus={(e) => e.target.select()} />
           </label>
           <CopyLink value={link} label={t.copyLink} done={t.linkCopied} />
         </div>
         <div className="formActions">
-          <Link className="btn btnPrimary" href="/admin/staff">
-            {t.doneBackToStaff}
-          </Link>
+          <Button asChild>
+            <Link href="/admin/staff">{t.doneBackToStaff}</Link>
+          </Button>
           {/* A full load starts a fresh form. */}
-          <a className="btn btnLight" href="/admin/staff/invite">
-            {t.inviteAnother}
-          </a>
+          <Button asChild variant="secondary">
+            <a href="/admin/staff/invite">{t.inviteAnother}</a>
+          </Button>
         </div>
       </section>
     );
@@ -73,8 +76,7 @@ export function InviteForm({
       <form action={action} className="panel adminStack inviteForm">
         <label className="field inviteEmail">
           {t.theirEmail}
-          <input
-            className="input"
+          <Input
             name="email"
             type="email"
             autoComplete="off"
@@ -123,12 +125,10 @@ export function InviteForm({
           </p>
         )}
         <div className="formActions inviteActions">
-          <button className="btn btnPrimary" disabled={pending}>
-            {t.invite}
-          </button>
-          <Link className="btn btnLight" href="/admin/staff">
-            {t.cancel}
-          </Link>
+          <Button disabled={pending}>{t.invite}</Button>
+          <Button asChild variant="secondary">
+            <Link href="/admin/staff">{t.cancel}</Link>
+          </Button>
         </div>
       </form>
       <aside className="inviteAside">
@@ -146,7 +146,10 @@ export function InviteForm({
             {t.inviteLinkTermsAfter}
           </p>
           <p>{t.inviteNotEmailedYet}</p>
-          <Link href="/admin/templates?key=staff_invitation">{t.seeTheEmail}</Link>
+          <Link href="/admin/templates?key=staff_invitation">
+            {t.seeTheEmail}
+            <ForwardArrow />
+          </Link>
         </section>
         <section className="panel">
           <h2>{t.beforeAccessTitle}</h2>

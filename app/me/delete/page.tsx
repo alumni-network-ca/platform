@@ -11,6 +11,7 @@ import { format, translations } from "@/lib/i18n";
 import { REAUTH_MINUTES, signedInRecently } from "@/lib/profile/fields";
 import { loadMyProfile } from "@/lib/profile/server";
 import { deleteMyProfile } from "../actions";
+import { BackArrow } from "@/components/icons";
 
 // Deleting this school's profile (PRF-06). It needs a recent sign-in (re-authentication); the action checks it
 // again. The login itself stays: it may belong to other schools, and DEC-08's purge job handles the rest.
@@ -29,7 +30,8 @@ export default async function DeletePage() {
           <div className="onbBody">
             <div className="onbHead">
               <Link className="meBackLink" href="/me">
-                ← {m.backToProfile}
+                <BackArrow />
+                {m.backToProfile}
               </Link>
               <h1>{format(m.deleteTitle, { school })}</h1>
               <p>{format(m.deleteIntro, { school })}</p>

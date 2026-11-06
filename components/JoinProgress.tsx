@@ -1,4 +1,5 @@
 import type { Locale } from "@/lib/i18n";
+import { Check } from "lucide-react";
 
 export function JoinProgress({ step, locale }: { step: 0 | 1 | 2; locale: Locale }) {
   const labels =
@@ -16,7 +17,7 @@ export function JoinProgress({ step, locale }: { step: 0 | 1 | 2; locale: Locale
             className={`joinDot${index < step ? " joinDone" : index === step ? " joinCurrent" : ""}`}
             aria-hidden="true"
           >
-            {index < step ? "✓" : index + 1}
+            {index < step ? <Check className="size-4" strokeWidth={3} /> : index + 1}
           </span>
           {label}
         </li>

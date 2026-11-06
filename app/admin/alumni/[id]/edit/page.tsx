@@ -3,6 +3,9 @@ import { staffRecord } from "@/lib/admin/records";
 import { adminCopy } from "@/lib/admin/data";
 import { ActionForm } from "@/components/admin/ActionForm";
 import { editRecord } from "../actions";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { BackArrow } from "@/components/icons";
 export default async function Edit({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const { profile: p, supabase, school } = await staffRecord(id, "records.edit");
@@ -29,7 +32,8 @@ export default async function Edit({ params }: { params: Promise<{ id: string }>
   return (
     <>
       <Link className="backLink" href={"/admin/alumni/" + id}>
-        ← {p.first_name} {p.last_name}
+        <BackArrow />
+        {p.first_name} {p.last_name}
       </Link>
       <div className="shellTitle">
         <h1>{t.edit}</h1>
@@ -40,8 +44,7 @@ export default async function Edit({ params }: { params: Promise<{ id: string }>
             {fields.map((f) => (
               <label key={f.key} className="field">
                 {t[f.key]}
-                <input
-                  className="input"
+                <Input
                   name={f.key}
                   maxLength={f.max}
                   required={f.key === "first_name" || f.key === "last_name"}
@@ -51,9 +54,8 @@ export default async function Edit({ params }: { params: Promise<{ id: string }>
             ))}
             <label className="field">
               {t.grad_year}
-              <input
+              <Input
                 name="grad_year"
-                className="input"
                 required
                 type="number"
                 min={1900}
@@ -64,8 +66,7 @@ export default async function Edit({ params }: { params: Promise<{ id: string }>
           </div>
           <label className="field">
             {t.admin_notes}
-            <textarea
-              className="input"
+            <Textarea
               name="admin_notes"
               rows={5}
               maxLength={2000}

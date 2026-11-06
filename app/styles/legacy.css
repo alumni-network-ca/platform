@@ -74,7 +74,7 @@ a {
   height: 42px;
   box-sizing: border-box;
   padding: 4px;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   background: #fff;
   color: var(--ink);
   object-fit: contain;
@@ -157,7 +157,7 @@ a {
 .navSignIn {
   padding: 9px 16px;
   border: 1px solid var(--on-brand-line);
-  border-radius: 7px;
+  border-radius: var(--radius-md);
   color: #fff;
   font-size: 14px;
   font-weight: 700;
@@ -237,9 +237,9 @@ a {
   overflow-y: auto;
   box-sizing: border-box;
   background: #fff;
-  border: 1px solid #e2e5ee;
-  border-radius: 14px;
-  box-shadow: 0 24px 60px -20px color-mix(in srgb, var(--brand) 40%, transparent);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
   color: var(--ink);
 }
 .acctHead {
@@ -264,7 +264,7 @@ a {
 }
 .acctEmail {
   overflow: hidden;
-  color: #4a5575;
+  color: var(--text-muted);
   font-size: 13px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -274,13 +274,13 @@ a {
   font-weight: 700;
 }
 .acctStatus-good {
-  color: #1b5e33;
+  color: var(--good);
 }
 .acctStatus-warn {
-  color: #7a4b00;
+  color: var(--warn);
 }
 .acctStatus-neutral {
-  color: #3a4a70;
+  color: var(--ink-soft);
 }
 .acctStatus-platform {
   color: #4b2a8a;
@@ -289,11 +289,11 @@ a {
   display: flex;
   flex-direction: column;
   padding: 6px;
-  border-top: 1px solid #eef0f4;
+  border-top: 1px solid var(--line-subtle);
 }
 .menuTitle {
   padding: 8px 12px 4px;
-  color: #4a5575;
+  color: var(--text-muted);
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -309,7 +309,7 @@ a {
   box-sizing: border-box;
   padding: 8px 12px;
   border: 0;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: transparent;
   color: var(--ink);
   font: inherit;
@@ -320,7 +320,7 @@ a {
 }
 .menuItem:hover,
 .menuItem:focus {
-  background: #f1f3f8;
+  background: var(--surface-hover);
   outline: none;
 }
 .menuItem:focus-visible {
@@ -328,7 +328,7 @@ a {
   outline-offset: -2px;
 }
 .menuItemDanger {
-  color: #a1173b;
+  color: var(--danger);
   font-weight: 700;
 }
 .menuChip {
@@ -343,16 +343,16 @@ a {
   color: #fff;
 }
 .menuChip-info {
-  background: #eef0f4;
-  color: #3a4a70;
+  background: var(--line-subtle);
+  color: var(--ink-soft);
 }
 .menuChip-good {
-  background: #e3f3e8;
-  color: #1b5e33;
+  background: var(--good-soft);
+  color: var(--good);
 }
 .menuChip-warn {
-  background: #fff4dc;
-  color: #7a4b00;
+  background: var(--warn-soft);
+  color: var(--warn);
 }
 .menuChip-soon {
   background: var(--accent-chip);
@@ -360,7 +360,7 @@ a {
 }
 .menuItemSoon,
 .menuItemSoon:hover {
-  color: #4a5575;
+  color: var(--text-muted);
   cursor: default;
 }
 .srOnly {
@@ -384,55 +384,7 @@ a {
     right: 16px;
   }
 }
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 7px;
-  padding: 10px 17px;
-  font-weight: 700;
-  font-size: 14px;
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: 0.15s;
-  white-space: nowrap;
-}
-.btn:hover {
-  transform: translateY(-1px);
-}
-.btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-.btnPrimary {
-  background: var(--accent);
-  color: #fff;
-}
-.btnPrimary:hover {
-  background: var(--accent-dark);
-}
-.btnGhost {
-  border-color: #42527a;
-  color: #fff;
-  background: transparent;
-}
-.btnGhost:hover,
-.btnGhost.isActive {
-  border-color: #fff;
-}
-.btnLight {
-  border-color: var(--line);
-  background: #fff;
-  color: var(--ink);
-}
-.btnLight:hover {
-  border-color: #aab3c7;
-}
-.btnWide {
-  width: 100%;
-  padding: 13px 18px;
-}
+
 .hero {
   max-width: 1180px;
   margin: 0 auto;
@@ -491,7 +443,7 @@ a {
 .authCard {
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 13px;
+  border-radius: var(--radius-lg);
 }
 .ledgerCard {
   padding: 8px;
@@ -522,13 +474,13 @@ a {
   color: var(--accent);
   background: var(--accent-soft);
   padding: 5px 8px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
 }
 .avatar {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #3a4a70, var(--brand));
+  background: linear-gradient(135deg, var(--ink-soft), var(--brand));
 }
 .avatarInitials {
   display: grid;
@@ -540,7 +492,7 @@ a {
 .pill {
   font-size: 10.5px;
   padding: 4px 9px;
-  border-radius: 20px;
+  border-radius: 999px;
   background: var(--accent-pale);
   color: var(--accent);
   font-weight: 750;
@@ -611,19 +563,15 @@ a {
   align-items: flex-start;
   margin-bottom: 28px;
 }
-.input,
-.select,
 textarea {
   width: 100%;
   border: 1px solid var(--line);
   background: #fff;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 11px 12px;
   color: var(--ink);
   outline: none;
 }
-.input:focus,
-.select:focus,
 textarea:focus {
   border-color: #a6b0c9;
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 6%, transparent);
@@ -706,8 +654,8 @@ textarea:focus {
   display: grid;
   place-items: center;
   height: 54px;
-  border: 1px solid #8a93ab; /* 3:1 against white, WCAG 1.4.11 */
-  border-radius: 10px;
+  border: 1px solid var(--input-line); /* 3:1 against white, WCAG 1.4.11 */
+  border-radius: var(--radius-lg);
   background: #fff;
   color: var(--ink);
   font-size: 24px;
@@ -745,7 +693,7 @@ textarea:focus {
 }
 .notice {
   padding: 14px;
-  border-radius: 9px;
+  border-radius: var(--radius-md);
   background: var(--accent-pale);
   color: var(--accent);
   font-size: 13px;
@@ -764,7 +712,7 @@ textarea:focus {
 .adminSide a {
   display: block;
   padding: 10px 12px;
-  border-radius: 7px;
+  border-radius: var(--radius-md);
   color: var(--ink-soft);
   margin-bottom: 3px;
 }
@@ -799,7 +747,7 @@ textarea:focus {
 .status {
   display: inline-block;
   padding: 4px 9px;
-  border-radius: 20px;
+  border-radius: 999px;
   font-size: 11px;
   font-weight: 700;
 }
@@ -951,7 +899,7 @@ textarea:focus {
   color: #286758;
   border: 1px solid #cde6df;
   padding: 13px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 13px;
   margin-bottom: 16px;
 }
@@ -964,7 +912,7 @@ textarea:focus {
   gap: 9px;
   padding: 11px 12px;
   border: 1px solid var(--line);
-  border-radius: 9px;
+  border-radius: var(--radius-md);
   font-size: 13px;
   background: #fff;
 }
@@ -1068,7 +1016,7 @@ textarea:focus {
   max-height: 650px;
   overflow: auto;
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
 }
 .adminAlumniList table {
   margin: 0;
@@ -1139,7 +1087,7 @@ textarea:focus {
   padding: 18px 20px;
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
 }
 .statLabel {
   color: var(--ink-soft);
@@ -1158,7 +1106,7 @@ textarea:focus {
   padding: 22px 24px;
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
 }
 .panel h2 {
   margin: 0;
@@ -1187,7 +1135,7 @@ textarea:focus {
   overflow-x: auto;
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
 }
 .dataTable {
   width: 100%;
@@ -1206,7 +1154,7 @@ textarea:focus {
 }
 .dataTable td {
   padding: 12px 20px;
-  border-top: 1px solid #eef0f4;
+  border-top: 1px solid var(--line-subtle);
   vertical-align: top;
 }
 .dataTable a {
@@ -1233,14 +1181,14 @@ textarea:focus {
   width: 36px;
   height: 36px;
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: transparent;
   color: var(--ink);
   cursor: pointer;
 }
 .rowMenuButton:hover,
 .rowMenuButton[aria-expanded="true"] {
-  background: #f1f3f8;
+  background: var(--surface-hover);
   border-color: var(--line);
 }
 .rowMenuButton:focus-visible {
@@ -1258,8 +1206,8 @@ textarea:focus {
   padding: 6px;
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 10px;
-  box-shadow: 0 16px 40px -16px rgb(11 33 89 / 35%);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
   text-align: left;
 }
 .rowMenuPanel form {
@@ -1299,7 +1247,7 @@ textarea:focus {
 }
 .cellSub {
   display: block;
-  color: #4a5575;
+  color: var(--text-muted);
   font-size: 13px;
   font-weight: 400;
 }
@@ -1307,23 +1255,23 @@ textarea:focus {
   display: inline-block;
   padding: 4px 10px;
   border-radius: 999px;
-  background: #eef0f4;
-  color: #3a4a70;
+  background: var(--line-subtle);
+  color: var(--ink-soft);
   font-size: 12px;
   font-weight: 700;
   white-space: nowrap;
 }
 .tagGood {
-  background: #e3f3e8;
-  color: #1b5e33;
+  background: var(--good-soft);
+  color: var(--good);
 }
 .tagWarn {
-  background: #fff4dc;
-  color: #7a4b00;
+  background: var(--warn-soft);
+  color: var(--warn);
 }
 .tagBad {
-  background: #fbe9ed;
-  color: #a1173b;
+  background: var(--danger-soft);
+  color: var(--danger);
 }
 .field {
   display: flex;
@@ -1333,7 +1281,7 @@ textarea:focus {
   font-weight: 600;
 }
 .fieldHint {
-  color: #4a5575;
+  color: var(--text-muted);
   font-size: 12px;
   font-weight: 400;
 }
@@ -1354,8 +1302,8 @@ textarea:focus {
   gap: 12px;
   align-items: flex-start;
   padding: 16px 18px;
-  border: 1px solid #c3c9d6;
-  border-radius: 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
   background: #fff;
   font-size: 14px;
   cursor: pointer;
@@ -1374,25 +1322,17 @@ textarea:focus {
   margin: 2px 0 0;
   accent-color: var(--accent);
 }
-.btnDanger {
-  background: #a1173b;
-  color: #fff;
-}
+
 .noticeGood {
-  background: #e3f3e8;
-  color: #1b5e33;
+  background: var(--good-soft);
+  color: var(--good);
 }
 .copyBox {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
-.copyBox .input {
-  flex: 1 1 260px;
-  width: auto;
-  font-family: ui-monospace, monospace;
-  font-size: 13px;
-}
+
 @media (max-width: 700px) {
   .shellMain {
     padding: 20px 16px;
@@ -1411,7 +1351,7 @@ textarea:focus {
   font-size: 14px;
 }
 .detailList dt {
-  color: #4a5575;
+  color: var(--text-muted);
 }
 .detailList dd {
   margin: 0;
@@ -1435,7 +1375,7 @@ textarea:focus {
   justify-content: space-between;
   align-items: center;
   padding: 10px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 14px;
   font-weight: 500;
   color: var(--ink);
@@ -1462,7 +1402,7 @@ textarea:focus {
   justify-content: space-between;
   gap: 16px;
   padding: 22px 24px;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   background: var(--brand);
   color: #fff;
   text-decoration: none;
@@ -1586,7 +1526,7 @@ textarea:focus {
   gap: 14px;
 }
 .onbRailTitle {
-  color: #4a5575;
+  color: var(--text-muted);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -1605,13 +1545,13 @@ textarea:focus {
   align-items: center;
   gap: 12px;
   padding: 10px 12px;
-  border-radius: 8px;
-  color: #4a5575;
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
   font-size: 14px;
   font-weight: 500;
 }
 a.onbStep:hover {
-  background: #f1f3f8;
+  background: var(--surface-hover);
 }
 .onbStepDone {
   color: var(--ink);
@@ -1627,10 +1567,10 @@ a.onbStep:hover {
   flex: 0 0 26px;
   height: 26px;
   box-sizing: border-box;
-  border: 2px solid #8a93ab;
+  border: 2px solid var(--input-line);
   border-radius: 50%;
   background: #fff;
-  color: #4a5575;
+  color: var(--text-muted);
   font-size: 12px;
   font-weight: 700;
 }
@@ -1646,7 +1586,7 @@ a.onbStep:hover {
 }
 .onbNote {
   padding-left: 12px;
-  color: #4a5575;
+  color: var(--text-muted);
   font-size: 13px;
 }
 .onbCard {
@@ -1656,14 +1596,14 @@ a.onbStep:hover {
   display: flex;
   flex-direction: column;
   background: #fff;
-  border: 1px solid #e2e5ee;
-  border-radius: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
 }
 .onbProgress {
   height: 4px;
   overflow: hidden;
-  border-radius: 12px 12px 0 0;
-  background: #e2e5ee;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: var(--line);
 }
 .onbProgress span {
   display: block;
@@ -1682,7 +1622,7 @@ a.onbStep:hover {
   gap: 8px;
 }
 .onbHead small {
-  color: #4a5575;
+  color: var(--text-muted);
   font-size: 13px;
   font-weight: 600;
 }
@@ -1693,7 +1633,7 @@ a.onbStep:hover {
 }
 .onbHead p {
   margin: 0;
-  color: #3a4a70;
+  color: var(--ink-soft);
   font-size: 15px;
   line-height: 1.55;
 }
@@ -1716,7 +1656,7 @@ a.onbStep:hover {
   font-weight: 600;
 }
 .onbLabel small {
-  color: #4a5575;
+  color: var(--text-muted);
   font-size: 13px;
   font-weight: 400;
 }
@@ -1724,8 +1664,8 @@ a.onbStep:hover {
   width: 100%;
   box-sizing: border-box;
   padding: 11px 13px;
-  border: 1px solid #8a93ab;
-  border-radius: 7px;
+  border: 1px solid var(--input-line);
+  border-radius: var(--radius-md);
   background: #fff;
   color: var(--ink);
   font: inherit;
@@ -1736,14 +1676,14 @@ a.onbStep:hover {
   outline-offset: 1px;
 }
 .onbInput[aria-invalid="true"] {
-  border-color: #a1173b;
+  border-color: var(--danger);
 }
 .onbHint {
-  color: #4a5575;
+  color: var(--text-muted);
   font-size: 12px;
 }
 .onbError {
-  color: #a1173b;
+  color: var(--danger);
   font-size: 12px;
   font-weight: 600;
 }
@@ -1752,13 +1692,13 @@ a.onbStep:hover {
   align-items: center;
   gap: 8px;
   padding: 11px 13px;
-  border-radius: 7px;
-  background: #f2f4f8;
+  border-radius: var(--radius-md);
+  background: var(--surface-sunken);
   font-size: 15px;
   font-weight: 600;
 }
 .onbStatic small {
-  color: #1b5e33;
+  color: var(--good);
   font-size: 12px;
   font-weight: 600;
 }
@@ -1778,7 +1718,7 @@ a.onbStep:hover {
   font-weight: 600;
 }
 .onbFieldset legend small {
-  color: #4a5575;
+  color: var(--text-muted);
   font-size: 13px;
   font-weight: 400;
 }
@@ -1792,7 +1732,7 @@ a.onbStep:hover {
   align-items: center;
   gap: 8px;
   padding: 8px 14px;
-  border: 1px solid #c3c9d6;
+  border: 1px solid var(--line-strong);
   border-radius: 999px;
   background: #fff;
   font-size: 14px;
@@ -1820,8 +1760,8 @@ a.onbStep:hover {
   align-items: flex-start;
   gap: 12px;
   padding: 14px 16px;
-  border: 1px solid #c3c9d6;
-  border-radius: 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
   background: #fff;
   cursor: pointer;
 }
@@ -1845,7 +1785,7 @@ a.onbStep:hover {
   font-size: 15px;
 }
 .onbOptionText span {
-  color: #4a5575;
+  color: var(--text-muted);
   font-size: 13px;
   line-height: 1.45;
 }
@@ -1867,7 +1807,7 @@ a.onbStep:hover {
   font-weight: 700;
 }
 .onbSectionHead span {
-  color: #4a5575;
+  color: var(--text-muted);
   font-size: 13px;
 }
 /* Fields line up by their top, so a hint or an error under one input never moves its neighbours. */
@@ -1877,8 +1817,8 @@ a.onbStep:hover {
   align-items: start;
   gap: 12px;
   padding: 14px 16px;
-  border: 1px solid #e2e5ee;
-  border-radius: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
   background: #fbfbfa;
 }
 .onbButton {
@@ -1887,8 +1827,8 @@ a.onbStep:hover {
   justify-content: center;
   gap: 8px;
   padding: 8px 12px;
-  border: 1px solid #8a93ab;
-  border-radius: 7px;
+  border: 1px solid var(--input-line);
+  border-radius: var(--radius-md);
   background: #fff;
   color: var(--ink);
   font: inherit;
@@ -1905,7 +1845,7 @@ a.onbStep:hover {
   grid-column: 1 / -1;
   justify-self: start;
   border-color: #e3b6c3;
-  color: #a1173b;
+  color: var(--danger);
 }
 .onbRemove:hover {
   background: #fbeaee;
@@ -1943,7 +1883,7 @@ a.onbStep:hover {
   align-items: flex-start;
   gap: 12px;
   padding: 16px 18px;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   background: #f7f7f6;
   font-size: 14px;
   line-height: 1.5;
@@ -1970,13 +1910,13 @@ a.onbStep:hover {
   justify-content: space-between;
   gap: 12px;
   padding: 18px 36px;
-  border-top: 1px solid #e2e5ee;
+  border-top: 1px solid var(--line);
 }
 .onbBack {
   display: inline-flex;
   padding: 11px 18px;
-  border: 1px solid #8a93ab;
-  border-radius: 7px;
+  border: 1px solid var(--input-line);
+  border-radius: var(--radius-md);
   color: var(--ink);
   font-size: 14px;
   font-weight: 700;
@@ -1986,7 +1926,7 @@ a.onbStep:hover {
   margin-left: auto;
   padding: 12px 22px;
   border: 0;
-  border-radius: 7px;
+  border-radius: var(--radius-md);
   background: var(--accent);
   color: #fff;
   font: inherit;
@@ -1999,15 +1939,15 @@ a.onbStep:hover {
 }
 .onbSubmit:disabled {
   background: #d5d9e3;
-  color: #4a5575;
+  color: var(--text-muted);
   cursor: not-allowed;
 }
 .onbAlert {
   margin: 0;
   padding: 12px 14px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: #fbeaee;
-  color: #7a1030;
+  color: var(--danger-dark);
   font-size: 14px;
   font-weight: 600;
 }
@@ -2024,7 +1964,7 @@ a.onbStep:hover {
   gap: 10px;
 }
 .onbPreviewTitle {
-  color: #4a5575;
+  color: var(--text-muted);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -2036,8 +1976,8 @@ a.onbStep:hover {
   align-items: center;
   gap: 16px;
   padding: 18px 20px;
-  border: 1px solid #e2e5ee;
-  border-radius: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
   background: #fff;
 }
 .onbPreviewCard[data-hidden="true"] {
@@ -2060,7 +2000,7 @@ a.onbStep:hover {
   flex-direction: column;
   gap: 3px;
   font-size: 14px;
-  color: #3a4a70;
+  color: var(--ink-soft);
 }
 .onbPreviewWho strong {
   color: var(--ink);
@@ -2068,7 +2008,7 @@ a.onbStep:hover {
   font-weight: 800;
 }
 .onbPreviewWho strong span {
-  color: #4a5575;
+  color: var(--text-muted);
   font-weight: 500;
 }
 .onbTags {
@@ -2142,8 +2082,8 @@ a.onbStep:hover {
 .meCard {
   box-sizing: border-box;
   background: #fff;
-  border: 1px solid #e2e5ee;
-  border-radius: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
 }
 .meHead {
   display: flex;
@@ -2168,7 +2108,7 @@ a.onbStep:hover {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  color: #3a4a70;
+  color: var(--ink-soft);
   font-size: 15px;
 }
 .meWho h1 {
@@ -2178,12 +2118,12 @@ a.onbStep:hover {
   font-weight: 800;
 }
 .meWho h1 span {
-  color: #4a5575;
+  color: var(--text-muted);
   font-size: 18px;
   font-weight: 500;
 }
 .meSub {
-  color: #4a5575;
+  color: var(--text-muted);
   font-size: 14px;
 }
 .meSection {
@@ -2219,13 +2159,13 @@ a.onbStep:hover {
 }
 .meText {
   margin: 0;
-  color: #3a4a70;
+  color: var(--ink-soft);
   font-size: 15px;
   line-height: 1.6;
 }
 .meEmpty {
   margin: 0;
-  color: #4a5575;
+  color: var(--text-muted);
   font-size: 14px;
   font-style: italic;
 }
@@ -2238,7 +2178,7 @@ a.onbStep:hover {
   font-weight: 700;
 }
 .meRow span + span {
-  color: #4a5575;
+  color: var(--text-muted);
   font-size: 14px;
 }
 .meTags {
@@ -2260,7 +2200,7 @@ a.onbStep:hover {
   align-items: flex-start;
   gap: 12px;
   padding: 22px;
-  color: #3a4a70;
+  color: var(--ink-soft);
   font-size: 14px;
   line-height: 1.5;
 }
@@ -2281,7 +2221,7 @@ a.onbStep:hover {
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background: #8a93ab;
+  background: var(--input-line);
 }
 .meDotOn {
   background: #2e8b57;
@@ -2295,7 +2235,7 @@ a.onbStep:hover {
   gap: 4px;
 }
 .meWarn {
-  color: #7a4b00;
+  color: var(--warn);
   font-weight: 600;
 }
 .meLinkButton {
@@ -2306,7 +2246,7 @@ a.onbStep:hover {
   cursor: pointer;
 }
 .meBox a.meDanger {
-  color: #a1173b;
+  color: var(--danger);
 }
 .meNarrow {
   max-width: 860px;
@@ -2317,7 +2257,7 @@ a.onbStep:hover {
 .meBullets {
   margin: 0;
   padding-left: 20px;
-  color: #3a4a70;
+  color: var(--ink-soft);
   font-size: 15px;
   line-height: 1.6;
 }
@@ -2327,9 +2267,9 @@ a.onbStep:hover {
   align-items: flex-start;
   gap: 8px;
   padding: 16px 18px;
-  border-radius: 10px;
-  background: #fff4dc;
-  color: #7a4b00;
+  border-radius: var(--radius-lg);
+  background: var(--warn-soft);
+  color: var(--warn);
 }
 .meReauth h2 {
   margin: 0;
@@ -2347,10 +2287,10 @@ a.onbStep:hover {
   padding-top: 0;
 }
 .onbDanger {
-  background: #a1173b;
+  background: var(--danger);
 }
 .onbDanger:hover {
-  background: #7a1030;
+  background: var(--danger-dark);
 }
 @media (max-width: 720px) {
   .me {
@@ -2365,7 +2305,7 @@ a.onbStep:hover {
 /* Alumni account creation and admission (approved Alumni canvas, November 2026). */
 .navJoin {
   padding: 10px 17px;
-  border-radius: 7px;
+  border-radius: var(--radius-md);
   background: var(--accent);
   color: #fff;
   font-size: 14px;
@@ -2447,7 +2387,7 @@ a.onbStep:hover {
   padding: 32px;
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--radius-xl);
   box-shadow: var(--shadow);
 }
 .joinCard > .tag {
@@ -2459,10 +2399,7 @@ a.onbStep:hover {
 .joinCard .notice {
   margin: 0;
 }
-.joinCard .input {
-  width: 100%;
-  min-width: 0;
-}
+
 .joinCard .authFooter {
   margin-top: 0;
   flex-wrap: wrap;
@@ -2472,11 +2409,13 @@ a.onbStep:hover {
   overflow-wrap: anywhere;
 }
 .joinCard .muted {
-  color: #4a5575;
+  color: var(--text-muted);
 }
-.joinCard a:not(.btn) {
+/* Text links in the card; links drawn as buttons (components/ui) keep their own colours. */
+.joinCard a:not([data-slot]) {
   color: var(--accent);
 }
+
 .joinCentered {
   max-width: 720px;
   margin: 0 auto;
@@ -2499,8 +2438,8 @@ a.onbStep:hover {
   margin: 0;
   padding: 15px 17px;
   border-left: 3px solid var(--accent);
-  border-radius: 0 8px 8px 0;
-  background: #f2f4f8;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  background: var(--surface-sunken);
   color: var(--ink-soft);
   font-size: 13px;
   line-height: 1.6;
@@ -2516,7 +2455,7 @@ a.onbStep:hover {
   margin: 0 0 28px;
   padding: 0;
   font-size: 12px;
-  color: #4a5575;
+  color: var(--text-muted);
 }
 .joinProgress li {
   display: flex;
@@ -2538,7 +2477,7 @@ a.onbStep:hover {
   font-size: 12px;
   font-weight: 800;
   background: #fff;
-  color: #4a5575;
+  color: var(--text-muted);
 }
 .joinProgress .joinDot {
   width: 23px;
@@ -2557,9 +2496,9 @@ a.onbStep:hover {
   color: #fff;
 }
 .joinWaiting {
-  background: #fff4dc;
+  background: var(--warn-soft);
   border-color: #b38a30;
-  color: #7a4b00;
+  color: var(--warn);
 }
 .joinJourney {
   list-style: none;
@@ -2576,7 +2515,7 @@ a.onbStep:hover {
 .joinJourney p {
   margin-top: 3px;
   font-size: 13px;
-  color: #4a5575;
+  color: var(--text-muted);
   line-height: 1.6;
 }
 .joinRequestLayout {
@@ -2596,7 +2535,7 @@ a.onbStep:hover {
   padding: 24px;
   background: var(--brand);
   color: #fff;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
 }
 .joinDarkPanel h2 {
   font-size: 20px;
@@ -2614,7 +2553,7 @@ a.onbStep:hover {
   display: grid;
   place-items: center;
   background: var(--accent-pale);
-  border-radius: 14px;
+  border-radius: var(--radius-xl);
   font-size: 24px;
   color: var(--accent);
 }
@@ -2775,7 +2714,7 @@ a.onbStep:hover {
   justify-content: space-between;
   gap: 14px;
   padding: 18px 22px;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   font-size: 14px;
 }
 .homeBanner p {
@@ -2785,19 +2724,19 @@ a.onbStep:hover {
   font-size: 15px;
 }
 .homeBannerWarn {
-  background: #fff4dc;
+  background: var(--warn-soft);
   border: 1px solid #f0d9a6;
-  color: #7a4b00;
+  color: var(--warn);
 }
 .homeBannerGood {
-  background: #e3f3e8;
+  background: var(--good-soft);
   border: 1px solid #b9dcc4;
-  color: #1b5e33;
+  color: var(--good);
   font-weight: 600;
 }
 .homeBannerError {
   font-weight: 700;
-  color: #a1173b;
+  color: var(--danger);
 }
 .homeActions {
   display: flex;
@@ -2807,9 +2746,7 @@ a.onbStep:hover {
 .homeActions form {
   margin: 0;
 }
-.homeActions .btn {
-  min-height: 44px;
-}
+
 .homeColumns {
   display: flex;
   flex-wrap: wrap;
@@ -2833,7 +2770,7 @@ a.onbStep:hover {
 .homePanel {
   background: var(--paper-raised);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   padding: 22px;
   display: flex;
   flex-direction: column;
@@ -2872,14 +2809,12 @@ a.onbStep:hover {
   min-width: 0;
   min-height: 44px;
   padding: 10px 14px;
-  border: 1px solid #8a93ab;
-  border-radius: 10px;
+  border: 1px solid var(--input-line);
+  border-radius: var(--radius-lg);
   color: var(--ink);
   background: #fff;
 }
-.homeSearch .btn {
-  min-height: 44px;
-}
+
 .homeOffers {
   display: flex;
   flex-direction: column;
@@ -2902,7 +2837,7 @@ a.onbStep:hover {
   display: inline-block;
   padding: 7px 12px;
   border-radius: 999px;
-  border: 1px solid #8a93ab;
+  border: 1px solid var(--input-line);
   background: #fff;
   color: var(--ink);
   font-size: 13px;
@@ -2931,7 +2866,7 @@ a.onbStep:hover {
 .homeSectionHead p {
   margin: 3px 0 0;
   font-size: 13px;
-  color: #4a5575;
+  color: var(--text-muted);
 }
 .homeSectionHead a {
   font-size: 14px;
@@ -2949,7 +2884,7 @@ a.onbStep:hover {
   padding: 18px;
   background: var(--paper-raised);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   color: var(--ink);
   text-decoration: none;
 }
@@ -2973,7 +2908,7 @@ a.onbStep:hover {
 }
 .homeCardName small {
   font-size: 13px;
-  color: #4a5575;
+  color: var(--text-muted);
 }
 .homeCardRole {
   font-size: 14px;
@@ -2984,7 +2919,7 @@ a.onbStep:hover {
   align-self: flex-start;
   padding: 4px 9px;
   border-radius: 999px;
-  background: #eef0f4;
+  background: var(--line-subtle);
   color: var(--ink-soft);
   font-size: 12px;
   font-weight: 700;
@@ -3009,8 +2944,8 @@ a.onbStep:hover {
   padding: 28px;
   text-align: center;
   background: var(--paper-raised);
-  border: 1px dashed #8a93ab;
-  border-radius: 12px;
+  border: 1px dashed var(--input-line);
+  border-radius: var(--radius-lg);
   font-size: 14px;
   color: var(--ink-soft);
 }
@@ -3056,11 +2991,11 @@ a.onbStep:hover {
 }
 .homeContacts small {
   font-size: 13px;
-  color: #4a5575;
+  color: var(--text-muted);
 }
 .homePanel .homeNote {
   font-size: 13px;
-  color: #4a5575;
+  color: var(--text-muted);
 }
 @media (max-width: 720px) {
   .homePage {
@@ -3108,7 +3043,7 @@ a.onbStep:hover {
   text-transform: uppercase;
 }
 .dirCount {
-  color: #4a5575;
+  color: var(--text-muted);
   font-size: 14px;
 }
 .dirForm {
@@ -3121,8 +3056,8 @@ a.onbStep:hover {
   align-items: center;
   gap: 12px;
   padding: 6px 6px 6px 18px;
-  border: 1px solid #8a93ab;
-  border-radius: 10px;
+  border: 1px solid var(--input-line);
+  border-radius: var(--radius-lg);
   background: #fff;
 }
 .dirSearch:focus-within {
@@ -3159,8 +3094,8 @@ a.onbStep:hover {
   gap: 20px;
   padding: 22px;
   box-sizing: border-box;
-  border: 1px solid #e2e5ee;
-  border-radius: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
   background: #fff;
 }
 .dirPanelHead {
@@ -3188,18 +3123,7 @@ a.onbStep:hover {
   font-size: 13px;
   font-weight: 600;
 }
-.dirSelect {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 10px 12px;
-  border: 1px solid #8a93ab;
-  border-radius: 7px;
-  background: #fff;
-  color: var(--ink);
-  font: inherit;
-  font-size: 14px;
-}
-.dirSelect:focus,
+
 .dirChip:focus-within {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
@@ -3225,7 +3149,7 @@ a.onbStep:hover {
   display: inline-flex;
   align-items: center;
   padding: 7px 12px;
-  border: 1px solid #8a93ab;
+  border: 1px solid var(--input-line);
   border-radius: 999px;
   background: #fff;
   font-size: 13px;
@@ -3258,7 +3182,7 @@ a.onbStep:hover {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  color: #4a5575;
+  color: var(--text-muted);
   font-size: 14px;
 }
 .dirSort {
@@ -3267,9 +3191,7 @@ a.onbStep:hover {
   gap: 8px;
   color: var(--ink);
 }
-.dirSort .dirSelect {
-  width: auto;
-}
+
 .dirChips {
   display: flex;
   flex-wrap: wrap;
@@ -3309,13 +3231,13 @@ a.onbStep:hover {
   flex-direction: column;
   gap: 12px;
   padding: 18px;
-  border: 1px solid #e2e5ee;
-  border-radius: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
   background: #fff;
   color: var(--ink);
 }
 .dirCard:hover {
-  border-color: #8a93ab;
+  border-color: var(--input-line);
 }
 .dirCard:focus-visible {
   outline: 2px solid var(--accent);
@@ -3341,7 +3263,7 @@ a.onbStep:hover {
   flex-direction: column;
   gap: 2px;
   min-width: 0;
-  color: #4a5575;
+  color: var(--text-muted);
   font-size: 13px;
 }
 .dirCardName {
@@ -3350,7 +3272,7 @@ a.onbStep:hover {
   font-weight: 800;
 }
 .dirCardRole {
-  color: #3a4a70;
+  color: var(--ink-soft);
   font-size: 14px;
   line-height: 1.45;
 }
@@ -3373,9 +3295,9 @@ a.onbStep:hover {
   align-items: flex-start;
   gap: 12px;
   padding: 28px;
-  border: 1px dashed #c3c9d6;
-  border-radius: 12px;
-  color: #3a4a70;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-lg);
+  color: var(--ink-soft);
 }
 .dirEmpty p {
   margin: 0;
@@ -3385,7 +3307,7 @@ a.onbStep:hover {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  color: #4a5575;
+  color: var(--text-muted);
   font-size: 14px;
 }
 .dirPages a {
@@ -3404,8 +3326,8 @@ a.onbStep:hover {
   .dirFiltersToggle {
     display: inline-flex;
     padding: 10px 16px;
-    border: 1px solid #8a93ab;
-    border-radius: 7px;
+    border: 1px solid var(--input-line);
+    border-radius: var(--radius-md);
     background: #fff;
     color: var(--ink);
     font: inherit;
@@ -3456,13 +3378,13 @@ a.onbStep:hover {
 }
 .profNote {
   margin: 0;
-  color: #4a5575;
+  color: var(--text-muted);
   font-size: 13px;
 }
 .profShow {
   padding: 10px 16px;
   border: 0;
-  border-radius: 7px;
+  border-radius: var(--radius-md);
   background: var(--accent);
   color: #fff;
   font: inherit;
@@ -3498,10 +3420,10 @@ a.onbStep:hover {
   padding: 12px 20px 16px;
 }
 .tableNote {
-  border-top: 1px solid #eef0f4;
+  border-top: 1px solid var(--line-subtle);
 }
 .rowMuted td {
-  color: #4a5575;
+  color: var(--text-muted);
 }
 .linkRow {
   display: flex;
@@ -3539,7 +3461,7 @@ a.onbStep:hover {
   gap: 10px;
   padding: 18px;
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   background: #fff;
   cursor: pointer;
 }
@@ -3565,7 +3487,7 @@ a.onbStep:hover {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #4a5575;
+  color: var(--text-muted);
 }
 .inviteCan,
 .inviteCant {
@@ -3584,19 +3506,29 @@ a.onbStep:hover {
   display: flex;
   gap: 8px;
 }
+/* The lucide check and x, drawn in the text colour. */
+.inviteCan > li::before,
+.inviteCan > span::before,
+.inviteCant > li::before,
+.inviteCant > span::before {
+  content: "";
+  flex: 0 0 14px;
+  height: 14px;
+  margin-top: 2px;
+  background: currentColor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
 .inviteCan > li::before,
 .inviteCan > span::before {
-  content: "✓";
-  color: #1b5e33;
-  font-weight: 800;
+  background: var(--good);
 }
 .inviteCant {
-  color: #4a5575;
+  color: var(--text-muted);
 }
 .inviteCant > li::before,
 .inviteCant > span::before {
-  content: "✕";
-  font-weight: 800;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6 6 18M6 6l12 12'/%3E%3C/svg%3E");
 }
 /* A5.1: the form, with "What they'll receive" and "Before they get access" beside it (under it on phones). */
 .inviteLayout {
@@ -3621,7 +3553,7 @@ a.onbStep:hover {
   padding: 20px 22px;
   font-size: 13px;
   line-height: 1.5;
-  color: #3a4a70;
+  color: var(--ink-soft);
 }
 .inviteAside .panel h2 {
   font-size: 15px;
@@ -3639,13 +3571,13 @@ a.onbStep:hover {
   flex-direction: column;
   gap: 6px;
   padding: 14px 16px;
-  border-radius: 8px;
-  background: #f2f4f8;
+  border-radius: var(--radius-md);
+  background: var(--surface-sunken);
 }
 .inviteActions {
   justify-content: flex-start;
   padding-top: 18px;
-  border-top: 1px solid #eef0f4;
+  border-top: 1px solid var(--line-subtle);
 }
 .inviteResult h2 {
   font-size: 17px;
@@ -3655,7 +3587,7 @@ a.onbStep:hover {
   padding: 18px 20px;
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   gap: 10px 20px;
@@ -3665,7 +3597,7 @@ a.onbStep:hover {
   background: #f7f7f6;
 }
 .inviteFacts dt {
-  color: #4a5575;
+  color: var(--text-muted);
 }
 .inviteFacts dd {
   margin: 0;
@@ -3681,15 +3613,15 @@ a.onbStep:hover {
   grid-template-columns: 1fr 1fr;
   gap: 4px;
   padding: 4px;
-  background: #eef0f4;
-  border-radius: 9px;
+  background: var(--line-subtle);
+  border-radius: var(--radius-md);
 }
 .inviteSwitch button {
   min-height: 42px;
   border: 0;
-  border-radius: 7px;
+  border-radius: var(--radius-md);
   background: transparent;
-  color: #4a5575;
+  color: var(--text-muted);
   font: inherit;
   font-size: 14px;
   font-weight: 700;
@@ -3712,7 +3644,7 @@ a.onbStep:hover {
   display: grid;
   gap: 18px;
   padding: 26px 28px;
-  border-radius: 14px;
+  border-radius: var(--radius-xl);
   background: var(--brand);
   color: #fff;
 }
@@ -3742,7 +3674,7 @@ a.onbStep:hover {
   display: grid;
   gap: 6px;
   padding: 18px;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   background: #fff;
   color: var(--ink);
   font-size: 14px;

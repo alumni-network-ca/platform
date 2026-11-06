@@ -5,6 +5,8 @@ import Link from "next/link";
 import { CodeInput } from "@/components/CodeInput";
 import { useLanguage } from "@/components/LanguageProvider";
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 // Secure email change: both the new and the current address get a code, and both codes are needed
 // (double_confirm_changes), so someone holding only an open session cannot move the account to their inbox.
@@ -90,8 +92,7 @@ export function EmailChange({ currentEmail }: { currentEmail: string }) {
         <form onSubmit={start} className="authForm">
           <label>
             {t.newEmail}
-            <input
-              className="input"
+            <Input
               type="email"
               autoComplete="email"
               value={newEmail}
@@ -99,9 +100,9 @@ export function EmailChange({ currentEmail }: { currentEmail: string }) {
               required
             />
           </label>
-          <button className="btn btnPrimary btnWide" disabled={busy}>
+          <Button size="lg" className="w-full" disabled={busy}>
             {busy ? t.working : t.send}
-          </button>
+          </Button>
         </form>
       )}
       {step === "codes" && (
@@ -115,9 +116,9 @@ export function EmailChange({ currentEmail }: { currentEmail: string }) {
             value={codeCurrent}
             onChange={setCodeCurrent}
           />
-          <button className="btn btnPrimary btnWide" disabled={busy}>
+          <Button size="lg" className="w-full" disabled={busy}>
             {busy ? t.working : t.confirm}
-          </button>
+          </Button>
         </form>
       )}
       {step === "done" && (

@@ -3,6 +3,8 @@ import { staffRecord } from "@/lib/admin/records";
 import { adminCopy, dateLabel, read, type Search } from "@/lib/admin/data";
 import { describeAudit } from "@/lib/admin/audit";
 import { schoolConfig } from "@/lib/tenant/config";
+import { Button } from "@/components/ui/button";
+import { BackArrow } from "@/components/icons";
 export default async function Record({
   params,
   searchParams,
@@ -34,7 +36,8 @@ export default async function Record({
   return (
     <>
       <Link className="backLink" href="/admin/alumni">
-        ← {t.alumni}
+        <BackArrow />
+        {t.alumni}
       </Link>
       <section className="panel">
         <div className="shellTitle">
@@ -48,9 +51,9 @@ export default async function Record({
         </div>
         {can("records.edit") && (
           <div className="adminActions">
-            <Link className="btn btnSecondary" href={"/admin/alumni/" + id + "/edit"}>
-              {t.edit}
-            </Link>
+            <Button asChild variant="secondary">
+              <Link href={"/admin/alumni/" + id + "/edit"}>{t.edit}</Link>
+            </Button>
             {p.status === "active" ? (
               <>
                 <Link href={"/admin/alumni/" + id + "/status?action=suspended"}>{t.suspend}</Link>

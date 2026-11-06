@@ -4,6 +4,9 @@ import type { Database } from "@/lib/database";
 import { format } from "@/lib/i18n";
 import { errorMessage, type AdminCopy, type ActionResult } from "@/lib/admin/forms";
 import { decideRequest } from "./actions";
+import { Button } from "@/components/ui/button";
+import { NativeSelect } from "@/components/ui/native-select";
+import { Textarea } from "@/components/ui/textarea";
 type Match = Database["public"]["Functions"]["access_request_matches"]["Returns"][number];
 export function DecisionForm({
   id,
@@ -53,7 +56,7 @@ export function DecisionForm({
           <>
             <label className="field">
               {t.linkRecord}
-              <select className="input" name="profile" defaultValue={linkable[0]?.profile_id ?? ""}>
+              <NativeSelect name="profile" defaultValue={linkable[0]?.profile_id ?? ""}>
                 {linkable.map((m) => (
                   <option key={m.profile_id} value={m.profile_id}>
                     {m.first_name} {m.last_name}, {m.grad_year}
@@ -61,7 +64,7 @@ export function DecisionForm({
                   </option>
                 ))}
                 <option value="">{t.createRecord}</option>
-              </select>
+              </NativeSelect>
             </label>
             <p className="fieldHint">{t.approveNote}</p>
           </>
@@ -70,9 +73,8 @@ export function DecisionForm({
           <>
             <label className="field">
               {t.question}
-              <textarea
+              <Textarea
                 name="question"
-                className="input"
                 required
                 maxLength={1000}
                 rows={4}
@@ -86,8 +88,7 @@ export function DecisionForm({
           <>
             <label className="field">
               {t.reasonApplicant}
-              <select
-                className="input"
+              <NativeSelect
                 name="reject_reason"
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
@@ -95,12 +96,12 @@ export function DecisionForm({
                 <option value={t.notGraduate}>{t.notGraduate}</option>
                 <option value={t.duplicate}>{t.duplicate}</option>
                 <option value="other">{t.other}</option>
-              </select>
+              </NativeSelect>
             </label>
             {reason === "other" && (
               <label className="field">
                 {t.reasonApplicant}
-                <textarea name="other_reason" className="input" required maxLength={1000} />
+                <Textarea name="other_reason" required maxLength={1000} />
               </label>
             )}
             <p className="fieldHint">{t.rejectNote}</p>
@@ -114,9 +115,9 @@ export function DecisionForm({
       )}
       <div className="formActions">
         <span className="fieldHint">{t.logged}</span>
-        <button className="btn btnPrimary" disabled={pending}>
+        <Button disabled={pending}>
           {choice === "approve" ? t.approve : choice === "needs_info" ? t.needsInfo : t.reject}
-        </button>
+        </Button>
       </div>
     </form>
   );
