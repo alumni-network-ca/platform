@@ -42,7 +42,7 @@ body {
   padding: 0;
 }
 body {
-  font-family: Inter, Arial, sans-serif;
+  font-family: var(--font-inter), Arial, sans-serif;
   background: var(--paper);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
@@ -2416,7 +2416,7 @@ a.onbStep:hover {
 .joinPage h2,
 .joinPage h3 {
   margin: 0;
-  font-family: Inter, Arial, sans-serif;
+  font-family: var(--font-inter), Arial, sans-serif;
 }
 .joinPage h1 {
   font-size: 34px;
@@ -2763,7 +2763,7 @@ a.onbStep:hover {
 }
 
 .joinAuth h1 {
-  font-family: Inter, Arial, sans-serif;
+  font-family: var(--font-inter), Arial, sans-serif;
   font-size: 30px;
   line-height: 1.2;
   font-weight: 800;
