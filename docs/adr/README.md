@@ -27,3 +27,4 @@ Each ADR records one decision: its context, the decision itself and its conseque
 | [0017](0017-configuration.md) | Configuration: env vars and shared settings in config/ | Accepted | — |
 | [0018](0018-school-config-cache.md) | School config read once, cached across requests | Accepted | — |
 | [0019](0019-school-colours.md) | School colours applied as CSS variables | Accepted | — |
+| [0020](0020-tailwind-migration.md) | Moving to Tailwind and shadcn/ui one screen at a time | Accepted | — |

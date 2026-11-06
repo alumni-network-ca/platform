@@ -47,7 +47,7 @@ export default async function Settings() {
             alt={school.name}
             width={160}
             height={80}
-            style={{ objectFit: "contain" }}
+            className="h-20 w-40 object-contain"
           />
         )}
         <div className="formRow">
