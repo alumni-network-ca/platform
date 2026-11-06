@@ -67,8 +67,25 @@ are 16px on phones so iOS doesn't zoom. Use `tabular-nums` for counts, stats and
 
 ## Loading and feedback
 
-- Every page that reads data has a `loading.tsx` with a skeleton shaped like the page (`components/ui/skeleton.tsx`).
-- A button that waits on the server shows `loading`.
+- **Skeletons.** Every page you navigate to has its own `loading.tsx`, built from `components/skeletons/`.
+  - A skeleton reuses its page's layout classes, so nothing moves when the content arrives.
+  - The grey blocks (`components/ui/skeleton.tsx`) are hidden from screen readers. One `LoadingStatus` says "Loading…".
+  - Give each page its own file: a parent's skeleton is not shown again when you move between its children. An
+    index page goes in a route group, as in `app/admin/(overview)/`, so its skeleton does not wrap its siblings.
+- **Status codes.** Once a skeleton streams, the response is a 200, whatever `notFound()` or `forbidden()` says next.
+  A 403 or 404 that must reach the browser is decided in a `layout.tsx` above the `loading.tsx`, through a `cache()`d
+  read the page shares: `app/admin/staff/layout.tsx`, `app/profile/[id]/layout.tsx`.
+- **Prefetching.** In production a `<Link>` prefetches the next page's skeleton, so a click shows it at once. A link
+  whose page checks access in a layout is not prefetched when there are many of them (`prefetch={false}` on the
+  directory's profile cards): each prefetch would run that check.
+- **Links.** `LinkPending` (`useLinkStatus`) draws a thin bar on a link whose navigation outlasts 150 ms.
+- **Buttons.** A button that waits on the server shows `loading` (a spinner and `aria-busy`). In a form rendered by a
+  server component, use `SubmitButton`, which reads `useFormStatus`. A form whose action then loads another page
+  returns `leaveTo(url)` (`lib/leave.ts`), which keeps the button busy until that page loads.
+- **Filters.** A GET form uses `next/form`. Changing a filter keeps the filters on screen and marks the results busy
+  (`DirectoryResults`); the page skeleton is for arriving on a page.
+- **Errors.** `not-found.tsx`, `forbidden.tsx` and `error.tsx` use `StatusPage`: what happened, what to do next. An
+  error shows its reference (`digest`), never its message.
 - A destructive action asks for confirmation in an `AlertDialog`, never `window.confirm`.
 
 ## Motion
