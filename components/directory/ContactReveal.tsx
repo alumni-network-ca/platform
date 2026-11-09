@@ -42,7 +42,7 @@ export function ContactReveal({
         >
           {copied ? copiedLabel : copyLabel}
         </button>
-        <span className="srOnly" role="status">
+        <span className="sr-only" role="status">
           {copied ? copiedLabel : ""}
         </span>
       </div>

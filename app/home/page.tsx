@@ -199,7 +199,7 @@ export default async function HomePage({
           <section className="homePanel">
             <h2>{t.findTitle}</h2>
             <Form action="/directory" className="homeSearch" role="search">
-              <label htmlFor="home-q" className="srOnly">
+              <label htmlFor="home-q" className="sr-only">
                 {t.searchLabel}
               </label>
               <input id="home-q" name="q" type="search" placeholder={t.searchPlaceholder} />

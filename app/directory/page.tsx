@@ -96,7 +96,7 @@ export default async function DirectoryPage({
             strokeWidth={2.2}
             className="shrink-0 text-muted-foreground"
           />
-          <label htmlFor="dir-q" className="srOnly">
+          <label htmlFor="dir-q" className="sr-only">
             {t.searchLabel}
           </label>
           <input
@@ -198,7 +198,7 @@ export default async function DirectoryPage({
                       <Link href={chip.href}>
                         {chip.label}
                         <X aria-hidden className="ml-1 inline-block size-3.5 align-[-0.15em]" />
-                        <span className="srOnly"> ({t.removeFilter})</span>
+                        <span className="sr-only"> ({t.removeFilter})</span>
                       </Link>
                     </li>
                   ))}

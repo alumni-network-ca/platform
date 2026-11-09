@@ -8,6 +8,8 @@ import { createClient } from "@/lib/supabase/client";
 import { AccountMenu } from "./AccountMenu";
 import { useLanguage } from "./LanguageProvider";
 import { Shield } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { onBar } from "./navStyles";
 import { LinkPending } from "./LinkPending";
 
 /** The link for the current page: the one whose activeOn path matches most closely. */
@@ -22,6 +24,17 @@ function currentLink(links: NavLink[], pathname: string) {
       }
   return current;
 }
+
+const PILL = {
+  reviewer: "border border-on-brand-pill-line text-on-brand-pill",
+  school_admin: "bg-pink text-foreground",
+  platform_admin: "bg-platform-pill text-white",
+} as const;
+
+const navLink = cn(
+  "relative flex items-center gap-2 rounded-full px-3.5 py-[9px] font-medium text-on-brand-soft hover:bg-white/8 hover:text-white aria-[current=page]:bg-white/12 aria-[current=page]:font-bold aria-[current=page]:text-white",
+  onBar,
+);
 
 /** Draws the bar that components/Nav.tsx computed on the server (docs/design/nav-bar.md). */
 export function NavBar({ model }: { model: NavModel }) {
@@ -44,49 +57,78 @@ export function NavBar({ model }: { model: NavModel }) {
   }
 
   return (
-    <header className={`topnav${model.theme === "platform" ? " topnavPlatform" : ""}`}>
+    <header
+      data-ui
+      className={cn(
+        "sticky top-0 z-[100] flex min-h-[66px] flex-wrap items-center justify-between gap-4 px-8 py-3 text-white shadow-[0_8px_24px_rgba(5,18,49,0.12)] max-[720px]:px-4",
+        model.theme === "platform" ? "bg-platform" : "bg-brand",
+      )}
+    >
       {/* The visible text is the accessible name (axe label-content-name-mismatch); the logo is decorative. */}
-      <Link className="navBrand" href={brand.href}>
+      <Link
+        className={cn("flex items-center gap-[11px] rounded-md text-white", onBar)}
+        href={brand.href}
+      >
         {brand.logo ? (
-          <Image src={brand.logo} alt="" width={42} height={42} className="navBrandTile" priority />
+          <Image
+            src={brand.logo}
+            alt=""
+            width={42}
+            height={42}
+            className="size-[42px] shrink-0 rounded-lg bg-white object-contain p-1"
+            priority
+          />
         ) : (
           <span
-            className={`navBrandTile${model.theme === "platform" ? " navBrandMark" : ""}`}
+            className={cn(
+              "grid size-[42px] shrink-0 place-items-center rounded-lg p-1 text-[13px] font-extrabold tracking-[0.04em]",
+              model.theme === "platform"
+                ? "bg-platform-mark text-white"
+                : "bg-white text-foreground",
+            )}
             aria-hidden="true"
           >
             {brand.monogram}
           </span>
         )}
-        <span className="navBrandText">
-          <span className="navBrandName">{brand.name}</span>
-          <span className="navBrandSub">{brand.tagline}</span>
+        <span className="flex flex-col gap-[3px]">
+          <span className="text-base leading-tight font-bold">{brand.name}</span>
+          <span className="text-[11px] leading-none tracking-[0.1em] text-on-brand-muted uppercase">
+            {brand.tagline}
+          </span>
         </span>
       </Link>
 
       {model.links.length > 0 && (
-        <nav className="navLinks" aria-label={model.label}>
+        <nav
+          className="flex flex-wrap gap-1 text-base max-[720px]:order-3 max-[720px]:w-full"
+          aria-label={model.label}
+        >
           {model.links.map((link) => {
             const content = (
               <>
                 {link.label}
                 {link.badge && (
                   <>
-                    <span className="navBadge" aria-hidden="true">
+                    <span
+                      className="min-w-5 rounded-full bg-on-brand-accent px-1.5 py-px text-center text-[11px] font-extrabold text-foreground tabular-nums"
+                      aria-hidden="true"
+                    >
                       {link.badge.count}
                     </span>
-                    <span className="srOnly"> ({link.badge.label})</span>
+                    <span className="sr-only"> ({link.badge.label})</span>
                   </>
                 )}
               </>
             );
             const ariaCurrent = link.key === current ? "page" : undefined;
             return link.href.startsWith("/") ? (
-              <Link key={link.key} className="relative" href={link.href} aria-current={ariaCurrent}>
+              <Link key={link.key} className={navLink} href={link.href} aria-current={ariaCurrent}>
                 {content}
                 <LinkPending />
               </Link>
             ) : (
-              <a key={link.key} href={link.href} aria-current={ariaCurrent}>
+              <a key={link.key} className={navLink} href={link.href} aria-current={ariaCurrent}>
                 {content}
               </a>
             );
@@ -94,11 +136,16 @@ export function NavBar({ model }: { model: NavModel }) {
         </nav>
       )}
 
-      <div className="navRight">
+      <div className="flex items-center gap-2.5 max-[800px]:ml-auto">
         {model.account ? (
           <>
             {pill && (
-              <span className={`rolePill rolePill-${pill.role}`}>
+              <span
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-extrabold tracking-[0.02em] whitespace-nowrap",
+                  PILL[pill.role],
+                )}
+              >
                 <Shield aria-hidden size={13} strokeWidth={2.4} />
                 {pill.label}
               </span>
@@ -113,20 +160,32 @@ export function NavBar({ model }: { model: NavModel }) {
           <>
             <button
               type="button"
-              className="navLang"
+              className={cn(
+                "cursor-pointer rounded-full border-0 bg-transparent px-3 py-2 text-base text-on-brand-soft hover:text-white",
+                onBar,
+              )}
               lang={model.language.switchTo}
               onClick={switchLanguage}
             >
               {model.language.code}
-              <span className="srOnly"> · {model.language.name}</span>
+              <span className="sr-only"> · {model.language.name}</span>
             </button>
             {model.signIn && (
-              <Link className="navSignIn" href={model.signIn.href}>
+              <Link
+                className={cn(
+                  "rounded-md border border-on-brand-line px-4 py-[9px] text-base font-bold text-white hover:bg-white/8",
+                  onBar,
+                )}
+                href={model.signIn.href}
+              >
                 {model.signIn.label}
               </Link>
             )}
             {model.join && (
-              <Link className="navJoin" href={model.join.href}>
+              <Link
+                className="rounded-md bg-primary px-[17px] py-2.5 text-base font-bold whitespace-nowrap text-white outline-none hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white"
+                href={model.join.href}
+              >
                 {model.join.label}
               </Link>
             )}

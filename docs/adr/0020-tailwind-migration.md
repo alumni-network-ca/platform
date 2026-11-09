@@ -22,6 +22,9 @@ defaults.
   screens therefore render as before, and components get the reset they expect. It reverts named properties only:
   `all: revert` would also drop SVG `fill`/`stroke` and image `width`/`height` attributes, which browsers treat as
   author styles.
+- **A rebuilt screen opts out of `compat` with `data-ui`.** Its root element carries `data-ui`, which `compat` skips
+  along with everything inside it. The screen then renders now as it will once `compat` is gone, so its screenshots
+  check the final result and deleting `compat` later changes nothing there.
 - **One set of tokens for both.** The school variables of ADR 0019 stay the source (`--brand`, `--accent`, `--ink`…).
   `@theme inline` gives them Tailwind names, so a school's colours reach every class.
   - `primary` is the action colour: `--accent`, which is burgundy for Herzliah.
@@ -33,7 +36,7 @@ defaults.
 - **Order of work.**
   - First the foundation: tokens, the components in `components/ui`, and every button and text field.
   - Then loading, pending and error states.
-  - Then each area's screens, deleting their rules from `legacy.css` as they move.
+  - Then each area's screens, one pull request per area, deleting their rules from `legacy.css` as they move.
   - `compat` and `legacy.css` are deleted together, when the last screen has moved.
 - **Icons** come from lucide-react, the icon set shadcn uses. Text glyphs (← → ✓ ✕ ✉ ✦) are not used as icons.
 

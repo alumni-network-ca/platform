@@ -209,7 +209,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
               {shared.map((link) => (
                 <a key={link.type} href={link.value} target="_blank" rel="noopener noreferrer">
                   {o.channels[link.type as (typeof LINKS)[number]]}
-                  <span className="srOnly"> {t.opensNewTab}</span>
+                  <span className="sr-only"> {t.opensNewTab}</span>
                 </a>
               ))}
             </>

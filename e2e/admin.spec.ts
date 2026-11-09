@@ -157,8 +157,11 @@ test("school admin invites and revokes staff", async ({ page, context, baseURL }
   await expect(invitation.getByLabel("Invitation link")).toHaveValue(/token=/);
   await actions.click();
   expect(await blockingViolations(page)).toEqual([]);
-  page.once("dialog", (dialog) => dialog.accept());
   await menu.getByRole("menuitem", { name: "Revoke", exact: true }).click();
+  // Revoking asks first, in a dialog (not window.confirm).
+  const ask = page.getByRole("alertdialog");
+  expect(await blockingViolations(page)).toEqual([]);
+  await ask.getByRole("button", { name: "Revoke", exact: true }).click();
   await expect(invitation).toContainText("Revoked");
   await expect(invitation.getByRole("button")).toHaveCount(0);
   expect(await blockingViolations(page)).toEqual([]);
