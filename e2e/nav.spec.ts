@@ -15,7 +15,9 @@ const menuItems = (page: Page) =>
     .getByRole("menu")
     .getByRole("menuitem")
     .evaluateAll((items) => items.map((item) => item.firstElementChild?.textContent));
-const pill = (page: Page) => page.getByRole("banner").locator(".rolePill");
+// The role pill beside the account button: its text is the role.
+const pill = (page: Page) =>
+  page.getByRole("banner").getByText(/^(Reviewer|School admin|Platform admin)$/);
 const mainNav = (page: Page) => page.getByRole("navigation", { name: "Main" });
 const navLinks = (page: Page) => mainNav(page).getByRole("link").allTextContents();
 
@@ -94,7 +96,8 @@ test.describe("nav bar", () => {
     await signInAs(context, baseURL!, accounts.alumni);
     await page.goto("/directory");
     await accountButton(page).click();
-    const box = await page.locator(".acctPanel").boundingBox();
+    // The panel around the menu: the account summary and the menu itself.
+    const box = await page.getByRole("menu").locator("..").boundingBox();
     const width = page.viewportSize()!.width;
     expect(box!.x).toBeGreaterThanOrEqual(0);
     expect(box!.x + box!.width).toBeLessThanOrEqual(width);

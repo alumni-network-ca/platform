@@ -1,4 +1,4 @@
-import { expect, type Page, test } from "@playwright/test";
+import { expect, type Locator, type Page, test } from "@playwright/test";
 import { schoolTheme } from "../lib/theme";
 import { blockingViolations } from "./fixtures/a11y";
 import { accounts } from "./fixtures/accounts";
@@ -13,19 +13,19 @@ const testSchool = schoolTheme({ primary_color: "#2E8B57", accent_color: "#F4A30
 >;
 const rgb = (hex: string) =>
   `rgb(${[1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(", ")})`;
-const background = (page: Page, selector: string) =>
-  page
-    .locator(selector)
-    .first()
-    .evaluate((el) => getComputedStyle(el).backgroundColor);
+const background = (target: Locator) =>
+  target.first().evaluate((el) => getComputedStyle(el).backgroundColor);
+// The nav bar, and its "Join now" button drawn in the school's action colour.
+const bar = (page: Page) => page.getByRole("banner");
+const joinNow = (page: Page) => bar(page).getByRole("link", { name: "Join now", exact: true });
 const rootStyle = (page: Page) => page.locator("html").getAttribute("style");
 
 test.describe("school colours", () => {
   test("Herzliah and the root site keep the default theme", async ({ page, baseURL }) => {
     await page.goto(addressOf(baseURL!, "herzliah", "/login"));
     expect(await rootStyle(page)).toBeNull();
-    expect(await background(page, ".topnav")).toBe("rgb(11, 33, 89)");
-    expect(await background(page, ".navJoin")).toBe("rgb(123, 30, 61)");
+    expect(await background(bar(page))).toBe("rgb(11, 33, 89)");
+    expect(await background(joinNow(page))).toBe("rgb(123, 30, 61)");
 
     await page.goto(addressOf(baseURL!, null, "/"));
     expect(await rootStyle(page)).toBeNull();
@@ -38,8 +38,8 @@ test.describe("school colours", () => {
     expect(testSchool["--brand"]).not.toBe("#2E8B57");
     for (const path of ["/login", "/join"]) {
       await page.goto(addressOf(baseURL!, "test-school", path));
-      expect(await background(page, ".topnav")).toBe(rgb(testSchool["--brand"]!));
-      expect(await background(page, ".navJoin")).toBe(rgb(testSchool["--accent"]!));
+      expect(await background(bar(page))).toBe(rgb(testSchool["--brand"]!));
+      expect(await background(joinNow(page))).toBe(rgb(testSchool["--accent"]!));
       expect(await blockingViolations(page), path).toEqual([]);
     }
   });
@@ -56,7 +56,7 @@ test.describe("school colours", () => {
       await signInAs(context, addressOf(baseURL!, "test-school"), email);
       for (const path of paths) {
         await page.goto(addressOf(baseURL!, "test-school", path));
-        expect(await background(page, ".topnav")).toBe(rgb(testSchool["--brand"]!));
+        expect(await background(bar(page))).toBe(rgb(testSchool["--brand"]!));
         expect(await blockingViolations(page), path).toEqual([]);
       }
     });
