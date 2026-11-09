@@ -74,7 +74,13 @@ The alumni pages (home, directory, `/me`, a profile, onboarding) build from `com
 `components/alumni/profile.tsx`: page frames and columns, the white `panel`, `Avatar`, `Tags`, `PersonCard` and
 `textLink`. Their skeletons use the same classes, so a page and its skeleton cannot drift apart.
 
+Sign-in, account creation, a request's status and a staff invitation build from `components/auth/parts.tsx`: one
+card (`AuthCard`, 16px corners, as on the canvas's SignIn and Join), the step markers, `Callout` (a note with a line of
+the school's colour down its side), `Facts` and `AbilityList`.
+
 - Text links are in the school's colour (`primary`) and underline on hover, as on the canvas.
+- A form's result is an `Alert` (`components/ui/alert.tsx`): `error` for what went wrong, `success`, `warning` or
+  `info`. Errors are red for every school, never the school's colour.
 - A clickable card changes its border and adds `shadow-sm` on hover. It never moves.
 
 ## Loading and feedback
