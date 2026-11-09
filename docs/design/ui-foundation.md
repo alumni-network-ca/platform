@@ -86,7 +86,11 @@ are 16px on phones so iOS doesn't zoom. Use `tabular-nums` for counts, stats and
   (`DirectoryResults`); the page skeleton is for arriving on a page.
 - **Errors.** `not-found.tsx`, `forbidden.tsx` and `error.tsx` use `StatusPage`: what happened, what to do next. An
   error shows its reference (`digest`), never its message.
-- A destructive action asks for confirmation in an `AlertDialog`, never `window.confirm`.
+- **Confirmation.** An action that is hard to undo asks first in a `ConfirmDialog` (`components/ui/confirm-dialog.tsx`),
+  never `window.confirm`. Its title is the question, its button repeats the action ("Remove"), and Cancel comes first.
+  The one exception is the unsaved-changes prompt when leaving a form, which guards a navigation.
+- **Empty lists.** Use `EmptyState` (`components/EmptyState.tsx`): an icon, one line on what is missing, an optional hint
+  and the action that fills it.
 
 ## Motion
 
