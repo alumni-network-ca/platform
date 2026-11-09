@@ -7,6 +7,8 @@ import { useLanguage } from "@/components/LanguageProvider";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Footer, footerLink, form, label, muted, pageTitle, stack } from "@/components/auth/parts";
+import { Alert } from "@/components/ui/alert";
 
 // Secure email change: both the new and the current address get a code, and both codes are needed
 // (double_confirm_changes), so someone holding only an open session cannot move the account to their inbox.
@@ -86,11 +88,13 @@ export function EmailChange({ currentEmail }: { currentEmail: string }) {
 
   return (
     <>
-      <h1>{t.title}</h1>
-      <p className="muted">{t.current(step === "done" ? newEmail.trim() : currentEmail)}</p>
+      <div className={stack()}>
+        <h1 className={pageTitle}>{t.title}</h1>
+        <p className={muted}>{t.current(step === "done" ? newEmail.trim() : currentEmail)}</p>
+      </div>
       {step === "email" && (
-        <form onSubmit={start} className="authForm">
-          <label>
+        <form onSubmit={start} className={form()}>
+          <label className={label}>
             {t.newEmail}
             <Input
               type="email"
@@ -106,10 +110,8 @@ export function EmailChange({ currentEmail }: { currentEmail: string }) {
         </form>
       )}
       {step === "codes" && (
-        <form onSubmit={confirm} className="authForm">
-          <p className="notice" role="status">
-            {t.sent}
-          </p>
+        <form onSubmit={confirm} className={form()}>
+          <Alert role="status">{t.sent}</Alert>
           <CodeInput label={t.codeNew(newEmail.trim())} value={codeNew} onChange={setCodeNew} />
           <CodeInput
             label={t.codeCurrent(currentEmail)}
@@ -122,18 +124,20 @@ export function EmailChange({ currentEmail }: { currentEmail: string }) {
         </form>
       )}
       {step === "done" && (
-        <p className="notice" role="status">
+        <Alert variant="success" role="status">
           {t.done(newEmail.trim())}
-        </p>
+        </Alert>
       )}
       {message && (
-        <div className="notice" role="alert">
+        <Alert variant="error" role="alert">
           {message}
-        </div>
+        </Alert>
       )}
-      <div className="authFooter">
-        <Link href="/account/password">{t.password}</Link>
-      </div>
+      <Footer>
+        <Link className={footerLink} href="/account/password">
+          {t.password}
+        </Link>
+      </Footer>
     </>
   );
 }

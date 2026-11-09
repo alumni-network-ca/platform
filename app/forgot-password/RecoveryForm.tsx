@@ -6,6 +6,8 @@ import { sendPasswordReset, type RecoveryResult } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { BackArrow } from "@/components/icons";
+import { Footer, footerLink, form, label, muted, pageTitle, stack } from "@/components/auth/parts";
+import { Alert } from "@/components/ui/alert";
 
 export function RecoveryForm({ expired }: { expired: boolean }) {
   const { locale } = useLanguage();
@@ -16,21 +18,25 @@ export function RecoveryForm({ expired }: { expired: boolean }) {
   });
   return (
     <>
-      <h1>{fr ? "Choisissez un nouveau mot de passe" : "Set or reset your password"}</h1>
-      <p className="muted">
-        {fr
-          ? "Utilisez cette option si vous avez oublié votre mot de passe ou si vous vous connectiez auparavant avec un code."
-          : "Use this if you forgot your password or previously signed in with a code."}
-      </p>
+      <div className={stack()}>
+        <h1 className={pageTitle}>
+          {fr ? "Choisissez un nouveau mot de passe" : "Set or reset your password"}
+        </h1>
+        <p className={muted}>
+          {fr
+            ? "Utilisez cette option si vous avez oublié votre mot de passe ou si vous vous connectiez auparavant avec un code."
+            : "Use this if you forgot your password or previously signed in with a code."}
+        </p>
+      </div>
       {expired && (
-        <p className="notice" role="alert">
+        <Alert variant="error" role="alert">
           {fr
             ? "Ce lien est invalide ou a expiré. Demandez-en un nouveau."
             : "This reset link is invalid or expired. Request a new one."}
-        </p>
+        </Alert>
       )}
-      <form action={action} className="authForm">
-        <label>
+      <form action={action} className={form()}>
+        <label className={label}>
           {fr ? "Adresse courriel" : "Email address"}
           <Input name="email" type="email" autoComplete="email" maxLength={254} required />
         </label>
@@ -45,14 +51,14 @@ export function RecoveryForm({ expired }: { expired: boolean }) {
         </Button>
       </form>
       {result.sent && (
-        <p className="notice noticeGood" role="status">
+        <Alert variant="success" role="status">
           {fr
             ? "Si un compte existe pour cette adresse, vous recevrez un lien pour choisir un mot de passe."
             : "If an account exists for this email, you'll receive a link to choose a password."}
-        </p>
+        </Alert>
       )}
       {result.error && (
-        <p className="notice" role="alert">
+        <Alert variant="error" role="alert">
           {result.error === "email"
             ? fr
               ? "Entrez une adresse courriel valide."
@@ -64,14 +70,14 @@ export function RecoveryForm({ expired }: { expired: boolean }) {
               : fr
                 ? "Impossible d'envoyer le courriel. Réessayez."
                 : "We couldn't send the email. Please try again."}
-        </p>
+        </Alert>
       )}
-      <div className="authFooter">
-        <Link href="/login">
+      <Footer>
+        <Link className={footerLink} href="/login">
           <BackArrow />
           {fr ? "Se connecter" : "Sign in"}
         </Link>
-      </div>
+      </Footer>
     </>
   );
 }

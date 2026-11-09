@@ -33,9 +33,7 @@ export const panel = "rounded-lg border bg-card";
 /** A card or panel heading. */
 export const sectionTitle = "text-lg leading-snug font-bold";
 
-/** A link in running text or under a heading (the canvas draws them in the school's colour). */
-export const textLink =
-  "rounded-sm font-semibold text-primary underline-offset-2 outline-none hover:text-primary-hover hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/45";
+export { textLink } from "@/components/ui/text-link";
 
 /** A page's small uppercase line above its title. */
 export const eyebrow = "text-xs font-bold tracking-[0.08em] text-primary uppercase";

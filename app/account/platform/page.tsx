@@ -5,6 +5,8 @@ import { schoolBranding } from "@/lib/school";
 import { rootUrl } from "@/lib/tenant/address";
 import { getOrigin } from "@/lib/tenant/server";
 import { Button } from "@/components/ui/button";
+import { AuthCard, AuthPage, muted, pageTitle, stack } from "@/components/auth/parts";
+import { Alert } from "@/components/ui/alert";
 
 const time = (iso: string) =>
   new Date(iso).toLocaleString("en-CA", {
@@ -34,33 +36,33 @@ export default async function PlatformAdminHere() {
   const consoleUrl = rootUrl(await getOrigin(), `/console/support?school=${school.slug}`);
 
   return (
-    <main className="authPage">
-      <section className="authCard">
-        <h1>You are signed in as a platform admin</h1>
-        <p className="muted">
-          Platform admins don&apos;t see {shortName}&apos;s alumni data. To help the school, open
-          support access from the console: it is read-only, ends on its own, and the school&apos;s
-          admins see it in their audit log.
-        </p>
+    <AuthPage>
+      <AuthCard>
+        <div className={stack()}>
+          <h1 className={pageTitle}>You are signed in as a platform admin</h1>
+          <p className={muted}>
+            Platform admins don&apos;t see {shortName}&apos;s alumni data. To help the school, open
+            support access from the console: it is read-only, ends on its own, and the school&apos;s
+            admins see it in their audit log.
+          </p>
+        </div>
         {grant ? (
-          <p className="notice noticeGood" role="status">
+          <Alert variant="success" role="status">
             Your support access to {shortName} is open until {time(grant.expires_at)}.
-          </p>
+          </Alert>
         ) : (
-          <p className="notice" role="status">
-            You have no support access open for {shortName}.
-          </p>
+          <Alert role="status">You have no support access open for {shortName}.</Alert>
         )}
-        <div className="authForm">
+        <div className="flex flex-col items-start gap-3">
           <Button asChild size="lg" className="w-full">
             <a href={consoleUrl}>Open the console</a>
           </Button>
-          <Link className="textButton" href="/join">
-            I am a {shortName} graduate: join the network
-          </Link>
+          <Button asChild variant="link">
+            <Link href="/join">I am a {shortName} graduate: join the network</Link>
+          </Button>
           <SignOutButton />
         </div>
-      </section>
-    </main>
+      </AuthCard>
+    </AuthPage>
   );
 }

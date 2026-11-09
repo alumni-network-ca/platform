@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { acceptInvitation, type AcceptResult } from "./actions";
 import { Button } from "@/components/ui/button";
 import { leaveTo } from "@/lib/leave";
+import { Alert } from "@/components/ui/alert";
 
 export function AcceptForm({
   token,
@@ -24,13 +25,13 @@ export function AcceptForm({
     },
   );
   return (
-    <form action={action} className="authForm">
+    <form action={action} className="flex flex-col items-start gap-3">
       <input type="hidden" name="token" value={token} />
       <Button loading={pending}>{pending ? t.accepting : t.accept}</Button>
       {result.failed && (
-        <div className="notice" role="alert">
+        <Alert variant="error" role="alert" className="self-stretch">
           {t.failed}
-        </div>
+        </Alert>
       )}
     </form>
   );
