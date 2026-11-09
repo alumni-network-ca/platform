@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { translations } from "@/lib/i18n";
@@ -77,13 +77,28 @@ describe("RowMenu", () => {
     expect(screen.queryByRole("menu")).toBeNull();
   });
 
-  it("asks before a confirmed item and sends nothing when cancelled", async () => {
-    const confirm = vi.spyOn(window, "confirm").mockReturnValue(false);
+  it("asks in a dialog before a confirmed item and sends nothing when cancelled", async () => {
     const { action, button, user } = setup();
     await user.click(button);
     await user.click(screen.getByRole("menuitem", { name: "Revoke" }));
-    expect(confirm).toHaveBeenCalledWith("Revoke it?");
+    const dialog = await screen.findByRole("alertdialog", { name: "Revoke it?" });
+    expect(screen.queryByRole("menu")).toBeNull();
+    await user.click(within(dialog).getByRole("button", { name: t.cancel }));
+    await waitFor(() => expect(screen.queryByRole("alertdialog")).toBeNull());
     expect(action).not.toHaveBeenCalled();
+    expect(document.activeElement).toBe(button);
+  });
+
+  it("sends the confirmed item's fields once the dialog is confirmed", async () => {
+    const { action, button, user } = setup();
+    await user.click(button);
+    await user.click(screen.getByRole("menuitem", { name: "Revoke" }));
+    const dialog = await screen.findByRole("alertdialog", { name: "Revoke it?" });
+    await user.click(within(dialog).getByRole("button", { name: "Revoke" }));
+    await waitFor(() => expect(action).toHaveBeenCalledTimes(1));
+    const form = action.mock.calls[0]![1];
+    expect(Object.fromEntries(form.entries())).toEqual({ operation: "revoke", invitation: "i1" });
+    await waitFor(() => expect(document.activeElement).toBe(button));
   });
 
   it("shows a new invitation link with Copy link", async () => {

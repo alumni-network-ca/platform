@@ -9,25 +9,17 @@ export function ActionForm({
   children,
   label,
   t,
-  confirm,
   disabled = false,
 }: {
   action: (state: ActionResult, form: FormData) => Promise<ActionResult>;
   children?: React.ReactNode;
   label: string;
   t: AdminCopy;
-  confirm?: string;
   disabled?: boolean;
 }) {
   const [state, formAction, pending] = useActionState(action, { error: null });
   return (
-    <form
-      action={formAction}
-      className="adminStack"
-      onSubmit={(e) => {
-        if (confirm && !window.confirm(confirm)) e.preventDefault();
-      }}
-    >
+    <form action={formAction} className="adminStack">
       {children}
       {state.error && (
         <p role="alert" className="notice">

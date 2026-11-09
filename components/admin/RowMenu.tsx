@@ -1,9 +1,20 @@
 "use client";
-import { useActionState, useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
+import {
+  startTransition,
+  useActionState,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type KeyboardEvent,
+} from "react";
 import { errorMessage, type ActionResult, type AdminCopy } from "@/lib/admin/forms";
 import { createPortal } from "react-dom";
 import { CopyLink } from "./CopyLink";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Input } from "@/components/ui/input";
+import { menuItem, menuPanel } from "@/components/ui/menu";
+import { cn } from "@/lib/utils";
 import { Ellipsis, Loader2 } from "lucide-react";
 
 export type RowMenuItem = {
@@ -46,6 +57,8 @@ export function RowMenu({
 }) {
   const [state, formAction, pending] = useActionState(action, { error: null });
   const [open, setOpen] = useState(false);
+  // An item that asks first, waiting on the confirmation dialog.
+  const [confirming, setConfirming] = useState<RowMenuItem | null>(null);
   const [focusOn, setFocusOn] = useState<"first" | "last">("first");
   const [place, setPlace] = useState({ top: 0, left: 0 });
   const wrapper = useRef<HTMLDivElement>(null);
@@ -141,7 +154,8 @@ export function RowMenu({
       <button
         ref={button}
         type="button"
-        className="rowMenuButton"
+        data-ui
+        className="inline-flex size-9 cursor-pointer items-center justify-center rounded-md border border-transparent bg-transparent p-0 text-foreground outline-none hover:border-border hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-foreground disabled:cursor-progress disabled:opacity-60 aria-expanded:border-border aria-expanded:bg-accent"
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={open ? `${id}menu` : undefined}
@@ -163,7 +177,8 @@ export function RowMenu({
             id={`${id}menu`}
             role="menu"
             aria-label={label}
-            className="rowMenuPanel"
+            data-ui
+            className={cn("absolute z-50", menuPanel)}
             style={{ top: place.top, left: place.left, width: MENU_WIDTH }}
           >
             {items.map((item) => (
@@ -171,11 +186,10 @@ export function RowMenu({
                 key={item.key}
                 action={formAction}
                 onSubmit={(e) => {
-                  if (item.confirm && !window.confirm(item.confirm)) {
-                    e.preventDefault();
-                    return;
-                  }
                   setOpen(false);
+                  if (!item.confirm) return;
+                  e.preventDefault();
+                  setConfirming(item);
                 }}
               >
                 {Object.entries(item.fields).map(([name, value]) => (
@@ -185,7 +199,7 @@ export function RowMenu({
                   type="submit"
                   role="menuitem"
                   tabIndex={-1}
-                  className={`menuItem${item.danger ? " menuItemDanger" : ""}`}
+                  className={menuItem({ tone: item.danger ? "danger" : "default" })}
                 >
                   {item.label}
                 </button>
@@ -194,6 +208,22 @@ export function RowMenu({
           </div>,
           document.body,
         )}
+      <ConfirmDialog
+        open={confirming !== null}
+        onOpenChange={(open) => !open && setConfirming(null)}
+        title={confirming?.confirm ?? ""}
+        confirmLabel={confirming?.label ?? ""}
+        cancelLabel={t.cancel}
+        destructive={confirming?.danger}
+        returnFocus={button}
+        onConfirm={() => {
+          // The menu, and the item's form with it, closed when the dialog opened: send its fields directly.
+          const form = new FormData();
+          for (const [name, value] of Object.entries(confirming?.fields ?? {}))
+            form.set(name, value);
+          startTransition(() => formAction(form));
+        }}
+      />
       {state.error && (
         <p role="alert" className="notice rowMenuNotice">
           {errorMessage(state.error, t)}
