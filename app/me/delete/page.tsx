@@ -4,6 +4,7 @@ import {
   FormAlert,
   ProfileForm,
   SubmitButton,
+  field,
 } from "@/components/profile/ProfileForm";
 import { SignOutButton } from "@/components/SignOutButton";
 import { format, translations } from "@/lib/i18n";
@@ -11,6 +12,17 @@ import { REAUTH_MINUTES, signedInRecently } from "@/lib/profile/fields";
 import { loadMyProfile } from "@/lib/profile/server";
 import { deleteMyProfile } from "../actions";
 import { BackArrow } from "@/components/icons";
+import { frame, textLink } from "@/components/alumni/parts";
+import {
+  FormHead,
+  consentBox,
+  formBody,
+  formCard,
+  formFooter,
+  optionInput,
+} from "@/components/profile/FormCard";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 // Deleting this school's profile (PRF-06). It needs a recent sign-in (re-authentication); the action checks it
 // again. The login itself stays: it may belong to other schools, and DEC-08's purge job handles the rest.
@@ -22,45 +34,56 @@ export default async function DeletePage() {
   const recent = signedInRecently(me.user.last_sign_in_at, new Date());
 
   return (
-    <main className="onb meNarrow">
-      <section className="onbCard">
-        <div className="onbBody">
-          <div className="onbHead">
-            <Link className="meBackLink" href="/me">
-              <BackArrow />
-              {m.backToProfile}
-            </Link>
-            <h1>{format(m.deleteTitle, { school })}</h1>
-            <p>{format(m.deleteIntro, { school })}</p>
-          </div>
-          <ul className="meBullets">
+    <main data-ui className={cn(frame.form, frame.narrow)}>
+      <section className={formCard}>
+        <div className={formBody}>
+          <FormHead
+            above={
+              <Link className={cn(textLink, "text-base")} href="/me">
+                <BackArrow />
+                {m.backToProfile}
+              </Link>
+            }
+            title={format(m.deleteTitle, { school })}
+            intro={format(m.deleteIntro, { school })}
+          />
+          <ul className="list-disc pl-5 text-md leading-relaxed text-subtle-foreground">
             <li>{m.deleteErased}</li>
             <li>{m.deleteRequest}</li>
           </ul>
           {!recent && (
-            <div className="meReauth">
-              <h2>{m.reauthTitle}</h2>
+            <div className="flex flex-col items-start gap-2 rounded-lg bg-warning-soft px-4.5 py-4 text-warning">
+              <h2 className="text-[1rem] font-bold">{m.reauthTitle}</h2>
               <p>{format(m.reauthBody, { minutes: REAUTH_MINUTES })}</p>
-              <SignOutButton to="/login?next=%2Fme%2Fdelete" label={m.reauthButton} />
+              <SignOutButton
+                to="/login?next=%2Fme%2Fdelete"
+                label={m.reauthButton}
+                className={cn(buttonVariants({ variant: "secondary", size: "sm" }), "mt-1")}
+              />
             </div>
           )}
         </div>
         {recent && (
           <ProfileForm action={deleteMyProfile} t={t}>
-            <div className="onbBody meDeleteForm">
+            <div className={cn(formBody, "pt-0 max-[720px]:pt-0")}>
               <FormAlert />
-              <div className="onbField">
-                <label className="onbConsent">
-                  <input type="checkbox" name="confirm" aria-describedby="confirm-error" />
+              <div className={field}>
+                <label className={consentBox}>
+                  <input
+                    type="checkbox"
+                    name="confirm"
+                    aria-describedby="confirm-error"
+                    className={cn(optionInput, "mt-0.5")}
+                  />
                   <span>{m.deleteConfirm}</span>
                 </label>
                 <FieldErrorText name="confirm" id="confirm-error" />
               </div>
             </div>
-            <div className="onbFooter">
-              <Link className="onbBack" href="/me">
-                {m.cancel}
-              </Link>
+            <div className={formFooter}>
+              <Button asChild variant="secondary">
+                <Link href="/me">{m.cancel}</Link>
+              </Button>
               <SubmitButton label={m.deleteButton} danger />
             </div>
           </ProfileForm>

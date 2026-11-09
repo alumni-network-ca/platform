@@ -4,7 +4,30 @@ import { dateLabel } from "@/lib/admin/data";
 import { format, translations } from "@/lib/i18n";
 import { CHANNELS, initials, type Channel, repeatsCurrentRole } from "@/lib/profile/fields";
 import { loadMyProfile } from "@/lib/profile/server";
+import { cn } from "@/lib/utils";
 import { confirmStillAccurate } from "./actions";
+import {
+  Avatar,
+  Tags,
+  VisibilityDot,
+  frame,
+  mainColumn,
+  notice,
+  panel,
+  sideColumn,
+  textLink,
+} from "@/components/alumni/parts";
+import {
+  ProfileRow,
+  ProfileWho,
+  SectionHead,
+  bodyText,
+  emptyText,
+  profileSection,
+  sideBox,
+  sideBoxTitle,
+} from "@/components/alumni/profile";
+import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
 
 // The alumnus's own profile (PRF-02; design Me): what other alumni see, each section with its edit page, and
@@ -73,51 +96,47 @@ export default async function MyProfilePage({
     );
 
   return (
-    <main className="me">
-      <div className="meMain">
+    <main data-ui className={frame.split}>
+      <div className={mainColumn}>
         {(saved || confirmed) && (
-          <p className="notice noticeGood" role="status">
+          <p className={notice({ tone: "good" })} role="status">
             {confirmed ? t.confirmed : t.saved}
           </p>
         )}
-        <section className="meCard meHead">
-          <span className="meAvatar" aria-hidden="true">
-            {initials(p.preferred_name || p.first_name, p.last_name)}
-          </span>
-          <div className="meWho">
-            <h1>
-              {name} {me.maidenName && <span>({me.maidenName})</span>}
-            </h1>
-            {(p.job_title || p.employer) && <span>{join([p.job_title, p.employer])}</span>}
-            <span className="meSub">
-              {join([
-                format(o.classOf, { year: p.grad_year }),
-                join([p.city, p.country], ", "),
-                p.languages
-                  .map((code) => o.languageNames[code as keyof typeof o.languageNames] ?? code)
-                  .join(", "),
-              ])}
-            </span>
-          </div>
-          <Link className="onbBack" href="/me/edit/about">
-            {t.edit}
-          </Link>
+        <section className={cn(panel, "flex flex-wrap items-center gap-5 p-7 max-[720px]:p-5")}>
+          <Avatar initials={initials(p.preferred_name || p.first_name, p.last_name)} size="xl" />
+          <ProfileWho
+            className="flex-[1_1_260px]"
+            name={name}
+            schoolName={me.maidenName}
+            role={join([p.job_title, p.employer])}
+            details={join([
+              format(o.classOf, { year: p.grad_year }),
+              join([p.city, p.country], ", "),
+              p.languages
+                .map((code) => o.languageNames[code as keyof typeof o.languageNames] ?? code)
+                .join(", "),
+            ])}
+          />
+          <Button asChild variant="secondary">
+            <Link href="/me/edit/about">{t.edit}</Link>
+          </Button>
         </section>
 
         <Section title={t.about} edit="/me/edit/about" t={t}>
-          <p className="meText">{p.bio || <span className="meEmpty">{t.noBio}</span>}</p>
+          {p.bio ? <p className={bodyText}>{p.bio}</p> : <p className={emptyText}>{t.noBio}</p>}
         </Section>
 
         <Section title={t.career} edit="/me/edit/career" t={t}>
           {p.job_title || p.employer || me.experience.length ? (
             <>
               {(p.job_title || p.employer) && (
-                <Row title={join([p.job_title, p.employer])} sub={join([field, p.city])} />
+                <ProfileRow title={join([p.job_title, p.employer])} sub={join([field, p.city])} />
               )}
               {me.experience
                 .filter((role) => !repeatsCurrentRole(role, p))
                 .map((role, i) => (
-                  <Row
+                  <ProfileRow
                     key={i}
                     title={join([role.job_title, role.employer])}
                     sub={join([role.location, dates(role, me.locale, t.now)])}
@@ -125,63 +144,61 @@ export default async function MyProfilePage({
                 ))}
             </>
           ) : (
-            <p className="meEmpty">{t.noCareer}</p>
+            <p className={emptyText}>{t.noCareer}</p>
           )}
         </Section>
 
         <Section title={t.education} edit="/me/edit/education" t={t}>
           {me.education.map((row, i) => (
-            <Row
+            <ProfileRow
               key={i}
               title={row.school}
               sub={join([row.degree, row.field_of_study, row.graduation_year])}
             />
           ))}
           {me.education.length === 0 && (
-            <p className="meEmpty">{format(t.noEducation, { school })}</p>
+            <p className={emptyText}>{format(t.noEducation, { school })}</p>
           )}
-          <Row title={me.school.name} sub={format(o.classOf, { year: p.grad_year })} />
+          <ProfileRow title={me.school.name} sub={format(o.classOf, { year: p.grad_year })} />
         </Section>
 
         <Section title={t.openTo} edit="/me/edit/networking" t={t}>
           {offers.length ? (
-            <div className="meTags">
-              {offers.map((offer) => (
-                <span key={offer.key}>{offer.label}</span>
-              ))}
-            </div>
+            <Tags size="md" labels={offers.map((offer) => offer.label)} />
           ) : (
-            <p className="meEmpty">{t.noOffers}</p>
+            <p className={emptyText}>{t.noOffers}</p>
           )}
         </Section>
       </div>
 
-      <aside className="meSide">
-        <section className="meCard meBox">
-          <h2>{t.visibility}</h2>
-          <span className="meState">
-            <span
-              className={p.visibility === "members" ? "meDot meDotOn" : "meDot"}
-              aria-hidden="true"
-            />
+      <aside className={sideColumn}>
+        {/* The home page's "Change who can see me" link lands here. */}
+        <section className={sideBox} id="visibility">
+          <h2 className={sideBoxTitle}>{t.visibility}</h2>
+          <span className="flex items-center gap-2 font-semibold text-foreground">
+            <VisibilityDot on={p.visibility === "members"} />
             {p.visibility === "members" ? format(t.visibleMembers, { school }) : t.visibleHidden}
           </span>
-          <Link href="/me/visibility">{t.changeVisibility}</Link>
+          <Link className={textLink} href="/me/visibility">
+            {t.changeVisibility}
+          </Link>
         </section>
 
-        <section className="meCard meBox">
-          <h2>{t.reach}</h2>
+        <section className={sideBox}>
+          <h2 className={sideBoxTitle}>{t.reach}</h2>
           {shared.length === 0 && <span>{t.reachNone}</span>}
-          <ul className="meList">
+          <ul className="flex flex-col gap-1">
             {channels.map((c) => (
               <li key={c.type}>{reach(c.type, c.public)}</li>
             ))}
           </ul>
-          <Link href="/me/edit/contact">{t.editContact}</Link>
+          <Link className={textLink} href="/me/edit/contact">
+            {t.editContact}
+          </Link>
         </section>
 
-        <section className="meCard meBox">
-          <h2>{t.current}</h2>
+        <section className={sideBox}>
+          <h2 className={sideBoxTitle}>{t.current}</h2>
           <span>
             {p.last_confirmed_at
               ? format(t.confirmedOn, { date: dateLabel(p.last_confirmed_at, me.locale) })
@@ -189,7 +206,7 @@ export default async function MyProfilePage({
           </span>
           {due !== null && due <= soon && (
             <>
-              <span className="meWarn">
+              <span className="font-semibold text-warning">
                 {due <= soon - 30 * 24 * 60 * 60 * 1000
                   ? t.overdue
                   : format(t.dueOn, { date: dateLabel(p.confirmation_due_at, me.locale) })}
@@ -203,14 +220,19 @@ export default async function MyProfilePage({
           )}
         </section>
 
-        <section className="meCard meBox" id="your-data">
-          <h2>{t.data}</h2>
+        <section className={sideBox} id="your-data">
+          <h2 className={sideBoxTitle}>{t.data}</h2>
           {/* A POST, so a link scanner or a prefetch never makes an export (each one is audited). */}
           <form method="post" action="/me/export">
-            <button className="meLinkButton">{t.download}</button>
+            <Button variant="link">{t.download}</Button>
           </form>
-          <Link href="/account/email">{t.signIn}</Link>
-          <Link href="/me/delete" className="meDanger">
+          <Link className={textLink} href="/account/email">
+            {t.signIn}
+          </Link>
+          <Link
+            className={cn(textLink, "text-destructive hover:text-destructive-hover")}
+            href="/me/delete"
+          >
             {t.deleteAccount}
           </Link>
         </section>
@@ -231,24 +253,14 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="meCard meSection" aria-label={title}>
-      <div className="meSectionHead">
-        <h2>{title}</h2>
-        <Link href={edit}>
+    <section className={profileSection} aria-label={title}>
+      <SectionHead title={title}>
+        <Link className={cn(textLink, "text-base")} href={edit}>
           {t.edit}
           <span className="sr-only"> — {title}</span>
         </Link>
-      </div>
+      </SectionHead>
       {children}
     </section>
-  );
-}
-
-function Row({ title, sub }: { title: string; sub: string }) {
-  return (
-    <div className="meRow">
-      <span>{title}</span>
-      {sub && <span>{sub}</span>}
-    </div>
   );
 }

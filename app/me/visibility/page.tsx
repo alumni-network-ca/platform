@@ -8,6 +8,10 @@ import { initials } from "@/lib/profile/fields";
 import { loadMyProfile } from "@/lib/profile/server";
 import { saveVisibility } from "../actions";
 import { BackArrow } from "@/components/icons";
+import { frame, textLink } from "@/components/alumni/parts";
+import { FormHead } from "@/components/profile/FormCard";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 // Publishing or hiding the profile (PRF-05), with the onboarding step's choices and directory preview.
 export default async function VisibilityPage() {
@@ -34,8 +38,8 @@ export default async function VisibilityPage() {
     );
 
   return (
-    <main className="onb meNarrow">
-      <ProfileForm className="onbContents" action={saveVisibility} t={t}>
+    <main data-ui className={cn(frame.form, frame.narrow)}>
+      <ProfileForm className="contents" action={saveVisibility} t={t}>
         <PublishChoices
           t={t}
           school={school}
@@ -49,19 +53,21 @@ export default async function VisibilityPage() {
             tags: me.offerTypes.filter((o) => me.offers.includes(o.key)).map((o) => o.label),
           }}
           head={
-            <div className="onbHead">
-              <Link className="meBackLink" href="/me">
-                <BackArrow />
-                {m.backToProfile}
-              </Link>
-              <h1>{m.visibilityTitle}</h1>
-              <p>{p.visibility === "members" ? m.visibilityMembers : m.visibilityHidden}</p>
-            </div>
+            <FormHead
+              above={
+                <Link className={cn(textLink, "text-base")} href="/me">
+                  <BackArrow />
+                  {m.backToProfile}
+                </Link>
+              }
+              title={m.visibilityTitle}
+              intro={p.visibility === "members" ? m.visibilityMembers : m.visibilityHidden}
+            />
           }
           back={
-            <Link className="onbBack" href="/me">
-              {m.cancel}
-            </Link>
+            <Button asChild variant="secondary">
+              <Link href="/me">{m.cancel}</Link>
+            </Button>
           }
           settings={{
             saveLabel: m.saveVisibility,
