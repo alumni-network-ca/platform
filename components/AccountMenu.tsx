@@ -5,6 +5,22 @@ import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import type { NavAccount, NavItem } from "@/lib/auth/nav";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { menuChip, menuItem } from "@/components/ui/menu";
+import { cn } from "@/lib/utils";
+import { onBar } from "./navStyles";
+
+const AVATAR = {
+  alumni: "bg-pink",
+  staff: "bg-avatar-staff",
+  platform: "bg-platform-avatar",
+} as const;
+const STATUS = {
+  good: "text-success",
+  warn: "text-warning",
+  neutral: "text-subtle-foreground",
+  platform: "text-platform-mark",
+} as const;
+const avatar = "grid shrink-0 place-items-center rounded-full font-extrabold text-foreground";
 
 /**
  * The avatar button and the account menu (WAI-ARIA menu button pattern). Enter, Space or ArrowDown open it on
@@ -103,11 +119,14 @@ export function AccountMenu({
   }
 
   return (
-    <div className="acctWrap" ref={wrapper} onKeyDown={onKeyDown}>
+    <div ref={wrapper} onKeyDown={onKeyDown}>
       <button
         ref={button}
         type="button"
-        className="avatarButton"
+        className={cn(
+          "flex cursor-pointer items-center gap-1.5 rounded-full border border-white/30 bg-transparent py-[3px] pr-2 pl-[3px] text-white aria-expanded:border-white aria-expanded:bg-white/14",
+          onBar,
+        )}
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={open ? `${id}menu` : undefined}
@@ -115,8 +134,11 @@ export function AccountMenu({
       >
         {/* Named by hidden text, not aria-label: axe's label-content-name-mismatch would otherwise want the
             initials in the name. */}
-        <span className="srOnly">{account.buttonLabel}</span>
-        <span className={`navAvatar navAvatar-${account.avatar}`} aria-hidden="true">
+        <span className="sr-only">{account.buttonLabel}</span>
+        <span
+          className={cn(avatar, "size-[34px] text-[13px]", AVATAR[account.avatar])}
+          aria-hidden="true"
+        >
           {account.initials}
         </span>
         {open ? (
@@ -127,18 +149,24 @@ export function AccountMenu({
       </button>
 
       {open && (
-        <div className={`acctPanel${platform ? " acctPanelPlatform" : ""}`}>
-          <div className="acctHead">
+        // Anchored to the bar (the sticky header is its containing block), under the avatar.
+        <div className="absolute top-[calc(100%+4px)] right-6 max-h-[calc(100vh-90px)] w-80 max-w-[calc(100vw-32px)] overflow-y-auto rounded-xl border border-border bg-card text-foreground shadow-lg max-[720px]:right-4">
+          <div
+            className={cn(
+              "flex items-center gap-3 px-[18px] pt-[18px] pb-4",
+              platform ? "bg-platform-soft" : "bg-background",
+            )}
+          >
             <span
-              className={`navAvatar navAvatarLarge navAvatar-${account.avatar}`}
+              className={cn(avatar, "size-[46px] text-[16px]", AVATAR[account.avatar])}
               aria-hidden="true"
             >
               {account.initials}
             </span>
-            <span className="acctWho">
-              <span className="acctName">{account.name}</span>
-              <span className="acctEmail">{account.email}</span>
-              <span className={`acctStatus acctStatus-${account.status.tone}`}>
+            <span className="flex min-w-0 flex-col gap-0.5">
+              <span className="text-md font-extrabold">{account.name}</span>
+              <span className="truncate text-sm text-muted-foreground">{account.email}</span>
+              <span className={cn("text-xs font-bold", STATUS[account.status.tone])}>
                 {account.status.text}
               </span>
             </span>
@@ -148,11 +176,14 @@ export function AccountMenu({
               <div
                 key={section.key}
                 role="group"
-                className="menuGroup"
+                className="flex flex-col border-t border-border-subtle p-1.5"
                 aria-labelledby={section.title ? `${id}${section.key}` : undefined}
               >
                 {section.title && (
-                  <div id={`${id}${section.key}`} className="menuTitle">
+                  <div
+                    id={`${id}${section.key}`}
+                    className="px-3 pt-2 pb-1 text-[11px] font-extrabold tracking-[0.08em] text-muted-foreground uppercase"
+                  >
                     {section.title}
                   </div>
                 )}
@@ -172,13 +203,13 @@ function MenuItem({ item, onChoose }: { item: NavItem; onChoose: () => void }) {
   const props = {
     role: "menuitem",
     tabIndex: -1,
-    className: `menuItem${item.danger ? " menuItemDanger" : ""}`,
+    className: menuItem({ tone: item.danger ? "danger" : "default" }),
     onClick: onChoose,
   };
   const content = (
     <>
       <span>{item.label}</span>
-      {item.chip && <span className={`menuChip menuChip-${item.chip.kind}`}>{item.chip.text}</span>}
+      {item.chip && <span className={menuChip({ kind: item.chip.kind })}>{item.chip.text}</span>}
     </>
   );
   // Not built yet: stays in the arrow-key order (ARIA keeps disabled items focusable) but goes nowhere.
@@ -188,7 +219,7 @@ function MenuItem({ item, onChoose }: { item: NavItem; onChoose: () => void }) {
         role="menuitem"
         tabIndex={-1}
         aria-disabled="true"
-        className={`${props.className} menuItemSoon`}
+        className={menuItem({ tone: "soon" })}
       >
         {content}
       </div>

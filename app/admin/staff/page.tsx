@@ -53,7 +53,7 @@ export default async function Staff() {
               <th>{t.role}</th>
               <th>{t.status}</th>
               <th className="cellActions">
-                <span className="srOnly">{t.actions}</span>
+                <span className="sr-only">{t.actions}</span>
               </th>
             </tr>
           </thead>
@@ -119,7 +119,7 @@ export default async function Staff() {
                 <th>{t.role}</th>
                 <th>{t.status}</th>
                 <th className="cellActions">
-                  <span className="srOnly">{t.actions}</span>
+                  <span className="sr-only">{t.actions}</span>
                 </th>
               </tr>
             </thead>

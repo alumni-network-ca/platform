@@ -31,360 +31,6 @@ a {
   text-decoration: none;
   color: inherit;
 }
-/* Nav bar (docs/design/nav-bar.md): one bar on every page, drawn by components/NavBar.tsx. */
-.topnav {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  min-height: 66px;
-  box-sizing: border-box;
-  padding: 12px 32px;
-  background: var(--brand);
-  color: #fff;
-  box-shadow: 0 8px 24px rgba(5, 18, 49, 0.12);
-}
-.topnavPlatform {
-  background: #15172b;
-}
-/* On the dark bar only: the menu below it has its own focus style. */
-.navBrand:focus-visible,
-.navLinks a:focus-visible,
-.navLang:focus-visible,
-.navSignIn:focus-visible,
-.avatarButton:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 2px;
-}
-.navBrand {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  color: #fff;
-}
-.navBrandTile {
-  display: grid;
-  place-items: center;
-  flex: 0 0 42px;
-  width: 42px;
-  height: 42px;
-  box-sizing: border-box;
-  padding: 4px;
-  border-radius: var(--radius-lg);
-  background: #fff;
-  color: var(--ink);
-  object-fit: contain;
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-}
-.navBrandMark {
-  background: #4b2a8a;
-  color: #fff;
-}
-.navBrandText {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-.navBrandName {
-  font-size: 14px;
-  font-weight: 700;
-}
-.navBrandSub {
-  font-size: 9px;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  color: var(--on-brand-muted);
-}
-.navLinks {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  font-size: 14px;
-}
-.navLinks a {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 9px 14px;
-  border-radius: 999px;
-  color: var(--on-brand-soft);
-  font-weight: 500;
-}
-.navLinks a:hover {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.08);
-}
-.navLinks a[aria-current="page"] {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.12);
-  font-weight: 700;
-}
-.navBadge {
-  min-width: 20px;
-  box-sizing: border-box;
-  padding: 1px 6px;
-  border-radius: 999px;
-  background: #eab6ce;
-  color: var(--ink);
-  font-size: 11px;
-  font-weight: 800;
-  text-align: center;
-}
-.navRight {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.navLang {
-  padding: 8px 12px;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--on-brand-soft);
-  font: inherit;
-  font-size: 14px;
-  cursor: pointer;
-}
-.navLang:hover {
-  color: #fff;
-}
-.navSignIn {
-  padding: 9px 16px;
-  border: 1px solid var(--on-brand-line);
-  border-radius: var(--radius-md);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 700;
-}
-.rolePill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-}
-.rolePill-reviewer {
-  border: 1px solid var(--on-brand-pill-line);
-  color: var(--on-brand-pill);
-}
-.rolePill-school_admin {
-  background: #eab6ce;
-  color: var(--ink);
-}
-.rolePill-platform_admin {
-  background: #7b5bc4;
-  color: #fff;
-}
-.avatarButton {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 3px 8px 3px 3px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 999px;
-  background: transparent;
-  color: #fff;
-  cursor: pointer;
-}
-.avatarButton[aria-expanded="true"] {
-  border-color: #fff;
-  background: rgba(255, 255, 255, 0.14);
-}
-.navAvatar {
-  display: grid;
-  place-items: center;
-  flex: 0 0 34px;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  color: var(--ink);
-  font-size: 13px;
-  font-weight: 800;
-}
-.navAvatarLarge {
-  flex-basis: 46px;
-  width: 46px;
-  height: 46px;
-  font-size: 16px;
-}
-.navAvatar-alumni {
-  background: #eab6ce;
-}
-.navAvatar-staff {
-  background: #c9d6f2;
-}
-.navAvatar-platform {
-  background: #d9cdf3;
-}
-/* Anchored to the bar (the sticky header is its containing block), under the avatar. */
-.acctPanel {
-  position: absolute;
-  top: calc(100% + 4px);
-  right: 24px;
-  width: 320px;
-  max-width: calc(100vw - 32px);
-  max-height: calc(100vh - 90px);
-  overflow-y: auto;
-  box-sizing: border-box;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-lg);
-  color: var(--ink);
-}
-.acctHead {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 18px 18px 16px;
-  background: #f7f7f6;
-}
-.acctPanelPlatform .acctHead {
-  background: #f4f0fc;
-}
-.acctWho {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-.acctName {
-  font-size: 15px;
-  font-weight: 800;
-}
-.acctEmail {
-  overflow: hidden;
-  color: var(--text-muted);
-  font-size: 13px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.acctStatus {
-  font-size: 12px;
-  font-weight: 700;
-}
-.acctStatus-good {
-  color: var(--good);
-}
-.acctStatus-warn {
-  color: var(--warn);
-}
-.acctStatus-neutral {
-  color: var(--ink-soft);
-}
-.acctStatus-platform {
-  color: #4b2a8a;
-}
-.menuGroup {
-  display: flex;
-  flex-direction: column;
-  padding: 6px;
-  border-top: 1px solid var(--line-subtle);
-}
-.menuTitle {
-  padding: 8px 12px 4px;
-  color: var(--text-muted);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.menuItem {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  min-height: 40px;
-  box-sizing: border-box;
-  padding: 8px 12px;
-  border: 0;
-  border-radius: var(--radius-md);
-  background: transparent;
-  color: var(--ink);
-  font: inherit;
-  font-size: 14px;
-  font-weight: 500;
-  text-align: left;
-  cursor: pointer;
-}
-.menuItem:hover,
-.menuItem:focus {
-  background: var(--surface-hover);
-  outline: none;
-}
-.menuItem:focus-visible {
-  outline: 2px solid var(--ink);
-  outline-offset: -2px;
-}
-.menuItemDanger {
-  color: var(--danger);
-  font-weight: 700;
-}
-.menuChip {
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 700;
-  white-space: nowrap;
-}
-.menuChip-count {
-  background: var(--accent);
-  color: #fff;
-}
-.menuChip-info {
-  background: var(--line-subtle);
-  color: var(--ink-soft);
-}
-.menuChip-good {
-  background: var(--good-soft);
-  color: var(--good);
-}
-.menuChip-warn {
-  background: var(--warn-soft);
-  color: var(--warn);
-}
-.menuChip-soon {
-  background: var(--accent-chip);
-  color: var(--accent);
-}
-.menuItemSoon,
-.menuItemSoon:hover {
-  color: var(--text-muted);
-  cursor: default;
-}
-.srOnly {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-@media (max-width: 720px) {
-  .topnav {
-    padding: 12px 16px;
-  }
-  /* The links take their own row under the brand and the account button. */
-  .navLinks {
-    order: 3;
-    width: 100%;
-  }
-  .acctPanel {
-    right: 16px;
-  }
-}
-
 .hero {
   max-width: 1180px;
   margin: 0 auto;
@@ -1031,28 +677,6 @@ textarea:focus {
 }
 
 /* Console and school admin shell (docs/design/alumni-full-flow, S1–S2 and A1–A4) */
-.shell {
-  /* Below the nav bar, which the root layout renders. */
-  min-height: calc(100vh - 66px);
-  display: flex;
-  flex-direction: column;
-  background: var(--paper);
-  color: var(--ink);
-}
-.shellBody {
-  flex: 1;
-  display: flex;
-  flex-wrap: wrap;
-}
-.shellMain {
-  flex: 999 1 640px;
-  min-width: 0;
-  box-sizing: border-box;
-  padding: 28px 36px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
 .shellTitle {
   display: flex;
   flex-wrap: wrap;
@@ -1175,45 +799,6 @@ textarea:focus {
   gap: 8px;
   white-space: normal;
 }
-.rowMenuButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border: 1px solid transparent;
-  border-radius: var(--radius-md);
-  background: transparent;
-  color: var(--ink);
-  cursor: pointer;
-}
-.rowMenuButton:hover,
-.rowMenuButton[aria-expanded="true"] {
-  background: var(--surface-hover);
-  border-color: var(--line);
-}
-.rowMenuButton:focus-visible {
-  outline: 2px solid var(--ink);
-  outline-offset: 1px;
-}
-.rowMenuButton:disabled {
-  opacity: 0.6;
-  cursor: progress;
-}
-.rowMenuPanel {
-  position: absolute;
-  z-index: 50;
-  box-sizing: border-box;
-  padding: 6px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-  text-align: left;
-}
-.rowMenuPanel form {
-  margin: 0;
-}
 .rowMenuNotice {
   max-width: 280px;
   text-align: left;
@@ -1334,11 +919,6 @@ textarea:focus {
   gap: 8px;
 }
 
-@media (max-width: 700px) {
-  .shellMain {
-    padding: 20px 16px;
-  }
-}
 .formStack {
   display: flex;
   flex-direction: column;
@@ -1360,42 +940,6 @@ textarea:focus {
   overflow-wrap: anywhere;
 }
 
-.adminNav {
-  flex: 0 0 232px;
-  width: 232px;
-  background: #fff;
-  border-right: 1px solid var(--line);
-  padding: 20px 12px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.adminNav a {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 12px;
-  border-radius: var(--radius-md);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--ink);
-  text-decoration: none;
-}
-.adminNav a[aria-current="page"] {
-  background: var(--accent-pale);
-  font-weight: 700;
-}
-.adminBadge {
-  min-width: 22px;
-  padding: 2px 7px;
-  border-radius: 999px;
-  background: var(--accent);
-  color: #fff;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 700;
-}
 .adminHero {
   display: flex;
   flex-wrap: wrap;
@@ -1488,12 +1032,6 @@ textarea:focus {
   gap: 14px;
 }
 @media (max-width: 800px) {
-  .adminNav {
-    flex: 1 0 100%;
-    width: 100%;
-    border-right: 0;
-    border-bottom: 1px solid var(--line);
-  }
   .adminDetails {
     grid-template-columns: 1fr;
     gap: 6px;
@@ -2304,22 +1842,6 @@ a.onbStep:hover {
 }
 
 /* Alumni account creation and admission (approved Alumni canvas, November 2026). */
-.navJoin {
-  padding: 10px 17px;
-  border-radius: var(--radius-md);
-  background: var(--accent);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 700;
-  white-space: nowrap;
-}
-.navJoin:hover {
-  background: var(--accent-dark);
-}
-.navJoin:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 3px;
-}
 .joinPage {
   width: 100%;
   max-width: 1112px;
@@ -2670,9 +2192,6 @@ a.onbStep:hover {
   }
   .signupPasswords {
     grid-template-columns: minmax(0, 1fr);
-  }
-  .navRight {
-    margin-left: auto;
   }
 }
 

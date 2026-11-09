@@ -21,10 +21,11 @@
  * Preflight resets margins, list styles, form controls and line height on every element. The legacy screens rely on
  * the browser's defaults, so outside a components/ui part (they all carry data-slot) the properties preflight sets go
  * back to the browser's values. Rules in the legacy layer and Tailwind classes still apply on top. Not `all: revert`:
- * that would also drop SVG fill/stroke and image width/height attributes. Remove this layer with legacy.css.
+ * that would also drop SVG fill/stroke and image width/height attributes. A screen rebuilt with Tailwind marks its root
+ * with data-ui, so it is drawn as it will be once this layer is gone. Remove this layer with legacy.css.
  */
 @layer compat {
-  :where(*):not([data-slot], [data-slot] *) {
+  :where(*):not([data-slot], [data-slot] *, [data-ui], [data-ui] *) {
     margin: revert;
     padding: revert;
     border: revert;
@@ -44,7 +45,7 @@
     resize: revert;
     tab-size: revert;
   }
-  :where(*):not([data-slot], [data-slot] *)::placeholder {
+  :where(*):not([data-slot], [data-slot] *, [data-ui], [data-ui] *)::placeholder {
     color: revert;
     opacity: revert;
   }
@@ -99,6 +100,14 @@
   --warn-soft: #fff4dc;
   --info: #123e7a;
   --info-soft: #e3eefc;
+
+  /* The platform console's own colours (design S1–S2): the same for every school. */
+  --platform: #15172b;
+  --platform-mark: #4b2a8a;
+  --platform-pill: #7b5bc4;
+  --platform-avatar: #d9cdf3;
+  --platform-soft: #f4f0fc;
+  --avatar-staff: #c9d6f2;
 }
 
 /*
@@ -145,6 +154,27 @@
   --color-border-strong: var(--line-strong);
   --color-input: var(--input-line);
   --color-ring: var(--accent-ring);
+  --color-primary-chip: var(--accent-chip);
+  --color-primary-tint: var(--accent-soft);
+  --color-pink: var(--pink);
+
+  /* Text, lines and pills on the brand colour (the nav bar, banners), set per school with the brand (lib/theme.ts). */
+  --color-on-brand-soft: var(--on-brand-soft);
+  --color-on-brand-muted: var(--on-brand-muted);
+  --color-on-brand-faint: var(--on-brand-faint);
+  --color-on-brand-line: var(--on-brand-line);
+  --color-on-brand-accent: var(--on-brand-accent);
+  --color-on-brand-pill: var(--on-brand-pill);
+  --color-on-brand-pill-line: var(--on-brand-pill-line);
+  --color-on-deep-soft: var(--on-deep-soft);
+  --color-on-deep-muted: var(--on-deep-muted);
+
+  --color-platform: var(--platform);
+  --color-platform-mark: var(--platform-mark);
+  --color-platform-pill: var(--platform-pill);
+  --color-platform-avatar: var(--platform-avatar);
+  --color-platform-soft: var(--platform-soft);
+  --color-avatar-staff: var(--avatar-staff);
 }
 
 @theme {
@@ -207,6 +237,12 @@
 @layer base {
   :root {
     color-scheme: light;
+  }
+  /* A bare `border` class draws in the line colour (Tailwind 4's default is the text colour), as shadcn expects. */
+  *,
+  ::before,
+  ::after {
+    border-color: var(--color-border);
   }
 }
 

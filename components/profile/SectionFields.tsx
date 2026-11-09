@@ -207,7 +207,7 @@ export function SectionFields({ section, me }: { section: Section; me: MyProfile
                     defaultChecked={saved?.is_public ?? false}
                   />
                   {t.showOnProfile}
-                  <span className="srOnly"> ({t.channels[type]})</span>
+                  <span className="sr-only"> ({t.channels[type]})</span>
                 </label>
               </div>
             );

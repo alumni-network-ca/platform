@@ -67,7 +67,7 @@ export default async function Home() {
                   <span className="censored" aria-hidden="true">
                     {fr ? "Nom du membre" : "Member name"}
                   </span>
-                  <span className="srOnly">Name visible to members</span>
+                  <span className="sr-only">Name visible to members</span>
                 </strong>
                 <div className="personMeta">{role}</div>
               </div>

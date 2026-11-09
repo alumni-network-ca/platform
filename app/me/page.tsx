@@ -236,7 +236,7 @@ function Section({
         <h2>{title}</h2>
         <Link href={edit}>
           {t.edit}
-          <span className="srOnly"> — {title}</span>
+          <span className="sr-only"> — {title}</span>
         </Link>
       </div>
       {children}
