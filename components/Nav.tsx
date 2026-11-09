@@ -22,7 +22,13 @@ type Reads = Omit<NavInput, "t" | "locale" | "origin">;
 export async function Nav() {
   const [school, locale, origin] = await Promise.all([getSchool(), getServerLocale(), getOrigin()]);
   const reads = school ? await readSchool() : await readRoot();
-  return <NavBar model={navModel({ ...reads, t: translations[locale].nav, locale, origin })} />;
+  const t = translations[locale];
+  return (
+    <NavBar
+      model={navModel({ ...reads, t: t.nav, locale, origin })}
+      platformLandingLabel={school ? undefined : t.schoolsLanding.label}
+    />
+  );
 }
 
 async function read<T>(query: PromiseLike<{ data: T; error: { message: string } | null }>) {
