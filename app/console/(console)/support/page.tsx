@@ -23,7 +23,7 @@ export default async function SupportPage({
 }: {
   searchParams: Promise<{ school?: string }>;
 }) {
-  const { supabase, user } = await requirePlatformAdmin("/console/support");
+  const { supabase, user } = await requirePlatformAdmin("/support");
   const { school: preselect } = await searchParams;
   const [schools, grants, admins] = await Promise.all([
     supabase.from("institutions").select("id, name, slug").order("name"),

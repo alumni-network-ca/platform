@@ -1,6 +1,6 @@
-// Links between the root site (the console) and the schools' addresses, on the deployment that served the
+// Links between the root site (the landing page), the console (admin.) and the schools' addresses, on the deployment that served the
 // request. Pure, so it is unit-tested; lib/tenant/server.ts reads the request's origin.
-import { PREVIEW_COOKIE, PREVIEW_ROOT } from "@/config/tenancy";
+import { ADMIN_LABEL, PREVIEW_COOKIE, PREVIEW_ROOT } from "@/config/tenancy";
 
 export type Origin = {
   protocol: "http:" | "https:";
@@ -33,7 +33,12 @@ export function schoolUrl(origin: Origin, slug: string, path = "/"): string {
   return `${origin.protocol}//${slug}.${origin.rootDomain}${port(origin.host)}${path}`;
 }
 
-/** The root site: https://alumninetwork.ca/path, or ?tenant=root on a PR preview. */
+/** The platform console: https://admin.alumninetwork.ca/path, or ?tenant=admin on a PR preview. */
+export function adminUrl(origin: Origin, path = "/"): string {
+  return schoolUrl(origin, ADMIN_LABEL, path);
+}
+
+/** The root site (landing page): https://alumninetwork.ca/path, or ?tenant=root on a PR preview. */
 export function rootUrl(origin: Origin, path = "/"): string {
   if (usesTenantSelector(origin))
     return `${origin.protocol}//${origin.host}${withTenant(path, PREVIEW_ROOT)}`;

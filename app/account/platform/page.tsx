@@ -2,7 +2,7 @@ import Link from "next/link";
 import { SignOutButton } from "@/components/SignOutButton";
 import { requireAccess } from "@/lib/auth/account";
 import { schoolBranding } from "@/lib/school";
-import { rootUrl } from "@/lib/tenant/address";
+import { adminUrl } from "@/lib/tenant/address";
 import { getOrigin } from "@/lib/tenant/server";
 import { Button } from "@/components/ui/button";
 import { AuthCard, AuthPage, muted, pageTitle, stack } from "@/components/auth/parts";
@@ -33,7 +33,7 @@ export default async function PlatformAdminHere() {
     .order("expires_at", { ascending: false })
     .limit(1)
     .maybeSingle();
-  const consoleUrl = rootUrl(await getOrigin(), `/console/support?school=${school.slug}`);
+  const consoleUrl = adminUrl(await getOrigin(), `/support?school=${school.slug}`);
 
   return (
     <AuthPage>

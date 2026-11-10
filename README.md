@@ -36,11 +36,11 @@ npm install                      # also installs the pre-commit hook
 npm run dev                      # runs on the cloud dev database, no setup needed
 ```
 
-Open **http://herzliah.localhost:3000**. The subdomain selects the school: `test-school.localhost:3000` is the second school, and plain `localhost:3000` is the root site (the page for schools). A session belongs to one school's address, so signing in at one does not sign you in at the other.
+Open **http://herzliah.localhost:3000**. The subdomain selects the school: `test-school.localhost:3000` is the second school, plain `localhost:3000` is the root site (the landing page), and `admin.localhost:3000` is the platform console. A session belongs to one school's address, so signing in at one does not sign you in at the other.
 
 On the cloud dev database, sign-in codes go out through Supabase's built-in email, which only delivers to the project team's addresses and a few times an hour; `.test` addresses never receive one. Sign in with your own team address, or choose "Sign in with a password" on an account that has one (set it at `/account/password`).
 
-The platform console is at **http://localhost:3000/console** (the root site has its own sign-in): sign in as a platform admin to list, create and suspend schools, invite their first school admin and open support access. On a PR preview, add `?tenant=root` to reach it.
+The platform console is at **http://admin.localhost:3000** (it has its own sign-in): sign in as a platform admin to list, create and suspend schools, invite their first school admin and open support access. On a PR preview, add `?tenant=admin` to reach it (`?tenant=root` is the landing page). On staging it is `admin.staging.alumninetwork.ca`.
 
 A migration on your branch reaches the cloud dev database only after the merge into `dev`. Until then, run the app on the local stack: start it, then copy `.env.example` to `.env.local` with the values from `supabase status -o env` (`.env.local` overrides `.env.development`).
 

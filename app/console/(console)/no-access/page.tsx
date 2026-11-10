@@ -6,11 +6,11 @@ import { AuthCard, AuthPage, Footer, muted, pageTitle, stack } from "@/component
 
 // Shown to a signed-in account that is not a platform admin.
 export default async function NoAccessPage() {
-  if (await getPlatformAdmin()) redirect("/console");
+  if (await getPlatformAdmin()) redirect("/");
   const {
     data: { user },
   } = await (await createClient()).auth.getUser();
-  if (!user) redirect("/login?next=%2Fconsole");
+  if (!user) redirect("/login?next=%2F");
   return (
     <AuthPage>
       <AuthCard>

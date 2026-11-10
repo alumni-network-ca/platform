@@ -62,7 +62,7 @@ export function SignInForm({
       }
       window.location.assign(
         audience === "console"
-          ? (next ?? "/console")
+          ? (next ?? "/")
           : next
             ? "/auth/home?next=" + encodeURIComponent(next)
             : "/auth/home",

@@ -6,12 +6,13 @@
 //   alumninetwork.ca, www.alumninetwork.ca, localhost:3000 → the root site (for schools, console)
 //   <anything>.vercel.app on a PR preview → the `tenant` cookie ("root": the root site), else the preview default school
 //   anything else                         → no tenant (404)
-import { PREVIEW_ROOT } from "@/config/tenancy";
+import { ADMIN_LABEL, PREVIEW_ROOT } from "@/config/tenancy";
 
 // Same rule as the institutions.slug check constraint.
 const SLUG = /^[a-z0-9-]{2,40}$/;
 
-export type Tenant = { kind: "school"; slug: string } | { kind: "root" } | { kind: "none" };
+export type Tenant =
+  { kind: "school"; slug: string } | { kind: "admin" } | { kind: "root" } | { kind: "none" };
 
 export type TenantInput = {
   host: string | null;
@@ -38,10 +39,12 @@ export function resolveTenant({
   if (hostname === root || hostname === `www.${root}`) return { kind: "root" };
   if (hostname.endsWith(`.${root}`)) {
     const label = hostname.slice(0, -(root.length + 1));
+    if (label === ADMIN_LABEL) return { kind: "admin" };
     return isSlug(label) ? { kind: "school", slug: label } : { kind: "none" };
   }
   if (isPreview) {
     if (previewCookie === PREVIEW_ROOT) return { kind: "root" };
+    if (previewCookie === ADMIN_LABEL) return { kind: "admin" };
     const slug = isSlug(previewCookie) ? previewCookie : previewDefault;
     return isSlug(slug) ? { kind: "school", slug } : { kind: "root" };
   }

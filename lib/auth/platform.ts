@@ -4,7 +4,7 @@ import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 
 /**
- * The signed-in platform admin on the root domain (ADR 0005), or null when the visitor is signed out or is not
+ * The signed-in platform admin on the console's address (admin.) (ADR 0005), or null when the visitor is signed out or is not
  * one. Platform admins are listed in platform_admins; the database checks it again in every console RPC.
  */
 export const getPlatformAdmin = cache(async () => {
@@ -26,5 +26,5 @@ export async function requirePlatformAdmin(path: string) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  redirect(user ? "/console/no-access" : `/login?next=${encodeURIComponent(path)}`);
+  redirect(user ? "/no-access" : `/login?next=${encodeURIComponent(path)}`);
 }

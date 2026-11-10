@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getServerTranslations } from "@/lib/i18n-server";
+import { adminUrl } from "@/lib/tenant/address";
+import { getOrigin } from "@/lib/tenant/server";
 import { ContactForm } from "./ContactForm";
 import { ContactLink } from "./ContactLink";
 import styles from "./landing.module.css";
@@ -88,7 +90,11 @@ export default async function RootSitePage({
 }: {
   searchParams: Promise<{ inquiry?: string | string[] }>;
 }) {
-  const [{ locale, t }, query] = await Promise.all([getServerTranslations(), searchParams]);
+  const [{ locale, t }, query, origin] = await Promise.all([
+    getServerTranslations(),
+    searchParams,
+    getOrigin(),
+  ]);
   const copy = t.schoolsLanding;
   const inquiry = query.inquiry === "quote" ? "quote" : "demo";
   const features = [
@@ -202,7 +208,8 @@ export default async function RootSitePage({
       <footer className={styles.footer}>
         <div className={styles.container}>
           <strong>{t.nav.platformName}</strong>
-          <Link href="/console">{t.nav.platformTagline}</Link>
+          {/* The console lives on admin.<root> (ADR 0001): a plain link, since it leaves this address. */}
+          <a href={adminUrl(origin)}>{t.nav.platformTagline}</a>
         </div>
       </footer>
     </div>

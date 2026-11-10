@@ -1,5 +1,5 @@
 import "server-only";
-import { PREVIEW_COOKIE, PREVIEW_ROOT } from "@/config/tenancy";
+import { ADMIN_LABEL, PREVIEW_COOKIE } from "@/config/tenancy";
 import { usesTenantSelector } from "@/lib/tenant/address";
 import { getOrigin, getSchool } from "@/lib/tenant/server";
 import { signupDestination } from "./next";
@@ -11,7 +11,6 @@ export async function authEmailRedirect(kind: "signup" | "recovery", next?: stri
   const path = `/auth/confirm?flow=${kind}${kind === "signup" && destination !== "/join" ? `&next=${encodeURIComponent(destination)}` : ""}`;
   // Auth must return to the host that owns the session cookies, including temporary custom domains.
   const url = new URL(path, `${origin.protocol}//${origin.host}`);
-  if (usesTenantSelector(origin))
-    url.searchParams.set(PREVIEW_COOKIE, school?.slug ?? PREVIEW_ROOT);
+  if (usesTenantSelector(origin)) url.searchParams.set(PREVIEW_COOKIE, school?.slug ?? ADMIN_LABEL);
   return url.toString();
 }

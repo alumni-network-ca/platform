@@ -14,11 +14,7 @@ export default async function ResetPasswordPage() {
   return (
     <AuthPage>
       <AuthCard>
-        <PasswordForm
-          email={user.email ?? ""}
-          recovery
-          continueTo={school ? "/auth/home" : "/console"}
-        />
+        <PasswordForm email={user.email ?? ""} recovery continueTo={school ? "/auth/home" : "/"} />
       </AuthCard>
     </AuthPage>
   );

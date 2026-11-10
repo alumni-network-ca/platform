@@ -72,7 +72,7 @@ export function StatusForm({ slug, suspended }: { slug: string; suspended: boole
       )}
       <div className="formActions">
         <Button asChild variant="secondary">
-          <Link href={`/console/schools/${slug}`}>Cancel</Link>
+          <Link href={`/schools/${slug}`}>Cancel</Link>
         </Button>
         <Button
           variant={suspended ? "default" : "destructive"}

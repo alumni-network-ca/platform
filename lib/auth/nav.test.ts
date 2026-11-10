@@ -433,7 +433,7 @@ describe("navModel", () => {
   });
 
   describe("platform admin", () => {
-    it("on the root domain: console links, every school and its grant", () => {
+    it("on the console's address: console links, every school and its grant", () => {
       const model = at({
         school: null,
         state: null,
@@ -441,10 +441,10 @@ describe("navModel", () => {
         platform: platformAdmin,
       });
       expect(model.theme).toBe("platform");
-      expect(model.brand.href).toBe("/console");
+      expect(model.brand.href).toBe("/");
       expect(links(model)).toEqual([
-        ["schools", "/console"],
-        ["support", "/console/support"],
+        ["schools", "/"],
+        ["support", "/support"],
         ["health", "#"],
       ]);
       expect(model.links[1]?.badge).toEqual({ count: 1, label: "1 active" });
@@ -469,7 +469,7 @@ describe("navModel", () => {
         chip: { text: "Grant · 2 h left", kind: "good" },
       });
       expect(item(model, "school:maple-ridge")).toMatchObject({
-        href: "/console/support?school=maple-ridge",
+        href: "/support?school=maple-ridge",
         chip: { text: "Needs a grant", kind: "info" },
       });
       expect(model.signOutTo).toBe("/login");
@@ -487,10 +487,10 @@ describe("navModel", () => {
         },
       });
       expect(model.theme).toBe("platform");
-      expect(model.brand.href).toBe("https://alumninetwork.ca/console");
+      expect(model.brand.href).toBe("https://admin.alumninetwork.ca/");
       expect(links(model)).toEqual([
-        ["schools", "https://alumninetwork.ca/console"],
-        ["support", "https://alumninetwork.ca/console/support"],
+        ["schools", "https://admin.alumninetwork.ca/"],
+        ["support", "https://admin.alumninetwork.ca/support"],
         ["health", "#"],
       ]);
       expect(model.links.every((l) => l.activeOn.length === 0)).toBe(true);
