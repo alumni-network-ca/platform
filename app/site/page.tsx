@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getServerTranslations } from "@/lib/i18n-server";
 import { ContactForm } from "./ContactForm";
+import { ContactLink } from "./ContactLink";
 import styles from "./landing.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -111,12 +112,12 @@ export default async function RootSitePage({
             </h1>
             <p className={styles.lede}>{copy.intro}</p>
             <div className={styles.actions}>
-              <Link className={styles.primary} href="/?inquiry=demo#contact">
+              <ContactLink className={styles.primary} inquiry="demo">
                 {copy.demo} <Icon name="arrow" />
-              </Link>
-              <Link className={styles.secondary} href="/?inquiry=quote#contact">
+              </ContactLink>
+              <ContactLink className={styles.secondary} inquiry="quote">
                 {copy.quote}
-              </Link>
+              </ContactLink>
             </div>
             <p className={styles.privacy}>
               <Icon name="lock" /> {copy.private}
@@ -178,7 +179,12 @@ export default async function RootSitePage({
           </ol>
         </section>
 
-        <section className={styles.invite} id="contact" aria-labelledby="landing-invite">
+        <section
+          className={styles.invite}
+          id="contact"
+          aria-labelledby="landing-invite"
+          tabIndex={-1}
+        >
           <div className={styles.container}>
             <div className={styles.inviteIcon}>
               <Icon name="school" />
