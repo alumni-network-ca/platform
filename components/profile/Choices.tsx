@@ -2,8 +2,23 @@
 
 import { useEffect, useRef, useState } from "react";
 import { format } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 import type { Visibility } from "@/lib/profile/fields";
-import { FieldErrorText, FormAlert, SubmitButton, type ProfileCopy } from "./ProfileForm";
+import { Avatar, Tags } from "@/components/alumni/parts";
+import {
+  FormProgress,
+  OptionText,
+  consentBox,
+  fieldset as fieldsetClass,
+  formBody,
+  formCard,
+  formFooter,
+  legend,
+  optionCard,
+  optionGrid,
+  optionInput,
+} from "./FormCard";
+import { FieldErrorText, FormAlert, SubmitButton, field, type ProfileCopy } from "./ProfileForm";
 
 /** The "Open to" options, with a live count of what is ticked. */
 export function OfferChoices({
@@ -24,25 +39,26 @@ export function OfferChoices({
   return (
     <fieldset
       ref={fieldset}
-      className="onbFieldset"
+      className={fieldsetClass}
       onChange={(event) => setCount(event.currentTarget.querySelectorAll("input:checked").length)}
     >
-      <legend>
-        {t.openTo} <small>{format(t.selected, { count })}</small>
+      <legend className={legend}>
+        {t.openTo}{" "}
+        <span className="font-normal text-muted-foreground tabular-nums">
+          {format(t.selected, { count })}
+        </span>
       </legend>
-      <div className="onbOptions">
+      <div className={optionGrid}>
         {options.map((option) => (
-          <label key={option.key} className="onbOption">
+          <label key={option.key} className={optionCard}>
             <input
               type="checkbox"
               name="offers"
               value={option.key}
               defaultChecked={selected.includes(option.key)}
+              className={optionInput}
             />
-            <span className="onbOptionText">
-              <strong>{option.label}</strong>
-              {option.hint && <span>{option.hint}</span>}
-            </span>
+            <OptionText title={option.label} hint={option.hint} />
           </label>
         ))}
       </div>
@@ -107,52 +123,46 @@ export function PublishChoices({
     ["members", format(t.visMembers, { school }), t.visMembersHint],
     ["hidden", t.visHidden, t.visHiddenHint],
   ];
-  const shown = preview.tags.slice(0, 2);
-  const more = preview.tags.length - shown.length;
   const previewTitle = members ? t.previewMembers : t.previewHidden;
   return (
-    <>
-      <section className="onbCard" ref={card}>
-        {progress !== undefined && (
-          <div className="onbProgress">
-            <span style={{ width: `${progress}%` }} />
-          </div>
-        )}
-        <div className="onbBody">
+    // The card and its preview share one column, so the preview lines up under the card beside the onboarding steps.
+    <div className="flex min-w-0 flex-[999_1_560px] flex-col gap-7">
+      <section className={cn(formCard, "flex-none")} ref={card}>
+        {progress !== undefined && <FormProgress value={progress} />}
+        <div className={formBody}>
           {head}
           <FormAlert />
-          <fieldset className="onbFieldset">
-            <legend>{t.visibility}</legend>
+          <fieldset className={fieldsetClass}>
+            <legend className={legend}>{t.visibility}</legend>
             {choices.map(([value, label, hint]) => (
-              <label key={value} className="onbOption">
+              <label key={value} className={optionCard}>
                 <input
                   type="radio"
                   name="visibility"
                   value={value}
                   defaultChecked={initial === value}
                   onChange={() => setVisibility(value)}
+                  className={optionInput}
                 />
-                <span className="onbOptionText">
-                  <strong>{label}</strong>
-                  <span>{hint}</span>
-                </span>
+                <OptionText title={label} hint={hint} />
               </label>
             ))}
           </fieldset>
-          <div className="onbField" hidden={!askConsent}>
-            <label className="onbConsent">
+          <div className={field} hidden={!askConsent}>
+            <label className={consentBox}>
               <input
                 type="checkbox"
                 name="consent"
                 onChange={(event) => setConsent(event.target.checked)}
                 aria-describedby="consent-error"
+                className={cn(optionInput, "mt-0.5")}
               />
               <span>{consentText}</span>
             </label>
             <FieldErrorText name="consent" id="consent-error" />
           </div>
         </div>
-        <div className="onbFooter">
+        <div className={formFooter}>
           {back}
           <SubmitButton
             label={
@@ -168,32 +178,29 @@ export function PublishChoices({
           />
         </div>
       </section>
-      <aside className="onbPreview" aria-label={previewTitle}>
-        <div className="onbPreviewInner">
-          <span className="onbPreviewTitle" aria-hidden="true">
-            {previewTitle}
+      <aside className="flex flex-col gap-2.5" aria-label={previewTitle}>
+        <span
+          className="text-xs font-bold tracking-[0.08em] text-muted-foreground uppercase"
+          aria-hidden="true"
+        >
+          {previewTitle}
+        </span>
+        {/* Faded while the profile stays hidden: no one will see this card. */}
+        <div
+          className="flex flex-wrap items-center gap-4 rounded-lg border bg-card px-5 py-4.5 transition-opacity data-[hidden=true]:opacity-45"
+          data-hidden={!members}
+        >
+          <Avatar initials={preview.initials} size="lg" />
+          <span className="flex flex-[1_1_240px] flex-col gap-[3px] text-base text-subtle-foreground">
+            <strong className="text-[1rem] font-extrabold text-foreground">
+              {preview.name}{" "}
+              <span className="font-medium text-muted-foreground">· {preview.classOf}</span>
+            </strong>
+            {preview.line && <span>{preview.line}</span>}
           </span>
-          <div className="onbPreviewCard" data-hidden={!members}>
-            <span className="onbAvatar" aria-hidden="true">
-              {preview.initials}
-            </span>
-            <span className="onbPreviewWho">
-              <strong>
-                {preview.name} <span>· {preview.classOf}</span>
-              </strong>
-              {preview.line && <span>{preview.line}</span>}
-            </span>
-            {shown.length > 0 && (
-              <span className="onbTags">
-                {shown.map((tag) => (
-                  <span key={tag}>{tag}</span>
-                ))}
-                {more > 0 && <span>+{more}</span>}
-              </span>
-            )}
-          </div>
+          {preview.tags.length > 0 && <Tags labels={preview.tags} max={2} />}
         </div>
       </aside>
-    </>
+    </div>
   );
 }

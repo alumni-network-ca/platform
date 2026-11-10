@@ -21,9 +21,9 @@ test.describe("alumni home", () => {
 
     const yourClass = page.getByRole("region", { name: /^Your class · Class of \d{4}$/ });
     await expect(yourClass.getByText("See what's new with your classmates")).toBeVisible();
-    expect(await yourClass.locator(".homeCard").count()).toBeLessThanOrEqual(3);
+    expect(await yourClass.locator('a[href^="/profile/"]').count()).toBeLessThanOrEqual(3);
     const newcomers = page.getByRole("region", { name: "New in the network" });
-    expect(await newcomers.locator(".homeCard").count()).toBeLessThanOrEqual(3);
+    expect(await newcomers.locator('a[href^="/profile/"]').count()).toBeLessThanOrEqual(3);
 
     await expect(page.getByRole("heading", { name: "Your profile" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "People you contacted" })).toBeVisible();

@@ -6,6 +6,27 @@ import { getServerLocale } from "@/lib/i18n-server";
 import { initials, optionsFor, repeatsCurrentRole } from "@/lib/profile/fields";
 import { schoolBranding } from "@/lib/school";
 import { schoolConfig } from "@/lib/tenant/config";
+import { cn } from "@/lib/utils";
+import { ExternalLink } from "lucide-react";
+import {
+  Avatar,
+  Tags,
+  frame,
+  mainColumn,
+  notice,
+  panel,
+  sideColumn,
+  textLink,
+} from "@/components/alumni/parts";
+import {
+  ProfileRow,
+  ProfileWho,
+  SectionHead,
+  bodyText,
+  profileSection,
+  sideBox,
+  sideBoxTitle,
+} from "@/components/alumni/profile";
 import { BackArrow } from "@/components/icons";
 
 // An alumnus's profile as other alumni see it (DIR-03, CON-02; design Profile). Only a published profile at this
@@ -104,58 +125,57 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
     parts.filter((part) => part !== null && part !== undefined && part !== "").join(separator);
 
   return (
-    <main className="me profPage">
-      <Link className="meBackLink profBack" href="/directory">
-        <BackArrow />
-        {t.back}
-      </Link>
-      <div className="meMain">
+    <main data-ui className={frame.split}>
+      <div className="basis-full">
+        <Link className={cn(textLink, "text-base")} href="/directory">
+          <BackArrow />
+          {t.back}
+        </Link>
+      </div>
+      <div className={mainColumn}>
         {own && (
-          <p className="notice noticeGood">
-            {t.yours} <Link href="/me">{t.editMine}</Link>
+          <p className={notice({ tone: "good" })}>
+            {t.yours}{" "}
+            <Link className="underline underline-offset-2 hover:no-underline" href="/me">
+              {t.editMine}
+            </Link>
           </p>
         )}
-        <section className="meCard profHead">
-          <div className="profBanner" aria-hidden="true" />
-          <div className="profHeadBody">
-            <span className="meAvatar profAvatar" aria-hidden="true">
-              {initials(p.preferred_name || p.first_name, p.last_name)}
-            </span>
-            <div className="meWho">
-              <h1>{name}</h1>
-              {(p.job_title || p.employer) && <span>{join([p.job_title, p.employer])}</span>}
-              <span className="meSub">
-                {join([
-                  format(t.classOf, { year: p.grad_year }),
-                  join([p.city, p.country], ", "),
-                  p.languages
-                    .map((code) => o.languageNames[code as keyof typeof o.languageNames] ?? code)
-                    .join(", "),
-                ])}
-              </span>
-            </div>
-            {offers.length > 0 && (
-              <div className="meTags">
-                {offers.map((offer) => (
-                  <span key={offer.key}>{label(offer)}</span>
-                ))}
-              </div>
-            )}
+        <section className={cn(panel, "overflow-hidden")}>
+          <div className="h-[88px] bg-brand" aria-hidden="true" />
+          <div className="flex flex-col gap-3.5 px-7 pb-6.5 max-[720px]:px-5">
+            <Avatar
+              initials={initials(p.preferred_name || p.first_name, p.last_name)}
+              size="xl"
+              className="-mt-11 size-[88px] border-4 border-card"
+            />
+            <ProfileWho
+              name={name}
+              role={join([p.job_title, p.employer])}
+              details={join([
+                format(t.classOf, { year: p.grad_year }),
+                join([p.city, p.country], ", "),
+                p.languages
+                  .map((code) => o.languageNames[code as keyof typeof o.languageNames] ?? code)
+                  .join(", "),
+              ])}
+            />
+            {offers.length > 0 && <Tags size="md" labels={offers.map(label)} />}
           </div>
         </section>
 
         {p.bio && (
-          <section className="meCard meSection" aria-label={t.about}>
-            <h2 className="profH2">{t.about}</h2>
-            <p className="meText">{p.bio}</p>
+          <section className={profileSection} aria-label={t.about}>
+            <SectionHead title={t.about} />
+            <p className={bodyText}>{p.bio}</p>
           </section>
         )}
 
         {(p.job_title || p.employer || (experience ?? []).length > 0) && (
-          <section className="meCard meSection" aria-label={t.workHistory}>
-            <h2 className="profH2">{t.workHistory}</h2>
+          <section className={profileSection} aria-label={t.workHistory}>
+            <SectionHead title={t.workHistory} />
             {(p.job_title || p.employer) && (
-              <Row
+              <ProfileRow
                 title={join([p.job_title, p.employer])}
                 sub={join([field && label(field), p.city])}
               />
@@ -163,7 +183,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
             {(experience ?? [])
               .filter((role) => !repeatsCurrentRole(role, p))
               .map((role, i) => (
-                <Row
+                <ProfileRow
                   key={i}
                   title={join([role.job_title, role.employer])}
                   sub={join([role.location, dates(role)])}
@@ -172,27 +192,29 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
           </section>
         )}
 
-        <section className="meCard meSection" aria-label={t.education}>
-          <h2 className="profH2">{t.education}</h2>
+        <section className={profileSection} aria-label={t.education}>
+          <SectionHead title={t.education} />
           {(education ?? []).map((row, i) => (
-            <Row
+            <ProfileRow
               key={i}
               title={row.school}
               sub={join([row.degree, row.field_of_study, row.graduation_year])}
             />
           ))}
-          <Row title={school.name} sub={format(t.classOf, { year: p.grad_year })} />
+          <ProfileRow title={school.name} sub={format(t.classOf, { year: p.grad_year })} />
         </section>
       </div>
 
-      <aside className="meSide">
-        <section className="meCard meBox" aria-labelledby="contact-title">
-          <h2 id="contact-title">{format(t.contactTitle, { name: first })}</h2>
+      <aside className={sideColumn}>
+        <section className={sideBox} aria-labelledby="contact-title">
+          <h2 id="contact-title" className={sideBoxTitle}>
+            {format(t.contactTitle, { name: first })}
+          </h2>
           {reveal.length === 0 && shared.length === 0 ? (
             <span>{t.noContact}</span>
           ) : (
             <>
-              <p className="profNote">
+              <p className="text-sm text-muted-foreground">
                 {format(t.contactNote, { school: schoolBranding(school).shortName })}
               </p>
               {reveal.map((type) => (
@@ -207,8 +229,15 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
                 />
               ))}
               {shared.map((link) => (
-                <a key={link.type} href={link.value} target="_blank" rel="noopener noreferrer">
+                <a
+                  key={link.type}
+                  className={cn(textLink, "inline-flex items-center gap-1")}
+                  href={link.value}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {o.channels[link.type as (typeof LINKS)[number]]}
+                  <ExternalLink aria-hidden className="size-3.5" />
                   <span className="sr-only"> {t.opensNewTab}</span>
                 </a>
               ))}
@@ -216,7 +245,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
           )}
         </section>
         {p.last_confirmed_at && (
-          <section className="meCard meBox">
+          <section className={sideBox}>
             <span>
               {format(t.confirmed, {
                 date: new Intl.DateTimeFormat(locale === "fr" ? "fr-CA" : "en-CA", {
@@ -230,14 +259,5 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
         )}
       </aside>
     </main>
-  );
-}
-
-function Row({ title, sub }: { title: string; sub: string }) {
-  return (
-    <div className="meRow">
-      <span>{title}</span>
-      {sub && <span>{sub}</span>}
-    </div>
   );
 }

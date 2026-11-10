@@ -13,7 +13,13 @@ import {
   type ReactNode,
 } from "react";
 import Link from "next/link";
+import { CircleAlert } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { NativeSelect } from "@/components/ui/native-select";
+import { Textarea } from "@/components/ui/textarea";
 import { format, type Locale, type translations } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 import type { Errors, FieldError } from "@/lib/profile/fields";
 import { useLanguage } from "../LanguageProvider";
 
@@ -114,7 +120,12 @@ export function ProfileForm({
 export function FormAlert() {
   const { failed, t } = useForm();
   return failed ? (
-    <p className="onbAlert" role="alert" tabIndex={-1}>
+    <p
+      className="flex items-start gap-2 rounded-md bg-destructive-soft px-3.5 py-3 text-base font-semibold text-destructive-hover outline-none"
+      role="alert"
+      tabIndex={-1}
+    >
+      <CircleAlert aria-hidden className="mt-0.5 size-4 shrink-0" />
       {failed === "forbidden"
         ? t.errors.forbidden
         : failed === "reauth"
@@ -123,6 +134,11 @@ export function FormAlert() {
     </p>
   ) : null;
 }
+
+/** A field: its label, the control, then a hint and an error under it. */
+export const field = "flex min-w-0 flex-col gap-2";
+export const fieldLabel = "text-sm font-semibold";
+export const fieldHint = "text-xs text-muted-foreground";
 
 const subscribeNever = () => () => {};
 
@@ -143,15 +159,18 @@ export function SubmitButton({
     () => true,
     () => false,
   );
-  const off = !hydrated || pending || disabled;
   return (
-    <button
-      className={danger ? "onbSubmit onbDanger" : "onbSubmit"}
-      disabled={off}
-      aria-disabled={off}
+    <Button
+      type="submit"
+      variant={danger ? "destructive" : "default"}
+      // Blocked (the consent is not ticked yet) reads as grey, as on the canvas, rather than as a faded colour.
+      className="ml-auto data-blocked:bg-border-strong data-blocked:text-muted-foreground data-blocked:opacity-100 data-blocked:shadow-none"
+      data-blocked={disabled || undefined}
+      loading={pending}
+      disabled={!hydrated || disabled}
     >
       {pending ? t.saving : label}
-    </button>
+    </Button>
   );
 }
 
@@ -159,15 +178,16 @@ export function SubmitButton({
 export function CancelLink({ href, label }: { href: string; label: string }) {
   const { dirty, unsavedWarning } = useForm();
   return (
-    <Link
-      className="onbBack"
-      href={href}
-      onClick={(event) => {
-        if (dirty && unsavedWarning && !window.confirm(unsavedWarning)) event.preventDefault();
-      }}
-    >
-      {label}
-    </Link>
+    <Button asChild variant="secondary">
+      <Link
+        href={href}
+        onClick={(event) => {
+          if (dirty && unsavedWarning && !window.confirm(unsavedWarning)) event.preventDefault();
+        }}
+      >
+        {label}
+      </Link>
+    </Button>
   );
 }
 
@@ -176,7 +196,7 @@ export function FieldErrorText({ name, id }: { name: string; id: string }) {
   const { errors, t } = useForm();
   const error = errors[name];
   return error ? (
-    <span id={id} className="onbError">
+    <span id={id} className="text-xs font-semibold text-destructive">
       {errorText(error, t)}
     </span>
   ) : null;
@@ -215,14 +235,14 @@ export function TextInput({
   const id = useId();
   const invalid = Boolean(errors[errorKey]);
   return (
-    <div className="onbField">
-      <label htmlFor={id} className="onbLabel">
-        {label} {optional && <small>{t.optional}</small>}
+    <div className={field}>
+      <label htmlFor={id} className={fieldLabel}>
+        {label}{" "}
+        {optional && <span className="font-normal text-muted-foreground">{t.optional}</span>}
       </label>
-      <input
+      <Input
         id={id}
         name={name}
-        className="onbInput"
         defaultValue={defaultValue ?? ""}
         aria-invalid={invalid || undefined}
         aria-describedby={
@@ -238,7 +258,7 @@ export function TextInput({
         {...input}
       />
       {hint && (
-        <span id={`${id}-hint`} className="onbHint">
+        <span id={`${id}-hint`} className={fieldHint}>
           {hint}
         </span>
       )}
@@ -265,22 +285,22 @@ export function TextArea({
   const [count, setCount] = useState((defaultValue ?? "").length);
   const invalid = Boolean(errors[name]);
   return (
-    <div className="onbField">
-      <label htmlFor={id} className="onbLabel">
-        {label} {optional && <small>{t.optional}</small>}
+    <div className={field}>
+      <label htmlFor={id} className={fieldLabel}>
+        {label}{" "}
+        {optional && <span className="font-normal text-muted-foreground">{t.optional}</span>}
       </label>
-      <textarea
+      <Textarea
         id={id}
         name={name}
         rows={3}
-        className="onbInput"
         defaultValue={defaultValue ?? ""}
         maxLength={maxLength}
         aria-invalid={invalid || undefined}
         aria-describedby={`${id}-count${invalid ? ` ${id}-error` : ""}`}
         onChange={(event) => setCount(event.target.value.length)}
       />
-      <span id={`${id}-count`} className="onbHint">
+      <span id={`${id}-count`} className={cn(fieldHint, "tabular-nums")}>
         {format(t.characters, { count, max: maxLength })}
       </span>
       <FieldErrorText name={name} id={`${id}-error`} />
@@ -305,14 +325,13 @@ export function SelectInput({
   const id = useId();
   const invalid = Boolean(errors[name]);
   return (
-    <div className="onbField">
-      <label htmlFor={id} className="onbLabel">
+    <div className={field}>
+      <label htmlFor={id} className={fieldLabel}>
         {label}
       </label>
-      <select
+      <NativeSelect
         id={id}
         name={name}
-        className="onbInput"
         defaultValue={defaultValue ?? ""}
         aria-invalid={invalid || undefined}
         aria-describedby={invalid ? `${id}-error` : undefined}
@@ -323,7 +342,7 @@ export function SelectInput({
             {option.label}
           </option>
         ))}
-      </select>
+      </NativeSelect>
       <FieldErrorText name={name} id={`${id}-error`} />
     </div>
   );

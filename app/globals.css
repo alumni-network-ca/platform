@@ -96,6 +96,7 @@
   --danger-soft: #fbe9ed;
   --good: #1b5e33;
   --good-soft: #e3f3e8;
+  --good-dot: #2e8b57; /* the "visible" dot beside its words; too light for text */
   --warn: #7a4b00;
   --warn-soft: #fff4dc;
   --info: #123e7a;
@@ -145,6 +146,7 @@
   --color-destructive-soft: var(--danger-soft);
   --color-success: var(--good);
   --color-success-soft: var(--good-soft);
+  --color-success-dot: var(--good-dot);
   --color-warning: var(--warn);
   --color-warning-soft: var(--warn-soft);
   --color-info: var(--info);
