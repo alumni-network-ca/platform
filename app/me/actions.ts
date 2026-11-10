@@ -91,5 +91,6 @@ export async function deleteMyProfile(_: FormState, form: FormData): Promise<For
   if (error) return failure(error);
   await me.supabase.auth.signOut({ scope: "local" });
   revalidatePath("/", "layout");
-  redirect("/");
+  // Let the browser reload the school address with the updated session cookies.
+  return { errors: {}, next: "/" };
 }

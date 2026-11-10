@@ -9,7 +9,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { publicEnv } from "@/config/env/public";
 import { serverEnv } from "@/config/env/server";
-import { PREVIEW_COOKIE, SCHOOL_HEADER } from "@/config/tenancy";
+import { PREVIEW_COOKIE, SCHOOL_HEADER, SITE_HEADER } from "@/config/tenancy";
 import type { Database } from "@/lib/database";
 import { encodeSchool, type PublicSchool } from "@/lib/school";
 import { anonClient } from "@/lib/supabase/anon";
@@ -97,6 +97,7 @@ export async function proxy(request: NextRequest) {
   const respond = () => {
     const headers = new Headers(request.headers);
     headers.delete(SCHOOL_HEADER);
+    headers.set(SITE_HEADER, tenant.kind);
     if (school) headers.set(SCHOOL_HEADER, encodeSchool(school));
     const response =
       folder && !pathname.startsWith("/api/")

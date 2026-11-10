@@ -9,6 +9,17 @@ import { STEPS, initials, isStep, resumeStep, type Step } from "@/lib/profile/fi
 import { loadMyProfile } from "@/lib/profile/server";
 import { finish, saveStep } from "../actions";
 import { Check } from "lucide-react";
+import { frame } from "@/components/alumni/parts";
+import {
+  FormHead,
+  FormProgress,
+  formBody,
+  formCard,
+  formFooter,
+} from "@/components/profile/FormCard";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 // One step of the onboarding wizard (ONB-05; design OnbAbout, OnbCareer, OnbNetwork, OnbPublish). The welcome,
 // education and contact steps are not drawn on the canvas: they reuse the drawn steps' layout.
@@ -41,36 +52,57 @@ export default async function OnboardingStepPage({
   };
   const [title, intro] = titles[step];
   const heading = (
-    <div className="onbHead">
-      {step === "welcome" && (
-        <span className="tag tagGood">
-          {me.locale === "fr" ? `Approuvé par ${school}` : `Approved by ${school}`}
-        </span>
-      )}
-      <small>{format(t.stepOf, { n: index + 1, total: STEPS.length })}</small>
-      <h1>{title}</h1>
-      <p>{intro}</p>
-    </div>
+    <FormHead
+      above={
+        step === "welcome" && (
+          <Badge variant="success" className="py-1">
+            {me.locale === "fr" ? `Approuvé par ${school}` : `Approved by ${school}`}
+          </Badge>
+        )
+      }
+      step={format(t.stepOf, { n: index + 1, total: STEPS.length })}
+      title={title}
+      intro={intro}
+    />
   );
   const previous = STEPS[index - 1];
   const back = previous && (
-    <Link className="onbBack" href={`/onboarding/${previous}`}>
-      {t.back}
-    </Link>
+    <Button asChild variant="secondary">
+      <Link href={`/onboarding/${previous}`}>{t.back}</Link>
+    </Button>
   );
 
   const rail = (
-    <nav className="onbRail" aria-label={t.title}>
-      <span className="onbRailTitle" aria-hidden="true">
+    // On a phone the card's "Step n of 7" and progress bar say where you are; the list would push the form down.
+    <nav
+      className="flex max-w-[280px] flex-[1_1_240px] flex-col gap-3.5 max-[720px]:hidden"
+      aria-label={t.title}
+    >
+      <span
+        className="text-xs font-bold tracking-[0.08em] text-muted-foreground uppercase"
+        aria-hidden="true"
+      >
         {t.title}
       </span>
-      <ol className="onbSteps">
+      <ol className="flex flex-col gap-1">
         {STEPS.map((name, i) => {
           const done = i < me.profile.onboarding_step && i !== index;
-          const className = `onbStep${done ? " onbStepDone" : ""}`;
+          const current = i === index;
+          const className = cn(
+            "flex items-center gap-3 rounded-md px-3 py-2.5 text-base font-medium text-muted-foreground",
+            done && "text-foreground",
+            current && "bg-primary-soft font-bold text-foreground",
+          );
           const content = (
             <>
-              <span className="onbDot" aria-hidden="true">
+              <span
+                className={cn(
+                  "grid size-[26px] shrink-0 place-items-center rounded-full border-2 border-input bg-card text-xs font-bold text-muted-foreground",
+                  done && "border-0 bg-brand text-brand-foreground",
+                  current && "border-0 bg-primary text-primary-foreground",
+                )}
+                aria-hidden="true"
+              >
                 {done ? <CheckIcon /> : i + 1}
               </span>
               {t.steps[name]}
@@ -83,7 +115,13 @@ export default async function OnboardingStepPage({
                   {content}
                 </span>
               ) : i <= resume ? (
-                <Link className={className} href={`/onboarding/${name}`}>
+                <Link
+                  className={cn(
+                    className,
+                    "outline-none hover:bg-accent focus-visible:ring-[3px] focus-visible:ring-ring/45",
+                  )}
+                  href={`/onboarding/${name}`}
+                >
                   {content}
                 </Link>
               ) : (
@@ -93,7 +131,7 @@ export default async function OnboardingStepPage({
           );
         })}
       </ol>
-      <span className="onbNote">{t.savedNote}</span>
+      <span className="pl-3 text-sm text-muted-foreground">{t.savedNote}</span>
     </nav>
   );
 
@@ -116,9 +154,9 @@ export default async function OnboardingStepPage({
         ),
       );
     return (
-      <main className="onb">
+      <main data-ui className={frame.form}>
         {rail}
-        <ProfileForm className="onbContents" action={finish} t={t}>
+        <ProfileForm className="contents" action={finish} t={t}>
           <PublishChoices
             t={t}
             school={school}
@@ -141,24 +179,22 @@ export default async function OnboardingStepPage({
   }
 
   return (
-    <main className="onb">
+    <main data-ui className={frame.form}>
       {rail}
       <ProfileForm
-        className="onbContents"
+        className="contents"
         action={saveStep.bind(null, step)}
         t={t}
         syncLocale={step === "welcome"}
       >
-        <section className="onbCard">
-          <div className="onbProgress">
-            <span style={{ width: `${progress}%` }} />
-          </div>
-          <div className="onbBody">
+        <section className={formCard}>
+          <FormProgress value={progress} />
+          <div className={formBody}>
             {heading}
             <FormAlert />
             <SectionFields section={step} me={me} />
           </div>
-          <div className="onbFooter">
+          <div className={formFooter}>
             {back}
             <SubmitButton label={step === "welcome" ? t.start : t.saveAndContinue} />
           </div>

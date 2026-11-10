@@ -64,6 +64,18 @@ are 16px on phones so iOS doesn't zoom. Use `tabular-nums` for counts, stats and
   ring in the school's colour.
 - Use `NativeSelect` rather than a custom listbox. It keeps form submission, submit-on-change and the phone's own
   picker.
+- A radio or checkbox drawn as a card (`optionCard` in `components/profile/FormCard.tsx`) shows its choice with a
+  second line of the school's colour inside the border, so nothing moves. A toggle chip whose label can wrap uses
+  `rounded-xl`, not `rounded-full`, so two lines make a rounded box rather than a stretched pill.
+
+## Page parts
+
+The alumni pages (home, directory, `/me`, a profile, onboarding) build from `components/alumni/parts.tsx` and
+`components/alumni/profile.tsx`: page frames and columns, the white `panel`, `Avatar`, `Tags`, `PersonCard` and
+`textLink`. Their skeletons use the same classes, so a page and its skeleton cannot drift apart.
+
+- Text links are in the school's colour (`primary`) and underline on hover, as on the canvas.
+- A clickable card changes its border and adds `shadow-sm` on hover. It never moves.
 
 ## Loading and feedback
 

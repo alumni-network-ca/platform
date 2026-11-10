@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import { serverEnv } from "@/config/env/server";
-import { SCHOOL_HEADER } from "@/config/tenancy";
+import { SCHOOL_HEADER, SITE_HEADER } from "@/config/tenancy";
 import { decodeSchool, type PublicSchool } from "@/lib/school";
 import type { Origin } from "./address";
 import { schoolConfig } from "./config";
@@ -19,6 +19,12 @@ export const getSchool = cache(async (): Promise<PublicSchool | null> => {
   const { branding } = await schoolConfig(school.id);
   return { ...school, branding };
 });
+
+/** Which site this request is on, as proxy.ts resolved it from the host: the landing page, the console or a school. */
+export async function getSite(): Promise<"root" | "admin" | "school"> {
+  const site = (await headers()).get(SITE_HEADER);
+  return site === "root" || site === "admin" ? site : "school";
+}
 
 /** For school pages: a 404 when the request has no school. */
 export async function requireSchool(): Promise<PublicSchool> {

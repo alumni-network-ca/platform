@@ -1114,23 +1114,5 @@
     "rule": "ui-literal",
     "text": "Who",
     "count": 1
-  },
-  {
-    "file": "app/site/page.tsx",
-    "rule": "ui-literal",
-    "text": "Alumni Network",
-    "count": 1
-  },
-  {
-    "file": "app/site/page.tsx",
-    "rule": "ui-literal",
-    "text": "Each school has its own address, such as herzliah.alumninetwork.ca. Use the link your school sent you to sign in or join.",
-    "count": 1
-  },
-  {
-    "file": "app/site/page.tsx",
-    "rule": "ui-literal",
-    "text": "Private professional networks for school alumni",
-    "count": 1
   }
 ]

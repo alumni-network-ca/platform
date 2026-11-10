@@ -2,6 +2,76 @@ export type Locale = "en" | "fr";
 
 export const translations = {
   en: {
+    schoolsLanding: {
+      label: "For schools",
+      headline: "Keep your alumni",
+      headlineAccent: "connected.",
+      intro:
+        "Give your graduates a private place to find each other, share career advice, and open doors for the next class. Your school controls access.",
+      how: "How it works",
+      private: "Private directories for school-verified graduates",
+      demo: "Book a demo",
+      demoSubject: "Book an Alumni Network demo for my school",
+      quote: "Request a quote",
+      quoteSubject: "Request an Alumni Network quote for my school",
+      contact: {
+        inquiry: "I’d like to",
+        name: "Full name",
+        school: "School name",
+        email: "Work email",
+        message: "Message (optional)",
+        submit: "Send request",
+        sending: "Sending…",
+        sent: "Thanks for reaching out. We’ll follow up by email.",
+        invalid: "Check your contact details and try again.",
+        limited: "We’re receiving a high volume of requests. Please try again later.",
+        failed: "We couldn’t send your request. Please try again.",
+      },
+      preview: {
+        label: "Platform preview",
+        address: "your-school.alumninetwork.ca",
+        school: "Your school",
+        network: "Alumni Network",
+        directory: "Alumni directory",
+        search: "Find alumni",
+        classYear: "Class year",
+        city: "City",
+        industry: "Industry",
+        verified: "Verified members",
+        approved: "Approved by your school",
+      },
+      featuresLabel: "The platform",
+      featuresTitle: "A network that feels like your school.",
+      branding: {
+        title: "Your own branded space",
+        body: "Give alumni a familiar place to land with your school’s name, colours, logo, and dedicated web address.",
+      },
+      membership: {
+        title: "You control access",
+        body: "Staff review access requests before graduates can browse the directory. Alumni choose what to share and how they can be contacted.",
+      },
+      directory: {
+        title: "Connections with a purpose",
+        body: "Help graduates find classmates or connect with alumni by location, career, and willingness to mentor, advise, or make introductions.",
+      },
+      processTitle: "From setup to first connections.",
+      processBody:
+        "Give your alumni office a clear path to launch and a workspace to manage membership as the network grows.",
+      setup: {
+        title: "Set up your school’s network",
+        body: "Work with our team to set up your address and branding, then invite the staff who will manage the network.",
+      },
+      invite: {
+        title: "Invite your graduates",
+        body: "Announce the new network through your existing alumni channels.",
+      },
+      review: {
+        title: "Verify and welcome graduates",
+        body: "Review requests in the staff dashboard. Approved graduates can set up their profiles and explore the directory.",
+      },
+      inviteTitle: "Bring your alumni network to life.",
+      inviteBody: "See how the platform would work for your school, or ask us for a quote.",
+    },
     // The nav bar (docs/design/nav-bar.md). {placeholders} are filled by format().
     nav: {
       main: "Main",
@@ -833,6 +903,77 @@ export const translations = {
   },
 
   fr: {
+    schoolsLanding: {
+      label: "Pour les écoles",
+      headline: "Gardez vos diplômés",
+      headlineAccent: "en contact.",
+      intro:
+        "Offrez à vos diplômés un espace privé pour se retrouver, échanger des conseils de carrière et ouvrir des portes à la prochaine promotion. Votre école contrôle l’accès.",
+      how: "Comment ça marche",
+      private: "Répertoires privés réservés aux diplômés vérifiés par leur école",
+      demo: "Réserver une démo",
+      demoSubject: "Réserver une démonstration du réseau des anciens pour mon école",
+      quote: "Demander un devis",
+      quoteSubject: "Demander un devis pour le réseau des anciens de mon école",
+      contact: {
+        inquiry: "Je souhaite",
+        name: "Nom complet",
+        school: "Nom de l’école",
+        email: "Courriel professionnel",
+        message: "Message (facultatif)",
+        submit: "Envoyer la demande",
+        sending: "Envoi en cours…",
+        sent: "Merci de nous avoir contactés. Nous vous répondrons par courriel.",
+        invalid: "Vérifiez vos coordonnées, puis réessayez.",
+        limited: "Nous recevons beaucoup de demandes. Veuillez réessayer plus tard.",
+        failed: "Nous n’avons pas pu envoyer votre demande. Veuillez réessayer.",
+      },
+      preview: {
+        label: "Aperçu de la plateforme",
+        address: "votre-ecole.alumninetwork.ca",
+        school: "Votre école",
+        network: "Réseau des anciens",
+        directory: "Répertoire des diplômés",
+        search: "Trouver des diplômés",
+        classYear: "Promotion",
+        city: "Ville",
+        industry: "Secteur",
+        verified: "Membres vérifiés",
+        approved: "Approuvés par votre école",
+      },
+      featuresLabel: "La plateforme",
+      featuresTitle: "Un réseau à l’image de votre école.",
+      branding: {
+        title: "Un espace à votre image",
+        body: "Accueillez vos diplômés dans un espace qui porte le nom, les couleurs et le logo de votre école, à une adresse qui lui est propre.",
+      },
+      membership: {
+        title: "Vous contrôlez l’accès",
+        body: "Votre équipe examine les demandes avant de donner accès au répertoire. Les diplômés choisissent quoi partager et comment les autres peuvent les joindre.",
+      },
+      directory: {
+        title: "Des liens qui ouvrent des portes",
+        body: "Aidez vos diplômés à retrouver leurs camarades ou à trouver des personnes dans leur ville ou leur domaine, prêtes à conseiller, à mentorer ou à faire des présentations.",
+      },
+      processTitle: "Du lancement aux premiers échanges.",
+      processBody:
+        "Votre bureau des anciens dispose d’un parcours de lancement clair et d’un espace pour gérer les adhésions à mesure que le réseau grandit.",
+      setup: {
+        title: "Créez le réseau de votre école",
+        body: "Configurez votre adresse et votre identité visuelle avec notre équipe, puis invitez le personnel qui gérera le réseau.",
+      },
+      invite: {
+        title: "Invitez vos diplômés",
+        body: "Annoncez le nouveau réseau dans vos canaux de communication habituels.",
+      },
+      review: {
+        title: "Vérifiez et accueillez vos diplômés",
+        body: "Examinez les demandes dans le tableau de bord. Les diplômés approuvés peuvent créer leur profil et explorer le répertoire.",
+      },
+      inviteTitle: "Donnez vie à votre réseau des anciens.",
+      inviteBody:
+        "Découvrez comment la plateforme pourrait fonctionner pour votre école ou demandez-nous un devis.",
+    },
     nav: {
       main: "Principal",
       networkName: "Réseau des anciens de {school}",

@@ -2,8 +2,15 @@
 
 import { useState } from "react";
 import type { EducationRow } from "@/lib/profile/fields";
+import { Plus, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { subSection } from "./FormCard";
 import { TextInput, type ProfileCopy } from "./ProfileForm";
-import { Plus } from "lucide-react";
+
+// Fields line up by their top, so a hint or an error under one never moves its neighbours.
+const rowBox =
+  "grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] items-start gap-3 rounded-lg border bg-background/50 px-4 py-3.5";
 
 type Role = {
   job_title: string;
@@ -40,9 +47,9 @@ export function EducationRows({ initial, t }: { initial: EducationRow[]; t: Prof
     graduation_year: null,
   });
   return (
-    <div className="onbSection">
+    <div className={subSection}>
       {rows.map(({ key, row }, i) => (
-        <div key={key} className="onbRow" role="group" aria-label={`${t.school} ${i + 1}`}>
+        <div key={key} className={rowBox} role="group" aria-label={`${t.school} ${i + 1}`}>
           <TextInput
             name="school"
             errorKey={`school.${i}`}
@@ -76,14 +83,10 @@ export function EducationRows({ initial, t }: { initial: EducationRow[]; t: Prof
             digits
             optional
           />
-          <button type="button" className="onbButton onbRemove" onClick={() => remove(key)}>
-            {t.remove}
-          </button>
+          <RemoveButton label={t.remove} onClick={() => remove(key)} />
         </div>
       ))}
-      <button type="button" className="onbButton onbAdd" onClick={add}>
-        <PlusIcon /> {t.addSchool}
-      </button>
+      <AddButton label={t.addSchool} onClick={add} />
     </div>
   );
 }
@@ -99,11 +102,12 @@ export function RoleRows({ initial, t }: { initial: Role[]; t: ProfileCopy }) {
     end_month: null,
   });
   return (
-    <div className="onbSection">
+    <div className={subSection}>
       {rows.map(({ key, row }, i) => (
         <div
           key={key}
-          className="onbRow onbRowRole"
+          // A role: title, employer and city, then its dates, then Remove.
+          className={cn(rowBox, "grid-cols-3 max-[720px]:grid-cols-1")}
           role="group"
           aria-label={`${t.previousRoles} ${i + 1}`}
         >
@@ -145,18 +149,35 @@ export function RoleRows({ initial, t }: { initial: Role[]; t: ProfileCopy }) {
             hint={t.endHint}
             defaultValue={monthValue(row.end_year, row.end_month)}
           />
-          <button type="button" className="onbButton onbRemove" onClick={() => remove(key)}>
-            {t.remove}
-          </button>
+          <RemoveButton label={t.remove} onClick={() => remove(key)} />
         </div>
       ))}
-      <button type="button" className="onbButton onbAdd" onClick={add}>
-        <PlusIcon /> {t.addRole}
-      </button>
+      <AddButton label={t.addRole} onClick={add} />
     </div>
   );
 }
 
-function PlusIcon() {
-  return <Plus aria-hidden size={16} strokeWidth={2.4} />;
+/** On its own line at the bottom of the row, in the colour of a removal. */
+function RemoveButton({ label, onClick }: { label: string; onClick: () => void }) {
+  return (
+    <Button
+      type="button"
+      variant="destructive-outline"
+      size="sm"
+      className="col-span-full justify-self-start"
+      onClick={onClick}
+    >
+      <Trash2 aria-hidden />
+      {label}
+    </Button>
+  );
+}
+
+function AddButton({ label, onClick }: { label: string; onClick: () => void }) {
+  return (
+    <Button type="button" variant="secondary" className="self-start" onClick={onClick}>
+      <Plus aria-hidden strokeWidth={2.4} />
+      {label}
+    </Button>
+  );
 }

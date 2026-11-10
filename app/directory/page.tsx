@@ -8,11 +8,23 @@ import { getServerLocale } from "@/lib/i18n-server";
 import { initials, optionsFor } from "@/lib/profile/fields";
 import { schoolBranding } from "@/lib/school";
 import { schoolConfig } from "@/lib/tenant/config";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { NativeSelect } from "@/components/ui/native-select";
-import { Search, X } from "lucide-react";
+import { Search, SearchX, X } from "lucide-react";
+import {
+  Avatar,
+  PersonCard,
+  Tags,
+  columns,
+  directoryGrid,
+  eyebrow,
+  frame,
+  pageTitle,
+  textLink,
+} from "@/components/alumni/parts";
+import { EmptyState } from "@/components/EmptyState";
 import { BackArrow, ForwardArrow } from "@/components/icons";
-import { LinkPending } from "@/components/LinkPending";
 import { SubmitButton } from "@/components/ui/submit-button";
 
 // The alumni directory (DIR-02; design Directory). Every filter is in the URL; search_directory returns only
@@ -79,17 +91,22 @@ export default async function DirectoryPage({
   const { shortName } = schoolBranding(school);
 
   return (
-    <main className="dir">
-      <div className="dirHead">
-        <div>
-          <span className="dirEyebrow">{t.eyebrow}</span>
-          <h1>{format(t.title, { school: shortName })}</h1>
+    <main data-ui className={frame.stack}>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="flex flex-col gap-1.5">
+          <span className={eyebrow}>{t.eyebrow}</span>
+          <h1 className={pageTitle}>{format(t.title, { school: shortName })}</h1>
         </div>
-        <span className="dirCount">{format(t.members, { count: members })}</span>
+        <span className="text-base text-muted-foreground tabular-nums">
+          {format(t.members, { count: members })}
+        </span>
       </div>
 
       <DirectoryForm>
-        <div className="dirSearch" role="search">
+        <div
+          className="flex items-center gap-3 rounded-lg border border-input bg-card py-1.5 pr-1.5 pl-4.5 shadow-xs transition-[border-color,box-shadow] focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/25"
+          role="search"
+        >
           <Search
             aria-hidden
             size={20}
@@ -105,18 +122,19 @@ export default async function DirectoryPage({
             type="search"
             defaultValue={f.q}
             placeholder={t.searchPlaceholder}
+            className="min-w-0 flex-1 bg-transparent py-3 text-[1rem] text-foreground outline-none placeholder:text-placeholder"
           />
           <SubmitButton className="h-10 rounded-sm">{t.search}</SubmitButton>
         </div>
 
-        <div className="dirBody">
+        <div className={columns}>
           <FilterPanel
             label={t.filters}
             toggleLabel={chips.length ? format(t.filtersCount, { count: chips.length }) : t.filters}
           >
-            <div className="dirPanelHead">
-              <h2>{t.filters}</h2>
-              <Link href="/directory" className="dirClear">
+            <div className="flex items-center justify-between">
+              <h2 className="text-md font-bold">{t.filters}</h2>
+              <Link href="/directory" className={cn(textLink, "text-sm font-bold")}>
                 {t.clear}
               </Link>
             </div>
@@ -153,35 +171,41 @@ export default async function DirectoryPage({
             />
             {/* The home page's "your class" link: kept until its chip removes it. */}
             {f.gradYear !== null && <input type="hidden" name="grad_year" value={f.gradYear} />}
-            <fieldset className="dirOffers">
-              <legend>{t.openTo}</legend>
-              <div>
+            <fieldset className="min-w-0">
+              <legend className="mb-2.5 text-sm font-semibold">{t.openTo}</legend>
+              <div className="flex flex-wrap gap-2">
                 {offers.map((offer) => (
-                  <label key={offer.key} className="dirChip">
+                  // A toggle button to look at; the checkbox inside stays for keyboards and the form. A label too long
+                  // for one line wraps in a rounded box rather than a stretched pill.
+                  <label
+                    key={offer.key}
+                    className="relative inline-flex cursor-pointer items-center rounded-xl border border-input bg-card px-3 py-[7px] text-sm font-bold transition-colors hover:border-primary has-checked:border-primary has-checked:bg-primary has-checked:text-primary-foreground has-focus-visible:ring-[3px] has-focus-visible:ring-ring/45"
+                  >
                     <input
                       type="checkbox"
                       name="offer"
                       value={offer.key}
                       defaultChecked={f.offers.includes(offer.key)}
+                      className="sr-only"
                     />
                     {label(offer)}
                   </label>
                 ))}
               </div>
             </fieldset>
-            <SubmitButton variant="secondary" className="dirApply">
+            <SubmitButton variant="secondary" className="self-start">
               {t.apply}
             </SubmitButton>
           </FilterPanel>
 
           <DirectoryResults label={t.results}>
-            <div className="dirResultsHead">
-              <span role="status">
+            <div className="flex flex-wrap items-center justify-between gap-3 text-base text-muted-foreground">
+              <span role="status" className="tabular-nums">
                 {total
                   ? format(t.showing, { from: page.from, to: page.to, total })
                   : t.noResultsCount}
               </span>
-              <label className="dirSort">
+              <label className="flex items-center gap-2 text-sm font-semibold text-foreground">
                 {t.sort}
                 <NativeSelect name="sort" defaultValue={f.sort} wrapperClassName="w-auto">
                   <option value="recent">{t.sortRecent}</option>
@@ -191,93 +215,85 @@ export default async function DirectoryPage({
             </div>
 
             {chips.length > 0 && (
-              <div className="dirChips">
-                <ul aria-label={t.activeFilters}>
+              <div className="flex flex-wrap items-center gap-x-3.5 gap-y-2">
+                <ul aria-label={t.activeFilters} className="flex flex-wrap gap-2">
                   {chips.map((chip) => (
                     <li key={chip.key}>
-                      <Link href={chip.href}>
+                      <Link
+                        href={chip.href}
+                        className="inline-flex items-center gap-1 rounded-xl bg-primary-tint px-3 py-1.5 text-sm font-bold text-primary-hover outline-none hover:ring-1 hover:ring-primary/40 focus-visible:ring-[3px] focus-visible:ring-ring/45"
+                      >
                         {chip.label}
-                        <X aria-hidden className="ml-1 inline-block size-3.5 align-[-0.15em]" />
+                        <X aria-hidden className="size-3.5 shrink-0" />
                         <span className="sr-only"> ({t.removeFilter})</span>
                       </Link>
                     </li>
                   ))}
                 </ul>
-                <Link href="/directory" className="dirClear">
+                <Link href="/directory" className={cn(textLink, "text-sm font-bold")}>
                   {t.resetAll}
                 </Link>
               </div>
             )}
 
             {people.length > 0 ? (
-              <ul className="dirGrid">
-                {people.map((p) => {
-                  const name = `${p.preferred_name || p.first_name} ${p.last_name}`;
-                  const role = [p.job_title, p.employer].filter(Boolean).join(" · ");
-                  const shown = p.offers.slice(0, 2);
-                  return (
-                    <li key={p.id}>
-                      {/* Not prefetched: a profile checks access in its layout, one read per card. */}
-                      <Link className="dirCard relative" href={`/profile/${p.id}`} prefetch={false}>
-                        <span className="dirCardHead">
-                          <span
-                            className="dirAvatar"
-                            style={{ background: tint(p.id) }}
-                            aria-hidden="true"
-                          >
-                            {initials(p.preferred_name || p.first_name, p.last_name)}
-                          </span>
-                          <span className="dirCardWho">
-                            <span className="dirCardName">{name}</span>
-                            <span>
-                              {[classOf(p.grad_year), p.city].filter(Boolean).join(" · ")}
-                            </span>
-                          </span>
-                        </span>
-                        {role && <span className="dirCardRole">{role}</span>}
-                        {shown.length > 0 && (
-                          <span className="dirTags">
-                            {shown.map((key) => (
-                              <span key={key}>{offerLabel(key)}</span>
-                            ))}
-                            {p.offers.length > shown.length && (
-                              <span>+{p.offers.length - shown.length}</span>
-                            )}
-                          </span>
-                        )}
-                        <LinkPending className="inset-x-[18px] bottom-2 text-primary" />
-                      </Link>
-                    </li>
-                  );
-                })}
+              <ul className={directoryGrid}>
+                {people.map((p) => (
+                  <li key={p.id}>
+                    <PersonCard
+                      href={`/profile/${p.id}`}
+                      avatar={
+                        <Avatar
+                          initials={initials(p.preferred_name || p.first_name, p.last_name)}
+                          tint={tint(p.id)}
+                        />
+                      }
+                      name={`${p.preferred_name || p.first_name} ${p.last_name}`}
+                      meta={[classOf(p.grad_year), p.city].filter(Boolean).join(" · ")}
+                      role={[p.job_title, p.employer].filter(Boolean).join(" · ")}
+                    >
+                      {p.offers.length > 0 && <Tags labels={p.offers.map(offerLabel)} max={2} />}
+                    </PersonCard>
+                  </li>
+                ))}
               </ul>
             ) : (
-              <div className="dirEmpty">
-                <p>{t.noResults}</p>
-                {chips.length > 0 && (
-                  <Button asChild variant="secondary">
-                    <Link href="/directory">{t.resetAll}</Link>
-                  </Button>
-                )}
-              </div>
+              <EmptyState
+                icon={SearchX}
+                title={t.noResults}
+                action={
+                  chips.length > 0 && (
+                    <Button asChild variant="secondary">
+                      <Link href="/directory">{t.resetAll}</Link>
+                    </Button>
+                  )
+                }
+              />
             )}
 
             {page.last > 1 && (
-              <nav className="dirPages" aria-label={t.pagination}>
+              <nav
+                className="flex items-center justify-between gap-3 text-base text-muted-foreground tabular-nums"
+                aria-label={t.pagination}
+              >
                 {page.previous ? (
-                  <Link href={page.previous}>
-                    <BackArrow />
-                    {t.previous}
-                  </Link>
+                  <Button asChild variant="ghost" className="text-primary">
+                    <Link href={page.previous}>
+                      <BackArrow className="mr-0" />
+                      {t.previous}
+                    </Link>
+                  </Button>
                 ) : (
                   <span />
                 )}
                 <span>{format(t.pageOf, { page: f.page, pages: page.last })}</span>
                 {page.next ? (
-                  <Link href={page.next}>
-                    {t.next}
-                    <ForwardArrow />
-                  </Link>
+                  <Button asChild variant="ghost" className="text-primary">
+                    <Link href={page.next}>
+                      {t.next}
+                      <ForwardArrow className="ml-0" />
+                    </Link>
+                  </Button>
                 ) : (
                   <span />
                 )}
@@ -310,8 +326,10 @@ function Select({
       ? [{ value, label: value }, ...options]
       : options;
   return (
-    <div className="dirField">
-      <label htmlFor={id}>{label}</label>
+    <div className="flex flex-col gap-2">
+      <label htmlFor={id} className="text-sm font-semibold">
+        {label}
+      </label>
       <NativeSelect id={id} name={name} defaultValue={value}>
         <option value="">{any}</option>
         {all.map((option) => (
