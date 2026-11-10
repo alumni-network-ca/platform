@@ -23,7 +23,17 @@ test.describe("each school at its own address", () => {
 
   test("the root domain shows the page for schools", async ({ page, baseURL }) => {
     await page.goto(addressOf(baseURL!, null));
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText(/networks for school alumni/i);
+    const header = page.getByRole("banner");
+    await expect(header).toHaveCount(1);
+    await expect(header.getByRole("link", { name: "Alumni Network For schools" })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Keep your alumni connected.");
+    await page.getByRole("link", { name: "Request a quote" }).click();
+    await expect(page).toHaveURL(/\?inquiry=quote#contact$/);
+    await expect(page.getByRole("combobox")).toHaveValue("quote");
+    await page.getByRole("link", { name: "Book a demo" }).click();
+    await expect(page).toHaveURL(/\?inquiry=demo#contact$/);
+    await expect(page.getByRole("combobox")).toHaveValue("demo");
+    await expect(page.getByRole("link", { name: /^(sign in|join|sign up)$/i })).toHaveCount(0);
     const response = await page.goto(addressOf(baseURL!, "herzliah", "/site"));
     expect(response?.status()).toBe(404);
   });

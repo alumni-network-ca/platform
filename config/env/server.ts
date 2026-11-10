@@ -7,6 +7,10 @@ export const serverEnv = {
   get rootDomain() {
     return process.env.ROOT_DOMAIN ?? "localhost";
   },
+  /** Public email address for school inquiries from the platform homepage. */
+  get platformContactEmail() {
+    return process.env.PLATFORM_CONTACT_EMAIL?.trim() || "schools@alumninetwork.ca";
+  },
   /** True only on Vercel PR previews, which pick the school with the tenant cookie. */
   get isPreview() {
     return process.env.VERCEL_ENV === "preview";

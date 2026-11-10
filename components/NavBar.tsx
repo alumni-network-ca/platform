@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import landing from "@/app/site/landing.module.css";
 import type { NavLink, NavModel } from "@/lib/auth/nav";
 import { createClient } from "@/lib/supabase/client";
 import { AccountMenu } from "./AccountMenu";
@@ -37,12 +38,20 @@ const navLink = cn(
 );
 
 /** Draws the bar that components/Nav.tsx computed on the server (docs/design/nav-bar.md). */
-export function NavBar({ model }: { model: NavModel }) {
+export function NavBar({
+  model,
+  platformLandingLabel,
+}: {
+  model: NavModel;
+  platformLandingLabel?: string;
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const { setLocale } = useLanguage();
   const current = currentLink(model.links, pathname);
   const { brand, pill } = model;
+  const landingTagline =
+    pathname === "/" || pathname === "/site" ? platformLandingLabel : undefined;
 
   function switchLanguage() {
     setLocale(model.language.switchTo);
@@ -62,12 +71,13 @@ export function NavBar({ model }: { model: NavModel }) {
       className={cn(
         "sticky top-0 z-[100] flex min-h-[66px] flex-wrap items-center justify-between gap-4 px-8 py-3 text-white shadow-[0_8px_24px_rgba(5,18,49,0.12)] max-[720px]:px-4",
         model.theme === "platform" ? "bg-platform" : "bg-brand",
+        landingTagline && landing.platformHeader,
       )}
     >
       {/* The visible text is the accessible name (axe label-content-name-mismatch); the logo is decorative. */}
       <Link
         className={cn("flex items-center gap-[11px] rounded-md text-white", onBar)}
-        href={brand.href}
+        href={landingTagline ? "/" : brand.href}
       >
         {brand.logo ? (
           <Image
@@ -79,22 +89,24 @@ export function NavBar({ model }: { model: NavModel }) {
             priority
           />
         ) : (
-          <span
-            className={cn(
-              "grid size-[42px] shrink-0 place-items-center rounded-lg p-1 text-[13px] font-extrabold tracking-[0.04em]",
-              model.theme === "platform"
-                ? "bg-platform-mark text-white"
-                : "bg-white text-foreground",
-            )}
-            aria-hidden="true"
-          >
-            {brand.monogram}
-          </span>
+          !landingTagline && (
+            <span
+              className={cn(
+                "grid size-[42px] shrink-0 place-items-center rounded-lg p-1 text-[13px] font-extrabold tracking-[0.04em]",
+                model.theme === "platform"
+                  ? "bg-platform-mark text-white"
+                  : "bg-white text-foreground",
+              )}
+              aria-hidden="true"
+            >
+              {brand.monogram}
+            </span>
+          )
         )}
         <span className="flex flex-col gap-[3px]">
           <span className="text-base leading-tight font-bold">{brand.name}</span>
           <span className="text-[11px] leading-none tracking-[0.1em] text-on-brand-muted uppercase">
-            {brand.tagline}
+            {landingTagline ?? brand.tagline}
           </span>
         </span>
       </Link>
@@ -170,7 +182,7 @@ export function NavBar({ model }: { model: NavModel }) {
               {model.language.code}
               <span className="sr-only"> · {model.language.name}</span>
             </button>
-            {model.signIn && (
+            {!landingTagline && model.signIn && (
               <Link
                 className={cn(
                   "rounded-md border border-on-brand-line px-4 py-[9px] text-base font-bold text-white hover:bg-white/8",
