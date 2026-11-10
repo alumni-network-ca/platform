@@ -6,6 +6,8 @@ import { replyToInfoRequest } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { leaveTo } from "@/lib/leave";
+import { Callout, fine, footerLink, form, label } from "@/components/auth/parts";
+import { Alert } from "@/components/ui/alert";
 
 export function ReplyForm({ question }: { question: string | null | undefined }) {
   const { locale } = useLanguage();
@@ -19,18 +21,18 @@ export function ReplyForm({ question }: { question: string | null | undefined })
     { error: false },
   );
   return (
-    <form action={action} className="authForm">
-      {question && <blockquote className="joinNotice">{question}</blockquote>}
-      <label>
+    <form action={action} className={form()}>
+      {question && <Callout as="blockquote">{question}</Callout>}
+      <label className={label}>
         {fr ? "Votre réponse" : "Your answer"}
         <Textarea name="reply" rows={4} maxLength={1000} required />
       </label>
       {state.error && (
-        <p role="alert" className="notice">
+        <Alert variant="error" role="alert">
           {fr
             ? "Veuillez écrire une réponse de 1 à 1 000 caractères."
             : "Please enter a reply between 1 and 1,000 characters."}
-        </p>
+        </Alert>
       )}
       <Button size="lg" className="w-full" loading={pending}>
         {pending
@@ -41,10 +43,10 @@ export function ReplyForm({ question }: { question: string | null | undefined })
             ? "Envoyer la réponse au réviseur"
             : "Send reply to the reviewer"}
       </Button>
-      <Link className="backLink" href="/join/edit">
+      <Link className={`${footerLink} self-start text-base`} href="/join/edit">
         {fr ? "Modifier les renseignements de ma demande" : "Edit my request details"}
       </Link>
-      <p className="microcopy muted">
+      <p className={fine}>
         {fr
           ? "La demande retournera en vérification. L'accès reste bloqué jusqu'à l'approbation."
           : "Your request will return to school review. Alumni access stays locked until approval."}

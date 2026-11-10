@@ -8,8 +8,24 @@ import { createAccount, type SignupResult } from "./signup-actions";
 import { ConfirmationResend } from "./verify/ConfirmationResend";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Mail } from "lucide-react";
 import { leaveTo } from "@/lib/leave";
+import {
+  AuthCard,
+  Callout,
+  Divider,
+  Footer,
+  cardTitle,
+  eyebrow,
+  fine,
+  footerLink,
+  form,
+  label,
+  MailIcon,
+  muted,
+  pair,
+  stack,
+} from "@/components/auth/parts";
+import { Alert } from "@/components/ui/alert";
 
 export function SignupForm({
   shortName,
@@ -55,44 +71,45 @@ export function SignupForm({
       };
   if (result.confirmationSent) {
     return (
-      <section className="joinCard" aria-labelledby="confirmation-sent-title">
-        <div role="status" className="joinStack">
-          <span className="joinIcon" aria-hidden="true">
-            <Mail className="size-6" />
-          </span>
-          <h2 id="confirmation-sent-title">
+      <AuthCard size="compact" aria-labelledby="confirmation-sent-title">
+        <div role="status" className={stack({ compact: true })}>
+          <MailIcon />
+          <h2 id="confirmation-sent-title" className={cardTitle}>
             {fr ? "Vérifiez votre boîte de réception" : "Check your inbox"}
           </h2>
-          <p className="muted">
+          <p className={muted}>
             {fr
               ? "Un courriel de confirmation a été envoyé. Consultez votre boîte de réception et cliquez sur le lien pour continuer."
               : "A confirmation email has been sent. Please check your inbox and click the link to continue."}
           </p>
         </div>
-        <p className="muted microcopy">
+        <p className={fine}>
           {fr
             ? "Vous ne trouvez pas le courriel ? Vérifiez vos indésirables."
             : "Can't find the email? Check your spam folder."}
         </p>
         <ConfirmationResend retryIn={SIGNUP_CONFIRMATION.resendCooldownMs / 1000} />
-        <div className="authFooter">
+        <Footer>
           <Link
+            className={footerLink}
             href={
               destination === "/join" ? "/login" : `/login?next=${encodeURIComponent(destination)}`
             }
           >
             {fr ? "Déjà confirmé ? Se connecter" : "Already confirmed? Sign in"}
           </Link>
-        </div>
-      </section>
+        </Footer>
+      </AuthCard>
     );
   }
   return (
-    <section className="joinCard" aria-labelledby="create-account-title">
-      <div className="joinStack">
-        <span className="joinEyebrow">{fr ? "Étape 1 de 3" : "Step 1 of 3"}</span>
-        <h2 id="create-account-title">{fr ? "Créez votre compte" : "Create your account"}</h2>
-        <p className="muted">
+    <AuthCard size="compact" aria-labelledby="create-account-title">
+      <div className={stack({ compact: true })}>
+        <span className={eyebrow}>{fr ? "Étape 1 de 3" : "Step 1 of 3"}</span>
+        <h2 id="create-account-title" className={cardTitle}>
+          {fr ? "Créez votre compte" : "Create your account"}
+        </h2>
+        <p className={muted}>
           {destination !== "/join"
             ? fr
               ? "Utilisez l'adresse courriel invitée par l'école."
@@ -103,36 +120,36 @@ export function SignupForm({
         </p>
       </div>
       {expired && (
-        <p className="notice" role="alert">
+        <Alert variant="error" role="alert">
           {fr
             ? "Ce lien est invalide ou a expiré. Demandez un nouveau courriel de confirmation ou connectez-vous si votre adresse est déjà confirmée."
             : "This confirmation link is invalid or expired. Request a new confirmation email, or sign in if you have already confirmed your email."}{" "}
           <Link href="/join/verify">{fr ? "Renvoyer le courriel" : "Resend confirmation"}</Link>
-        </p>
+        </Alert>
       )}
-      <form action={action} className="authForm">
+      <form action={action} className={form({ compact: true })}>
         <input type="hidden" name="next" value={destination} />
         {invitedEmail && (
-          <div className="signupField">
-            <div className="signupPasswords">
-              <label>
+          <div className="grid gap-1">
+            <div className={pair}>
+              <label className={label}>
                 {fr ? "Prénom" : "First name"}
                 <Input name="first_name" autoComplete="given-name" maxLength={100} required />
               </label>
-              <label>
+              <label className={label}>
                 {fr ? "Nom" : "Last name"}
                 <Input name="last_name" autoComplete="family-name" maxLength={100} required />
               </label>
             </div>
-            <p className="microcopy muted">
+            <p className={fine}>
               {fr
                 ? `Le personnel de ${shortName} voit votre nom sur la page du personnel et dans le journal d'audit.`
                 : `Other ${shortName} staff see your name on the Staff page and in the audit log.`}
             </p>
           </div>
         )}
-        <div className="signupField">
-          <label>
+        <div className="grid gap-1">
+          <label className={label}>
             {fr ? "Adresse courriel" : "Email address"}
             <Input
               name="email"
@@ -146,7 +163,7 @@ export function SignupForm({
               required
             />
           </label>
-          <p id="signup-email-hint" className="microcopy muted">
+          <p id="signup-email-hint" className={fine}>
             {invitedEmail
               ? fr
                 ? "Fixée par l'invitation; elle ne peut pas être modifiée ici."
@@ -156,9 +173,9 @@ export function SignupForm({
                 : "Use a personal email you will keep after graduation."}
           </p>
         </div>
-        <div className="signupPasswords">
-          <div className="signupField">
-            <label>
+        <div className={pair}>
+          <div className="grid gap-1">
+            <label className={label}>
               {fr ? "Créer un mot de passe" : "Create a password"}
               <Input
                 name="password"
@@ -169,13 +186,13 @@ export function SignupForm({
                 required
               />
             </label>
-            <p id="signup-password-hint" className="microcopy muted">
+            <p id="signup-password-hint" className={fine}>
               {fr
                 ? `Au moins ${MIN_PASSWORD_LENGTH} caractères.`
                 : `At least ${MIN_PASSWORD_LENGTH} characters.`}
             </p>
           </div>
-          <label>
+          <label className={label}>
             {fr ? "Confirmer le mot de passe" : "Confirm password"}
             <Input
               name="confirm_password"
@@ -186,7 +203,7 @@ export function SignupForm({
             />
           </label>
         </div>
-        <div className="joinNotice">
+        <Callout compact>
           <strong>
             {fr
               ? "Créer un compte ne donne pas accès au réseau."
@@ -200,11 +217,11 @@ export function SignupForm({
             : fr
               ? "Ensuite, envoyez votre demande à l'école pour vérification."
               : "Next, submit your request for the school's review."}
-        </div>
+        </Callout>
         {result.error && (
-          <div className="notice" role="alert">
+          <Alert variant="error" role="alert">
             {errors[result.error]}
-          </div>
+          </Alert>
         )}
         <Button size="lg" className="w-full" loading={pending}>
           {pending
@@ -216,7 +233,7 @@ export function SignupForm({
               : "Create my account"}
         </Button>
       </form>
-      <p className="joinDivider">
+      <Divider compact>
         {fr ? "Vous avez déjà un compte ?" : "Already have an account?"}{" "}
         <Link
           href={
@@ -225,7 +242,7 @@ export function SignupForm({
         >
           {fr ? "Se connecter" : "Sign in"}
         </Link>
-      </p>
-    </section>
+      </Divider>
+    </AuthCard>
   );
 }

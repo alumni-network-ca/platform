@@ -5,9 +5,21 @@ import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
 import { MIN_PASSWORD_LENGTH } from "@/config/auth";
 import { createClient } from "@/lib/supabase/client";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ForwardArrow } from "@/components/icons";
+import {
+  Footer,
+  fine,
+  footerLink,
+  form,
+  label,
+  muted,
+  pageTitle,
+  stack,
+} from "@/components/auth/parts";
+import { Alert } from "@/components/ui/alert";
 
 // Also used after an email recovery link. Supabase requires a recent sign-in for a password change.
 
@@ -88,18 +100,20 @@ export function PasswordForm({
 
   return (
     <>
-      <h1>
-        {recovery
-          ? locale === "fr"
-            ? "Choisissez un nouveau mot de passe"
-            : "Choose a new password"
-          : t.title}
-      </h1>
-      <p className="muted">{t.intro(email)}</p>
-      <form onSubmit={save} className="authForm">
+      <div className={stack()}>
+        <h1 className={pageTitle}>
+          {recovery
+            ? locale === "fr"
+              ? "Choisissez un nouveau mot de passe"
+              : "Choose a new password"
+            : t.title}
+        </h1>
+        <p className={muted}>{t.intro(email)}</p>
+      </div>
+      <form onSubmit={save} className={form()}>
         {/* Tells password managers which account the new password belongs to. */}
         <input type="email" autoComplete="username" value={email} readOnly hidden />
-        <label>
+        <label className={label}>
           {t.password}
           <Input
             type="password"
@@ -111,10 +125,10 @@ export function PasswordForm({
             required
           />
         </label>
-        <p id="password-hint" className="muted microcopy">
+        <p id="password-hint" className={cn(fine, "-mt-2")}>
           {t.hint}
         </p>
-        <label>
+        <label className={label}>
           {t.confirm}
           <Input
             type="password"
@@ -130,7 +144,7 @@ export function PasswordForm({
         </Button>
       </form>
       {saved && (
-        <p className="notice" role="status">
+        <Alert variant="success" role="status">
           {t.saved}
           {recovery && (
             <>
@@ -141,17 +155,19 @@ export function PasswordForm({
               </Link>
             </>
           )}
-        </p>
+        </Alert>
       )}
       {message && (
-        <div className="notice" role="alert">
+        <Alert variant="error" role="alert">
           {message}
-        </div>
+        </Alert>
       )}
       {!recovery && (
-        <div className="authFooter">
-          <Link href="/account/email">{t.email}</Link>
-        </div>
+        <Footer>
+          <Link className={footerLink} href="/account/email">
+            {t.email}
+          </Link>
+        </Footer>
       )}
     </>
   );

@@ -1,4 +1,5 @@
 import { RecoveryForm } from "./RecoveryForm";
+import { AuthCard, AuthPage } from "@/components/auth/parts";
 
 export default async function ForgotPasswordPage({
   searchParams,
@@ -7,10 +8,10 @@ export default async function ForgotPasswordPage({
 }) {
   const expired = (await searchParams).error === "expired";
   return (
-    <main className="authPage">
-      <section className="authCard joinAuth">
+    <AuthPage>
+      <AuthCard>
         <RecoveryForm expired={expired} />
-      </section>
-    </main>
+      </AuthCard>
+    </AuthPage>
   );
 }

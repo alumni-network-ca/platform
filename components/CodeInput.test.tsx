@@ -10,7 +10,7 @@ function Form() {
 }
 
 const boxes = (container: HTMLElement) =>
-  [...container.querySelectorAll(".codeBox")].map((box) => box.textContent);
+  [...container.querySelectorAll("[data-code-box]")].map((box) => box.textContent);
 
 describe("CodeInput", () => {
   it("is one labelled field that the browser can fill with an emailed code", () => {
@@ -42,7 +42,7 @@ describe("CodeInput", () => {
   it("marks the box the next digit goes into while focused", async () => {
     const { container } = render(<Form />);
     const current = () =>
-      [...container.querySelectorAll(".codeBox")].findIndex((box) =>
+      [...container.querySelectorAll("[data-code-box]")].findIndex((box) =>
         box.hasAttribute("data-current"),
       );
     expect(current()).toBe(-1);
@@ -56,7 +56,7 @@ describe("CodeInput", () => {
     const { container } = render(<Form />);
     await userEvent.type(screen.getByLabelText("6-digit code"), "12");
     expect(container.querySelector("label")).toHaveTextContent(/^6-digit code$/);
-    for (const box of container.querySelectorAll(".codeBox")) {
+    for (const box of container.querySelectorAll("[data-code-box]")) {
       expect(box).toHaveAttribute("aria-hidden", "true");
     }
   });

@@ -2,6 +2,7 @@
 
 import { useId, useState } from "react";
 import { CODE_LENGTH } from "@/config/auth";
+import { cn } from "@/lib/utils";
 
 /**
  * An emailed one-time code, shown as six boxes. Underneath is one ordinary input, so paste, the browser's
@@ -22,12 +23,13 @@ export function CodeInput({
   // The box the next digit goes into; the last box once the code is complete.
   const current = Math.min(value.length, CODE_LENGTH - 1);
   return (
-    <div className="codeField">
+    <div className="flex flex-col gap-[7px] text-sm font-semibold">
       <label htmlFor={id}>{label}</label>
-      <div className="codeInput">
+      <div className="relative grid max-w-[340px] grid-cols-6 gap-2">
         <input
           id={id}
-          className="codeInputField"
+          // Invisible over the boxes; 16px, or iOS zooms in on focus.
+          className="absolute inset-0 z-1 w-full cursor-text bg-transparent p-0 text-[1rem] text-transparent caret-transparent outline-none selection:bg-transparent"
           inputMode="numeric"
           autoComplete="one-time-code"
           pattern={`[0-9]{${CODE_LENGTH}}`}
@@ -42,8 +44,14 @@ export function CodeInput({
         {Array.from({ length: CODE_LENGTH }, (_, i) => (
           <span
             key={i}
-            className="codeBox"
+            className={cn(
+              "grid h-[54px] place-items-center rounded-lg border border-input bg-card text-2xl font-bold text-foreground tabular-nums",
+              // The box the next digit goes into: the field's focus ring, and a blinking caret while it is empty.
+              "data-current:border-ring data-current:ring-[3px] data-current:ring-ring/25",
+              "data-current:empty:after:h-[26px] data-current:empty:after:w-0.5 data-current:empty:after:animate-caret data-current:empty:after:bg-ring data-current:empty:after:content-['']",
+            )}
             aria-hidden="true"
+            data-code-box=""
             data-current={focused && i === current ? "" : undefined}
           >
             {value[i]}

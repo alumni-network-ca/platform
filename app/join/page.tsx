@@ -10,6 +10,22 @@ import { previewInvitation } from "@/lib/staff/invitation";
 import { JoinForm } from "./JoinForm";
 import { SignupForm } from "./SignupForm";
 import { Check } from "lucide-react";
+import {
+  AuthCard,
+  AuthPage,
+  Callout,
+  Journey,
+  eyebrow,
+  fine,
+  intro,
+  introTitle,
+  lead,
+  muted,
+  pageTitle,
+  split,
+  stack,
+} from "@/components/auth/parts";
+import { Badge } from "@/components/ui/badge";
 
 // The same public entry point is shared in school emails and in the guest navigation.
 export default async function JoinPage({
@@ -35,69 +51,89 @@ export default async function JoinPage({
   if (invitation && invitation.status !== "open") redirect(destination);
   const staff = translations[locale].staffInvite;
   return (
-    <main className={`joinPage${user ? "" : " joinSignupPage"}`}>
-      {destination === "/join" && <JoinProgress step={user ? 1 : 0} locale={locale} />}
+    <AuthPage compact={!user}>
+      {destination === "/join" && (
+        <JoinProgress step={user ? 1 : 0} locale={locale} compact={!user} />
+      )}
       {user ? (
-        <div className="joinRequestLayout">
-          <section className="joinCard">
-            <span className="tag tagGood">
-              <Check
-                aria-hidden
-                className="mr-1 inline-block size-3.5 align-[-0.15em]"
-                strokeWidth={3}
-              />
-              {fr ? "Compte créé · Courriel confirmé" : "Account created · Email confirmed"}
-            </span>
-            <span className="joinEyebrow">{fr ? "Étape 2 de 3" : "Step 2 of 3"}</span>
-            <h1>{fr ? "Demandez l'accès au réseau" : "Request alumni access"}</h1>
-            <p className="muted">
-              {fr
-                ? shortName + " vérifie vos renseignements avant d'approuver votre accès au réseau."
-                : "Tell the school who you are. A " +
-                  shortName +
-                  " reviewer will check your details before approving your admission."}
-            </p>
-            <JoinForm />
-          </section>
-          <aside className="joinAside">
-            <div className="joinDarkPanel">
-              <h2>{fr ? "La suite" : "What happens next"}</h2>
-              <p>
-                <strong>{fr ? "1. Vérification par l'école" : "1. School review"}</strong>
-                <br />
+        <div className="grid grid-cols-[minmax(0,1fr)_320px] items-start gap-7 max-[800px]:grid-cols-1">
+          <AuthCard size="side">
+            <div className={stack()}>
+              <Badge variant="success" className="mb-1 py-1">
+                <Check aria-hidden strokeWidth={3} />
+                {fr ? "Compte créé · Courriel confirmé" : "Account created · Email confirmed"}
+              </Badge>
+              <span className={eyebrow}>{fr ? "Étape 2 de 3" : "Step 2 of 3"}</span>
+              <h1 className={pageTitle}>
+                {fr ? "Demandez l'accès au réseau" : "Request alumni access"}
+              </h1>
+              <p className={muted}>
                 {fr
-                  ? "Un réviseur compare vos renseignements aux dossiers de l'école."
-                  : "A reviewer checks your details against the school's records."}
-              </p>
-              <p>
-                <strong>{fr ? "2. Une mise à jour" : "2. An update"}</strong>
-                <br />
-                {fr
-                  ? "Connectez-vous pour voir la décision ou répondre à une question."
-                  : "Sign in to see the decision or reply if the reviewer needs more information."}
-              </p>
-              <p>
-                <strong>{fr ? "3. Votre profil d'ancien" : "3. Your alumni profile"}</strong>
-                <br />
-                {fr
-                  ? "Une fois votre demande approuvée, créez votre profil et choisissez sa visibilité."
-                  : "After approval, complete your profile and choose its visibility."}
+                  ? shortName +
+                    " vérifie vos renseignements avant d'approuver votre accès au réseau."
+                  : "Tell the school who you are. A " +
+                    shortName +
+                    " reviewer will check your details before approving your admission."}
               </p>
             </div>
-            <p className="microcopy muted">
+            <JoinForm />
+          </AuthCard>
+          <aside className="grid min-w-0 gap-5">
+            <div className="grid gap-5 rounded-lg bg-brand p-6 text-brand-foreground">
+              <h2 className="text-xl font-bold tracking-[-0.02em]">
+                {fr ? "La suite" : "What happens next"}
+              </h2>
+              {(fr
+                ? [
+                    [
+                      "1. Vérification par l'école",
+                      "Un réviseur compare vos renseignements aux dossiers de l'école.",
+                    ],
+                    [
+                      "2. Une mise à jour",
+                      "Connectez-vous pour voir la décision ou répondre à une question.",
+                    ],
+                    [
+                      "3. Votre profil d'ancien",
+                      "Une fois votre demande approuvée, créez votre profil et choisissez sa visibilité.",
+                    ],
+                  ]
+                : [
+                    [
+                      "1. School review",
+                      "A reviewer checks your details against the school's records.",
+                    ],
+                    [
+                      "2. An update",
+                      "Sign in to see the decision or reply if the reviewer needs more information.",
+                    ],
+                    [
+                      "3. Your alumni profile",
+                      "After approval, complete your profile and choose its visibility.",
+                    ],
+                  ]
+              ).map(([title, body]) => (
+                <p key={title} className="text-base text-on-brand-soft">
+                  <strong className="text-brand-foreground">{title}</strong>
+                  <br />
+                  {body}
+                </p>
+              ))}
+            </div>
+            <p className={fine}>
               {fr ? "Connecté en tant que" : "Signed in as"}
               <br />
-              <strong>{user.email}</strong>
+              <strong className="text-foreground">{user.email}</strong>
             </p>
           </aside>
         </div>
       ) : (
-        <div className="joinSplit">
+        <div className={split}>
           {invitation?.status === "open" ? (
-            <section className="joinIntro">
-              <span className="joinEyebrow">{format(staff.eyebrow, { school: shortName })}</span>
-              <h1>{staff.createTitle}</h1>
-              <p className="joinLead">
+            <section className={intro({ compact: true })}>
+              <span className={eyebrow}>{format(staff.eyebrow, { school: shortName })}</span>
+              <h1 className={introTitle}>{staff.createTitle}</h1>
+              <p className={lead}>
                 {format(staff.signupLead, {
                   inviter: invitation.inviterName ?? staff.platformTeam,
                   email: invitation.email,
@@ -106,11 +142,11 @@ export default async function JoinPage({
               </p>
             </section>
           ) : (
-            <section className="joinIntro">
-              <span className="joinEyebrow">
+            <section className={intro({ compact: true })}>
+              <span className={eyebrow}>
                 {fr ? "Nouveau sur le réseau ?" : "New to the network?"}
               </span>
-              <h1>
+              <h1 className={introTitle}>
                 {fr ? (
                   "Tout commence par votre compte."
                 ) : (
@@ -121,7 +157,7 @@ export default async function JoinPage({
                   </>
                 )}
               </h1>
-              <p className="joinLead">
+              <p className={lead}>
                 {fr
                   ? "Créez votre compte, puis présentez-vous à " +
                     shortName +
@@ -130,48 +166,33 @@ export default async function JoinPage({
                     shortName +
                     " who you are. A school reviewer will approve your alumni access."}
               </p>
-              <ol className="joinJourney">
-                <li>
-                  <span className="joinDot joinCurrent" aria-hidden="true">
-                    1
-                  </span>
-                  <div>
-                    <h3>{fr ? "Créez votre compte" : "Create your account"}</h3>
-                    <p>
-                      {fr
-                        ? "Choisissez votre adresse courriel et votre mot de passe."
-                        : "Choose the email and password you'll use to sign in."}
-                    </p>
-                  </div>
-                </li>
-                <li>
-                  <span className="joinDot" aria-hidden="true">
-                    2
-                  </span>
-                  <div>
-                    <h3>{fr ? "Demandez l'accès au réseau" : "Request alumni access"}</h3>
-                    <p>
-                      {fr
-                        ? "Indiquez votre nom à l'école et votre année de graduation."
-                        : "Share your name at school and graduation year."}
-                    </p>
-                  </div>
-                </li>
-                <li>
-                  <span className="joinDot" aria-hidden="true">
-                    3
-                  </span>
-                  <div>
-                    <h3>{fr ? "Attendez l'approbation de l'école" : "Wait for school approval"}</h3>
-                    <p>
-                      {fr
-                        ? "Après l'approbation, créez votre profil et rejoignez la communauté."
-                        : "Once approved, set up your profile and join the community."}
-                    </p>
-                  </div>
-                </li>
-              </ol>
-              <div className="joinNotice">
+              <Journey
+                compact
+                steps={[
+                  {
+                    state: "current",
+                    title: fr ? "Créez votre compte" : "Create your account",
+                    body: fr
+                      ? "Choisissez votre adresse courriel et votre mot de passe."
+                      : "Choose the email and password you'll use to sign in.",
+                  },
+                  {
+                    state: "todo",
+                    title: fr ? "Demandez l'accès au réseau" : "Request alumni access",
+                    body: fr
+                      ? "Indiquez votre nom à l'école et votre année de graduation."
+                      : "Share your name at school and graduation year.",
+                  },
+                  {
+                    state: "todo",
+                    title: fr ? "Attendez l'approbation de l'école" : "Wait for school approval",
+                    body: fr
+                      ? "Après l'approbation, créez votre profil et rejoignez la communauté."
+                      : "Once approved, set up your profile and join the community.",
+                  },
+                ]}
+              />
+              <Callout compact>
                 <strong>
                   {fr ? "Vos renseignements restent privés" : "Private from the start"}
                 </strong>
@@ -179,7 +200,7 @@ export default async function JoinPage({
                 {fr
                   ? "Seul le personnel autorisé de l'école voit votre demande. Votre profil reste masqué jusqu'à sa publication."
                   : "Only authorised school staff see your request. Your profile stays hidden until you publish it."}
-              </div>
+              </Callout>
             </section>
           )}
           <SignupForm
@@ -190,6 +211,6 @@ export default async function JoinPage({
           />
         </div>
       )}
-    </main>
+    </AuthPage>
   );
 }

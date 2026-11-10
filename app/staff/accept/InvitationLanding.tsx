@@ -6,6 +6,20 @@ import { format, type Locale, type translations } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  AuthCard,
+  Callout,
+  Footer,
+  cardTitle,
+  eyebrow,
+  fine,
+  footerLink,
+  form,
+  label,
+  muted,
+  stack,
+} from "@/components/auth/parts";
+import { Alert } from "@/components/ui/alert";
 
 type Copy = (typeof translations)[Locale]["staffInvite"];
 
@@ -51,27 +65,44 @@ export function InvitationLanding({
   }
 
   return (
-    <section className="joinCard" aria-labelledby="invite-account-title">
-      <div className="joinStack">
-        <span className="joinEyebrow">{format(t.stepOfTwo, { step: 1 })}</span>
-        <h2 id="invite-account-title">{existing ? t.signInTitle : t.createTitle}</h2>
-        <p className="muted">{existing ? t.signInLead : t.createLead}</p>
+    <AuthCard size="compact" aria-labelledby="invite-account-title">
+      <div className={stack({ compact: true })}>
+        <span className={eyebrow}>{format(t.stepOfTwo, { step: 1 })}</span>
+        <h2 id="invite-account-title" className={cardTitle}>
+          {existing ? t.signInTitle : t.createTitle}
+        </h2>
+        <p className={muted}>{existing ? t.signInLead : t.createLead}</p>
       </div>
-      <div className="inviteSwitch" role="group" aria-label={t.choose}>
-        <button type="button" aria-pressed={!existing} onClick={() => setExisting(false)}>
-          {t.newTab}
-        </button>
-        <button type="button" aria-pressed={existing} onClick={() => setExisting(true)}>
-          {t.existingTab}
-        </button>
+      {/* Two buttons that work as one switch: new account or existing one. */}
+      <div
+        className="grid grid-cols-2 gap-1 rounded-md bg-muted p-1"
+        role="group"
+        aria-label={t.choose}
+      >
+        {(
+          [
+            [false, t.newTab],
+            [true, t.existingTab],
+          ] as const
+        ).map(([value, text]) => (
+          <button
+            key={text}
+            type="button"
+            aria-pressed={existing === value}
+            onClick={() => setExisting(value)}
+            className="min-h-[42px] cursor-pointer rounded-sm text-base font-bold text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/45 aria-pressed:bg-card aria-pressed:text-foreground aria-pressed:shadow-sm"
+          >
+            {text}
+          </button>
+        ))}
       </div>
       {existing ? (
-        <form onSubmit={signIn} className="authForm">
-          <label>
+        <form onSubmit={signIn} className={form({ compact: true })}>
+          <label className={label}>
             {t.email}
             <Input type="email" autoComplete="username" readOnly value={email} />
           </label>
-          <label>
+          <label className={label}>
             {t.password}
             <Input
               type="password"
@@ -85,21 +116,23 @@ export function InvitationLanding({
             {busy ? t.signingIn : t.signInButton}
           </Button>
           {message && (
-            <div className="notice" role="alert">
+            <Alert variant="error" role="alert">
               {message}
-            </div>
+            </Alert>
           )}
-          <div className="authFooter">
-            <Link href="/forgot-password">{t.forgot}</Link>
-          </div>
+          <Footer>
+            <Link className={footerLink} href="/forgot-password">
+              {t.forgot}
+            </Link>
+          </Footer>
         </form>
       ) : (
-        <div className="authForm">
-          <label>
+        <div className={form({ compact: true })}>
+          <label className={label}>
             {t.email}
             <Input type="email" readOnly value={email} aria-describedby="invite-fixed-email" />
           </label>
-          <p id="invite-fixed-email" className="microcopy muted">
+          <p id="invite-fixed-email" className={fine}>
             {format(t.fixedEmail, { inviter })}
           </p>
           <Button asChild size="lg" className="w-full">
@@ -107,8 +140,10 @@ export function InvitationLanding({
           </Button>
         </div>
       )}
-      <p className="joinNotice">{format(t.onlyFor, { email })}</p>
-      <p className="microcopy muted">{t.notExpecting}</p>
-    </section>
+      <Callout as="p" compact>
+        {format(t.onlyFor, { email })}
+      </Callout>
+      <p className={fine}>{t.notExpecting}</p>
+    </AuthCard>
   );
 }

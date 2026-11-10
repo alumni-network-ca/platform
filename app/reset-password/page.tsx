@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getSchool } from "@/lib/tenant/server";
 import { PasswordForm } from "@/app/account/password/PasswordForm";
+import { AuthCard, AuthPage } from "@/components/auth/parts";
 
 export default async function ResetPasswordPage() {
   const supabase = await createClient();
@@ -11,10 +12,10 @@ export default async function ResetPasswordPage() {
   if (!user) redirect("/forgot-password?error=expired");
   const school = await getSchool();
   return (
-    <main className="authPage">
-      <section className="authCard joinAuth">
+    <AuthPage>
+      <AuthCard>
         <PasswordForm email={user.email ?? ""} recovery continueTo={school ? "/auth/home" : "/"} />
-      </section>
-    </main>
+      </AuthCard>
+    </AuthPage>
   );
 }
