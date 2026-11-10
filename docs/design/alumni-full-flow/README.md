@@ -63,7 +63,7 @@ The preview's Next screen control switches between applicant, email and staff co
 ## Rules drawn on the canvas
 
 - **School admin** sees every school admin page. **Reviewer** sees the dashboard, decides sign-ups, reads the roster, records and audit log; no record actions, exports, templates, staff or settings (ADR 0005).
-- **Platform admins** (Gab, Noah) work at `alumninetwork.ca/console`. The console shows counts per school, never alumni personal data. To see a school's data they open a support grant: a reason and at most 8 hours. The school's admins see it in their audit log, highlighted.
+- **Platform admins** (Gab, Noah) work at `admin.alumninetwork.ca`. The console shows counts per school, never alumni personal data. To see a school's data they open a support grant: a reason and at most 8 hours. The school's admins see it in their audit log, highlighted.
 - All admin and console pages require two-factor sign-in (FND-11).
 - CSV import is not drawn; sign-up through `/join` is the only way in at launch (DEC-01).
 
@@ -82,16 +82,16 @@ Signed-out pages use the `guest` role: FR, Sign in and the proposed Join now act
 
 "Ready" means the database functions exist and are tested; "new" names what the database still needs. **Built** marks screens that are implemented.
 
-### Super admin (root domain)
+### Super admin (`admin.alumninetwork.ca`)
 
 | Screen | Route | Backlog | Database |
 |---|---|---|---|
-| **Built** · S1.1 Console: all schools (`SaSchools`) | `/console` | SA-01 | `platform_school_summaries()`, counts only |
-| **Built** · S1.2 Create a school (`SaCreate`) | `/console/schools/new` | SA-01 | `platform_create_school` with branding (`clean_branding`) |
-| **Built** except the checklist · S1.3 School setup: staff invitations (school admin or reviewer), read-only staff list, launch checklist (`SaSetup`) | `/console/schools/[slug]` | SA-01, SA-02, SA-05 | `platform_invite_staff`, `platform_school_staff`, `issue_staff_invitation_link`, `revoke_staff_invitation`. "Open sign-ups" needs the "in setup" status (SA-05) |
-| **Built** · S2.1 Support access (`SaSupport`) | `/console/support` | FND-13 (done), SA-01 | `platform_open_grant`, `platform_revoke_grant` |
-| **Built** · S2.2 Suspend or offboard (`SaSuspend`) | `/console/schools/[slug]/status` | SA-01, SA-03 | `platform_set_school_status`. Offboarding waits for the retention job (DEC-08, SA-05) |
-| S2.3 Platform health (`SaHealth`) | `/console/health` | SA-04 | needs job heartbeats (FND-17) and the email outbox worker (EML-01) |
+| **Built** · S1.1 Console: all schools (`SaSchools`) | `/` | SA-01 | `platform_school_summaries()`, counts only |
+| **Built** · S1.2 Create a school (`SaCreate`) | `/schools/new` | SA-01 | `platform_create_school` with branding (`clean_branding`) |
+| **Built** except the checklist · S1.3 School setup: staff invitations (school admin or reviewer), read-only staff list, launch checklist (`SaSetup`) | `/schools/[slug]` | SA-01, SA-02, SA-05 | `platform_invite_staff`, `platform_school_staff`, `issue_staff_invitation_link`, `revoke_staff_invitation`. "Open sign-ups" needs the "in setup" status (SA-05) |
+| **Built** · S2.1 Support access (`SaSupport`) | `/support` | FND-13 (done), SA-01 | `platform_open_grant`, `platform_revoke_grant` |
+| **Built** · S2.2 Suspend or offboard (`SaSuspend`) | `/schools/[slug]/status` | SA-01, SA-03 | `platform_set_school_status`. Offboarding waits for the retention job (DEC-08, SA-05) |
+| S2.3 Platform health (`SaHealth`) | `/health` | SA-04 | needs job heartbeats (FND-17) and the email outbox worker (EML-01) |
 
 ### School admin (school address)
 

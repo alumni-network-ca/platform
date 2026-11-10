@@ -8,7 +8,7 @@ import { ui } from "@/components/admin/parts";
 // S2.2 Suspend or reactivate a school.
 export default async function SchoolStatusPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const { supabase } = await requirePlatformAdmin(`/console/schools/${slug}/status`);
+  const { supabase } = await requirePlatformAdmin(`/schools/${slug}/status`);
   const { data: school } = await supabase
     .from("institutions")
     .select("name, slug, status")
@@ -18,7 +18,7 @@ export default async function SchoolStatusPage({ params }: { params: Promise<{ s
   const suspended = school.status === "suspended";
   return (
     <>
-      <Link className={ui.backLink} href={`/console/schools/${school.slug}`}>
+      <Link className={ui.backLink} href={`/schools/${school.slug}`}>
         <BackArrow />
         {school.name}
       </Link>

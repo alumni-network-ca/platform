@@ -23,9 +23,47 @@ test.describe("each school at its own address", () => {
 
   test("the root domain shows the page for schools", async ({ page, baseURL }) => {
     await page.goto(addressOf(baseURL!, null));
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText(/networks for school alumni/i);
+    const header = page.getByRole("banner");
+    await expect(header).toHaveCount(1);
+    await expect(header.getByRole("link", { name: "Alumni Network For schools" })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Keep your alumni connected.");
+    await page.getByRole("link", { name: "Request a quote" }).click();
+    await expect(page).toHaveURL(/\?inquiry=quote#contact$/);
+    await expect(page.getByRole("combobox")).toHaveValue("quote");
+    await page.getByRole("link", { name: "Book a demo" }).click();
+    await expect(page).toHaveURL(/\?inquiry=demo#contact$/);
+    await expect(page.getByRole("combobox")).toHaveValue("demo");
+    await expect(page.getByRole("link", { name: /^(sign in|join|sign up)$/i })).toHaveCount(0);
     const response = await page.goto(addressOf(baseURL!, "herzliah", "/site"));
     expect(response?.status()).toBe(404);
+  });
+
+  test("each site's pages stay on its own address", async ({ page, baseURL }) => {
+    for (const [slug, path] of [
+      ["herzliah", "/site"],
+      ["herzliah", "/console"],
+      ["admin", "/site"],
+      [null, "/site"],
+    ] as const) {
+      const response = await page.request.get(addressOf(baseURL!, slug, path), {
+        maxRedirects: 0,
+      });
+      expect(response.status(), `${slug ?? "root"}${path}`).toBe(404);
+    }
+  });
+
+  test("the console's old root-domain links move to admin.", async ({ page, baseURL }) => {
+    for (const [from, to] of [
+      ["/console", "/"],
+      ["/console/schools/new?x=1", "/schools/new?x=1"],
+      ["/login?next=%2Fsupport", "/login?next=%2Fsupport"],
+    ]) {
+      const response = await page.request.get(addressOf(baseURL!, null, from), {
+        maxRedirects: 0,
+      });
+      expect(response.status()).toBe(308);
+      expect(response.headers().location).toBe(addressOf(baseURL!, "admin", to));
+    }
   });
 
   test("the directory lists only that school's alumni", async ({ page, context, baseURL }) => {

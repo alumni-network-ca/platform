@@ -7,7 +7,7 @@ export type GrantResult = { error: string | null; opened?: string };
 
 /** S2.1: open a time-boxed support grant (1–8 h, with a reason the school's admins see), or end one early. */
 export async function manageGrant(_: GrantResult, form: FormData): Promise<GrantResult> {
-  const { supabase } = await requirePlatformAdmin("/console/support");
+  const { supabase } = await requirePlatformAdmin("/support");
   if (form.get("intent") === "end") {
     const { error } = await supabase.rpc("platform_revoke_grant", {
       p_grant: String(form.get("grant") ?? ""),

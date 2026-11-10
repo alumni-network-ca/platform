@@ -22,7 +22,7 @@ export async function manageInvitation(
   form: FormData,
 ): Promise<InvitationResult> {
   const slug = String(form.get("slug") ?? "");
-  const { supabase } = await requirePlatformAdmin(`/console/schools/${slug}`);
+  const { supabase } = await requirePlatformAdmin(`/schools/${slug}`);
   const intent = String(form.get("intent") ?? "");
 
   const { data: school } = await supabase

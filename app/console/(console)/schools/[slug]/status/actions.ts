@@ -10,7 +10,7 @@ export type StatusResult = { error: string | null };
 /** S2.2: suspend or reactivate a school. The slug typed back confirms which school. */
 export async function setSchoolStatus(_: StatusResult, form: FormData): Promise<StatusResult> {
   const slug = String(form.get("slug") ?? "");
-  const { supabase } = await requirePlatformAdmin(`/console/schools/${slug}/status`);
+  const { supabase } = await requirePlatformAdmin(`/schools/${slug}/status`);
   const status = form.get("status") === "active" ? "active" : "suspended";
   const reason = String(form.get("reason") ?? "").trim();
   if (String(form.get("confirm") ?? "").trim() !== slug)
@@ -33,5 +33,5 @@ export async function setSchoolStatus(_: StatusResult, form: FormData): Promise<
   refreshSchoolConfig(school.id);
   // The nav bar, in the root layout, lists the live schools.
   revalidatePath("/", "layout");
-  redirect(`/console/schools/${slug}`);
+  redirect(`/schools/${slug}`);
 }

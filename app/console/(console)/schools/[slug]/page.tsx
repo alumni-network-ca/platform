@@ -16,7 +16,7 @@ const day = (iso: string) =>
 // a school status for setup, which comes with SA-05.
 export default async function SchoolPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const { supabase } = await requirePlatformAdmin(`/console/schools/${slug}`);
+  const { supabase } = await requirePlatformAdmin(`/schools/${slug}`);
   const { data: school } = await supabase
     .from("institutions")
     .select(
@@ -73,7 +73,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
 
   return (
     <>
-      <Link className={ui.backLink} href="/console">
+      <Link className={ui.backLink} href="/">
         <BackArrow />
         Schools
       </Link>
@@ -131,13 +131,13 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
         <section className={ui.panel}>
           <h2>Support and status</h2>
           <p>
-            <Link href={`/console/support?school=${school.slug}`}>
+            <Link href={`/support?school=${school.slug}`}>
               Open support access
               <ForwardArrow />
             </Link>
           </p>
           <p>
-            <Link href={`/console/schools/${school.slug}/status`}>
+            <Link href={`/schools/${school.slug}/status`}>
               {suspended ? "Reactivate the school…" : "Suspend the school…"}
             </Link>
           </p>

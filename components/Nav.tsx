@@ -9,7 +9,7 @@ import { translations } from "@/lib/i18n";
 import { getServerLocale } from "@/lib/i18n-server";
 import { schoolBranding } from "@/lib/school";
 import { createClient } from "@/lib/supabase/server";
-import { getOrigin, getSchool } from "@/lib/tenant/server";
+import { getOrigin, getSchool, getSite } from "@/lib/tenant/server";
 import { NavBar } from "./NavBar";
 
 type Supabase = Awaited<ReturnType<typeof createClient>>;
@@ -20,9 +20,21 @@ type Reads = Omit<NavInput, "t" | "locale" | "origin">;
  * RLS, and passed to the client as a finished model: the browser never queries roles.
  */
 export async function Nav() {
-  const [school, locale, origin] = await Promise.all([getSchool(), getServerLocale(), getOrigin()]);
+  const [school, locale, origin, site] = await Promise.all([
+    getSchool(),
+    getServerLocale(),
+    getOrigin(),
+    getSite(),
+  ]);
   const reads = school ? await readSchool() : await readRoot();
-  return <NavBar model={navModel({ ...reads, t: translations[locale].nav, locale, origin })} />;
+  const t = translations[locale];
+  return (
+    <NavBar
+      model={navModel({ ...reads, t: t.nav, locale, origin })}
+      // The landing header only on the root domain, not on the console's overview, which is "/" too.
+      platformLandingLabel={site === "root" ? t.schoolsLanding.label : undefined}
+    />
+  );
 }
 
 async function read<T>(query: PromiseLike<{ data: T; error: { message: string } | null }>) {

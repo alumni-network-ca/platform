@@ -7,10 +7,10 @@ import { ui } from "@/components/admin/parts";
 
 // S1.2 Create a school.
 export default async function NewSchoolPage() {
-  await requirePlatformAdmin("/console/schools/new");
+  await requirePlatformAdmin("/schools/new");
   return (
     <>
-      <Link className={ui.backLink} href="/console">
+      <Link className={ui.backLink} href="/">
         <BackArrow />
         Schools
       </Link>

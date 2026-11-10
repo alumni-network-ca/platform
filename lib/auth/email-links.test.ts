@@ -37,11 +37,11 @@ describe("auth email destinations", () => {
     expect(url.searchParams.get("next")).toBe("/staff/accept?token=invitation");
   });
 
-  it("keeps the root site selector for preview password recovery", async () => {
+  it("keeps the console selector for preview password recovery", async () => {
     origin({ isPreview: true });
     request.getSchool.mockResolvedValue(null);
     const url = new URL(await authEmailRedirect("recovery"));
-    expect(url.searchParams.get("tenant")).toBe("root");
+    expect(url.searchParams.get("tenant")).toBe("admin");
     expect(url.searchParams.get("flow")).toBe("recovery");
   });
 

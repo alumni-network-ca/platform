@@ -13,7 +13,7 @@ export default async function SchoolsPage({
 }: {
   searchParams: Promise<{ q?: string }>;
 }) {
-  const { supabase } = await requirePlatformAdmin("/console");
+  const { supabase } = await requirePlatformAdmin("/");
   const { q = "" } = await searchParams;
   const origin = await getOrigin();
   const { data, error } = await supabase.rpc("platform_school_summaries");
@@ -37,7 +37,7 @@ export default async function SchoolsPage({
           </p>
         </div>
         <Button asChild>
-          <Link href="/console/schools/new">New school</Link>
+          <Link href="/schools/new">New school</Link>
         </Button>
       </div>
 
@@ -87,7 +87,7 @@ export default async function SchoolsPage({
               // The whole row opens the school (S1.3); the name is the one real link, stretched over the row.
               <tr key={s.id} className={ui.rowLink}>
                 <td>
-                  <Link className={ui.rowLinkTarget} href={`/console/schools/${s.slug}`}>
+                  <Link className={ui.rowLinkTarget} href={`/schools/${s.slug}`}>
                     {s.name}
                   </Link>
                   <span className={ui.cellSub}>{new URL(schoolUrl(origin, s.slug)).host}</span>

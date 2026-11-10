@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { rootUrl, schoolUrl, slugFromName, usesTenantSelector, type Origin } from "./address";
+import {
+  adminUrl,
+  rootUrl,
+  schoolUrl,
+  slugFromName,
+  usesTenantSelector,
+  type Origin,
+} from "./address";
 
 const production: Origin = {
   protocol: "https:",
@@ -27,28 +34,31 @@ const staging: Origin = {
   isPreview: true,
 };
 
-describe("schoolUrl and rootUrl", () => {
+describe("schoolUrl, adminUrl and rootUrl", () => {
   it("swap the school label on a real domain", () => {
     expect(schoolUrl(production, "herzliah", "/join")).toBe(
       "https://herzliah.alumninetwork.ca/join",
     );
-    expect(rootUrl(production, "/console")).toBe("https://alumninetwork.ca/console");
+    expect(rootUrl(production)).toBe("https://alumninetwork.ca/");
+    expect(adminUrl(production, "/support")).toBe("https://admin.alumninetwork.ca/support");
   });
 
   it("keep the local port", () => {
     expect(schoolUrl(local, "test-school")).toBe("http://test-school.localhost:3000/");
-    expect(rootUrl(local, "/console/support?school=herzliah")).toBe(
-      "http://localhost:3000/console/support?school=herzliah",
+    expect(adminUrl(local, "/support?school=herzliah")).toBe(
+      "http://admin.localhost:3000/support?school=herzliah",
     );
+    expect(rootUrl(local)).toBe("http://localhost:3000/");
   });
 
   it("stay on the preview host and switch with ?tenant=", () => {
     expect(schoolUrl(preview, "herzliah", "/staff/accept?token=abc")).toBe(
       "https://platform-git-x.vercel.app/staff/accept?token=abc&tenant=herzliah",
     );
-    expect(rootUrl(preview, "/console")).toBe(
-      "https://platform-git-x.vercel.app/console?tenant=root",
+    expect(adminUrl(preview, "/schools/new")).toBe(
+      "https://platform-git-x.vercel.app/schools/new?tenant=admin",
     );
+    expect(rootUrl(preview)).toBe("https://platform-git-x.vercel.app/?tenant=root");
   });
 
   it("use subdomains on staging, a preview deployment on its own root domain", () => {
@@ -56,7 +66,8 @@ describe("schoolUrl and rootUrl", () => {
       "https://maimonide.staging.alumninetwork.ca/staff/accept?token=abc",
     );
     const school = { ...staging, host: "maimonide.staging.alumninetwork.ca" };
-    expect(rootUrl(school, "/console")).toBe("https://staging.alumninetwork.ca/console");
+    expect(adminUrl(school)).toBe("https://admin.staging.alumninetwork.ca/");
+    expect(rootUrl(school)).toBe("https://staging.alumninetwork.ca/");
     expect(schoolUrl(school, "herzliah")).toBe("https://herzliah.staging.alumninetwork.ca/");
   });
 });

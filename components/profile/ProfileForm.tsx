@@ -19,11 +19,16 @@ import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Textarea } from "@/components/ui/textarea";
 import { format, type Locale, type translations } from "@/lib/i18n";
-import { cn } from "@/lib/utils";
+import { leaveTo } from "@/lib/leave";
 import type { Errors, FieldError } from "@/lib/profile/fields";
+import { cn } from "@/lib/utils";
 import { useLanguage } from "../LanguageProvider";
 
-export type FormState = { errors: Errors; failed?: "failed" | "forbidden" | "reauth" };
+export type FormState = {
+  errors: Errors;
+  failed?: "failed" | "forbidden" | "reauth";
+  next?: string;
+};
 export type ProfileCopy = (typeof translations)[Locale]["onboarding"];
 
 const FormContext = createContext<{
@@ -71,7 +76,14 @@ export function ProfileForm({
   syncLocale?: boolean;
   unsavedWarning?: string;
 }) {
-  const [state, dispatch, pending] = useActionState(action, { errors: {} });
+  const [state, dispatch, pending] = useActionState(
+    async (previous: FormState, data: FormData) => {
+      const result = await action(previous, data);
+      if (result.next) return leaveTo(result.next);
+      return result;
+    },
+    { errors: {} },
+  );
   const { setLocale } = useLanguage();
   const form = useRef<HTMLFormElement>(null);
   const [dirty, setDirty] = useState(false);

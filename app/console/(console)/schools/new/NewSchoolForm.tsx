@@ -111,7 +111,7 @@ export function NewSchoolForm({ origin }: { origin: Origin }) {
       )}
       <div className={ui.formActions}>
         <Button asChild variant="secondary">
-          <Link href="/console">Cancel</Link>
+          <Link href="/">Cancel</Link>
         </Button>
         <Button loading={pending}>{pending ? "Creating…" : "Create school"}</Button>
       </div>

@@ -6,7 +6,8 @@ import { addressOf, signInAs } from "./fixtures/session";
 // The nav bar on every page (docs/design/nav-bar.md): what each nav role sees, the account menu's keyboard
 // behaviour, and accessibility with the menu open. lib/auth/nav.test.ts covers every role's mapping in detail.
 
-const root = (baseURL: string, path = "/") => addressOf(baseURL, null, path);
+/** The platform console's address: admin.localhost, a label swap of the base URL like a school's. */
+const admin = (baseURL: string, path = "/") => addressOf(baseURL, "admin", path);
 const accountButton = (page: Page) =>
   page.getByRole("banner").getByRole("button", { name: /^Account menu for/ });
 /** Each menu item's label, without its chip. */
@@ -171,8 +172,8 @@ test.describe("nav bar", () => {
     context,
     baseURL,
   }) => {
-    await signInAs(context, root(baseURL!), accounts.system);
-    await page.goto(root(baseURL!, "/console"));
+    await signInAs(context, admin(baseURL!), accounts.system);
+    await page.goto(admin(baseURL!, "/"));
     await expect(pill(page)).toHaveText("Platform admin");
     const links = await navLinks(page);
     expect([links[0], links.at(-1)]).toEqual(["Schools", "Health"]);
@@ -188,7 +189,7 @@ test.describe("nav bar", () => {
     expect(await blockingViolations(page)).toEqual([]);
 
     await page.getByRole("menuitem", { name: /^Support access/ }).click();
-    await expect(page).toHaveURL(root(baseURL!, "/console/support"));
+    await expect(page).toHaveURL(admin(baseURL!, "/support"));
     await expect(mainNav(page).getByRole("link", { name: /^Support/ })).toHaveAttribute(
       "aria-current",
       "page",
@@ -200,8 +201,8 @@ test.describe("nav bar", () => {
     context,
     baseURL,
   }) => {
-    await signInAs(context, root(baseURL!), accounts.system);
-    await page.goto(root(baseURL!, "/console/support?school=test-school"));
+    await signInAs(context, admin(baseURL!), accounts.system);
+    await page.goto(admin(baseURL!, "/support?school=test-school"));
     const reason = `Nav bar check ${Date.now().toString(36)}`;
     await page.getByLabel("Reason (required; the school sees this)").fill(reason);
     await page.getByRole("button", { name: "Open grant" }).click();
@@ -214,10 +215,10 @@ test.describe("nav bar", () => {
       await expect(pill(page)).toHaveText("Platform admin");
       await expect(mainNav(page).getByRole("link", { name: "Schools" })).toHaveAttribute(
         "href",
-        root(baseURL!, "/console"),
+        admin(baseURL!, "/"),
       );
     } finally {
-      await page.goto(root(baseURL!, "/console/support"));
+      await page.goto(admin(baseURL!, "/support"));
       await grant.getByRole("button", { name: "End now" }).click();
       await expect(grant).toHaveCount(0);
     }

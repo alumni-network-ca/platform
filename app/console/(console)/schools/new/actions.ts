@@ -12,7 +12,7 @@ export async function createSchool(
   _: CreateSchoolResult,
   form: FormData,
 ): Promise<CreateSchoolResult> {
-  const { supabase } = await requirePlatformAdmin("/console/schools/new");
+  const { supabase } = await requirePlatformAdmin("/schools/new");
   const field = (name: string) => String(form.get(name) ?? "").trim();
   const slug = field("slug").toLowerCase();
   if (field("name").length < 2) return { error: "Give the school its full name." };
@@ -42,5 +42,5 @@ export async function createSchool(
   }
   // The nav bar, in the root layout, lists the live schools.
   revalidatePath("/", "layout");
-  redirect(`/console/schools/${slug}`);
+  redirect(`/schools/${slug}`);
 }
