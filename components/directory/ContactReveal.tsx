@@ -1,8 +1,10 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 import { useState, useTransition } from "react";
 import { revealContact } from "@/app/profile/[id]/actions";
+import { textLink } from "@/components/alumni/parts";
+import { Button } from "@/components/ui/button";
 
 /**
  * A "Show email" or "Show phone" button (CON-02). The value is fetched only on click, one at a time, and then
@@ -30,18 +32,22 @@ export function ContactReveal({
 
   if (value)
     return (
-      <div className="profReveal">
-        <a href={`${channel === "email" ? "mailto" : "tel"}:${value}`}>{value}</a>
-        <button
+      <div className="flex flex-wrap items-center gap-2 wrap-anywhere">
+        <a className={textLink} href={`${channel === "email" ? "mailto" : "tel"}:${value}`}>
+          {value}
+        </a>
+        <Button
           type="button"
-          className="onbButton"
+          variant="secondary"
+          size="sm"
           onClick={async () => {
             await navigator.clipboard.writeText(value);
             setCopied(true);
           }}
         >
+          {copied ? <Check aria-hidden /> : <Copy aria-hidden />}
           {copied ? copiedLabel : copyLabel}
-        </button>
+        </Button>
         <span className="sr-only" role="status">
           {copied ? copiedLabel : ""}
         </span>
@@ -50,11 +56,9 @@ export function ContactReveal({
 
   return (
     <>
-      <button
+      <Button
         type="button"
-        className="profShow"
-        disabled={pending}
-        aria-busy={pending || undefined}
+        loading={pending}
         onClick={() =>
           startTransition(async () => {
             const result = await revealContact(profileId, channel);
@@ -63,13 +67,10 @@ export function ContactReveal({
           })
         }
       >
-        {pending && (
-          <Loader2 aria-hidden className="mr-1.5 inline-block size-4 animate-spin align-[-0.2em]" />
-        )}
         {label}
-      </button>
+      </Button>
       {failed && (
-        <p className="onbError" role="alert">
+        <p className="text-xs font-semibold text-destructive" role="alert">
           {failedLabel}
         </p>
       )}

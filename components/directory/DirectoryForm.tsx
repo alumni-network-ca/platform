@@ -1,8 +1,12 @@
 "use client";
 
 import Form from "next/form";
+import { SlidersHorizontal } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { useFormStatus } from "react-dom";
+import { panel } from "@/components/alumni/parts";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 /**
  * The directory's search and filters as one GET form (DIR-02): the URL holds every filter, so a search can be
@@ -13,7 +17,7 @@ export function DirectoryForm({ children }: { children: ReactNode }) {
   return (
     <Form
       action="/directory"
-      className="dirForm"
+      className="flex flex-col gap-6"
       onChange={(event) => {
         const target = event.target as HTMLElement;
         if (target instanceof HTMLSelectElement || (target as HTMLInputElement).type === "checkbox")
@@ -37,17 +41,27 @@ export function FilterPanel({
 }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="dirFilters">
-      <button
+    <div className="max-w-[280px] min-w-0 flex-[1_1_240px] max-[720px]:max-w-none max-[720px]:basis-full">
+      <Button
         type="button"
-        className="dirFiltersToggle"
+        variant="secondary"
+        className="min-[721px]:hidden"
         aria-expanded={open}
         aria-controls="dir-filter-panel"
         onClick={() => setOpen(!open)}
       >
+        <SlidersHorizontal aria-hidden />
         {toggleLabel}
-      </button>
-      <aside id="dir-filter-panel" className="dirPanel" data-open={open} aria-label={label}>
+      </Button>
+      <aside
+        id="dir-filter-panel"
+        className={cn(
+          panel,
+          "flex flex-col gap-5 p-5.5 max-[720px]:mt-2.5 max-[720px]:hidden max-[720px]:data-[open=true]:flex",
+        )}
+        data-open={open}
+        aria-label={label}
+      >
         {children}
       </aside>
     </div>
@@ -62,7 +76,7 @@ export function DirectoryResults({ label, children }: { label: string; children:
   const { pending } = useFormStatus();
   return (
     <section
-      className="dirResults transition-opacity data-pending:opacity-50 data-pending:delay-150"
+      className="flex min-w-0 flex-[999_1_560px] flex-col gap-3.5 transition-opacity data-pending:opacity-50 data-pending:delay-150"
       aria-label={label}
       aria-busy={pending || undefined}
       data-pending={pending || undefined}

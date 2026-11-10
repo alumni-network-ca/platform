@@ -7,6 +7,9 @@ import { isSection } from "@/lib/profile/fields";
 import { loadMyProfile } from "@/lib/profile/server";
 import { saveSection } from "../../actions";
 import { BackArrow } from "@/components/icons";
+import { frame, textLink } from "@/components/alumni/parts";
+import { FormHead, formBody, formCard, formFooter } from "@/components/profile/FormCard";
+import { cn } from "@/lib/utils";
 
 // One section of the profile, edited with the onboarding wizard's fields (PRF-02: the sections mirror it).
 export default async function EditSectionPage({
@@ -31,27 +34,29 @@ export default async function EditSectionPage({
   const [title, intro] = titles[section];
 
   return (
-    <main className="onb meNarrow">
+    <main data-ui className={cn(frame.form, frame.narrow)}>
       <ProfileForm
-        className="onbContents"
+        className="contents"
         action={saveSection.bind(null, section)}
         t={t}
         unsavedWarning={m.unsaved}
       >
-        <section className="onbCard">
-          <div className="onbBody">
-            <div className="onbHead">
-              <Link className="meBackLink" href="/me">
-                <BackArrow />
-                {m.backToProfile}
-              </Link>
-              <h1>{title}</h1>
-              <p>{intro}</p>
-            </div>
+        <section className={formCard}>
+          <div className={formBody}>
+            <FormHead
+              above={
+                <Link className={cn(textLink, "text-base")} href="/me">
+                  <BackArrow />
+                  {m.backToProfile}
+                </Link>
+              }
+              title={title}
+              intro={intro}
+            />
             <FormAlert />
             <SectionFields section={section} me={me} />
           </div>
-          <div className="onbFooter">
+          <div className={formFooter}>
             <CancelLink href="/me" label={m.cancel} />
             <SubmitButton label={m.save} />
           </div>

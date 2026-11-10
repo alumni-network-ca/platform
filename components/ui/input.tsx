@@ -23,6 +23,8 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
         "h-11 px-3",
         // A read-only field (a copyable link, a stored colour) reads as information, not as a field to fill.
         "read-only:bg-secondary read-only:hover:border-input",
+        // A month or date field's calendar button, quieter until pointed at.
+        "[&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-60 [&::-webkit-calendar-picker-indicator]:hover:opacity-100",
         "file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground",
         className,
       )}

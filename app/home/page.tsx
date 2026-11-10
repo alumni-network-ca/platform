@@ -14,11 +14,32 @@ import { getServerTranslations } from "@/lib/i18n-server";
 import { initials, optionsFor } from "@/lib/profile/fields";
 import { schoolBranding } from "@/lib/school";
 import { schoolConfig } from "@/lib/tenant/config";
+import { cn } from "@/lib/utils";
 import { confirmStillAccurate } from "./actions";
-import { Button } from "@/components/ui/button";
+import { GraduationCap, Users } from "lucide-react";
+import {
+  Avatar,
+  PersonCard,
+  VisibilityDot,
+  columns,
+  eyebrow,
+  frame,
+  mainColumn,
+  notice,
+  pageTitle,
+  panel,
+  personGrid,
+  sectionTitle,
+  sideColumn,
+  textLink,
+} from "@/components/alumni/parts";
+import { EmptyState } from "@/components/EmptyState";
 import { ForwardArrow } from "@/components/icons";
-import { SubmitButton } from "@/components/ui/submit-button";
 import { LinkPending } from "@/components/LinkPending";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { SubmitButton } from "@/components/ui/submit-button";
 
 // The alumni home page (DIR-06; design Home): the reader's own status first, then ways into the network. Every
 // read goes through RLS: search_directory returns only members-visible profiles, and contact_events only the
@@ -131,54 +152,58 @@ export default async function HomePage({
   const replyTo = office?.reply_to_email;
 
   const avatar = (p: { id: string; first_name: string; last_name: string }, small = false) => (
-    <span
-      aria-hidden="true"
-      className={small ? "homeAvatar homeAvatarSmall" : "homeAvatar"}
-      style={{ background: tint(p.id) }}
-    >
-      {initials(p.first_name, p.last_name)}
-    </span>
+    <Avatar
+      initials={initials(p.first_name, p.last_name)}
+      tint={tint(p.id)}
+      size={small ? "sm" : "md"}
+    />
   );
   const card = (p: Card, meta: string, extra?: string) => (
-    <Link key={p.id} className="homeCard relative" href={`/profile/${p.id}`} prefetch={false}>
-      <span className="homeCardHead">
-        {avatar(p)}
-        <span className="homeCardName">
-          <strong>{displayName(p)}</strong>
-          <small>{meta}</small>
-        </span>
-      </span>
-      {roleLine(p) && <span className="homeCardRole">{roleLine(p)}</span>}
-      {extra && <span className="homeTag">{extra}</span>}
-      <LinkPending className="inset-x-[18px] bottom-2 text-primary" />
-    </Link>
+    <PersonCard
+      key={p.id}
+      href={`/profile/${p.id}`}
+      avatar={avatar(p)}
+      name={displayName(p)}
+      meta={meta}
+      role={roleLine(p)}
+    >
+      {extra && <Badge className="py-1">{extra}</Badge>}
+    </PersonCard>
   );
+  const seeAll = cn(textLink, "text-base font-bold");
+  const sidePanel = cn(panel, "flex flex-col items-start gap-3 p-5.5 text-base");
 
   return (
-    <main className="homePage">
-      <div className="homeHead">
-        <span className="eyebrow">
+    <main data-ui className={frame.stack}>
+      <div className="flex flex-col gap-1.5">
+        <span className={eyebrow}>
           {format(t.eyebrow, { year: me.grad_year, network: networkName })}
         </span>
-        <h1>{format(t.welcome, { name })}</h1>
+        <h1 className={pageTitle}>{format(t.welcome, { name })}</h1>
       </div>
 
       {askToConfirm && (
-        <section className="homeBanner homeBannerWarn" aria-label={t.freshnessLabel}>
+        <section
+          className={cn(
+            notice({ tone: "warn" }),
+            "flex flex-wrap items-center justify-between gap-3.5",
+          )}
+          aria-label={t.freshnessLabel}
+        >
           <div>
-            <strong>{t.freshnessTitle}</strong>
-            <p>
+            <strong className="text-md font-bold">{t.freshnessTitle}</strong>
+            <p className="mt-1">
               {me.last_confirmed_at &&
                 `${format(t.lastConfirmed, { date: longDate.format(new Date(me.last_confirmed_at)) })} `}
               {t.freshnessBody}
             </p>
             {confirm === "failed" && (
-              <p role="alert" className="homeBannerError">
+              <p role="alert" className="mt-1 font-bold text-destructive">
                 {t.confirmFailed}
               </p>
             )}
           </div>
-          <div className="homeActions">
+          <div className="flex flex-wrap gap-2.5">
             <form action={confirmStillAccurate}>
               <SubmitButton>{t.stillAccurate}</SubmitButton>
             </form>
@@ -189,29 +214,40 @@ export default async function HomePage({
         </section>
       )}
       {confirm === "done" && (
-        <p className="homeBanner homeBannerGood" role="status">
+        <p className={notice({ tone: "good" })} role="status">
           {t.confirmed}
         </p>
       )}
 
-      <div className="homeColumns">
-        <div className="homeMain">
-          <section className="homePanel">
-            <h2>{t.findTitle}</h2>
-            <Form action="/directory" className="homeSearch" role="search">
+      <div className={columns}>
+        <div className={mainColumn}>
+          <section className={cn(panel, "flex flex-col gap-4 p-6")}>
+            <h2 className={sectionTitle}>{t.findTitle}</h2>
+            <Form action="/directory" className="flex flex-wrap gap-2.5" role="search">
               <label htmlFor="home-q" className="sr-only">
                 {t.searchLabel}
               </label>
-              <input id="home-q" name="q" type="search" placeholder={t.searchPlaceholder} />
+              <Input
+                id="home-q"
+                name="q"
+                type="search"
+                placeholder={t.searchPlaceholder}
+                className="w-auto flex-[1_1_280px]"
+              />
               <SubmitButton>{t.search}</SubmitButton>
             </Form>
             {offers.length > 0 && (
-              <div className="homeOffers">
-                <span>{t.openTo}</span>
-                <ul>
+              <div className="flex flex-col gap-2.5">
+                <span id="home-offers" className="text-sm font-semibold text-subtle-foreground">
+                  {t.openTo}
+                </span>
+                <ul aria-labelledby="home-offers" className="flex flex-wrap gap-2">
                   {offers.map((o) => (
                     <li key={o.key}>
-                      <Link href={`/directory?offer=${encodeURIComponent(o.key)}`}>
+                      <Link
+                        className="inline-flex rounded-full border border-input bg-card px-3 py-[7px] text-sm font-bold text-foreground outline-none hover:border-primary focus-visible:ring-[3px] focus-visible:ring-ring/45"
+                        href={`/directory?offer=${encodeURIComponent(o.key)}`}
+                      >
                         {locale === "fr" ? o.label_fr : o.label_en}
                       </Link>
                     </li>
@@ -221,38 +257,37 @@ export default async function HomePage({
             )}
           </section>
 
-          <section className="homeSection" aria-labelledby="home-class">
-            <div className="homeSectionHead">
-              <div>
-                <h2 id="home-class">{format(t.classTitle, { year: me.grad_year })}</h2>
-                <p>{t.classSubtitle}</p>
-              </div>
+          <section className="flex flex-col gap-3.5" aria-labelledby="home-class">
+            <SectionHead
+              id="home-class"
+              title={format(t.classTitle, { year: me.grad_year })}
+              subtitle={t.classSubtitle}
+            >
               {classTotal > 0 && (
-                <Link href={`/directory?grad_year=${me.grad_year}`}>
+                <Link className={seeAll} href={`/directory?grad_year=${me.grad_year}`}>
                   {classTotal === 1 ? t.seeClassOne : format(t.seeClass, { count: classTotal })}
                   <ForwardArrow />
                 </Link>
               )}
-            </div>
+            </SectionHead>
             {classCards.length ? (
-              <div className="homeGrid">
+              <div className={personGrid}>
                 {classCards.map((p) => card(p, p.city ?? format(t.classOf, { year: p.grad_year })))}
               </div>
             ) : (
-              <p className="homeEmpty">{t.classEmpty}</p>
+              <EmptyState icon={GraduationCap} title={t.classEmpty} className="py-8" />
             )}
           </section>
 
-          <section className="homeSection" aria-labelledby="home-new">
-            <div className="homeSectionHead">
-              <h2 id="home-new">{t.newTitle}</h2>
-              <Link href="/directory">
+          <section className="flex flex-col gap-3.5" aria-labelledby="home-new">
+            <SectionHead id="home-new" title={t.newTitle}>
+              <Link className={seeAll} href="/directory">
                 {t.browse}
                 <ForwardArrow />
               </Link>
-            </div>
+            </SectionHead>
             {newCards.length ? (
-              <div className="homeGrid">
+              <div className={personGrid}>
                 {newCards.map((p) =>
                   card(
                     p,
@@ -264,44 +299,54 @@ export default async function HomePage({
                 )}
               </div>
             ) : (
-              <p className="homeEmpty">{t.newEmpty}</p>
+              <EmptyState icon={Users} title={t.newEmpty} className="py-8" />
             )}
           </section>
         </div>
 
-        <aside className="homeSide">
-          <section className="homePanel">
-            <div className="homeCardHead">
+        <aside className={sideColumn}>
+          <section className={sidePanel}>
+            <div className="flex items-center gap-3">
               {avatar(me)}
-              <span className="homeCardName">
-                <h2>{t.profileTitle}</h2>
-                {roleLine(me) && <small>{roleLine(me)}</small>}
-              </span>
+              <div className="flex min-w-0 flex-col gap-0.5">
+                <h2 className="text-md font-bold">{t.profileTitle}</h2>
+                {roleLine(me) && (
+                  <span className="text-sm text-muted-foreground">{roleLine(me)}</span>
+                )}
+              </div>
             </div>
-            <p className="homeVisibility">
-              <span aria-hidden="true" className={listed ? "homeDot homeDotOn" : "homeDot"} />
+            <p className="flex items-center gap-2 font-semibold">
+              <VisibilityDot on={listed} />
               {listed ? format(t.visible, { school: shortName }) : t.hidden}
             </p>
-            <Link href="/me">{t.viewProfile}</Link>
-            <Link href="/me#visibility">{t.changeVisibility}</Link>
+            <Link className={textLink} href="/me">
+              {t.viewProfile}
+            </Link>
+            <Link className={textLink} href="/me#visibility">
+              {t.changeVisibility}
+            </Link>
           </section>
 
-          <section className="homePanel">
-            <h2>{t.contactedTitle}</h2>
+          <section className={sidePanel}>
+            <h2 className="text-md font-bold">{t.contactedTitle}</h2>
             {contacted.length > 0 && (
-              <ul className="homeContacts">
+              <ul className="flex w-full flex-col gap-2.5">
                 {contacted.map((c) => (
                   <li key={c.recipient_profile_id}>
-                    <Link className="relative" href={`/profile/${c.person.id}`} prefetch={false}>
+                    <Link
+                      className="group relative flex items-center gap-2.5 rounded-md font-medium text-foreground outline-none focus-visible:ring-[3px] focus-visible:ring-ring/45"
+                      href={`/profile/${c.person.id}`}
+                      prefetch={false}
+                    >
                       {avatar(c.person, true)}
-                      <span>
-                        <strong>{displayName(c.person)}</strong>
-                        <small>
+                      <span className="flex min-w-0 flex-col gap-px">
+                        <strong className="group-hover:underline">{displayName(c.person)}</strong>
+                        <span className="text-sm text-muted-foreground">
                           {all.onboarding.channels[
                             c.channel as keyof typeof all.onboarding.channels
                           ] ?? c.channel}{" "}
                           · {shortDate.format(new Date(c.created_at))}
-                        </small>
+                        </span>
                       </span>
                       <LinkPending className="inset-x-0 -bottom-1 text-primary" />
                     </Link>
@@ -309,16 +354,45 @@ export default async function HomePage({
                 ))}
               </ul>
             )}
-            <p className="homeNote">{t.contactedNote}</p>
+            <p className="text-sm text-muted-foreground">{t.contactedNote}</p>
           </section>
 
-          <section className="homePanel">
-            <h2>{t.privacyTitle}</h2>
-            <p>{format(t.privacyBody, { school: shortName })}</p>
-            {replyTo && <a href={`mailto:${replyTo}`}>{t.contactOffice}</a>}
+          <section className={sidePanel}>
+            <h2 className="text-md font-bold">{t.privacyTitle}</h2>
+            <p className="text-subtle-foreground">{format(t.privacyBody, { school: shortName })}</p>
+            {replyTo && (
+              <a className={textLink} href={`mailto:${replyTo}`}>
+                {t.contactOffice}
+              </a>
+            )}
           </section>
         </aside>
       </div>
     </main>
+  );
+}
+
+/** A section's title (and a line under it) with its "see all" link on the right. */
+function SectionHead({
+  id,
+  title,
+  subtitle,
+  children,
+}: {
+  id: string;
+  title: string;
+  subtitle?: string;
+  children?: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-wrap items-baseline justify-between gap-2">
+      <div>
+        <h2 id={id} className={sectionTitle}>
+          {title}
+        </h2>
+        {subtitle && <p className="mt-0.5 text-sm text-muted-foreground">{subtitle}</p>}
+      </div>
+      {children}
+    </div>
   );
 }
