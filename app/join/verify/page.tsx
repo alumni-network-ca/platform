@@ -8,7 +8,19 @@ import { homeFor } from "@/lib/auth/home";
 import { signupDestination } from "@/lib/auth/next";
 import { getServerLocale } from "@/lib/i18n-server";
 import { ConfirmationResend } from "./ConfirmationResend";
-import { Mail } from "lucide-react";
+import {
+  AuthCard,
+  AuthPage,
+  Callout,
+  Footer,
+  MailIcon,
+  eyebrow,
+  fine,
+  footerLink,
+  muted,
+  pageTitle,
+  stack,
+} from "@/components/auth/parts";
 
 const COOKIE = SIGNUP_CONFIRMATION.cookies;
 
@@ -37,37 +49,39 @@ export default async function VerifySignupPage() {
   const locale = await getServerLocale();
   const fr = locale === "fr";
   return (
-    <main className="joinPage">
+    <AuthPage>
       {destination === "/join" && <JoinProgress step={0} locale={locale} />}
-      <section className="joinCard joinCentered">
-        <span className="joinIcon" aria-hidden="true">
-          <Mail className="size-6" />
-        </span>
-        <span className="joinEyebrow">
-          {fr ? "Terminez la création de votre compte" : "Finish creating your account"}
-        </span>
-        <h1>{fr ? "Confirmez votre adresse courriel" : "Confirm your email"}</h1>
-        <p className="muted">
-          {email ? (
-            fr ? (
-              <>
-                Nous avons envoyé un lien de confirmation à <strong>{email}</strong>.
-              </>
+      <AuthCard size="wide">
+        <div className={stack()}>
+          <MailIcon />
+          <span className={eyebrow}>
+            {fr ? "Terminez la création de votre compte" : "Finish creating your account"}
+          </span>
+          <h1 className={pageTitle}>
+            {fr ? "Confirmez votre adresse courriel" : "Confirm your email"}
+          </h1>
+          <p className={muted}>
+            {email ? (
+              fr ? (
+                <>
+                  Nous avons envoyé un lien de confirmation à <strong>{email}</strong>.
+                </>
+              ) : (
+                <>
+                  We sent a confirmation link to <strong>{email}</strong>.
+                </>
+              )
+            ) : fr ? (
+              "Ouvrez le courriel de confirmation que vous avez reçu."
             ) : (
-              <>
-                We sent a confirmation link to <strong>{email}</strong>.
-              </>
-            )
-          ) : fr ? (
-            "Ouvrez le courriel de confirmation que vous avez reçu."
-          ) : (
-            "Open the confirmation email we sent you."
-          )}{" "}
-          {fr
-            ? "Cliquez sur « Confirmer mon adresse courriel » pour continuer."
-            : "Select “Confirm my email” to continue."}
-        </p>
-        <div className="joinNotice">
+              "Open the confirmation email we sent you."
+            )}{" "}
+            {fr
+              ? "Cliquez sur « Confirmer mon adresse courriel » pour continuer."
+              : "Select “Confirm my email” to continue."}
+          </p>
+        </div>
+        <Callout>
           {destination !== "/join"
             ? fr
               ? "Après la confirmation de votre courriel, vous pourrez consulter et accepter votre invitation du personnel."
@@ -75,15 +89,16 @@ export default async function VerifySignupPage() {
             : fr
               ? "La confirmation du courriel ne confirme pas votre statut d'ancien. Ensuite, vous soumettrez votre demande d'accès à un réviseur de l'école."
               : "Email confirmation is the first step. Next, submit your alumni request. A school reviewer must approve it before you can access the network."}
-        </div>
-        <p className="muted microcopy">
+        </Callout>
+        <p className={fine}>
           {fr
             ? "Vous ne trouvez pas le courriel ? Vérifiez vos indésirables et votre adresse."
             : "Can't find the email? Check your spam folder and make sure you used the right address."}
         </p>
         {email && <ConfirmationResend retryIn={retryIn} />}
-        <div className="authFooter">
+        <Footer>
           <Link
+            className={footerLink}
             href={
               destination === "/join" ? "/join" : `/join?next=${encodeURIComponent(destination)}`
             }
@@ -91,14 +106,15 @@ export default async function VerifySignupPage() {
             {fr ? "Changer d'adresse" : "Change email"}
           </Link>
           <Link
+            className={footerLink}
             href={
               destination === "/join" ? "/login" : `/login?next=${encodeURIComponent(destination)}`
             }
           >
             {fr ? "Déjà confirmé ? Se connecter" : "Already confirmed? Sign in"}
           </Link>
-        </div>
-      </section>
-    </main>
+        </Footer>
+      </AuthCard>
+    </AuthPage>
   );
 }

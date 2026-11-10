@@ -5,6 +5,19 @@ import { useSearchParams } from "next/navigation";
 import { useLanguage } from "./LanguageProvider";
 import { safeNext, signupDestination } from "@/lib/auth/next";
 import { createClient } from "@/lib/supabase/client";
+import {
+  Callout,
+  Divider,
+  Footer,
+  eyebrow,
+  footerLink,
+  form,
+  label,
+  muted,
+  pageTitle,
+  stack,
+} from "@/components/auth/parts";
+import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { BackArrow } from "@/components/icons";
@@ -65,15 +78,19 @@ export function SignInForm({
   }
   return (
     <>
-      <span className="joinEyebrow">{fr ? "Bon retour" : "Welcome back"}</span>
-      <h1>{fr ? "Connexion à " + networkName : "Sign in to " + networkName}</h1>
-      <p className="muted">
-        {fr
-          ? "Utilisez l'adresse courriel et le mot de passe de votre compte."
-          : "Use the email and password you chose when you created your account."}
-      </p>
-      <form onSubmit={signIn} className="authForm">
-        <label>
+      <div className={stack()}>
+        <span className={eyebrow}>{fr ? "Bon retour" : "Welcome back"}</span>
+        <h1 className={pageTitle}>
+          {fr ? "Connexion à " + networkName : "Sign in to " + networkName}
+        </h1>
+        <p className={muted}>
+          {fr
+            ? "Utilisez l'adresse courriel et le mot de passe de votre compte."
+            : "Use the email and password you chose when you created your account."}
+        </p>
+      </div>
+      <form onSubmit={signIn} className={form()}>
+        <label className={label}>
           {fr ? "Adresse courriel" : "Email address"}
           <Input
             type="email"
@@ -83,7 +100,7 @@ export function SignInForm({
             required
           />
         </label>
-        <label>
+        <label className={label}>
           {fr ? "Mot de passe" : "Password"}
           <Input
             type="password"
@@ -98,25 +115,25 @@ export function SignInForm({
         </Button>
       </form>
       {message && (
-        <div className="notice" role="alert">
+        <Alert variant="error" role="alert">
           {message}
-        </div>
+        </Alert>
       )}
-      <div className="authFooter">
-        <Link href="/forgot-password">
+      <Footer>
+        <Link className={footerLink} href="/forgot-password">
           {fr
             ? "Mot de passe oublié ou pas encore choisi ?"
             : "Forgot your password or haven't set one?"}
         </Link>
-      </div>
+      </Footer>
       {audience === "school" && (
         <>
-          <div className="joinNotice">
+          <Callout>
             {fr
               ? "En attente de l'approbation de l'école ? Connectez-vous pour consulter votre demande ou répondre au réviseur."
               : "Waiting for school approval? Sign in to check your request's status or reply to the reviewer."}
-          </div>
-          <p className="joinDivider">
+          </Callout>
+          <Divider>
             {fr ? "Pas encore de compte ?" : "Don't have an account?"}{" "}
             <Link
               href={
@@ -125,15 +142,15 @@ export function SignInForm({
             >
               {fr ? "Créer un compte" : "Create an account"}
             </Link>
-          </p>
+          </Divider>
         </>
       )}
-      <div className="authFooter">
-        <Link href="/">
+      <Footer>
+        <Link className={footerLink} href="/">
           <BackArrow />
           {fr ? "Accueil" : "Home"}
         </Link>
-      </div>
+      </Footer>
     </>
   );
 }

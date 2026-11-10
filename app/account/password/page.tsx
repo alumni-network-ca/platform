@@ -1,14 +1,15 @@
 import { requireAccess } from "@/lib/auth/account";
 import { PasswordForm } from "./PasswordForm";
+import { AuthCard, AuthPage } from "@/components/auth/parts";
 
 // Setting or changing a password (ADR 0015). Open to anyone signed in at this school; PRF-02 links it from /me.
 export default async function PasswordPage() {
   const { user } = await requireAccess("/account/password");
   return (
-    <main className="authPage">
-      <section className="authCard">
+    <AuthPage>
+      <AuthCard>
         <PasswordForm email={user.email ?? ""} />
-      </section>
-    </main>
+      </AuthCard>
+    </AuthPage>
   );
 }

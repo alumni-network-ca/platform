@@ -7,6 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { leaveTo } from "@/lib/leave";
+import { cn } from "@/lib/utils";
+import { fine, form, label } from "@/components/auth/parts";
+import { Alert } from "@/components/ui/alert";
 
 const TEXT = {
   en: {
@@ -74,8 +77,8 @@ export function JoinForm({ initial }: { initial?: RequestDetails }) {
   );
   const thisYear = new Date().getFullYear();
   return (
-    <form action={action} className="authForm">
-      <label>
+    <form action={action} className={form()}>
+      <label className={label}>
         {t.firstName}
         <Input
           name="first_name"
@@ -85,7 +88,7 @@ export function JoinForm({ initial }: { initial?: RequestDetails }) {
           required
         />
       </label>
-      <label>
+      <label className={label}>
         {t.lastName}
         <Input
           name="last_name"
@@ -95,11 +98,11 @@ export function JoinForm({ initial }: { initial?: RequestDetails }) {
           required
         />
       </label>
-      <label>
+      <label className={label}>
         {t.maidenName}
         <Input name="maiden_name" maxLength={80} defaultValue={initial?.maiden_name ?? ""} />
       </label>
-      <label>
+      <label className={label}>
         {t.gradYear}
         <Input
           name="grad_year"
@@ -111,7 +114,7 @@ export function JoinForm({ initial }: { initial?: RequestDetails }) {
           required
         />
       </label>
-      <label>
+      <label className={label}>
         {t.studentId}
         <Input
           name="school_student_id"
@@ -121,22 +124,23 @@ export function JoinForm({ initial }: { initial?: RequestDetails }) {
           defaultValue={initial?.school_student_id ?? ""}
         />
       </label>
-      {/* Outside the label, so the field's name stays short; the input reads it as its description. */}
-      <p id="student-id-hint" className="microcopy muted joinFieldHint">
+      {/* Outside the label, so the field's name stays short; the input reads it as its description. Pulled up to
+          the field it belongs to: the form's gap less the label's. */}
+      <p id="student-id-hint" className={cn(fine, "-mt-2")}>
         {t.studentIdHint}
       </p>
-      <label>
+      <label className={label}>
         {t.note}
         <Textarea name="note" rows={3} maxLength={1000} defaultValue={initial?.note ?? ""} />
       </label>
-      <p className="microcopy muted">{t.privacy}</p>
+      <p className={fine}>{t.privacy}</p>
       <Button size="lg" className="w-full" loading={pending}>
         {pending ? t.sending : initial ? t.save : t.submit}
       </Button>
       {result.error && (
-        <div className="notice" role="alert">
+        <Alert variant="error" role="alert">
           {t.errors[result.error]}
-        </div>
+        </Alert>
       )}
     </form>
   );

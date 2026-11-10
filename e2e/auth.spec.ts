@@ -25,7 +25,7 @@ async function signUp(page: Page, email: string) {
   await expect(page.getByRole("button", { name: "Create my account", exact: true })).toHaveCount(0);
 }
 const badPassword = (page: Page) =>
-  expect(page.locator(".notice[role=alert]")).toHaveText("Wrong email or password.");
+  expect(page.locator("[data-slot=alert][role=alert]")).toHaveText("Wrong email or password.");
 
 test("password sign-in without a destination opens the alumni home", async ({ page, baseURL }) => {
   await signIn(page, accounts.alumni);
@@ -157,7 +157,9 @@ test("signup rejects mismatched passwords before creating an account", async ({ 
   await page.getByLabel("Create a password", { exact: true }).fill(LOCAL_PASSWORD);
   await page.getByLabel("Confirm password", { exact: true }).fill(LOCAL_PASSWORD + "x");
   await page.getByRole("button", { name: "Create my account" }).click();
-  await expect(page.locator(".notice[role=alert]")).toHaveText("The two passwords are different.");
+  await expect(page.locator("[data-slot=alert][role=alert]")).toHaveText(
+    "The two passwords are different.",
+  );
   await expect(page).toHaveURL(/\/join$/);
 });
 

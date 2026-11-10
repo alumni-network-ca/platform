@@ -6,7 +6,17 @@ import { getServerLocale } from "@/lib/i18n-server";
 import { schoolBranding } from "@/lib/school";
 import { ReplyForm } from "./ReplyForm";
 import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
+import {
+  AuthCard,
+  AuthPage,
+  Callout,
+  Journey,
+  fine,
+  muted,
+  pageTitle,
+  stack,
+} from "@/components/auth/parts";
+import { Badge } from "@/components/ui/badge";
 
 const STATES = ["pending", "needs-info", "rejected", "suspended"] as const;
 type AccountPage = (typeof STATES)[number];
@@ -83,72 +93,57 @@ export default async function AccountStatePage({ params }: { params: Promise<{ s
   };
   const t = content[state];
   return (
-    <main className="joinPage">
+    <AuthPage>
       {state === "pending" && <JoinProgress step={2} locale={locale} />}
-      <section className="joinCard joinCentered">
-        <span className={"tag" + (state === "pending" ? " tagWarn" : "")}>{t.badge}</span>
-        <h1>{t.title}</h1>
-        <p className="muted">{t.body}</p>
+      <AuthCard size="wide">
+        <div className={stack()}>
+          <Badge variant={state === "pending" ? "warning" : "neutral"} className="mb-1 py-1">
+            {t.badge}
+          </Badge>
+          <h1 className={pageTitle}>{t.title}</h1>
+          <p className={muted}>{t.body}</p>
+        </div>
         {state === "pending" && (
           <>
-            <ol className="joinJourney">
-              <li>
-                <span className="joinDot joinDone" aria-hidden="true">
-                  <Check className="size-4" strokeWidth={3} />
-                </span>
-                <div>
-                  <h3>{fr ? "Compte créé" : "Account created"}</h3>
-                  <p>
-                    {fr ? "Courriel confirmé" : "Email confirmed"} · {user.email}
-                  </p>
-                </div>
-              </li>
-              <li>
-                <span className="joinDot joinDone" aria-hidden="true">
-                  <Check className="size-4" strokeWidth={3} />
-                </span>
-                <div>
-                  <h3>{fr ? "Demande envoyée" : "Alumni request submitted"}</h3>
-                  <p>
-                    {request?.first_name} {request?.last_name} · {fr ? "Promotion" : "Class of"}{" "}
-                    {request?.grad_year}
-                    {request?.school_student_id &&
-                      ` · ${fr ? "Matricule" : "Student ID"} ${request.school_student_id}`}
-                  </p>
-                </div>
-              </li>
-              <li aria-current="step">
-                <span className="joinDot joinWaiting" aria-hidden="true">
-                  3
-                </span>
-                <div>
-                  <h3>{fr ? "Vérification par l'école en attente" : "School review pending"}</h3>
-                  <p>
-                    {fr
-                      ? "Un réviseur approuvera la demande ou demandera plus de renseignements."
-                      : "A school reviewer will approve your request or ask for more details."}
-                  </p>
-                </div>
-              </li>
-              <li>
-                <span className="joinDot" aria-hidden="true">
-                  4
-                </span>
-                <div>
-                  <h3 className="muted">
-                    {fr
-                      ? "Accès au réseau et création du profil"
-                      : "Alumni access and profile setup"}
-                  </h3>
-                  <p>
-                    {fr
-                      ? "Disponible après l'approbation de l'école."
-                      : "Available after school approval."}
-                  </p>
-                </div>
-              </li>
-            </ol>
-            <div className="joinNotice">
+            <Journey
+              steps={[
+                {
+                  state: "done",
+                  title: fr ? "Compte créé" : "Account created",
+                  body: `${fr ? "Courriel confirmé" : "Email confirmed"} · ${user.email}`,
+                },
+                {
+                  state: "done",
+                  title: fr ? "Demande envoyée" : "Alumni request submitted",
+                  body: (
+                    <>
+                      {request?.first_name} {request?.last_name} · {fr ? "Promotion" : "Class of"}{" "}
+                      {request?.grad_year}
+                      {request?.school_student_id &&
+                        ` · ${fr ? "Matricule" : "Student ID"} ${request.school_student_id}`}
+                    </>
+                  ),
+                },
+                {
+                  state: "waiting",
+                  title: fr ? "Vérification par l'école en attente" : "School review pending",
+                  body: fr
+                    ? "Un réviseur approuvera la demande ou demandera plus de renseignements."
+                    : "A school reviewer will approve your request or ask for more details.",
+                },
+                {
+                  state: "todo",
+                  later: true,
+                  title: fr
+                    ? "Accès au réseau et création du profil"
+                    : "Alumni access and profile setup",
+                  body: fr
+                    ? "Disponible après l'approbation de l'école."
+                    : "Available after school approval.",
+                },
+              ]}
+            />
+            <Callout>
               <strong>
                 {fr ? "L'annuaire est encore verrouillé." : "The alumni directory is locked."}
               </strong>
@@ -156,13 +151,13 @@ export default async function AccountStatePage({ params }: { params: Promise<{ s
               {fr
                 ? "Vous pourrez utiliser le réseau après l'approbation de votre demande."
                 : "You'll be able to use the network once a reviewer approves you."}
-            </div>
-            <p className="muted microcopy">
+            </Callout>
+            <p className={fine}>
               {fr
                 ? "Vous pouvez fermer cette page. Connectez-vous de nouveau pour consulter votre demande."
                 : "You can close this page. Sign in again anytime to check your request."}
             </p>
-            <div className="joinActions">
+            <div className="flex flex-wrap gap-3">
               <Button asChild variant="secondary">
                 <Link href="/join/edit">{fr ? "Modifier ma demande" : "Edit my request"}</Link>
               </Button>
@@ -176,9 +171,9 @@ export default async function AccountStatePage({ params }: { params: Promise<{ s
         )}
         {state === "needs-info" && <ReplyForm question={request?.info_request} />}
         {state === "rejected" && request?.decision_reason && (
-          <blockquote className="joinNotice">{request.decision_reason}</blockquote>
+          <Callout as="blockquote">{request.decision_reason}</Callout>
         )}
-      </section>
-    </main>
+      </AuthCard>
+    </AuthPage>
   );
 }

@@ -3,6 +3,7 @@ import { useActionState, useEffect, useState } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
 import { SIGNUP_CONFIRMATION } from "@/config/auth";
 import { resendConfirmation, type ResendResult } from "../signup-actions";
+import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 
 export function ConfirmationResend({ retryIn }: { retryIn: number }) {
@@ -23,7 +24,7 @@ export function ConfirmationResend({ retryIn }: { retryIn: number }) {
     return () => clearTimeout(timer);
   }, [wait]);
   return (
-    <form action={action}>
+    <form action={action} className="flex flex-col items-start gap-3">
       <Button variant="secondary" loading={pending} disabled={wait > 0}>
         {wait > 0
           ? fr
@@ -38,14 +39,14 @@ export function ConfirmationResend({ retryIn }: { retryIn: number }) {
               : "Resend confirmation email"}
       </Button>
       {result.sent && (
-        <p className="notice noticeGood" role="status">
+        <Alert variant="success" role="status" className="self-stretch">
           {fr
             ? "Le courriel de confirmation a été renvoyé."
             : "Confirmation email resent. Check your inbox."}
-        </p>
+        </Alert>
       )}
       {result.error && (
-        <p className="notice" role="alert">
+        <Alert variant="error" role="alert" className="self-stretch">
           {result.error === "tooMany"
             ? fr
               ? "Patientez une minute avant de réessayer."
@@ -53,7 +54,7 @@ export function ConfirmationResend({ retryIn }: { retryIn: number }) {
             : fr
               ? "Impossible d'envoyer le courriel. Veuillez réessayer."
               : "We couldn't send the email. Please try again."}
-        </p>
+        </Alert>
       )}
     </form>
   );

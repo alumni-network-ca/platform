@@ -21,7 +21,7 @@ import {
   formFooter,
   optionInput,
 } from "@/components/profile/FormCard";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 // Deleting this school's profile (PRF-06). It needs a recent sign-in (re-authentication); the action checks it
@@ -58,7 +58,9 @@ export default async function DeletePage() {
               <SignOutButton
                 to="/login?next=%2Fme%2Fdelete"
                 label={m.reauthButton}
-                className={cn(buttonVariants({ variant: "secondary", size: "sm" }), "mt-1")}
+                variant="secondary"
+                size="sm"
+                className="mt-1"
               />
             </div>
           )}

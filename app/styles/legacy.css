@@ -50,8 +50,7 @@ a {
 }
 .hero h1,
 .page h1,
-.section h2,
-.authCard h1 {
+.section h2 {
   font-family: Georgia, "Times New Roman", serif;
   font-weight: 500;
   letter-spacing: -0.018em;
@@ -85,8 +84,7 @@ a {
 }
 .ledgerCard,
 .card,
-.statCard,
-.authCard {
+.statCard {
   background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
@@ -233,110 +231,6 @@ textarea:focus {
   font-weight: 800;
   color: var(--accent);
 }
-.authPage {
-  min-height: calc(100vh - 72px);
-  display: grid;
-  place-items: start center;
-  padding: 72px 20px;
-  background:
-    radial-gradient(circle at top right, var(--accent-glow) 0, transparent 32%), var(--paper);
-}
-.authCard {
-  width: min(100%, 520px);
-  padding: 34px;
-  box-shadow: var(--shadow);
-}
-.authCard h1 {
-  font-size: 38px;
-  margin: 0 0 12px;
-}
-.authForm {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-top: 26px;
-}
-.authForm label,
-.codeField {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  font-size: 13px;
-  font-weight: 700;
-}
-.authForm .microcopy {
-  margin: 0;
-}
-/* A hint under the field above it: the form's 16px gap less 9px matches the label's own 7px gap. */
-.authForm .joinFieldHint {
-  margin-top: -9px;
-}
-/* Six-box code entry (components/CodeInput.tsx): the real input lies invisible over the boxes. */
-.codeInput {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 8px;
-  max-width: 340px;
-}
-.codeInputField {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  width: 100%;
-  border: 0;
-  padding: 0;
-  background: transparent;
-  color: transparent;
-  caret-color: transparent;
-  font-size: 16px; /* under 16px, iOS zooms in on focus */
-  outline: none;
-  cursor: text;
-}
-.codeInputField::selection {
-  background: transparent;
-}
-.codeBox {
-  display: grid;
-  place-items: center;
-  height: 54px;
-  border: 1px solid var(--input-line); /* 3:1 against white, WCAG 1.4.11 */
-  border-radius: var(--radius-lg);
-  background: #fff;
-  color: var(--ink);
-  font-size: 24px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
-.codeBox[data-current] {
-  border-color: var(--brand);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 14%, transparent);
-}
-.codeBox[data-current]:empty::after {
-  content: "";
-  width: 2px;
-  height: 26px;
-  background: var(--brand);
-  animation: codeCaret 1s steps(1) infinite;
-}
-@keyframes codeCaret {
-  50% {
-    opacity: 0;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .codeBox[data-current]:empty::after {
-    animation: none;
-  }
-}
-.authFooter {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 20px;
-  font-size: 12px;
-  color: var(--accent);
-}
 .notice {
   padding: 14px;
   border-radius: var(--radius-md);
@@ -475,16 +369,12 @@ textarea:focus {
   }
   .ctas,
   .footer,
-  .footer div,
-  .authFooter {
+  .footer div {
     flex-direction: column;
     align-items: stretch;
   }
   .footer div {
     gap: 10px;
-  }
-  .authPage {
-    padding-top: 35px;
   }
 }
 
@@ -505,49 +395,6 @@ textarea:focus {
   font-size: 13px;
   font-weight: 700;
   margin: 14px 0;
-}
-.claimPage {
-  display: grid;
-  grid-template-columns: 1fr 480px;
-  gap: 60px;
-  align-items: start;
-  max-width: 1100px;
-}
-.claimIntro {
-  padding-top: 28px;
-}
-.claimIntro h1 {
-  font-size: 48px;
-}
-.stepList {
-  display: grid;
-  grid-template-columns: 34px 1fr;
-  gap: 12px 14px;
-  margin-top: 35px;
-}
-.stepList > span {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: var(--accent-soft);
-  color: var(--accent);
-  font-weight: 800;
-}
-.stepList p {
-  margin: 3px 0 12px;
-  color: var(--slate);
-  font-size: 13px;
-}
-.matchCard {
-  background: #edf7f4;
-  color: #286758;
-  border: 1px solid #cde6df;
-  padding: 13px;
-  border-radius: var(--radius-md);
-  font-size: 13px;
-  margin-bottom: 16px;
 }
 .full {
   grid-column: 1/-1;
@@ -632,15 +479,8 @@ textarea:focus {
   margin-top: 5px;
 }
 @media (max-width: 850px) {
-  .claimPage,
   .adminGrid {
     grid-template-columns: 1fr;
-  }
-  .claimPage {
-    gap: 22px;
-  }
-  .claimIntro h1 {
-    font-size: 38px;
   }
 }
 @media (max-width: 600px) {
@@ -1044,368 +884,6 @@ textarea:focus {
   }
 }
 
-/* Alumni account creation and admission (approved Alumni canvas, November 2026). */
-.joinPage {
-  width: 100%;
-  max-width: 1112px;
-  margin: 0 auto;
-  padding: 48px 28px 64px;
-  line-height: 1.55;
-}
-.joinPage h1,
-.joinPage h2,
-.joinPage h3 {
-  margin: 0;
-  font-family: var(--font-inter), Arial, sans-serif;
-}
-.joinPage h1 {
-  font-size: 34px;
-  line-height: 1.15;
-  letter-spacing: -0.035em;
-  font-weight: 800;
-}
-.joinPage h2 {
-  font-size: 27px;
-  line-height: 1.3;
-  letter-spacing: -0.02em;
-}
-.joinPage h3 {
-  font-size: 15px;
-  line-height: 1.5;
-}
-.joinPage p {
-  margin: 0;
-}
-.joinSplit {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 460px;
-  gap: 64px;
-  align-items: start;
-}
-.joinIntro {
-  display: grid;
-  gap: 24px;
-  padding-top: 28px;
-}
-.joinIntro h1 {
-  font-size: 46px;
-  line-height: 1.12;
-}
-.joinLead {
-  font-size: 17px;
-  line-height: 1.65;
-  color: var(--ink-soft);
-}
-.joinEyebrow {
-  display: block;
-  font-size: 11px;
-  line-height: 1.5;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-.joinCard {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
-  padding: 32px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow);
-}
-.joinCard > .tag {
-  align-self: flex-start;
-}
-.joinCard .authForm {
-  margin-top: 0;
-}
-.joinCard .notice {
-  margin: 0;
-}
-
-.joinCard .authFooter {
-  margin-top: 0;
-  flex-wrap: wrap;
-}
-.joinCard p,
-.joinCard strong {
-  overflow-wrap: anywhere;
-}
-.joinCard .muted {
-  color: var(--text-muted);
-}
-/* Text links in the card; links drawn as buttons (components/ui) keep their own colours. */
-.joinCard a:not([data-slot]) {
-  color: var(--accent);
-}
-
-.joinCentered {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 36px;
-}
-.joinStack {
-  display: grid;
-  gap: 8px;
-}
-.joinDivider {
-  border-top: 1px solid var(--line);
-  padding-top: 20px;
-  font-size: 13px;
-}
-.joinDivider a {
-  color: var(--accent);
-  font-weight: 700;
-}
-.joinNotice {
-  margin: 0;
-  padding: 15px 17px;
-  border-left: 3px solid var(--accent);
-  border-radius: 0 var(--radius-md) var(--radius-md) 0;
-  background: var(--surface-sunken);
-  color: var(--ink-soft);
-  font-size: 13px;
-  line-height: 1.6;
-}
-.joinNotice a {
-  text-decoration: underline;
-}
-.joinProgress {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 18px;
-  list-style: none;
-  margin: 0 0 28px;
-  padding: 0;
-  font-size: 12px;
-  color: var(--text-muted);
-}
-.joinProgress li {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-}
-.joinProgress [aria-current] {
-  color: var(--accent);
-  font-weight: 700;
-}
-.joinDot {
-  flex: 0 0 30px;
-  width: 30px;
-  height: 30px;
-  display: grid;
-  place-items: center;
-  border: 1px solid #c5ccda;
-  border-radius: 50%;
-  font-size: 12px;
-  font-weight: 800;
-  background: #fff;
-  color: var(--text-muted);
-}
-.joinProgress .joinDot {
-  width: 23px;
-  height: 23px;
-  flex-basis: 23px;
-  font-size: 10px;
-}
-.joinCurrent {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
-}
-.joinDone {
-  background: var(--brand);
-  border-color: var(--brand);
-  color: #fff;
-}
-.joinWaiting {
-  background: var(--warn-soft);
-  border-color: #b38a30;
-  color: var(--warn);
-}
-.joinJourney {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: 20px;
-}
-.joinJourney li {
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-}
-.joinJourney p {
-  margin-top: 3px;
-  font-size: 13px;
-  color: var(--text-muted);
-  line-height: 1.6;
-}
-.joinRequestLayout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 28px;
-  align-items: start;
-}
-.joinAside {
-  display: grid;
-  gap: 20px;
-  min-width: 0;
-}
-.joinDarkPanel {
-  display: grid;
-  gap: 20px;
-  padding: 24px;
-  background: var(--brand);
-  color: #fff;
-  border-radius: var(--radius-lg);
-}
-.joinDarkPanel h2 {
-  font-size: 20px;
-}
-.joinDarkPanel p {
-  color: var(--on-brand-soft);
-  font-size: 14px;
-}
-.joinDarkPanel strong {
-  color: #fff;
-}
-.joinIcon {
-  width: 54px;
-  height: 54px;
-  display: grid;
-  place-items: center;
-  background: var(--accent-pale);
-  border-radius: var(--radius-xl);
-  font-size: 24px;
-  color: var(--accent);
-}
-.joinActions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-.joinPage a:focus-visible,
-.joinPage button:focus-visible,
-.joinPage input:focus-visible,
-.joinPage textarea:focus-visible {
-  outline: 3px solid var(--accent-ring);
-  outline-offset: 3px;
-}
-.authCard > .joinEyebrow {
-  margin-bottom: 12px;
-}
-.authCard .joinNotice {
-  margin-top: 24px;
-}
-.authCard .joinDivider {
-  margin-top: 24px;
-}
-/* Keep account creation in view without compressing the controls or clipping content. */
-.joinSignupPage {
-  padding-top: 24px;
-  padding-bottom: 28px;
-}
-.joinSignupPage .joinProgress {
-  margin-bottom: 20px;
-}
-.joinSignupPage .joinIntro {
-  gap: 18px;
-  padding-top: 16px;
-}
-.joinSignupPage .joinJourney {
-  gap: 16px;
-}
-.joinSignupPage .joinCard {
-  gap: 16px;
-  padding: 24px;
-}
-.joinSignupPage .joinStack {
-  gap: 6px;
-}
-.joinSignupPage .authForm {
-  gap: 12px;
-}
-.signupField {
-  display: grid;
-  gap: 4px;
-}
-.signupPasswords {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  align-items: start;
-}
-.signupPasswords label {
-  min-width: 0;
-}
-.joinSignupPage .joinNotice {
-  padding: 10px 14px;
-}
-.joinSignupPage .joinDivider {
-  padding-top: 12px;
-}
-@media (min-width: 801px) and (max-height: 760px) {
-  .joinSignupPage {
-    padding-top: 16px;
-    padding-bottom: 16px;
-  }
-  .joinSignupPage .joinProgress {
-    margin-bottom: 12px;
-  }
-  .joinSignupPage .joinCard {
-    gap: 12px;
-    padding: 20px;
-  }
-}
-@media (max-width: 800px) {
-  .joinPage {
-    padding: 32px 20px 48px;
-  }
-  .joinSplit,
-  .joinRequestLayout {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 28px;
-  }
-  .joinSplit .joinIntro {
-    order: 2;
-    padding-top: 0;
-  }
-  .joinIntro h1 {
-    font-size: 35px;
-  }
-  .joinPage h1 {
-    font-size: 29px;
-  }
-  .joinCard,
-  .joinCentered {
-    padding: 25px;
-  }
-  .joinProgress {
-    gap: 10px;
-  }
-  .joinSignupPage {
-    padding: 20px 16px 32px;
-  }
-  .joinSignupPage .joinCard {
-    padding: 20px;
-  }
-  .signupPasswords {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-.joinAuth h1 {
-  font-family: var(--font-inter), Arial, sans-serif;
-  font-size: 30px;
-  line-height: 1.2;
-  font-weight: 800;
-  letter-spacing: -0.025em;
-}
-
 /* Staff invitation flow (docs/design/staff-invite.md) */
 .tableTitle {
   margin: 0;
@@ -1580,64 +1058,6 @@ textarea:focus {
 }
 .inviteResult h2 {
   font-size: 17px;
-}
-.inviteFacts {
-  margin: 0;
-  padding: 18px 20px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 10px 20px;
-  font-size: 14px;
-}
-.joinCard .inviteFacts {
-  background: #f7f7f6;
-}
-.inviteFacts dt {
-  color: var(--text-muted);
-}
-.inviteFacts dd {
-  margin: 0;
-  font-weight: 600;
-  overflow-wrap: anywhere;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-}
-.inviteSwitch {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4px;
-  padding: 4px;
-  background: var(--line-subtle);
-  border-radius: var(--radius-md);
-}
-.inviteSwitch button {
-  min-height: 42px;
-  border: 0;
-  border-radius: var(--radius-md);
-  background: transparent;
-  color: var(--text-muted);
-  font: inherit;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-}
-.inviteSwitch button[aria-pressed="true"] {
-  background: #fff;
-  color: var(--ink);
-  box-shadow: 0 1px 3px rgba(11, 33, 89, 0.18);
-}
-.inviteLists {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 18px;
-}
-.inviteLists h3 {
-  margin-bottom: 8px;
 }
 .welcomeBanner {
   display: grid;

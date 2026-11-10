@@ -1,28 +1,34 @@
 "use client";
 
 import { useState } from "react";
+import { Button, type ButtonProps } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 
 /**
- * Ends this address's session only (DEC-13), then loads `to` so the server sees the signed-out state. Drawn as a text
- * link unless `className` gives it another look.
+ * Ends this address's session only (DEC-13), then loads `to` so the server sees the signed-out state. A text link
+ * unless `variant` gives it a button's look.
  */
 export function SignOutButton({
   to = "/",
   label = "Sign out",
-  className = "textButton",
+  variant = "link",
+  size,
+  className,
 }: {
   to?: string;
   label?: string;
+  variant?: ButtonProps["variant"];
+  size?: ButtonProps["size"];
   className?: string;
 }) {
   const [busy, setBusy] = useState(false);
   return (
-    <button
+    <Button
       type="button"
+      variant={variant}
+      size={size}
       className={className}
-      disabled={busy}
-      aria-busy={busy || undefined}
+      loading={busy}
       onClick={async () => {
         setBusy(true);
         await createClient().auth.signOut({ scope: "local" });
@@ -30,6 +36,6 @@ export function SignOutButton({
       }}
     >
       {label}
-    </button>
+    </Button>
   );
 }
