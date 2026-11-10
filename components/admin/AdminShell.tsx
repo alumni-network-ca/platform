@@ -12,7 +12,10 @@ export async function AdminShell({ children }: { children: React.ReactNode }) {
     <div className="flex min-h-[calc(100vh-66px)] flex-col bg-background text-foreground">
       <div className="flex flex-1 flex-wrap">
         <AdminNav sections={sections} label={t.dashboard} />
-        <main className="flex min-w-0 flex-[999_1_640px] flex-col gap-5 px-9 py-7 max-[700px]:px-4 max-[700px]:py-5">
+        <main
+          data-ui
+          className="flex min-w-0 flex-[999_1_640px] flex-col gap-5 px-9 py-7 max-[700px]:px-4 max-[700px]:py-5"
+        >
           {children}
         </main>
       </div>

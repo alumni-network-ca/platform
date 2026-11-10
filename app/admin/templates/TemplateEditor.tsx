@@ -7,6 +7,8 @@ import { approveTemplate } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { ui } from "@/components/admin/parts";
+import { Alert } from "@/components/ui/alert";
 export function TemplateEditor({
   templateKey,
   locale,
@@ -43,8 +45,8 @@ export function TemplateEditor({
     });
   };
   return (
-    <form action={action} className="adminStack">
-      <div className="field">
+    <form action={action} className={ui.adminStack}>
+      <div className={ui.field}>
         <label htmlFor="template-subject">{t.subject}</label>
         <Input
           id="template-subject"
@@ -56,7 +58,7 @@ export function TemplateEditor({
           onChange={(e) => setSubject(e.target.value)}
         />
       </div>
-      <div className="field">
+      <div className={ui.field}>
         <label htmlFor="template-body">{t.message}</label>
         <Textarea
           ref={bodyRef}
@@ -70,26 +72,26 @@ export function TemplateEditor({
           onChange={(e) => setBody(e.target.value)}
         />
       </div>
-      <div className="adminChips" aria-label={t.insert}>
+      <div className={ui.adminChips} aria-label={t.insert}>
         {templatePlaceholders[templateKey].map((p) => (
-          <button key={p} className="tag" type="button" onClick={() => insert(p)}>
+          <button key={p} className={ui.filterChip} type="button" onClick={() => insert(p)}>
             {"{" + p + "}"}
           </button>
         ))}
       </div>
-      <p className="fieldHint">{t.draftNote}</p>
+      <p className={ui.fieldHint}>{t.draftNote}</p>
       {state.error && (
-        <p role="alert" className="notice">
+        <Alert variant="error" role="alert">
           {errorMessage(state.error, t)}
-        </p>
+        </Alert>
       )}
       {state.saved && (
-        <p role="status" className="notice noticeGood">
+        <Alert variant="success" role="status">
           {t.saved}
-        </p>
+        </Alert>
       )}
       {/* TODO(EML-01): email preview requires the renderer. */}
-      <div className="formActions">
+      <div className={ui.formActions}>
         <Button loading={pending}>{t.approveVersion}</Button>
       </div>
     </form>

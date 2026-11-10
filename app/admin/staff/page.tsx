@@ -5,6 +5,9 @@ import { RowMenu } from "@/components/admin/RowMenu";
 import { format } from "@/lib/i18n";
 import { manageStaff } from "./actions";
 import { Button } from "@/components/ui/button";
+import { ui } from "@/components/admin/parts";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 const DAY = 86_400_000;
 
@@ -33,7 +36,7 @@ export default async function Staff() {
   const roleLabel = (role: string) => (role === "school_admin" ? t.schoolAdmin : t.reviewer);
   return (
     <>
-      <div className="shellTitle">
+      <div className={ui.shellTitle}>
         <div>
           <h1>{t.staff}</h1>
           <p>{t.staffIntro}</p>
@@ -42,17 +45,17 @@ export default async function Staff() {
           <Link href="/admin/staff/invite">{t.inviteStaff}</Link>
         </Button>
       </div>
-      <section className="tableBox" aria-labelledby="staff-team">
-        <h2 id="staff-team" className="tableTitle">
+      <section className={ui.tableBox} aria-labelledby="staff-team">
+        <h2 id="staff-team" className={ui.tableTitle}>
           {t.team}
         </h2>
-        <table className="dataTable">
+        <table className={ui.dataTable}>
           <thead>
             <tr>
               <th>{t.name}</th>
               <th>{t.role}</th>
               <th>{t.status}</th>
-              <th className="cellActions">
+              <th className={ui.cellActions}>
                 <span className="sr-only">{t.actions}</span>
               </th>
             </tr>
@@ -68,16 +71,16 @@ export default async function Staff() {
                     <strong>
                       {name} {s.user_id === user.id ? t.you : ""}
                     </strong>
-                    {s.name && <span className="cellSub">{s.email}</span>}
+                    {s.name && <span className={ui.cellSub}>{s.email}</span>}
                   </td>
                   <td>{roleLabel(s.role)}</td>
                   <td>
-                    <span className="tag tagGood">{t.active}</span>
-                    <span className="cellSub">{date(s.joined_at)}</span>
+                    <Badge variant="success">{t.active}</Badge>
+                    <span className={ui.cellSub}>{date(s.joined_at)}</span>
                   </td>
-                  <td className="cellActions">
+                  <td className={ui.cellActions}>
                     {last ? (
-                      <p className="fieldHint">{t.onlyAdmin}</p>
+                      <p className={ui.fieldHint}>{t.onlyAdmin}</p>
                     ) : (
                       <RowMenu
                         action={manageStaff}
@@ -107,18 +110,18 @@ export default async function Staff() {
           </tbody>
         </table>
       </section>
-      <section className="tableBox" aria-labelledby="staff-invitations">
-        <h2 id="staff-invitations" className="tableTitle">
+      <section className={ui.tableBox} aria-labelledby="staff-invitations">
+        <h2 id="staff-invitations" className={ui.tableTitle}>
           {t.invitations}
         </h2>
         {invitations.length ? (
-          <table className="dataTable">
+          <table className={ui.dataTable}>
             <thead>
               <tr>
                 <th>{t.invitedAddress}</th>
                 <th>{t.role}</th>
                 <th>{t.status}</th>
-                <th className="cellActions">
+                <th className={ui.cellActions}>
                   <span className="sr-only">{t.actions}</span>
                 </th>
               </tr>
@@ -132,17 +135,19 @@ export default async function Staff() {
                     : "open";
                 const by = inv.invited_by && names.get(inv.invited_by);
                 return (
-                  <tr key={inv.id} className={state === "revoked" ? "rowMuted" : undefined}>
+                  <tr key={inv.id} className={state === "revoked" ? ui.rowMuted : undefined}>
                     <td>
                       <strong>{inv.email}</strong>
-                      {by && <span className="cellSub">{format(t.invitedBy, { name: by })}</span>}
+                      {by && (
+                        <span className={ui.cellSub}>{format(t.invitedBy, { name: by })}</span>
+                      )}
                     </td>
                     <td>{roleLabel(inv.role)}</td>
                     <td>
                       {state === "open" && (
                         <>
-                          <span className="tag">{t.statusSent}</span>
-                          <span className="cellSub">
+                          <Badge>{t.statusSent}</Badge>
+                          <span className={ui.cellSub}>
                             {format(t.sentUntil, {
                               sent: date(inv.created_at),
                               date: date(inv.expires_at),
@@ -152,8 +157,8 @@ export default async function Staff() {
                       )}
                       {state === "expired" && (
                         <>
-                          <span className="tag tagWarn">{t.statusExpired}</span>
-                          <span className="cellSub">
+                          <Badge variant="warning">{t.statusExpired}</Badge>
+                          <span className={ui.cellSub}>
                             {format(t.expiredOn, {
                               sent: date(inv.created_at),
                               date: date(inv.expires_at),
@@ -163,14 +168,14 @@ export default async function Staff() {
                       )}
                       {state === "revoked" && (
                         <>
-                          <span className="tag">{t.statusRevoked}</span>
-                          <span className="cellSub">
+                          <Badge>{t.statusRevoked}</Badge>
+                          <span className={ui.cellSub}>
                             {format(t.revokedOn, { date: date(inv.revoked_at) })}
                           </span>
                         </>
                       )}
                     </td>
-                    <td className="cellActions">
+                    <td className={ui.cellActions}>
                       {state !== "revoked" && (
                         <RowMenu
                           action={manageStaff}
@@ -209,21 +214,21 @@ export default async function Staff() {
             </tbody>
           </table>
         ) : (
-          <p className="tableEmpty">{t.noInvitations}</p>
+          <p className={ui.tableEmpty}>{t.noInvitations}</p>
         )}
-        <p className="fieldHint tableNote">{t.invitationsNote}</p>
+        <p className={cn(ui.fieldHint, ui.tableNote)}>{t.invitationsNote}</p>
       </section>
-      <div className="panelGrid">
-        <section className="panel">
+      <div className={ui.panelGrid}>
+        <section className={ui.panel}>
           <h2>{t.schoolAdmin}</h2>
           <p>{t.schoolAdminHelp}</p>
         </section>
-        <section className="panel">
+        <section className={ui.panel}>
           <h2>{t.reviewer}</h2>
           <p>{t.reviewerHelp}</p>
         </section>
       </div>
-      <p className="fieldHint">{t.staffNote}</p>
+      <p className={ui.fieldHint}>{t.staffNote}</p>
       {/* TODO(FND-11): show verified two-factor status. */}
     </>
   );

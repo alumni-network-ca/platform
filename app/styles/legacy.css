@@ -83,8 +83,7 @@ a {
   line-height: 1.5;
 }
 .ledgerCard,
-.card,
-.statCard {
+.card {
   background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
@@ -224,66 +223,6 @@ textarea:focus {
   color: var(--accent);
   font-size: 12px;
 }
-.viewProfile {
-  margin-top: auto;
-  padding-top: 18px;
-  font-size: 12px;
-  font-weight: 800;
-  color: var(--accent);
-}
-.notice {
-  padding: 14px;
-  border-radius: var(--radius-md);
-  background: var(--accent-pale);
-  color: var(--accent);
-  font-size: 13px;
-  margin: 16px 0;
-  line-height: 1.5;
-}
-.adminLayout {
-  display: grid;
-  grid-template-columns: 220px 1fr;
-  min-height: calc(100vh - 72px);
-}
-.adminSide {
-  border-right: 1px solid var(--line);
-  padding: 28px 18px;
-}
-.adminSide a {
-  display: block;
-  padding: 10px 12px;
-  border-radius: var(--radius-md);
-  color: var(--ink-soft);
-  margin-bottom: 3px;
-}
-.adminSide a:first-of-type {
-  background: var(--brand);
-  color: #fff;
-}
-.adminMain {
-  padding: 34px;
-}
-.statCards {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
-}
-.statCard {
-  padding: 18px;
-}
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #fff;
-  border: 1px solid var(--line);
-}
-.table th,
-.table td {
-  text-align: left;
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--line);
-  font-size: 13px;
-}
 .status {
   display: inline-block;
   padding: 4px 9px;
@@ -294,10 +233,6 @@ textarea:focus {
 .claimed {
   background: var(--accent-soft);
   color: var(--accent);
-}
-.unclaimed {
-  background: #eee;
-  color: var(--slate);
 }
 .footer {
   background: var(--brand-deep);
@@ -333,20 +268,13 @@ textarea:focus {
     grid-template-columns: repeat(2, 1fr);
     padding: 28px 20px;
   }
-  .grid3,
-  .statCards {
+  .grid3 {
     grid-template-columns: 1fr 1fr;
   }
   .page,
   .section {
     padding-left: 20px;
     padding-right: 20px;
-  }
-  .adminLayout {
-    grid-template-columns: 1fr;
-  }
-  .adminSide {
-    display: none;
   }
   .footer {
     padding: 28px 20px;
@@ -357,8 +285,7 @@ textarea:focus {
   }
 }
 @media (max-width: 600px) {
-  .grid3,
-  .statCards {
+  .grid3 {
     grid-template-columns: 1fr;
   }
   .statsInner {
@@ -379,23 +306,6 @@ textarea:focus {
 }
 
 /* Product V3 */
-.textButton {
-  border: 0;
-  background: transparent;
-  color: var(--accent);
-  font-weight: 750;
-  font-size: 12px;
-  cursor: pointer;
-  padding: 3px 0;
-}
-.fieldLabel {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  font-size: 13px;
-  font-weight: 700;
-  margin: 14px 0;
-}
 .full {
   grid-column: 1/-1;
 }
@@ -412,77 +322,6 @@ textarea:focus {
 .choice input {
   accent-color: var(--accent);
 }
-.profileSummary {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  margin-bottom: 18px;
-}
-.profileSummary h1 {
-  font-size: 29px;
-  margin: 0;
-}
-.profileAvatar {
-  width: 72px;
-  height: 72px;
-  font-size: 18px;
-}
-.completion {
-  margin-left: auto;
-  width: 86px;
-  height: 86px;
-  border-radius: 50%;
-  background: var(--accent-pale);
-  display: grid;
-  place-content: center;
-  text-align: center;
-}
-.completion strong {
-  font-size: 20px;
-  color: var(--accent);
-}
-.completion span {
-  font-size: 10px;
-  color: var(--slate);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-.adminGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-  margin-top: 22px;
-}
-.adminTableCard {
-  padding: 0;
-  overflow: hidden;
-}
-.adminTableCard h3 {
-  padding: 18px 20px;
-  margin: 0;
-  border-bottom: 1px solid var(--line);
-}
-.adminTableCard td small {
-  display: block;
-  color: var(--slate);
-  font-size: 10px;
-  margin-top: 3px;
-}
-.statCard strong {
-  font-size: 26px;
-  display: block;
-}
-.statCard > span:not([class]) {
-  font-size: 12px;
-  color: var(--slate);
-  display: block;
-  margin-top: 5px;
-}
-@media (max-width: 850px) {
-  .adminGrid {
-    grid-template-columns: 1fr;
-  }
-}
 @media (max-width: 600px) {
   .full {
     grid-column: auto;
@@ -490,238 +329,16 @@ textarea:focus {
 }
 
 /* V4 polish */
-.adminSearchBar {
-  display: flex;
-  gap: 10px;
-  margin: 16px 0;
-}
-.adminSearchBar input {
-  flex: 1;
-}
-.adminAlumniList {
-  max-height: 650px;
-  overflow: auto;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-}
-.adminAlumniList table {
-  margin: 0;
-}
-.adminName {
-  font-weight: 750;
-}
-.adminMeta {
-  font-size: 11px;
-  color: var(--slate);
-  margin-top: 3px;
-}
 
 /* Console and school admin shell (docs/design/alumni-full-flow, S1–S2 and A1–A4) */
-.shellTitle {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 16px;
-}
-.shellTitle h1 {
-  margin: 0;
-  font-size: 28px;
-  font-weight: 800;
-}
-.shellTitle p {
-  margin: 6px 0 0;
-  font-size: 15px;
-  color: var(--ink-soft);
-}
-.backLink {
-  align-self: flex-start;
-  color: var(--accent);
-  font-size: 14px;
-  font-weight: 600;
-}
-.statGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 14px;
-}
-.statCard {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 18px 20px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-}
-.statLabel {
-  color: var(--ink-soft);
-  font-size: 13px;
-  font-weight: 600;
-}
-.statValue {
-  font-size: 32px;
-  font-weight: 800;
-  line-height: 1;
-}
-.panel {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding: 22px 24px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-}
-.panel h2 {
-  margin: 0;
-  font-size: 17px;
-  font-weight: 700;
-}
-.panel p {
-  margin: 0;
-}
-.panel h3 {
-  margin: 6px 0 0;
-  font-size: 15px;
-  font-weight: 700;
-}
-.panelWarn {
-  background: #fff8e8;
-  border-color: #f0d9a8;
-}
-.panelGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 16px;
-  align-items: start;
-}
-.tableBox {
-  overflow-x: auto;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-}
-.dataTable {
-  width: 100%;
-  min-width: 640px;
-  border-collapse: collapse;
-  font-size: 14px;
-}
-.dataTable th {
-  padding: 14px 20px;
-  text-align: left;
-  color: var(--ink-soft);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-.dataTable td {
-  padding: 12px 20px;
-  border-top: 1px solid var(--line-subtle);
-  vertical-align: top;
-}
-.dataTable a {
-  color: var(--ink);
-  font-weight: 700;
-}
 /* Row actions behind a "⋯" button (RowMenu, AdmStaff). The panel is placed on <body> (page coordinates) so the table's scroll box can't clip it. */
-.dataTable .cellActions {
-  width: 1%;
-  text-align: right;
-  white-space: nowrap;
-}
-.rowMenu {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
-  white-space: normal;
-}
-.rowMenuNotice {
-  max-width: 280px;
-  text-align: left;
-}
-.rowMenuLink {
-  width: 240px;
-  text-align: left;
-}
-.rowMenuLink .field {
-  flex: 1 1 100%;
-  min-width: 0;
-}
 /* A table row that opens a page: its one link is stretched over the whole row (design: SaSchools). */
-.dataTable tr.rowLink {
-  position: relative;
-  cursor: pointer;
-}
-.dataTable tr.rowLink:hover td {
-  background: #f7f8fb;
-}
-.dataTable a.rowLinkTarget {
-  color: #4b2a8a;
-}
-.dataTable a.rowLinkTarget:hover,
-.dataTable a.rowLinkTarget:focus-visible {
-  text-decoration: underline;
-}
-.dataTable a.rowLinkTarget::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-}
-.cellSub {
-  display: block;
-  color: var(--text-muted);
-  font-size: 13px;
-  font-weight: 400;
-}
-.tag {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: var(--line-subtle);
-  color: var(--ink-soft);
-  font-size: 12px;
-  font-weight: 700;
-  white-space: nowrap;
-}
-.tagGood {
-  background: var(--good-soft);
-  color: var(--good);
-}
-.tagWarn {
-  background: var(--warn-soft);
-  color: var(--warn);
-}
-.tagBad {
-  background: var(--danger-soft);
-  color: var(--danger);
-}
 .field {
   display: flex;
   flex-direction: column;
   gap: 6px;
   font-size: 13px;
   font-weight: 600;
-}
-.fieldHint {
-  color: var(--text-muted);
-  font-size: 12px;
-  font-weight: 400;
-}
-.formRow {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
-}
-.formActions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 10px;
 }
 .choice {
   display: flex;
@@ -749,356 +366,6 @@ textarea:focus {
   accent-color: var(--accent);
 }
 
-.noticeGood {
-  background: var(--good-soft);
-  color: var(--good);
-}
-.copyBox {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.formStack {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-.detailList {
-  display: grid;
-  grid-template-columns: minmax(120px, auto) 1fr;
-  gap: 8px 16px;
-  margin: 0;
-  font-size: 14px;
-}
-.detailList dt {
-  color: var(--text-muted);
-}
-.detailList dd {
-  margin: 0;
-  font-weight: 600;
-  overflow-wrap: anywhere;
-}
-
-.adminHero {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 22px 24px;
-  border-radius: var(--radius-lg);
-  background: var(--brand);
-  color: #fff;
-  text-decoration: none;
-}
-.adminHero small {
-  display: block;
-  color: var(--on-brand-accent);
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-.adminHero strong {
-  display: block;
-  font-size: 22px;
-}
-.adminTabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  border-bottom: 1px solid var(--line);
-}
-.adminTabs a {
-  padding: 12px 16px;
-  color: var(--ink);
-  text-decoration: none;
-  border-bottom: 3px solid transparent;
-}
-.adminTabs a[aria-current="page"] {
-  border-color: var(--accent);
-  font-weight: 700;
-}
-.adminFilters {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 14px;
-}
-.adminDetails {
-  display: grid;
-  grid-template-columns: minmax(100px, 1fr) 2fr;
-  gap: 10px 20px;
-  margin: 0;
-}
-.adminDetails dt {
-  color: var(--ink-soft);
-}
-.adminDetails dd {
-  margin: 0;
-  overflow-wrap: anywhere;
-  white-space: pre-wrap;
-}
-.adminMatch {
-  border-color: #398254;
-}
-.adminSupport {
-  background: #fff8e8;
-}
-.adminDialog {
-  max-width: 640px;
-  width: 100%;
-  align-self: center;
-}
-.adminActions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-}
-.adminChips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.adminChips a {
-  color: var(--ink);
-}
-.adminChips a[aria-current="page"] {
-  background: var(--accent-pale);
-}
-.adminStack {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-@media (max-width: 800px) {
-  .adminDetails {
-    grid-template-columns: 1fr;
-    gap: 6px;
-  }
-  .adminDetails dd {
-    margin-bottom: 10px;
-  }
-  .panelGrid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
 /* Staff invitation flow (docs/design/staff-invite.md) */
-.tableTitle {
-  margin: 0;
-  padding: 16px 20px 4px;
-  font-size: 16px;
-  font-weight: 700;
-}
-.tableEmpty,
-.tableNote {
-  margin: 0;
-  padding: 12px 20px 16px;
-}
-.tableNote {
-  border-top: 1px solid var(--line-subtle);
-}
-.rowMuted td {
-  color: var(--text-muted);
-}
-.linkRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 10px;
-}
-.linkRow .field {
-  flex: 1 1 320px;
-}
-.inviteEmail {
-  max-width: 440px;
-}
-.inviteEmail + .fieldHint {
-  margin-top: -6px;
-}
-.roleCards {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  min-width: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 14px;
-}
-.roleCards legend {
-  padding: 0;
-  margin-bottom: 12px;
-  font-size: 13px;
-  font-weight: 600;
-}
-.roleCard {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 18px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  background: #fff;
-  cursor: pointer;
-}
-.roleCard:has(input:checked) {
-  border: 2px solid var(--accent);
-  padding: 17px;
-  background: var(--accent-pale);
-}
-.roleCardHead {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 16px;
-}
-.roleCardHead input {
-  width: 18px;
-  height: 18px;
-  margin: 0;
-  accent-color: var(--accent);
-}
-.roleCardLabel {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-.inviteCan,
-.inviteCant {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 7px;
-  font-size: 13px;
-  line-height: 1.45;
-}
-.inviteCan > li,
-.inviteCan > span,
-.inviteCant > li,
-.inviteCant > span {
-  display: flex;
-  gap: 8px;
-}
 /* The lucide check and x, drawn in the text colour. */
-.inviteCan > li::before,
-.inviteCan > span::before,
-.inviteCant > li::before,
-.inviteCant > span::before {
-  content: "";
-  flex: 0 0 14px;
-  height: 14px;
-  margin-top: 2px;
-  background: currentColor;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E")
-    center / contain no-repeat;
-}
-.inviteCan > li::before,
-.inviteCan > span::before {
-  background: var(--good);
-}
-.inviteCant {
-  color: var(--text-muted);
-}
-.inviteCant > li::before,
-.inviteCant > span::before {
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6 6 18M6 6l12 12'/%3E%3C/svg%3E");
-}
 /* A5.1: the form, with "What they'll receive" and "Before they get access" beside it (under it on phones). */
-.inviteLayout {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  align-items: flex-start;
-}
-.inviteForm {
-  flex: 999 1 540px;
-  min-width: 0;
-  gap: 24px;
-}
-.inviteAside {
-  flex: 1 1 280px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-.inviteAside .panel {
-  gap: 12px;
-  padding: 20px 22px;
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--ink-soft);
-}
-.inviteAside .panel h2 {
-  font-size: 15px;
-  color: var(--ink);
-}
-.inviteAside strong {
-  color: var(--ink);
-}
-.inviteAside a {
-  font-size: 14px;
-  font-weight: 600;
-}
-.invitePreview {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 14px 16px;
-  border-radius: var(--radius-md);
-  background: var(--surface-sunken);
-}
-.inviteActions {
-  justify-content: flex-start;
-  padding-top: 18px;
-  border-top: 1px solid var(--line-subtle);
-}
-.inviteResult h2 {
-  font-size: 17px;
-}
-.welcomeBanner {
-  display: grid;
-  gap: 18px;
-  padding: 26px 28px;
-  border-radius: var(--radius-xl);
-  background: var(--brand);
-  color: #fff;
-}
-.welcomeHead {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 14px 28px;
-}
-.welcomeHead h2 {
-  margin: 0;
-  font-size: 26px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
-.welcomeHead p {
-  margin: 8px 0 0;
-  color: var(--on-brand-soft);
-}
-.welcomeCards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
-}
-.welcomeCard {
-  display: grid;
-  gap: 6px;
-  padding: 18px;
-  border-radius: var(--radius-lg);
-  background: #fff;
-  color: var(--ink);
-  font-size: 14px;
-  line-height: 1.5;
-}
-.welcomeCard span {
-  color: var(--ink-soft);
-}

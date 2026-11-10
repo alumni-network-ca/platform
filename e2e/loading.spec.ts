@@ -62,7 +62,7 @@ test.describe("loading states", () => {
 
     await menu.getByRole("link", { name: "Alumni" }).click();
     await expect(loading(page)).toBeAttached();
-    await expect(page.locator(".tableBox [data-slot=skeleton]").first()).toBeVisible();
+    await expect(page.getByRole("main").locator("[data-slot=skeleton]").first()).toBeVisible();
     await expect(menu).toBeVisible();
 
     release();

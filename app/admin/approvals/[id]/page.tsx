@@ -5,6 +5,9 @@ import { adminCopy, dateLabel, read } from "@/lib/admin/data";
 import { DecisionForm } from "./DecisionForm";
 import { Check } from "lucide-react";
 import { BackArrow } from "@/components/icons";
+import { ui } from "@/components/admin/parts";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 export default async function Review({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const { supabase, school } = await requireStaff("/admin/approvals/" + id, "requests.read");
@@ -20,11 +23,11 @@ export default async function Review({ params }: { params: Promise<{ id: string 
   const matches = await read(supabase.rpc("access_request_matches", { p_requests: [id] }));
   return (
     <>
-      <Link className="backLink" href="/admin/approvals">
+      <Link className={ui.backLink} href="/admin/approvals">
         <BackArrow />
         {t.approvals}
       </Link>
-      <div className="shellTitle">
+      <div className={ui.shellTitle}>
         <div>
           <h1>
             {r.first_name} {r.last_name} · {r.grad_year}
@@ -37,10 +40,10 @@ export default async function Review({ params }: { params: Promise<{ id: string 
           </p>
         </div>
       </div>
-      <div className="panelGrid">
-        <section className="panel">
+      <div className={ui.panelGrid}>
+        <section className={ui.panel}>
           <h2>{t.toldUs}</h2>
-          <dl className="adminDetails">
+          <dl className={ui.adminDetails}>
             <dt>{t.name}</dt>
             <dd>
               {r.first_name} {r.last_name}
@@ -64,7 +67,7 @@ export default async function Review({ params }: { params: Promise<{ id: string 
           </dl>
         </section>
         {matches.map((m) => (
-          <section key={m.profile_id} className="panel adminMatch">
+          <section key={m.profile_id} className={cn(ui.panel, ui.adminMatch)} data-match="">
             <h2>{t.suggested}</h2>
             <Link href={"/admin/alumni/" + m.profile_id}>
               {m.first_name} {m.last_name}, {m.grad_year}
@@ -73,16 +76,16 @@ export default async function Review({ params }: { params: Promise<{ id: string 
             <p>
               {t.school_student_id}: <strong>{m.school_student_id || "—"}</strong>{" "}
               {m.id_match ? (
-                <span className="tag tagGood">
+                <Badge variant="success">
                   <Check
                     aria-hidden
                     className="mr-1 inline-block size-3.5 align-[-0.15em]"
                     strokeWidth={3}
                   />
                   {t.sameStudentId}
-                </span>
+                </Badge>
               ) : r.school_student_id && m.school_student_id ? (
-                <span className="tag tagWarn">{t.differentStudentId}</span>
+                <Badge variant="warning">{t.differentStudentId}</Badge>
               ) : null}
             </p>
           </section>
@@ -92,7 +95,7 @@ export default async function Review({ params }: { params: Promise<{ id: string 
       {r.status === "pending" || r.status === "needs_info" ? (
         <DecisionForm id={id} year={r.grad_year} matches={matches} t={t} />
       ) : (
-        <section className="panel">
+        <section className={ui.panel}>
           <p>{t.alreadyDecided}</p>
           <p>{r.decision_reason || r.info_request}</p>
         </section>

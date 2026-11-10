@@ -6,6 +6,9 @@ import { adminCopy, dateLabel, read, pageNumber, type Search } from "@/lib/admin
 import { describeAudit } from "@/lib/admin/audit";
 import { NativeSelect } from "@/components/ui/native-select";
 import { SubmitButton } from "@/components/ui/submit-button";
+import { ScrollText } from "lucide-react";
+import { EmptyState } from "@/components/EmptyState";
+import { ui } from "@/components/admin/parts";
 export default async function Audit({ searchParams }: { searchParams: Search }) {
   const { supabase, school } = await requireStaff("/admin/audit", "audit.read");
   const { t, locale } = await adminCopy();
@@ -45,14 +48,14 @@ export default async function Audit({ searchParams }: { searchParams: Search }) 
   if (!rows.length && page > 1) redirect(url(type));
   return (
     <>
-      <div className="shellTitle">
+      <div className={ui.shellTitle}>
         <div>
           <h1>{t.audit}</h1>
           <p>{t.auditIntro}</p>
         </div>
       </div>
-      <Form action="/admin/audit" className="adminFilters">
-        <label className="field">
+      <Form action="/admin/audit" className={ui.adminFilters}>
+        <label className={ui.field}>
           {t.who}
           <NativeSelect name="who" defaultValue={who ?? ""}>
             <option value="">{t.anyone}</option>
@@ -66,14 +69,18 @@ export default async function Audit({ searchParams }: { searchParams: Search }) 
         {type && <input type="hidden" name="type" value={type} />}
         <SubmitButton>{t.apply}</SubmitButton>
       </Form>
-      <nav className="adminChips" aria-label={t.type}>
-        <Link className="tag" href={url(undefined)} aria-current={!type ? "page" : undefined}>
+      <nav className={ui.adminChips} aria-label={t.type}>
+        <Link
+          className={ui.filterChip}
+          href={url(undefined)}
+          aria-current={!type ? "page" : undefined}
+        >
           {t.allTypes}
         </Link>
         {types.map((key) => (
           <Link
             key={key}
-            className="tag"
+            className={ui.filterChip}
             href={url(key)}
             aria-current={key === type ? "page" : undefined}
           >
@@ -82,8 +89,8 @@ export default async function Audit({ searchParams }: { searchParams: Search }) 
         ))}
       </nav>
       {rows.length ? (
-        <div className="tableBox">
-          <table className="dataTable">
+        <div className={ui.tableBox}>
+          <table className={ui.dataTable}>
             <thead>
               <tr>
                 <th>{t.when}</th>
@@ -98,7 +105,7 @@ export default async function Audit({ searchParams }: { searchParams: Search }) 
                 return (
                   <tr
                     key={row.id}
-                    className={row.actor_kind === "system_admin" ? "adminSupport" : undefined}
+                    className={row.actor_kind === "system_admin" ? ui.adminSupport : undefined}
                   >
                     <td>{dateLabel(row.created_at, locale)}</td>
                     <td>{d.actor}</td>
@@ -111,13 +118,13 @@ export default async function Audit({ searchParams }: { searchParams: Search }) 
           </table>
         </div>
       ) : (
-        <p className="panel">{t.empty}</p>
+        <EmptyState icon={ScrollText} title={t.empty} />
       )}
-      <div className="formActions">
+      <div className={ui.formActions}>
         {page > 1 && <Link href={url(type, page - 1)}>{t.previous}</Link>}
         {page * 25 < (count ?? 0) && <Link href={url(type, page + 1)}>{t.next}</Link>}
       </div>
-      <p className="fieldHint">{t.auditNote}</p>
+      <p className={ui.fieldHint}>{t.auditNote}</p>
     </>
   );
 }

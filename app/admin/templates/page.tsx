@@ -3,6 +3,7 @@ import { requireStaff } from "@/lib/auth/staff";
 import { adminCopy, read, type Search } from "@/lib/admin/data";
 import { templateKeys } from "@/lib/admin/templates";
 import { TemplateEditor } from "./TemplateEditor";
+import { ui } from "@/components/admin/parts";
 export default async function Templates({ searchParams }: { searchParams: Search }) {
   const { supabase, school } = await requireStaff("/admin/templates", "templates.manage");
   const { t } = await adminCopy();
@@ -35,14 +36,14 @@ export default async function Templates({ searchParams }: { searchParams: Search
   };
   return (
     <>
-      <div className="shellTitle">
+      <div className={ui.shellTitle}>
         <div>
           <h1>{t.templates}</h1>
           <p>{t.templatesIntro}</p>
         </div>
       </div>
-      <div className="panelGrid">
-        <nav className="panel" aria-label={t.templates}>
+      <div className={ui.panelGrid}>
+        <nav className={ui.panel} aria-label={t.templates}>
           {templateKeys.map((k) => (
             <Link
               key={k}
@@ -50,15 +51,15 @@ export default async function Templates({ searchParams }: { searchParams: Search
               aria-current={k === key ? "page" : undefined}
             >
               <strong>{t[k]}</strong>
-              <span className="cellSub">
+              <span className={ui.cellSub}>
                 EN: {status(k, "en")} · FR: {status(k, "fr")}
               </span>
             </Link>
           ))}
         </nav>
-        <section className="panel">
+        <section className={ui.panel}>
           <h2>{t[key]}</h2>
-          <nav className="adminTabs" aria-label={t.defaultLanguage}>
+          <nav className={ui.adminTabs} aria-label={t.defaultLanguage}>
             <Link
               href={"?key=" + key + "&locale=en"}
               aria-current={locale === "en" ? "page" : undefined}

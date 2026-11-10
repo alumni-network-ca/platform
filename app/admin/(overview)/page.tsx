@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { NativeSelect } from "@/components/ui/native-select";
 import { ForwardArrow } from "@/components/icons";
 import { SubmitButton } from "@/components/ui/submit-button";
+import { cn } from "@/lib/utils";
+import { ui } from "@/components/admin/parts";
 export default async function Dashboard({ searchParams }: { searchParams: Search }) {
   const { supabase, school, user, role, can } = await requireStaff("/admin", "metrics.read");
   const { t, locale } = await adminCopy();
@@ -79,13 +81,13 @@ export default async function Dashboard({ searchParams }: { searchParams: Search
   ] as const;
   return (
     <>
-      <div className="shellTitle">
+      <div className={ui.shellTitle}>
         <div>
           <h1>{t.dashboard}</h1>
           <p>{name ? format(t.greetingName, { name }) : t.greeting}</p>
         </div>
-        <Form action="/admin" className="adminFilters">
-          <label className="field">
+        <Form action="/admin" className={ui.adminFilters}>
+          <label className={ui.field}>
             {t.period}
             <NativeSelect name="period" defaultValue={period}>
               <option value="30d">{t.period30}</option>
@@ -97,8 +99,8 @@ export default async function Dashboard({ searchParams }: { searchParams: Search
         </Form>
       </div>
       {params.welcome === "1" && (
-        <section className="welcomeBanner" aria-labelledby="welcome-title">
-          <div className="welcomeHead">
+        <section className={ui.welcomeBanner} aria-labelledby="welcome-title">
+          <div className={ui.welcomeHead}>
             <div>
               <h2 id="welcome-title">
                 {name ? format(t.welcomeTitle, { name }) : t.welcomeTitleNoName}
@@ -114,9 +116,9 @@ export default async function Dashboard({ searchParams }: { searchParams: Search
               <Link href="/admin">{t.dismiss}</Link>
             </Button>
           </div>
-          <div className="welcomeCards">
+          <div className={ui.welcomeCards}>
             {welcomeStarts.map((start) => (
-              <Link key={start.href} href={start.href} className="welcomeCard">
+              <Link key={start.href} href={start.href} className={ui.welcomeCard}>
                 <strong>{start.title}</strong>
                 <span>{start.help}</span>
               </Link>
@@ -124,7 +126,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Search
           </div>
         </section>
       )}
-      <Link className="adminHero" href="/admin/approvals">
+      <Link className={ui.adminHero} href="/admin/approvals">
         <span>
           <small>{t.needsYou}</small>
           <strong>
@@ -136,17 +138,17 @@ export default async function Dashboard({ searchParams }: { searchParams: Search
           <ForwardArrow />
         </span>
       </Link>
-      <div className="statGrid">
+      <div className={ui.statGrid}>
         {cards.map(({ key, href }) => (
-          <Link key={key} href={href} className="statCard">
-            <span className="statLabel">{t[key]}</span>
-            <span className="statValue">{metrics[key]}</span>
+          <Link key={key} href={href} className={ui.statCard}>
+            <span className={ui.statLabel}>{t[key]}</span>
+            <span className={ui.statValue}>{metrics[key]}</span>
           </Link>
         ))}
       </div>
       {/* TODO(FRS-04), TODO(EML-05): overdue confirmations and bounced-email metrics. */}
-      <section className="panel">
-        <div className="shellTitle">
+      <section className={ui.panel}>
+        <div className={ui.shellTitle}>
           <h2>{t.recent}</h2>
           <Link href="/admin/audit">
             {t.audit}
@@ -159,15 +161,17 @@ export default async function Dashboard({ searchParams }: { searchParams: Search
             return (
               <div
                 key={row.id}
-                className={row.actor_kind === "system_admin" ? "panel panelWarn" : ""}
+                className={
+                  row.actor_kind === "system_admin" ? cn(ui.panel, ui.panelWarn) : undefined
+                }
               >
                 {d.targetHref ? <Link href={d.targetHref}>{d.text}</Link> : <span>{d.text}</span>}
-                <span className="cellSub">{dateLabel(row.created_at, locale)}</span>
+                <span className={ui.cellSub}>{dateLabel(row.created_at, locale)}</span>
               </div>
             );
           })
         ) : (
-          <p>{t.empty}</p>
+          <p className="text-muted-foreground">{t.empty}</p>
         )}
       </section>
     </>

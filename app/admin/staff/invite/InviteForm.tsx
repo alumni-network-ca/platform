@@ -8,6 +8,10 @@ import { inviteStaff, type InviteResult } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ForwardArrow } from "@/components/icons";
+import { ui } from "@/components/admin/parts";
+import { AbilityList } from "@/components/auth/parts";
+import { Alert } from "@/components/ui/alert";
+import { cn } from "@/lib/utils";
 
 export function InviteForm({
   t,
@@ -43,7 +47,7 @@ export function InviteForm({
   if (state.invited) {
     const { email, role, link, expires } = state.invited;
     return (
-      <section className="panel inviteResult" role="status">
+      <section className={cn(ui.panel, ui.inviteResult)} role="status">
         <h2>
           {format(t.invitationReady, {
             email,
@@ -51,14 +55,14 @@ export function InviteForm({
           })}
         </h2>
         <p>{format(t.invitationReadyHelp, { date: expires })}</p>
-        <div className="linkRow">
-          <label className="field">
+        <div className={ui.linkRow}>
+          <label className={ui.field}>
             {t.invitationLink}
             <Input readOnly value={link} onFocus={(e) => e.target.select()} />
           </label>
           <CopyLink value={link} label={t.copyLink} done={t.linkCopied} />
         </div>
-        <div className="formActions">
+        <div className={ui.formActions}>
           <Button asChild>
             <Link href="/admin/staff">{t.doneBackToStaff}</Link>
           </Button>
@@ -72,9 +76,9 @@ export function InviteForm({
   }
 
   return (
-    <div className="inviteLayout">
-      <form action={action} className="panel adminStack inviteForm">
-        <label className="field inviteEmail">
+    <div className={ui.inviteLayout}>
+      <form action={action} className={cn(ui.panel, ui.adminStack, ui.inviteForm)}>
+        <label className={cn(ui.field, ui.inviteEmail)}>
           {t.theirEmail}
           <Input
             name="email"
@@ -87,14 +91,14 @@ export function InviteForm({
             onChange={(e) => setEmail(e.target.value)}
           />
         </label>
-        <p id="invite-email-hint" className="fieldHint">
+        <p id="invite-email-hint" className={ui.fieldHint}>
           {t.theirEmailHint}
         </p>
-        <fieldset className="roleCards">
+        <fieldset className={ui.roleCards}>
           <legend>{t.role}</legend>
           {roles.map((role) => (
-            <label key={role.id} className="roleCard">
-              <span className="roleCardHead">
+            <label key={role.id} className={ui.roleCard}>
+              <span className={ui.roleCardHead}>
                 <input
                   type="radio"
                   name="role"
@@ -103,39 +107,31 @@ export function InviteForm({
                 />
                 <strong>{role.title}</strong>
               </span>
-              <span className="cellSub">{role.summary}</span>
-              <span className="roleCardLabel">{t.canLabel}</span>
-              <span className="inviteCan">
-                {role.can.map((line) => (
-                  <span key={line}>{line}</span>
-                ))}
-              </span>
-              <span className="roleCardLabel">{t.cantLabel}</span>
-              <span className="inviteCant">
-                {role.cannot.map((line) => (
-                  <span key={line}>{line}</span>
-                ))}
-              </span>
+              <span className={ui.cellSub}>{role.summary}</span>
+              <span className={ui.roleCardLabel}>{t.canLabel}</span>
+              <AbilityList inline can items={role.can} />
+              <span className={ui.roleCardLabel}>{t.cantLabel}</span>
+              <AbilityList inline can={false} items={role.cannot} />
             </label>
           ))}
         </fieldset>
         {state.error && (
-          <p role="alert" className="notice">
+          <Alert variant="error" role="alert">
             {state.error === "alreadyStaff" ? t.alreadyStaff : errorMessage(state.error, t)}
-          </p>
+          </Alert>
         )}
-        <div className="formActions inviteActions">
+        <div className={cn(ui.formActions, ui.inviteActions)}>
           <Button loading={pending}>{t.invite}</Button>
           <Button asChild variant="secondary">
             <Link href="/admin/staff">{t.cancel}</Link>
           </Button>
         </div>
       </form>
-      <aside className="inviteAside">
-        <section className="panel">
+      <aside className={ui.inviteAside}>
+        <section className={cn(ui.panel, ui.inviteAsidePanel)}>
           <h2>{t.whatTheyReceive}</h2>
           {subject && (
-            <div className="invitePreview">
+            <div className={ui.invitePreview}>
               <strong>{subject}</strong>
               {sender && <span>{format(t.inviteFrom, { sender })}</span>}
             </div>
@@ -151,7 +147,7 @@ export function InviteForm({
             <ForwardArrow />
           </Link>
         </section>
-        <section className="panel">
+        <section className={cn(ui.panel, ui.inviteAsidePanel)}>
           <h2>{t.beforeAccessTitle}</h2>
           <p>{t.beforeAccess1}</p>
           <p>{t.beforeAccess2}</p>

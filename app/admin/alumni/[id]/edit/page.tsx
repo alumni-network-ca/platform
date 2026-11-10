@@ -6,6 +6,7 @@ import { editRecord } from "../actions";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { BackArrow } from "@/components/icons";
+import { ui } from "@/components/admin/parts";
 export default async function Edit({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const { profile: p, supabase, school } = await staffRecord(id, "records.edit");
@@ -31,18 +32,18 @@ export default async function Edit({ params }: { params: Promise<{ id: string }>
   ] as const;
   return (
     <>
-      <Link className="backLink" href={"/admin/alumni/" + id}>
+      <Link className={ui.backLink} href={"/admin/alumni/" + id}>
         <BackArrow />
         {p.first_name} {p.last_name}
       </Link>
-      <div className="shellTitle">
+      <div className={ui.shellTitle}>
         <h1>{t.edit}</h1>
       </div>
-      <section className="panel">
+      <section className={ui.panel}>
         <ActionForm action={editRecord.bind(null, id)} label={t.save} t={t}>
-          <div className="formRow">
+          <div className={ui.formRow}>
             {fields.map((f) => (
-              <label key={f.key} className="field">
+              <label key={f.key} className={ui.field}>
                 {t[f.key]}
                 <Input
                   name={f.key}
@@ -52,7 +53,7 @@ export default async function Edit({ params }: { params: Promise<{ id: string }>
                 />
               </label>
             ))}
-            <label className="field">
+            <label className={ui.field}>
               {t.grad_year}
               <Input
                 name="grad_year"
@@ -64,7 +65,7 @@ export default async function Edit({ params }: { params: Promise<{ id: string }>
               />
             </label>
           </div>
-          <label className="field">
+          <label className={ui.field}>
             {t.admin_notes}
             <Textarea
               name="admin_notes"

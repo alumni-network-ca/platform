@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Textarea } from "@/components/ui/textarea";
 import { leaveTo } from "@/lib/leave";
+import { ui } from "@/components/admin/parts";
+import { Alert } from "@/components/ui/alert";
 type Match = Database["public"]["Functions"]["access_request_matches"]["Returns"][number];
 export function DecisionForm({
   id,
@@ -32,8 +34,8 @@ export function DecisionForm({
   );
   const linkable = matches.filter((m) => !m.claimed);
   return (
-    <form action={action} className="panel">
-      <fieldset className="adminStack">
+    <form action={action} className={ui.panel}>
+      <fieldset className={ui.adminStack}>
         <legend>{t.decision}</legend>
         {(
           [
@@ -42,7 +44,7 @@ export function DecisionForm({
             ["reject", t.reject],
           ] as const
         ).map(([key, label]) => (
-          <label key={key} className="choice">
+          <label key={key} className={ui.choice}>
             <input
               type="radio"
               name="decision"
@@ -55,7 +57,7 @@ export function DecisionForm({
         ))}
         {choice === "approve" && (
           <>
-            <label className="field">
+            <label className={ui.field}>
               {t.linkRecord}
               <NativeSelect name="profile" defaultValue={linkable[0]?.profile_id ?? ""}>
                 {linkable.map((m) => (
@@ -67,12 +69,12 @@ export function DecisionForm({
                 <option value="">{t.createRecord}</option>
               </NativeSelect>
             </label>
-            <p className="fieldHint">{t.approveNote}</p>
+            <p className={ui.fieldHint}>{t.approveNote}</p>
           </>
         )}
         {choice === "needs_info" && (
           <>
-            <label className="field">
+            <label className={ui.field}>
               {t.question}
               <Textarea
                 name="question"
@@ -82,12 +84,12 @@ export function DecisionForm({
                 defaultValue={format(t.defaultQuestion, { year })}
               />
             </label>
-            <p className="fieldHint">{t.infoNote}</p>
+            <p className={ui.fieldHint}>{t.infoNote}</p>
           </>
         )}
         {choice === "reject" && (
           <>
-            <label className="field">
+            <label className={ui.field}>
               {t.reasonApplicant}
               <NativeSelect
                 name="reject_reason"
@@ -100,22 +102,22 @@ export function DecisionForm({
               </NativeSelect>
             </label>
             {reason === "other" && (
-              <label className="field">
+              <label className={ui.field}>
                 {t.reasonApplicant}
                 <Textarea name="other_reason" required maxLength={1000} />
               </label>
             )}
-            <p className="fieldHint">{t.rejectNote}</p>
+            <p className={ui.fieldHint}>{t.rejectNote}</p>
           </>
         )}
       </fieldset>
       {state.error && (
-        <p role="alert" className="notice">
+        <Alert variant="error" role="alert">
           {errorMessage(state.error, t)}
-        </p>
+        </Alert>
       )}
-      <div className="formActions">
-        <span className="fieldHint">{t.logged}</span>
+      <div className={ui.formActions}>
+        <span className={ui.fieldHint}>{t.logged}</span>
         <Button loading={pending}>
           {choice === "approve" ? t.approve : choice === "needs_info" ? t.needsInfo : t.reject}
         </Button>

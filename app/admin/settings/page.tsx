@@ -8,6 +8,8 @@ import { ActionForm } from "@/components/admin/ActionForm";
 import { saveSettings } from "./actions";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
+import { Badge } from "@/components/ui/badge";
+import { ui } from "@/components/admin/parts";
 export default async function Settings() {
   const { supabase, school } = await requireStaff("/admin/settings", "settings.manage");
   const { t } = await adminCopy();
@@ -35,13 +37,13 @@ export default async function Settings() {
   const { logo } = schoolBranding({ ...school, branding: settings.branding });
   return (
     <>
-      <div className="shellTitle">
+      <div className={ui.shellTitle}>
         <div>
           <h1>{t.settings}</h1>
           <p>{t.settingsIntro}</p>
         </div>
       </div>
-      <section className="panel">
+      <section className={ui.panel}>
         <h2>{t.branding}</h2>
         {logo && (
           <Image
@@ -52,33 +54,36 @@ export default async function Settings() {
             className="h-20 w-40 object-contain"
           />
         )}
-        <div className="formRow">
+        <div className={ui.formRow}>
           {colours.map((c) => {
             const ratio = contrastRatio(c.hex);
             return (
-              <div key={c.label} className="adminStack">
-                <label className="field">
+              <div key={c.label} className={ui.adminStack}>
+                <label className={ui.field}>
                   {c.label}
                   <Input readOnly value={c.hex} />
                 </label>
-                <span className={"tag " + (ratio !== null && ratio >= 4.5 ? "tagGood" : "tagWarn")}>
+                <Badge
+                  variant={ratio !== null && ratio >= 4.5 ? "success" : "warning"}
+                  className="tabular-nums"
+                >
                   {ratio !== null && ratio >= 4.5 ? t.contrastPass : t.contrastFail}
                   {ratio !== null ? " · " + ratio.toFixed(1) + ":1" : ""}
-                </span>
+                </Badge>
               </div>
             );
           })}
         </div>
         {/* TODO: replace logo after storage uploads are implemented. Branding is read-only. */}
       </section>
-      <section className="panel">
+      <section className={ui.panel}>
         <h2>{t.email}</h2>
         <ActionForm action={saveSettings} label={t.save} t={t}>
-          <label className="field">
+          <label className={ui.field}>
             {t.senderName}
             <Input name="sender" maxLength={120} defaultValue={settings.email_display_name ?? ""} />
           </label>
-          <label className="field">
+          <label className={ui.field}>
             {t.replyTo}
             <Input
               name="reply_to"
@@ -87,7 +92,7 @@ export default async function Settings() {
               defaultValue={settings.reply_to_email ?? ""}
             />
           </label>
-          <label className="field">
+          <label className={ui.field}>
             {t.defaultLanguage}
             <NativeSelect name="locale" defaultValue={settings.default_locale}>
               <option value="en">{t.english}</option>

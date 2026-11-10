@@ -265,21 +265,32 @@ export function Facts({
 }
 
 /** What a role can or cannot do, each line with a check or a cross. */
-export function AbilityList({ items, can }: { items: string[]; can: boolean }) {
+export function AbilityList({
+  items,
+  can,
+  inline = false,
+}: {
+  items: string[];
+  can: boolean;
+  /** Spans instead of a list, inside a <label> (the role cards), which may only hold phrasing content. */
+  inline?: boolean;
+}) {
   const Icon = can ? Check : X;
+  const List = inline ? "span" : "ul";
+  const Item = inline ? "span" : "li";
   return (
-    <ul className={cn("grid gap-[7px] text-sm leading-[1.45]", !can && "text-muted-foreground")}>
+    <List className={cn("grid gap-[7px] text-sm leading-[1.45]", !can && "text-muted-foreground")}>
       {items.map((line) => (
-        <li key={line} className="flex gap-2">
+        <Item key={line} className="flex gap-2">
           <Icon
             aria-hidden
             strokeWidth={3}
             className={cn("mt-0.5 size-3.5 shrink-0", can && "text-success")}
           />
           {line}
-        </li>
+        </Item>
       ))}
-    </ul>
+    </List>
   );
 }
 

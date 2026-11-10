@@ -5,6 +5,9 @@ import { manageGrant, type GrantResult } from "./actions";
 import { Button } from "@/components/ui/button";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Textarea } from "@/components/ui/textarea";
+import { ui } from "@/components/admin/parts";
+import { Alert } from "@/components/ui/alert";
+import { cn } from "@/lib/utils";
 
 export type ActiveGrant = {
   id: string;
@@ -23,17 +26,17 @@ export function ActiveGrants({ grants }: { grants: ActiveGrant[] }) {
   return (
     <>
       {grants.map((g) => (
-        <section key={g.id} className="panel panelWarn">
-          <div className="shellTitle">
+        <section key={g.id} className={cn(ui.panel, ui.panelWarn)} data-grant="">
+          <div className={ui.shellTitle}>
             <div>
               <h2>
                 Active: {g.school} · ends in {g.endsIn}
               </h2>
-              <p className="fieldHint">
+              <p className={ui.fieldHint}>
                 Reason: “{g.reason}” · opened by {g.by}
               </p>
             </div>
-            <div className="formActions">
+            <div className={ui.formActions}>
               <Button asChild variant="secondary">
                 <a href={g.address}>Go to the school</a>
               </Button>
@@ -51,9 +54,9 @@ export function ActiveGrants({ grants }: { grants: ActiveGrant[] }) {
         </section>
       ))}
       {result.error && (
-        <div className="notice" role="alert">
+        <Alert variant="error" role="alert">
           {result.error}
-        </div>
+        </Alert>
       )}
     </>
   );
@@ -71,12 +74,12 @@ export function OpenGrantForm({
   });
   const selected = schools.find((s) => s.slug === preselect)?.id;
   return (
-    <section className="panel">
+    <section className={ui.panel}>
       <h2>Open a grant</h2>
-      <form action={action} className="formStack">
+      <form action={action} className={ui.formStack}>
         <input type="hidden" name="intent" value="open" />
-        <div className="formRow">
-          <label className="field">
+        <div className={ui.formRow}>
+          <label className={ui.field}>
             School
             <NativeSelect name="school" defaultValue={selected} required>
               {schools.map((s) => (
@@ -86,7 +89,7 @@ export function OpenGrantForm({
               ))}
             </NativeSelect>
           </label>
-          <label className="field">
+          <label className={ui.field}>
             For how long
             <NativeSelect name="hours" defaultValue="1">
               <option value="1">1 hour</option>
@@ -95,7 +98,7 @@ export function OpenGrantForm({
             </NativeSelect>
           </label>
         </div>
-        <label className="field">
+        <label className={ui.field}>
           Reason (required; the school sees this)
           <Textarea
             name="reason"
@@ -107,16 +110,16 @@ export function OpenGrantForm({
           />
         </label>
         {result.opened && (
-          <div className="notice noticeGood" role="status">
+          <Alert variant="success" role="status">
             Grant opened. It ends on its own, or you can end it early above.
-          </div>
+          </Alert>
         )}
         {result.error && (
-          <div className="notice" role="alert">
+          <Alert variant="error" role="alert">
             {result.error}
-          </div>
+          </Alert>
         )}
-        <div className="formActions">
+        <div className={ui.formActions}>
           <Button loading={pending}>{pending ? "Opening…" : "Open grant"}</Button>
         </div>
       </form>
