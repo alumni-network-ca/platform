@@ -3,7 +3,7 @@
 // Links into this school's pages go through canOpen(), so the bar never offers a page the guards refuse.
 import type { Enums } from "@/lib/database";
 import { format, type Locale, type translations } from "@/lib/i18n";
-import { rootUrl, schoolUrl, type Origin } from "@/lib/tenant/address";
+import { adminUrl, schoolUrl, type Origin } from "@/lib/tenant/address";
 import {
   canOpen,
   hasActiveProfile,
@@ -133,8 +133,8 @@ export function navModel(input: NavInput): NavModel {
   const { t, school, user, state, origin } = input;
   const role = navRole(input);
   const platformTheme = role === "platform_admin" || !school;
-  // Console pages live on the root domain: relative there, absolute from a school's address.
-  const consoleUrl = (path: string) => (school ? rootUrl(origin, path) : path);
+  // Console pages live on admin.<root>: relative there, absolute from a school's address.
+  const consoleUrl = (path: string) => (school ? adminUrl(origin, path) : path);
   const opens = (href: string) => !state || !href.startsWith("/") || canOpen(state, href);
   const item = (key: keyof NavStrings, href: string, extra: Partial<NavItem> = {}): NavItem => ({
     key,
@@ -165,7 +165,7 @@ export function navModel(input: NavInput): NavModel {
     ? {
         name: t.platformName,
         tagline: t.platformTagline,
-        href: role === "platform_admin" ? consoleUrl("/console") : "/",
+        href: role === "platform_admin" ? consoleUrl("/") : "/",
         logo: null,
         monogram: "AN",
       }
@@ -355,19 +355,19 @@ export function navModel(input: NavInput): NavModel {
       {
         key: "schools",
         label: t.schools,
-        href: consoleUrl("/console"),
-        activeOn: school ? [] : ["/console"],
+        href: consoleUrl("/"),
+        activeOn: school ? [] : ["/", "/schools"],
       },
       {
         key: "support",
         label: t.support,
-        href: consoleUrl("/console/support"),
-        activeOn: school ? [] : ["/console/support"],
+        href: consoleUrl("/support"),
+        activeOn: school ? [] : ["/support"],
         badge: activeGrants
           ? { count: activeGrants, label: format(t.activeBadge, { count: activeGrants }) }
           : undefined,
       },
-      // TODO(SA-04): /console/health.
+      // TODO(SA-04): /health.
       { key: "health", label: t.health, href: "#", activeOn: [] },
     ];
     status = { text: t.allSchools, tone: "platform" };
@@ -381,15 +381,15 @@ export function navModel(input: NavInput): NavModel {
       section(
         "console",
         [
-          item("schools", consoleUrl("/console"), {
+          item("schools", consoleUrl("/"), {
             chip: { text: String(schools.length), kind: "info" },
           }),
-          item("supportAccess", consoleUrl("/console/support"), {
+          item("supportAccess", consoleUrl("/support"), {
             chip: activeGrants
               ? { text: format(t.activeBadge, { count: activeGrants }), kind: "warn" }
               : undefined,
           }),
-          // TODO(SA-04): /console/health, with a chip counting its alerts.
+          // TODO(SA-04): /health, with a chip counting its alerts.
           item("platformHealth", "#"),
         ],
         t.consoleSection,
@@ -408,7 +408,7 @@ export function navModel(input: NavInput): NavModel {
                 },
               }
             : {
-                href: consoleUrl(`/console/support?school=${slug}`),
+                href: consoleUrl(`/support?school=${slug}`),
                 chip: { text: t.needsGrant, kind: "info" as const },
               }),
         })),

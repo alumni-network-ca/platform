@@ -6,10 +6,10 @@ import { BackArrow } from "@/components/icons";
 
 // S1.2 Create a school.
 export default async function NewSchoolPage() {
-  await requirePlatformAdmin("/console/schools/new");
+  await requirePlatformAdmin("/schools/new");
   return (
     <>
-      <Link className="backLink" href="/console">
+      <Link className="backLink" href="/">
         <BackArrow />
         Schools
       </Link>

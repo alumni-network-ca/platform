@@ -298,14 +298,14 @@ items:
     depends: [FND-13, FND-07]
     reqs: [MT1, MT6]
     summary: |
-      Design S1.1, S1.2, S2.1, S2.2 (docs/design/alumni-full-flow). /console on the root domain, for platform admins
+      Design S1.1, S1.2, S2.1, S2.2 (docs/design/alumni-full-flow). The console on admin.<domain>, for platform admins
       (MFA comes with FND-11), with its own sign-in. Lists schools with counts only (members, pending sign-ups,
       staff, open grants), never personal data. Creates a school (name, address, short name, logo path, colours,
       default language, sender name, reply-to; the platform's default career fields, options and templates apply).
       Suspends a school with a reason and the address typed back, and reactivates it: a suspended school's address
       answers 404 and its staff lose access. Opens and ends time-boxed support grants (FND-13) with their history.
       On a school's address, a platform admin with no role there lands on /account/platform, which points to the
-      console. On PR previews, ?tenant=root reaches the console. Every change is audited.
+      console. On PR previews, ?tenant=admin reaches the console. Every change is audited.
     ac:
       - A new school is reachable at <slug>.<domain> immediately, with no deploy.
       - Any account that is not a platform admin is refused, and the console shows no alumni data.

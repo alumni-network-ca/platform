@@ -8,6 +8,7 @@ const preview = { rootDomain: "alumninetwork.ca", isPreview: true, previewDefaul
 
 const school = (slug: string) => ({ kind: "school", slug });
 const root = { kind: "root" };
+const admin = { kind: "admin" };
 const none = { kind: "none" };
 
 describe("resolveTenant", () => {
@@ -17,6 +18,9 @@ describe("resolveTenant", () => {
     ["upper case and a trailing dot", production, "Herzliah.AlumniNetwork.ca.", school("herzliah")],
     ["the bare domain", production, "alumninetwork.ca", root],
     ["www", production, "www.alumninetwork.ca", root],
+    ["the console", production, "admin.alumninetwork.ca", admin],
+    ["the console, upper case", production, "Admin.AlumniNetwork.ca", admin],
+    ["a nested console label", production, "admin.x.alumninetwork.ca", none],
     ["a nested subdomain", production, "a.b.alumninetwork.ca", none],
     ["a one-letter label (slugs need 2+)", production, "x.alumninetwork.ca", none],
     ["another domain", production, "herzliah.evil.example", none],
@@ -24,14 +28,22 @@ describe("resolveTenant", () => {
     ["no host header", production, "", none],
     ["staging", staging, "herzliah.staging.alumninetwork.ca", school("herzliah")],
     ["the staging root", staging, "staging.alumninetwork.ca", root],
+    ["the staging console", staging, "admin.staging.alumninetwork.ca", admin],
     ["local with a port", local, "herzliah.localhost:3000", school("herzliah")],
     ["plain localhost", local, "localhost:3000", root],
+    ["the local console", local, "admin.localhost:3000", admin],
     ["127.0.0.1", local, "127.0.0.1:3000", none],
     [
       "a preview switched to the root site",
       { ...preview, previewCookie: "root" },
       "pr-1.vercel.app",
       root,
+    ],
+    [
+      "a preview switched to the console",
+      { ...preview, previewCookie: "admin" },
+      "pr-1.vercel.app",
+      admin,
     ],
   ])("%s", (_, env, host, expected) => {
     expect(resolveTenant({ ...env, host })).toEqual(expected);

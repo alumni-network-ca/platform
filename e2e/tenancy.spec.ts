@@ -28,6 +28,34 @@ test.describe("each school at its own address", () => {
     expect(response?.status()).toBe(404);
   });
 
+  test("each site's pages stay on its own address", async ({ page, baseURL }) => {
+    for (const [slug, path] of [
+      ["herzliah", "/site"],
+      ["herzliah", "/console"],
+      ["admin", "/site"],
+      [null, "/site"],
+    ] as const) {
+      const response = await page.request.get(addressOf(baseURL!, slug, path), {
+        maxRedirects: 0,
+      });
+      expect(response.status(), `${slug ?? "root"}${path}`).toBe(404);
+    }
+  });
+
+  test("the console's old root-domain links move to admin.", async ({ page, baseURL }) => {
+    for (const [from, to] of [
+      ["/console", "/"],
+      ["/console/schools/new?x=1", "/schools/new?x=1"],
+      ["/login?next=%2Fsupport", "/login?next=%2Fsupport"],
+    ]) {
+      const response = await page.request.get(addressOf(baseURL!, null, from), {
+        maxRedirects: 0,
+      });
+      expect(response.status()).toBe(308);
+      expect(response.headers().location).toBe(addressOf(baseURL!, "admin", to));
+    }
+  });
+
   test("the directory lists only that school's alumni", async ({ page, context, baseURL }) => {
     await signInAs(context, addressOf(baseURL!, "test-school"), accounts.testSchoolAlumni);
     await page.goto(addressOf(baseURL!, "test-school", "/directory"));

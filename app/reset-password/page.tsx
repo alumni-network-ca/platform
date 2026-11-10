@@ -13,11 +13,7 @@ export default async function ResetPasswordPage() {
   return (
     <main className="authPage">
       <section className="authCard joinAuth">
-        <PasswordForm
-          email={user.email ?? ""}
-          recovery
-          continueTo={school ? "/auth/home" : "/console"}
-        />
+        <PasswordForm email={user.email ?? ""} recovery continueTo={school ? "/auth/home" : "/"} />
       </section>
     </main>
   );
