@@ -174,7 +174,7 @@ export default async function HomePage({
   const sidePanel = cn(panel, "flex flex-col items-start gap-3 p-5.5 text-base");
 
   return (
-    <main data-ui className={frame.stack}>
+    <main className={frame.stack}>
       <div className="flex flex-col gap-1.5">
         <span className={eyebrow}>
           {format(t.eyebrow, { year: me.grad_year, network: networkName })}

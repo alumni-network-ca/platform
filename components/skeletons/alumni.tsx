@@ -21,7 +21,7 @@ const OFFER_WIDTHS = ["w-24", "w-32", "w-20", "w-28"];
 
 export function HomeSkeleton({ label }: { label: string }) {
   return (
-    <main data-ui className={frame.stack} aria-busy="true">
+    <main className={frame.stack} aria-busy="true">
       <LoadingStatus label={label} />
       <div className="flex flex-col gap-1.5" aria-hidden="true">
         <Skeleton className="h-3.5 w-56 max-w-full" />
@@ -93,7 +93,7 @@ export function DirectoryResultsSkeleton() {
 
 export function DirectorySkeleton({ label }: { label: string }) {
   return (
-    <main data-ui className={frame.stack} aria-busy="true">
+    <main className={frame.stack} aria-busy="true">
       <LoadingStatus label={label} />
       <div className="flex flex-wrap items-end justify-between gap-4" aria-hidden="true">
         <div className="flex flex-col gap-1.5">
@@ -155,7 +155,7 @@ function SideCard({ lines }: { lines: number }) {
 /** A profile: your own (/me) or another alumnus's (/profile/…), which has a back link and a banner. */
 export function ProfileSkeleton({ label, other = false }: { label: string; other?: boolean }) {
   return (
-    <main data-ui className={frame.split} aria-busy="true">
+    <main className={frame.split} aria-busy="true">
       <LoadingStatus label={label} />
       {other && (
         <div className="basis-full" aria-hidden="true">
@@ -199,7 +199,7 @@ export function ProfileSkeleton({ label, other = false }: { label: string; other
 /** The one-card forms under /me (edit a section, visibility, delete): a heading, fields and the buttons. */
 export function FormPageSkeleton({ label, fields = 4 }: { label: string; fields?: number }) {
   return (
-    <main data-ui className={cn(frame.form, frame.narrow)} aria-busy="true">
+    <main className={cn(frame.form, frame.narrow)} aria-busy="true">
       <LoadingStatus label={label} />
       <div className={formCard} aria-hidden="true">
         <div className={formBody}>

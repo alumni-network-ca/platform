@@ -96,7 +96,7 @@ export default async function MyProfilePage({
     );
 
   return (
-    <main data-ui className={frame.split}>
+    <main className={frame.split}>
       <div className={mainColumn}>
         {(saved || confirmed) && (
           <p className={notice({ tone: "good" })} role="status">

@@ -1,15 +1,5 @@
-/*
- * Cascade order, lowest first:
- *   theme, base   Tailwind's design tokens and preflight (its CSS reset).
- *   compat        Undoes preflight outside components/ui, so screens styled by app/styles/legacy.css look as they did.
- *   legacy        The hand-written styles from before Tailwind, until every screen is rebuilt (FND-02).
- *   components,   Tailwind classes. A utility always wins over a legacy rule.
- *   utilities
- */
-@layer theme, base, compat, legacy, components, utilities;
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "./styles/legacy.css" layer(legacy);
 
 /* Only the app's own code holds class names: not the design canvas, the docs or other checkouts. */
 @source not "../.claude";
@@ -19,40 +9,6 @@
 
 /* A laptop screen that is short rather than narrow: account creation tightens so its button stays in view. */
 @custom-variant short (@media (min-width: 801px) and (max-height: 760px));
-
-/*
- * Preflight resets margins, list styles, form controls and line height on every element. The legacy screens rely on
- * the browser's defaults, so outside a components/ui part (they all carry data-slot) the properties preflight sets go
- * back to the browser's values. Rules in the legacy layer and Tailwind classes still apply on top. Not `all: revert`:
- * that would also drop SVG fill/stroke and image width/height attributes. A screen rebuilt with Tailwind marks its root
- * with data-ui, so it is drawn as it will be once this layer is gone. Remove this layer with legacy.css.
- */
-@layer compat {
-  :where(*):not([data-slot], [data-slot] *, [data-ui], [data-ui] *) {
-    margin: revert;
-    padding: revert;
-    border: revert;
-    border-radius: revert;
-    font: revert;
-    letter-spacing: revert;
-    color: revert;
-    background-color: revert;
-    text-decoration: revert;
-    list-style: revert;
-    display: revert;
-    vertical-align: revert;
-    border-collapse: revert;
-    text-indent: revert;
-    opacity: revert;
-    appearance: revert;
-    resize: revert;
-    tab-size: revert;
-  }
-  :where(*):not([data-slot], [data-slot] *, [data-ui], [data-ui] *)::placeholder {
-    color: revert;
-    opacity: revert;
-  }
-}
 
 :root {
   /* Herzliah's approved design is the default theme. A school with its own colours gets the brand and accent variables
@@ -250,6 +206,15 @@
 @layer base {
   :root {
     color-scheme: light;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
   }
   /* A bare `border` class draws in the line colour (Tailwind 4's default is the text colour), as shadcn expects. */
   *,

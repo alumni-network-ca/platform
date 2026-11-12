@@ -20,7 +20,6 @@ export function AuthPage({
 }) {
   return (
     <main
-      data-ui
       className={cn(
         "mx-auto w-full max-w-[1112px] px-7 pt-12 pb-16 leading-[1.55] max-[800px]:px-5 max-[800px]:pt-8 max-[800px]:pb-12",
         compact &&
