@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { requireStaff } from "@/lib/auth/staff";
 import { adminCopy, dateLabel, read, pageNumber, type Search } from "@/lib/admin/data";
+import { Badge } from "@/components/ui/badge";
+import { Inbox } from "lucide-react";
+import { EmptyState } from "@/components/EmptyState";
+import { ui } from "@/components/admin/parts";
 export default async function Approvals({ searchParams }: { searchParams: Search }) {
   const { supabase, school } = await requireStaff("/admin/approvals", "requests.read");
   const { t, locale } = await adminCopy();
@@ -38,13 +42,13 @@ export default async function Approvals({ searchParams }: { searchParams: Search
   const total = counts.find((c) => c.key === tab)?.count ?? 0;
   return (
     <>
-      <div className="shellTitle">
+      <div className={ui.shellTitle}>
         <div>
           <h1>{t.approvals}</h1>
           <p>{t.queueIntro}</p>
         </div>
       </div>
-      <nav className="adminTabs" aria-label={t.status}>
+      <nav className={ui.adminTabs} aria-label={t.status}>
         {counts.map((c) => (
           <Link
             key={c.key}
@@ -57,8 +61,8 @@ export default async function Approvals({ searchParams }: { searchParams: Search
         ))}
       </nav>
       {rows.length ? (
-        <div className="tableBox">
-          <table className="dataTable">
+        <div className={ui.tableBox}>
+          <table className={ui.dataTable}>
             <thead>
               <tr>
                 <th>{t.applicant}</th>
@@ -77,12 +81,13 @@ export default async function Approvals({ searchParams }: { searchParams: Search
                       <strong>
                         {r.first_name} {r.last_name}
                       </strong>
-                      <span className="cellSub">{r.email}</span>
+                      <span className={ui.cellSub}>{r.email}</span>
                     </td>
                     <td>{r.grad_year}</td>
                     <td>
-                      <span
-                        className={"tag " + (match?.claimed ? "tagWarn" : match ? "tagGood" : "")}
+                      <Badge
+                        variant={match?.claimed ? "warning" : match ? "success" : "neutral"}
+                        className="whitespace-normal"
                       >
                         {match
                           ? match.claimed
@@ -94,7 +99,7 @@ export default async function Approvals({ searchParams }: { searchParams: Search
                               match.grad_year +
                               (match.id_match ? " · " + t.sameStudentId : "")
                           : t.noMatch}
-                      </span>
+                      </Badge>
                     </td>
                     <td>{dateLabel(r.created_at, locale)}</td>
                     <td>
@@ -107,13 +112,13 @@ export default async function Approvals({ searchParams }: { searchParams: Search
           </table>
         </div>
       ) : (
-        <p className="panel">{t.empty}</p>
+        <EmptyState icon={Inbox} title={t.empty} />
       )}
-      <div className="formActions">
+      <div className={ui.formActions}>
         {page > 1 && <Link href={"?tab=" + tab + "&page=" + (page - 1)}>{t.previous}</Link>}
         {page * 25 < total && <Link href={"?tab=" + tab + "&page=" + (page + 1)}>{t.next}</Link>}
       </div>
-      <p className="fieldHint">{t.matchesNote}</p>
+      <p className={ui.fieldHint}>{t.matchesNote}</p>
     </>
   );
 }

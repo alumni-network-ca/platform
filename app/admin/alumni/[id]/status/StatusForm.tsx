@@ -5,6 +5,8 @@ import { errorMessage, type AdminCopy } from "@/lib/admin/forms";
 import { changeStatus } from "../actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { ui } from "@/components/admin/parts";
+import { Alert } from "@/components/ui/alert";
 export function StatusForm({
   id,
   active,
@@ -33,11 +35,11 @@ export function StatusForm({
       ]
     : [["active", t.reactivate]];
   return (
-    <form className="adminStack" action={action}>
-      <fieldset className="adminStack">
+    <form className={ui.adminStack} action={action}>
+      <fieldset className={ui.adminStack}>
         <legend>{t.actions}</legend>
         {choices.map(([key, label]) => (
-          <label className="choice" key={key}>
+          <label className={ui.choice} key={key}>
             <input
               type="radio"
               name="status"
@@ -49,7 +51,7 @@ export function StatusForm({
           </label>
         ))}
       </fieldset>
-      <label className="field">
+      <label className={ui.field}>
         {t.reason}
         <Textarea
           name="reason"
@@ -61,17 +63,17 @@ export function StatusForm({
         />
       </label>
       {state.error && (
-        <p role="alert" className="notice">
+        <Alert variant="error" role="alert">
           {errorMessage(state.error, t)}
-        </p>
+        </Alert>
       )}
-      <div className="formActions">
+      <div className={ui.formActions}>
         <Link href={"/admin/alumni/" + id}>{t.cancel}</Link>
         <Button variant="destructive" loading={pending} disabled={!reason.trim()}>
           {choices.find(([key]) => key === status)?.[1]}
         </Button>
       </div>
-      {!reason.trim() && <p className="fieldHint">{t.addReason}</p>}
+      {!reason.trim() && <p className={ui.fieldHint}>{t.addReason}</p>}
     </form>
   );
 }

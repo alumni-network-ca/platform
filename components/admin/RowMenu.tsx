@@ -16,6 +16,8 @@ import { Input } from "@/components/ui/input";
 import { menuItem, menuPanel } from "@/components/ui/menu";
 import { cn } from "@/lib/utils";
 import { Ellipsis, Loader2 } from "lucide-react";
+import { ui } from "@/components/admin/parts";
+import { Alert } from "@/components/ui/alert";
 
 export type RowMenuItem = {
   key: string;
@@ -117,7 +119,7 @@ export function RowMenu({
     if (event.target === button.current) {
       if (event.key === "ArrowDown" || event.key === "ArrowUp") {
         event.preventDefault();
-        openOn(event.key === "ArrowUp" ? "last" : "first");
+        if (!pending) openOn(event.key === "ArrowUp" ? "last" : "first");
       } else if (event.key === "Escape" && open) {
         event.preventDefault();
         setOpen(false);
@@ -150,19 +152,25 @@ export function RowMenu({
   }
 
   return (
-    <div className="rowMenu" ref={wrapper} onKeyDown={onKeyDown}>
+    <div className={ui.rowMenu} ref={wrapper} onKeyDown={onKeyDown}>
       <button
         ref={button}
         type="button"
         data-ui
-        className="inline-flex size-9 cursor-pointer items-center justify-center rounded-md border border-transparent bg-transparent p-0 text-foreground outline-none hover:border-border hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-foreground disabled:cursor-progress disabled:opacity-60 aria-expanded:border-border aria-expanded:bg-accent"
+        className="inline-flex size-9 cursor-pointer items-center justify-center rounded-md border border-transparent bg-transparent p-0 text-foreground outline-none hover:border-border hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-foreground aria-disabled:cursor-progress aria-disabled:opacity-60 aria-expanded:border-border aria-expanded:bg-accent"
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={open ? `${id}menu` : undefined}
         aria-label={label}
-        disabled={pending}
+        // Busy, not disabled: a disabled button can't take focus, and focus comes back here when the menu or the
+        // confirm dialog closes. Clicks wait until the action is done.
+        aria-disabled={pending || undefined}
         aria-busy={pending || undefined}
-        onClick={() => (open ? setOpen(false) : openOn("first"))}
+        onClick={() => {
+          if (pending) return;
+          if (open) setOpen(false);
+          else openOn("first");
+        }}
       >
         {pending ? (
           <Loader2 aria-hidden size={18} className="animate-spin" />
@@ -225,18 +233,18 @@ export function RowMenu({
         }}
       />
       {state.error && (
-        <p role="alert" className="notice rowMenuNotice">
+        <Alert variant="error" role="alert" className={ui.rowMenuNotice}>
           {errorMessage(state.error, t)}
-        </p>
+        </Alert>
       )}
       {state.saved && !state.link && (
-        <p role="status" className="notice noticeGood rowMenuNotice">
+        <Alert variant="success" role="status" className={ui.rowMenuNotice}>
           {t.saved}
-        </p>
+        </Alert>
       )}
       {state.link && (
-        <div className="linkRow rowMenuLink">
-          <label className="field">
+        <div className={cn(ui.linkRow, ui.rowMenuLink)}>
+          <label className={ui.field}>
             {t.invitationLink}
             <Input readOnly value={state.link} onFocus={(e) => e.target.select()} />
           </label>

@@ -6,6 +6,8 @@ import { setSchoolStatus, type StatusResult } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { ui } from "@/components/admin/parts";
+import { Alert } from "@/components/ui/alert";
 
 export function StatusForm({ slug, suspended }: { slug: string; suspended: boolean }) {
   const [result, action, pending] = useActionState<StatusResult, FormData>(setSchoolStatus, {
@@ -15,7 +17,7 @@ export function StatusForm({ slug, suspended }: { slug: string; suspended: boole
   const label = suspended ? "Reactivate school" : "Suspend school";
 
   return (
-    <form action={action} className="formStack">
+    <form action={action} className={ui.formStack}>
       <input type="hidden" name="slug" value={slug} />
       {suspended ? (
         <>
@@ -26,23 +28,23 @@ export function StatusForm({ slug, suspended }: { slug: string; suspended: boole
           </p>
         </>
       ) : (
-        <fieldset className="formStack" style={{ border: 0, margin: 0, padding: 0 }}>
-          <legend className="field">What do you want to do?</legend>
-          <label className="choice">
+        <fieldset className={ui.formStack} style={{ border: 0, margin: 0, padding: 0 }}>
+          <legend className={ui.field}>What do you want to do?</legend>
+          <label className={ui.choice}>
             <input type="radio" name="status" value="suspended" defaultChecked />
             <span>
               <strong>Suspend</strong>
-              <span className="cellSub">
+              <span className={ui.cellSub}>
                 The school&apos;s address stops answering. Nobody can sign in, and its staff lose
                 their access. All data is kept, and you can reactivate it at any time.
               </span>
             </span>
           </label>
-          <label className="choice">
+          <label className={ui.choice}>
             <input type="radio" name="status" value="offboard" disabled />
             <span>
               <strong>Offboard</strong>
-              <span className="cellSub">
+              <span className={ui.cellSub}>
                 Export the school&apos;s data, then delete it after the retention period (DEC-08).
                 Comes with the retention job.
               </span>
@@ -50,12 +52,12 @@ export function StatusForm({ slug, suspended }: { slug: string; suspended: boole
           </label>
         </fieldset>
       )}
-      <label className="field">
+      <label className={ui.field}>
         Reason{suspended ? " (optional)" : ""}
         <Textarea name="reason" rows={2} maxLength={500} required={!suspended} />
-        <span className="fieldHint">Kept in the school&apos;s audit log.</span>
+        <span className={ui.fieldHint}>Kept in the school&apos;s audit log.</span>
       </label>
-      <label className="field">
+      <label className={ui.field}>
         Type {slug} to confirm
         <Input
           name="confirm"
@@ -66,11 +68,11 @@ export function StatusForm({ slug, suspended }: { slug: string; suspended: boole
         />
       </label>
       {result.error && (
-        <div className="notice" role="alert">
+        <Alert variant="error" role="alert">
           {result.error}
-        </div>
+        </Alert>
       )}
-      <div className="formActions">
+      <div className={ui.formActions}>
         <Button asChild variant="secondary">
           <Link href={`/schools/${slug}`}>Cancel</Link>
         </Button>

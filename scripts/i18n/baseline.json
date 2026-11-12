@@ -356,7 +356,13 @@
   {
     "file": "app/console/(console)/(overview)/page.tsx",
     "rule": "ui-literal",
-    "text": "No school matches “",
+    "text": "`No school matches “${q.trim()}”.`",
+    "count": 1
+  },
+  {
+    "file": "app/console/(console)/(overview)/page.tsx",
+    "rule": "ui-literal",
+    "text": "No schools yet. Create the first one.",
     "count": 1
   },
   {

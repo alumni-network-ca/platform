@@ -1,6 +1,8 @@
 import { staffRecord } from "@/lib/admin/records";
 import { adminCopy, type Search } from "@/lib/admin/data";
 import { StatusForm } from "./StatusForm";
+import { ui } from "@/components/admin/parts";
+import { cn } from "@/lib/utils";
 export default async function Status({
   params,
   searchParams,
@@ -14,7 +16,7 @@ export default async function Status({
   const query = await searchParams;
   // Dedicated route with dialog styling rather than an intercepted modal (A2.3).
   return (
-    <section className="panel adminDialog" aria-labelledby="status-title">
+    <section className={cn(ui.panel, ui.adminDialog)} aria-labelledby="status-title">
       <h1 id="status-title">
         {t.changeAccess}: {profile.first_name} {profile.last_name}
       </h1>

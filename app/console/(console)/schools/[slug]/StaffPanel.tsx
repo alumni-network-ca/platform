@@ -5,6 +5,9 @@ import { manageInvitation, type InvitationResult } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
+import { ui } from "@/components/admin/parts";
+import { Alert } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 
 export type Invitation = {
   id: string;
@@ -23,11 +26,11 @@ export type StaffMember = {
 };
 
 const ROLE: Record<string, string> = { school_admin: "School admin", reviewer: "Reviewer" };
-const STATUS: Record<Invitation["status"], [string, string]> = {
-  open: ["Waiting", "tagWarn"],
-  accepted: ["Accepted", "tagGood"],
-  revoked: ["Revoked", ""],
-  expired: ["Expired", ""],
+const STATUS: Record<Invitation["status"], [string, "warning" | "success" | "neutral"]> = {
+  open: ["Waiting", "warning"],
+  accepted: ["Accepted", "success"],
+  revoked: ["Revoked", "neutral"],
+  expired: ["Expired", "neutral"],
 };
 
 /**
@@ -49,39 +52,39 @@ export function StaffPanel({
   const [copied, setCopied] = useState(false);
 
   return (
-    <section className="panel" aria-labelledby="console-staff">
+    <section className={ui.panel} aria-labelledby="console-staff">
       <h2 id="console-staff">Staff</h2>
-      <p className="fieldHint">
+      <p className={ui.fieldHint}>
         Invite a school admin or a reviewer. They accept while signed in with that email. Emails
         aren&apos;t sent yet, so copy the link and send it to them.
       </p>
-      <form action={action} className="formRow">
+      <form action={action} className={ui.formRow}>
         <input type="hidden" name="slug" value={slug} />
         <input type="hidden" name="intent" value="invite" />
-        <label className="field">
+        <label className={ui.field}>
           Email
           <Input type="email" name="email" placeholder="name@school.ca" required />
         </label>
-        <label className="field">
+        <label className={ui.field}>
           Role
           <NativeSelect name="role" defaultValue="school_admin">
             <option value="school_admin">School admin</option>
             <option value="reviewer">Reviewer</option>
           </NativeSelect>
         </label>
-        <div className="formActions" style={{ alignSelf: "end", justifyContent: "flex-start" }}>
+        <div className={ui.formActions} style={{ alignSelf: "end", justifyContent: "flex-start" }}>
           <Button loading={pending}>{pending ? "Sending…" : "Send invitation"}</Button>
         </div>
       </form>
 
       {result.link && (
-        <div className="notice noticeGood" role="status">
+        <Alert variant="success" role="status">
           <p>
             Send this link to {result.link.email} ({ROLE[result.link.role]?.toLowerCase()}). It
             works once, only for that address, and expires in 7 days. Getting a new link cancels
             this one.
           </p>
-          <div className="copyBox">
+          <div className={ui.copyBox}>
             <Input readOnly value={result.link.url} aria-label="Invitation link" />
             <Button
               type="button"
@@ -94,18 +97,18 @@ export function StaffPanel({
               {copied ? "Copied" : "Copy link"}
             </Button>
           </div>
-        </div>
+        </Alert>
       )}
       {result.error && (
-        <div className="notice" role="alert">
+        <Alert variant="error" role="alert">
           {result.error}
-        </div>
+        </Alert>
       )}
 
       <h3 id="console-team">Current staff</h3>
       {staff.length > 0 ? (
-        <div className="tableBox" role="region" aria-labelledby="console-team" tabIndex={0}>
-          <table className="dataTable" aria-labelledby="console-team">
+        <div className={ui.tableBox} role="region" aria-labelledby="console-team" tabIndex={0}>
+          <table className={ui.dataTable} aria-labelledby="console-team">
             <thead>
               <tr>
                 <th>Person</th>
@@ -118,12 +121,12 @@ export function StaffPanel({
                 <tr key={s.id}>
                   <td>
                     <strong>{s.name || s.email}</strong>
-                    {s.name && <span className="cellSub">{s.email}</span>}
+                    {s.name && <span className={ui.cellSub}>{s.email}</span>}
                   </td>
                   <td>{ROLE[s.role] ?? s.role}</td>
                   <td>
-                    <span className="tag tagGood">Active</span>
-                    <span className="cellSub">Joined {s.joined}</span>
+                    <Badge variant="success">Active</Badge>
+                    <span className={ui.cellSub}>Joined {s.joined}</span>
                   </td>
                 </tr>
               ))}
@@ -133,7 +136,7 @@ export function StaffPanel({
       ) : (
         <p>No staff yet. Invite the school&apos;s first admin above.</p>
       )}
-      <p className="fieldHint">
+      <p className={ui.fieldHint}>
         To change a role or remove someone, the school&apos;s admins use their Staff page.
       </p>
 
@@ -141,12 +144,12 @@ export function StaffPanel({
         <>
           <h3 id="console-invitations">Invitations</h3>
           <div
-            className="tableBox"
+            className={ui.tableBox}
             role="region"
             aria-labelledby="console-invitations"
             tabIndex={0}
           >
-            <table className="dataTable" aria-labelledby="console-invitations">
+            <table className={ui.dataTable} aria-labelledby="console-invitations">
               <thead>
                 <tr>
                   <th>Person</th>
@@ -161,22 +164,20 @@ export function StaffPanel({
                     <td>{inv.email}</td>
                     <td>{ROLE[inv.role] ?? inv.role}</td>
                     <td>
-                      <span className={`tag ${STATUS[inv.status][1]}`}>
-                        {STATUS[inv.status][0]}
-                      </span>
-                      <span className="cellSub">{inv.when}</span>
+                      <Badge variant={STATUS[inv.status][1]}>{STATUS[inv.status][0]}</Badge>
+                      <span className={ui.cellSub}>{inv.when}</span>
                     </td>
                     <td>
                       {inv.status === "open" && (
                         <form
                           action={action}
-                          className="formActions"
+                          className={ui.formActions}
                           style={{ justifyContent: "flex-start" }}
                         >
                           <input type="hidden" name="slug" value={slug} />
                           <input type="hidden" name="invitation" value={inv.id} />
                           <button
-                            className="textButton"
+                            className={ui.textButton}
                             name="intent"
                             value="link"
                             disabled={pending}
@@ -184,7 +185,7 @@ export function StaffPanel({
                             New link
                           </button>
                           <button
-                            className="textButton"
+                            className={ui.textButton}
                             name="intent"
                             value="revoke"
                             disabled={pending}

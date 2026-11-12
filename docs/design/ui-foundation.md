@@ -78,6 +78,10 @@ Sign-in, account creation, a request's status and a staff invitation build from 
 card (`AuthCard`, 16px corners, as on the canvas's SignIn and Join), the step markers, `Callout` (a note with a line of
 the school's colour down its side), `Facts` and `AbilityList`.
 
+The school admin and the platform console build from `ui` in `components/admin/parts.ts`: the page title, panels,
+the stat grid (`auto-fit`, so the cards fill the row), tables in a scroll box with tabular figures, fields, role
+cards and the welcome banner. A table's box is `relative`, so a screen-reader-only header can't widen the page.
+
 - Text links are in the school's colour (`primary`) and underline on hover, as on the canvas.
 - A form's result is an `Alert` (`components/ui/alert.tsx`): `error` for what went wrong, `success`, `warning` or
   `info`. Errors are red for every school, never the school's colour.

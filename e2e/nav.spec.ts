@@ -206,7 +206,7 @@ test.describe("nav bar", () => {
     const reason = `Nav bar check ${Date.now().toString(36)}`;
     await page.getByLabel("Reason (required; the school sees this)").fill(reason);
     await page.getByRole("button", { name: "Open grant" }).click();
-    const grant = page.locator(".panelWarn", { hasText: reason });
+    const grant = page.locator("[data-grant]", { hasText: reason });
     await expect(grant).toContainText("Active: Test School");
     try {
       const testSchool = addressOf(baseURL!, "test-school");

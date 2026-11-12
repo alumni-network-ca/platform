@@ -2,6 +2,7 @@ import { requirePlatformAdmin } from "@/lib/auth/platform";
 import { schoolUrl } from "@/lib/tenant/address";
 import { getOrigin } from "@/lib/tenant/server";
 import { ActiveGrants, OpenGrantForm, type ActiveGrant } from "./GrantForms";
+import { ui } from "@/components/admin/parts";
 
 const when = (iso: string) =>
   new Date(iso).toLocaleString("en-CA", {
@@ -59,7 +60,7 @@ export default async function SupportPage({
 
   return (
     <>
-      <div className="shellTitle">
+      <div className={ui.shellTitle}>
         <div>
           <h1>Support access</h1>
           <p>
@@ -71,13 +72,13 @@ export default async function SupportPage({
       </div>
       <ActiveGrants grants={active} />
       <OpenGrantForm schools={schools.data ?? []} preselect={preselect} />
-      <section className="panel">
+      <section className={ui.panel}>
         <h2>Past grants</h2>
         {past.length === 0 ? (
-          <p className="fieldHint">None yet.</p>
+          <p className={ui.fieldHint}>None yet.</p>
         ) : (
-          <div className="tableBox">
-            <table className="dataTable">
+          <div className={ui.tableBox}>
+            <table className={ui.dataTable}>
               <thead>
                 <tr>
                   <th>School</th>
@@ -93,7 +94,7 @@ export default async function SupportPage({
                     <td>{emailOf(g.user_id)}</td>
                     <td>
                       {when(g.created_at)}
-                      <span className="cellSub">
+                      <span className={ui.cellSub}>
                         {g.revoked_at
                           ? `ended early after ${duration(Date.parse(g.revoked_at) - Date.parse(g.created_at))}`
                           : duration(Date.parse(g.expires_at) - Date.parse(g.created_at))}

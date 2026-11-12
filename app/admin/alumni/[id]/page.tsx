@@ -3,8 +3,13 @@ import { staffRecord } from "@/lib/admin/records";
 import { adminCopy, dateLabel, read, type Search } from "@/lib/admin/data";
 import { describeAudit } from "@/lib/admin/audit";
 import { schoolConfig } from "@/lib/tenant/config";
-import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { menuItem, menuPanel } from "@/components/ui/menu";
+import { cn } from "@/lib/utils";
 import { BackArrow } from "@/components/icons";
+import { ui } from "@/components/admin/parts";
+import { Badge } from "@/components/ui/badge";
 export default async function Record({
   params,
   searchParams,
@@ -35,48 +40,70 @@ export default async function Record({
           : "hidden";
   return (
     <>
-      <Link className="backLink" href="/admin/alumni">
+      <Link className={ui.backLink} href="/admin/alumni">
         <BackArrow />
         {t.alumni}
       </Link>
-      <section className="panel">
-        <div className="shellTitle">
+      <section className={ui.panel}>
+        <div className={ui.shellTitle}>
           <div>
             <h1>
               {p.preferred_name || p.first_name} {p.last_name}
             </h1>
             <p>{[p.grad_year, p.job_title, p.city].filter(Boolean).join(" · ")}</p>
           </div>
-          <span className="tag">{state === "deleted" ? t.unknown : t[state]}</span>
+          <Badge>{state === "deleted" ? t.unknown : t[state]}</Badge>
         </div>
         {can("records.edit") && (
-          <div className="adminActions">
+          <div className={ui.adminActions}>
             <Button asChild variant="secondary">
               <Link href={"/admin/alumni/" + id + "/edit"}>{t.edit}</Link>
             </Button>
             {p.status === "active" ? (
               <>
-                <Link href={"/admin/alumni/" + id + "/status?action=suspended"}>{t.suspend}</Link>
-                <details>
-                  <summary>{t.more}</summary>
-                  <div className="adminStack">
-                    <Link href={"/admin/alumni/" + id + "/status?action=archived"}>
+                <Button asChild variant="destructive-outline">
+                  <Link href={"/admin/alumni/" + id + "/status?action=suspended"}>{t.suspend}</Link>
+                </Button>
+                {/* The rarer changes, behind a disclosure (a native one: keyboard and screen readers know it). */}
+                <details className="group relative">
+                  <summary
+                    className={cn(
+                      buttonVariants({ variant: "ghost" }),
+                      "list-none [&::-webkit-details-marker]:hidden",
+                    )}
+                  >
+                    {t.more}
+                    <ChevronDown
+                      aria-hidden
+                      className="transition-transform group-open:rotate-180"
+                    />
+                  </summary>
+                  <div className={cn(menuPanel, "absolute top-full left-0 z-10 mt-1 min-w-48")}>
+                    <Link
+                      className={menuItem({ tone: "danger" })}
+                      href={"/admin/alumni/" + id + "/status?action=archived"}
+                    >
                       {t.archive}
                     </Link>
-                    <Link href={"/admin/alumni/" + id + "/status?action=deceased"}>
+                    <Link
+                      className={menuItem({ tone: "danger" })}
+                      href={"/admin/alumni/" + id + "/status?action=deceased"}
+                    >
                       {t.markDeceased}
                     </Link>
                   </div>
                 </details>
               </>
             ) : (
-              <Link href={"/admin/alumni/" + id + "/status?action=active"}>{t.reactivate}</Link>
+              <Button asChild variant="secondary">
+                <Link href={"/admin/alumni/" + id + "/status?action=active"}>{t.reactivate}</Link>
+              </Button>
             )}
           </div>
         )}
         {/* TODO(EML-05): change sign-in email. */}
       </section>
-      <nav className="adminTabs" aria-label={t.details}>
+      <nav className={ui.adminTabs} aria-label={t.details}>
         {(["details", "history", "request"] as const).map((key) => (
           <Link key={key} href={"?tab=" + key} aria-current={tab === key ? "page" : undefined}>
             {t[key]}
@@ -88,7 +115,7 @@ export default async function Record({
       ) : tab === "history" ? (
         <History id={id} requestIds={requests.map((r) => r.id)} />
       ) : (
-        <section className="panel">
+        <section className={ui.panel}>
           {requests.length ? (
             requests.map((r) => (
               <div key={r.id}>
@@ -100,11 +127,11 @@ export default async function Record({
               </div>
             ))
           ) : (
-            <p>{t.empty}</p>
+            <p className="text-muted-foreground">{t.empty}</p>
           )}
         </section>
       )}
-      <p className="fieldHint">{t.recordNote}</p>
+      <p className={ui.fieldHint}>{t.recordNote}</p>
     </>
   );
 }
@@ -180,14 +207,14 @@ async function Details({
     [t.nextDue, dateLabel(p.confirmation_due_at, locale)],
   ];
   return (
-    <div className="panelGrid">
+    <div className={ui.panelGrid}>
       {[
         [t.publicDetails, publicFields],
         [t.privateDetails, privateFields],
       ].map(([title, fields], index) => (
-        <section className="panel" key={index}>
+        <section className={ui.panel} key={index}>
           <h2>{title as string}</h2>
-          <dl className="adminDetails">
+          <dl className={ui.adminDetails}>
             {(fields as (string | null | undefined)[][]).map(([label, value]) => (
               <div style={{ display: "contents" }} key={label}>
                 <dt>{label}</dt>
@@ -245,17 +272,17 @@ async function History({ id, requestIds }: { id: string; requestIds: string[] })
       })),
   ].sort((a, b) => b.created_at.localeCompare(a.created_at));
   return (
-    <section className="panel">
+    <section className={ui.panel}>
       {events.length ? (
         events.map((e) => (
           <div key={e.id}>
             <strong>{e.text}</strong>
             <p>{e.details}</p>
-            <span className="cellSub">{dateLabel(e.created_at, locale)}</span>
+            <span className={ui.cellSub}>{dateLabel(e.created_at, locale)}</span>
           </div>
         ))
       ) : (
-        <p>{t.empty}</p>
+        <p className="text-muted-foreground">{t.empty}</p>
       )}
     </section>
   );

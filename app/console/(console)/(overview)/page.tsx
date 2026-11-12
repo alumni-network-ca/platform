@@ -4,6 +4,8 @@ import { schoolUrl } from "@/lib/tenant/address";
 import { getOrigin } from "@/lib/tenant/server";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { ui } from "@/components/admin/parts";
 
 // S1.1 Console: all schools. Counts only, never alumni data (ADR 0005).
 export default async function SchoolsPage({
@@ -27,7 +29,7 @@ export default async function SchoolsPage({
 
   return (
     <>
-      <div className="shellTitle">
+      <div className={ui.shellTitle}>
         <div>
           <h1>Schools</h1>
           <p>
@@ -39,36 +41,38 @@ export default async function SchoolsPage({
         </Button>
       </div>
 
-      <div className="statGrid">
-        <div className="statCard">
-          <span className="statLabel">Live schools</span>
-          <span className="statValue">{schools.filter((s) => s.status === "active").length}</span>
+      <div className={ui.statGrid}>
+        <div className={ui.statCard}>
+          <span className={ui.statLabel}>Live schools</span>
+          <span className={ui.statValue}>
+            {schools.filter((s) => s.status === "active").length}
+          </span>
         </div>
-        <div className="statCard">
-          <span className="statLabel">Suspended</span>
-          <span className="statValue">
+        <div className={ui.statCard}>
+          <span className={ui.statLabel}>Suspended</span>
+          <span className={ui.statValue}>
             {schools.filter((s) => s.status === "suspended").length}
           </span>
         </div>
-        <div className="statCard">
-          <span className="statLabel">Active members</span>
-          <span className="statValue">{total((s) => s.members)}</span>
+        <div className={ui.statCard}>
+          <span className={ui.statLabel}>Active members</span>
+          <span className={ui.statValue}>{total((s) => s.members)}</span>
         </div>
-        <div className="statCard">
-          <span className="statLabel">Open support grants</span>
-          <span className="statValue">{total((s) => s.active_grants)}</span>
+        <div className={ui.statCard}>
+          <span className={ui.statLabel}>Open support grants</span>
+          <span className={ui.statValue}>{total((s) => s.active_grants)}</span>
         </div>
       </div>
 
-      <form className="formRow" role="search">
-        <label className="field">
+      <form className={ui.formRow} role="search">
+        <label className={ui.field}>
           Find a school
           <Input name="q" defaultValue={q} placeholder="Name or address" />
         </label>
       </form>
 
-      <div className="tableBox">
-        <table className="dataTable">
+      <div className={ui.tableBox}>
+        <table className={ui.dataTable}>
           <thead>
             <tr>
               <th>School</th>
@@ -81,31 +85,35 @@ export default async function SchoolsPage({
           <tbody>
             {shown.map((s) => (
               // The whole row opens the school (S1.3); the name is the one real link, stretched over the row.
-              <tr key={s.id} className="rowLink">
+              <tr key={s.id} className={ui.rowLink}>
                 <td>
-                  <Link className="rowLinkTarget" href={`/schools/${s.slug}`}>
+                  <Link className={ui.rowLinkTarget} href={`/schools/${s.slug}`}>
                     {s.name}
                   </Link>
-                  <span className="cellSub">{new URL(schoolUrl(origin, s.slug)).host}</span>
+                  <span className={ui.cellSub}>{new URL(schoolUrl(origin, s.slug)).host}</span>
                 </td>
                 <td>
-                  <span className={`tag ${s.status === "active" ? "tagGood" : "tagBad"}`}>
+                  <Badge variant={s.status === "active" ? "success" : "destructive"}>
                     {s.status === "active" ? "Live" : "Suspended"}
-                  </span>
+                  </Badge>
                 </td>
                 <td>{s.members}</td>
                 <td>{s.pending_requests}</td>
                 <td>
                   {s.staff}
                   {s.open_invitations > 0 && (
-                    <span className="cellSub">{s.open_invitations} invited, not accepted</span>
+                    <span className={ui.cellSub}>{s.open_invitations} invited, not accepted</span>
                   )}
                 </td>
               </tr>
             ))}
             {shown.length === 0 && (
               <tr>
-                <td colSpan={5}>No school matches “{q}”.</td>
+                <td colSpan={5} className="py-8! text-center text-muted-foreground">
+                  {query
+                    ? `No school matches “${q.trim()}”.`
+                    : "No schools yet. Create the first one."}
+                </td>
               </tr>
             )}
           </tbody>

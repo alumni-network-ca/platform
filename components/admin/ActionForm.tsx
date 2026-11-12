@@ -4,6 +4,8 @@ import { errorMessage, type ActionResult, type AdminCopy } from "@/lib/admin/for
 import { CopyLink } from "./CopyLink";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ui } from "@/components/admin/parts";
+import { Alert } from "@/components/ui/alert";
 export function ActionForm({
   action,
   children,
@@ -19,28 +21,28 @@ export function ActionForm({
 }) {
   const [state, formAction, pending] = useActionState(action, { error: null });
   return (
-    <form action={formAction} className="adminStack">
+    <form action={formAction} className={ui.adminStack}>
       {children}
       {state.error && (
-        <p role="alert" className="notice">
+        <Alert variant="error" role="alert">
           {errorMessage(state.error, t)}
-        </p>
+        </Alert>
       )}
       {state.saved && (
-        <p role="status" className="notice noticeGood">
+        <Alert variant="success" role="status">
           {t.saved}
-        </p>
+        </Alert>
       )}
       {state.link && (
-        <div className="linkRow">
-          <label className="field">
+        <div className={ui.linkRow}>
+          <label className={ui.field}>
             {t.invitationLink}
             <Input readOnly value={state.link} onFocus={(e) => e.target.select()} />
           </label>
           <CopyLink value={state.link} label={t.copyLink} done={t.linkCopied} />
         </div>
       )}
-      <div className="formActions">
+      <div className={ui.formActions}>
         <Button loading={pending} disabled={disabled}>
           {label}
         </Button>

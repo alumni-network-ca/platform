@@ -177,7 +177,7 @@ test.describe("platform console", () => {
     );
     await page.getByLabel("Reason (required; the school sees this)").fill(reason);
     await page.getByRole("button", { name: "Open grant" }).click();
-    const grant = page.locator(".panelWarn", { hasText: reason });
+    const grant = page.locator("[data-grant]", { hasText: reason });
     await expect(grant).toContainText("Active: Test School");
     await grant.getByRole("button", { name: "End now" }).click();
     await expect(grant).toHaveCount(0);

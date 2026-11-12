@@ -6,6 +6,8 @@ import { schoolUrl } from "@/lib/tenant/address";
 import { getOrigin } from "@/lib/tenant/server";
 import { StaffPanel, type Invitation, type StaffMember } from "./StaffPanel";
 import { BackArrow, ForwardArrow } from "@/components/icons";
+import { Badge } from "@/components/ui/badge";
+import { ui } from "@/components/admin/parts";
 
 const day = (iso: string) =>
   new Date(iso).toLocaleDateString("en-CA", { month: "short", day: "numeric", year: "numeric" });
@@ -71,11 +73,11 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
 
   return (
     <>
-      <Link className="backLink" href="/">
+      <Link className={ui.backLink} href="/">
         <BackArrow />
         Schools
       </Link>
-      <div className="shellTitle">
+      <div className={ui.shellTitle}>
         <div>
           <h1>{school.name}</h1>
           <p>
@@ -83,37 +85,39 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
             {creator ? ` by ${creator}` : ""}
           </p>
         </div>
-        <span className={`tag ${suspended ? "tagBad" : "tagGood"}`}>
+        <Badge variant={suspended ? "destructive" : "success"}>
           {suspended ? "Suspended" : "Live"}
-        </span>
+        </Badge>
       </div>
 
-      <div className="statGrid">
-        <div className="statCard">
-          <span className="statLabel">Members</span>
-          <span className="statValue">{counts?.members ?? 0}</span>
+      <div className={ui.statGrid}>
+        <div className={ui.statCard}>
+          <span className={ui.statLabel}>Members</span>
+          <span className={ui.statValue}>{counts?.members ?? 0}</span>
         </div>
-        <div className="statCard">
-          <span className="statLabel">Pending sign-ups</span>
-          <span className="statValue">{counts?.pending_requests ?? 0}</span>
+        <div className={ui.statCard}>
+          <span className={ui.statLabel}>Pending sign-ups</span>
+          <span className={ui.statValue}>{counts?.pending_requests ?? 0}</span>
         </div>
-        <div className="statCard">
-          <span className="statLabel">Staff</span>
-          <span className="statValue">{counts?.staff ?? 0}</span>
+        <div className={ui.statCard}>
+          <span className={ui.statLabel}>Staff</span>
+          <span className={ui.statValue}>{counts?.staff ?? 0}</span>
         </div>
-        <div className="statCard">
-          <span className="statLabel">Open support grants</span>
-          <span className="statValue">{counts?.active_grants ?? 0}</span>
+        <div className={ui.statCard}>
+          <span className={ui.statLabel}>Open support grants</span>
+          <span className={ui.statValue}>{counts?.active_grants ?? 0}</span>
         </div>
       </div>
 
       <StaffPanel slug={school.slug} staff={staff} invitations={rows} />
 
-      <div className="panelGrid">
-        <section className="panel">
+      <div className={ui.panelGrid}>
+        <section className={ui.panel}>
           <h2>Settings</h2>
-          <p className="fieldHint">The school&apos;s admins change these on their Settings page.</p>
-          <dl className="detailList">
+          <p className={ui.fieldHint}>
+            The school&apos;s admins change these on their Settings page.
+          </p>
+          <dl className={ui.detailList}>
             <dt>Network name</dt>
             <dd>{shortName} Alumni Network</dd>
             <dt>Default language</dt>
@@ -124,7 +128,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
             <dd>{school.reply_to_email ?? "Not set"}</dd>
           </dl>
         </section>
-        <section className="panel">
+        <section className={ui.panel}>
           <h2>Support and status</h2>
           <p>
             <Link href={`/support?school=${school.slug}`}>

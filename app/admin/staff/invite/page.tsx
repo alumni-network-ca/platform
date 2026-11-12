@@ -4,6 +4,7 @@ import { adminCopy, read } from "@/lib/admin/data";
 import { schoolBranding } from "@/lib/school";
 import { InviteForm } from "./InviteForm";
 import { BackArrow } from "@/components/icons";
+import { ui } from "@/components/admin/parts";
 
 // A5.1 Invite a staff member (docs/design/staff-invite.md §2): the only way in from the Staff page.
 export default async function InviteStaff() {
@@ -37,11 +38,11 @@ export default async function InviteStaff() {
   const subject = template?.subject.replaceAll("{school_name}", schoolBranding(school).shortName);
   return (
     <>
-      <Link className="backLink" href="/admin/staff">
+      <Link className={ui.backLink} href="/admin/staff">
         <BackArrow />
         {t.backToStaff}
       </Link>
-      <div className="shellTitle">
+      <div className={ui.shellTitle}>
         <div>
           <h1>{t.inviteStaff}</h1>
           <p>{t.inviteLead}</p>
