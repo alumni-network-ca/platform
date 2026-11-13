@@ -5,13 +5,13 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   plugins: [react()],
   resolve: {
-    alias: { "@": path.resolve(import.meta.dirname, ".") },
+    alias: { "@": path.resolve(import.meta.dirname, "src") },
   },
   test: {
     environment: "jsdom",
-    setupFiles: ["./tests/setup.ts"],
-    include: ["**/*.test.{ts,tsx}"],
-    exclude: ["node_modules/**", ".next/**", "e2e/**"],
+    setupFiles: ["./src/tests/setup.ts"],
+    // Unit tests live in src/tests/unit at the path of the code they test; Playwright owns src/tests/e2e.
+    include: ["src/tests/unit/**/*.test.{ts,tsx}"],
     css: false,
   },
 });

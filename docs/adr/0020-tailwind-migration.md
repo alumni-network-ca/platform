@@ -5,7 +5,7 @@
 ## Context
 
 ADR 0009 chose Tailwind CSS v4 and shadcn/ui, but every screen was built with hand-written CSS: one 3,779-line
-`app/globals.css`. It has no shared scale: 13 corner radii, 28 font sizes, 7 shadows and about 120 literal colours.
+`src/app/globals.css`. It has no shared scale: 13 corner radii, 28 font sizes, 7 shadows and about 120 literal colours.
 Buttons, inputs and loading states differ from page to page. Rewriting every screen at once would block other work
 and risk regressions just before the December pilot. Turning Tailwind on is not free either: its preflight resets
 margins, headings, lists and form controls on every element, and the existing screens depend on the browser's
@@ -13,9 +13,9 @@ defaults.
 
 ## Decision
 
-- **Cascade layers keep the old and new styles apart.** `app/globals.css` declares
+- **Cascade layers keep the old and new styles apart.** `src/app/globals.css` declares
   `@layer theme, base, compat, legacy, components, utilities` and loads the old stylesheet, now
-  `app/styles/legacy.css`, into the `legacy` layer. Later layers win whatever the selector's specificity, so a
+  `src/app/styles/legacy.css`, into the `legacy` layer. Later layers win whatever the selector's specificity, so a
   Tailwind class always beats a legacy rule, and a legacy rule beats preflight.
 - **A `compat` layer undoes preflight outside components/ui.** Every shadcn part carries `data-slot`. Outside those
   parts, `compat` sets the properties that preflight touches back to the browser's values (`revert`). The legacy
@@ -34,7 +34,7 @@ defaults.
   for colour changes, 200ms for overlays), described in [docs/design/ui-foundation.md](../design/ui-foundation.md).
   `legacy.css` uses the same variables, so screens that are not yet rebuilt follow the scale too.
 - **Order of work.**
-  - First the foundation: tokens, the components in `components/ui`, and every button and text field.
+  - First the foundation: tokens, the components in `src/components/ui`, and every button and text field.
   - Then loading, pending and error states.
   - Then each area's screens, one pull request per area, deleting their rules from `legacy.css` as they move.
   - `compat` and `legacy.css` are deleted together, when the last screen has moved.
@@ -47,12 +47,12 @@ defaults.
   components/ui. A change to a screen not yet rebuilt may still edit `legacy.css`.
 - A legacy class whose name matches a Tailwind utility (such as `.table`) is overridden by that utility. Avoid such
   names; none is in use today.
-- shadcn components are copied into `components/ui` and edited to match the design. `npx shadcn add` output must be
+- shadcn components are copied into `src/components/ui` and edited to match the design. `npx shadcn add` output must be
   adapted to the token names and radius scale before it is committed.
 
 ## Outcome (2026-11-12)
 
-Every screen now uses Tailwind and components/ui. `app/styles/legacy.css`, the `compat` layer and the `data-ui`
-marker are gone, and preflight applies everywhere. The base layer of `app/globals.css` keeps what the old stylesheet
+Every screen now uses Tailwind and components/ui. `src/app/styles/legacy.css`, the `compat` layer and the `data-ui`
+marker are gone, and preflight applies everywhere. The base layer of `src/app/globals.css` keeps what the old stylesheet
 set on the page itself: the background, text colour, font and smooth scrolling. The shared pieces are listed in
 [docs/design/ui-foundation.md](../design/ui-foundation.md).
