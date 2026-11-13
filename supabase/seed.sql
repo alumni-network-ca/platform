@@ -35,7 +35,7 @@ insert into public.institutions (id, name, slug, default_locale, reply_to_email,
     "favicon": "/institutes/favicons/herzliah.png"}'),
   ('aaaaaaaa-0000-4000-8000-000000000002', 'Test School', 'test-school', 'fr', 'office@test-school.test',
    'Test School Alumni',
-   -- Its own colours, too light behind white text, so e2e/theme.spec.ts checks the shades the app derives (ADR 0019).
+   -- Its own colours, too light behind white text, so src/tests/e2e/theme.spec.ts checks the shades the app derives (ADR 0019).
    '{"short_name": "Test School", "primary_color": "#2E8B57", "accent_color": "#F4A300"}');
 
 -- Herzliah approves the platform defaults as-is, so emails flow in local development.

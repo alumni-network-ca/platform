@@ -5,7 +5,7 @@ and **A6 · Accepting the invitation and first sign-in**, plus the revised **A4.
 `invitee` role of the nav bar (Layout page, L0). The frames are in [`alumni-full-flow/`](alumni-full-flow/)
 (`AdmStaff`, `StaffInvite*`, `Staff*`); index and routes in its [README](alumni-full-flow/README.md). Copy
 layout and wording from the frames, not their code; names, addresses and dates in them are sample data. Copy
-below is English; every string needs an FR entry in `lib/i18n.ts`.
+below is English; every string needs an FR entry in `src/lib/i18n.ts`.
 
 The database rules stay the authority (ADR 0005, `staff_invitations`, the staff RPCs). Where this design needs
 more than the database offers, §6 says so.
@@ -154,7 +154,7 @@ What the design needed beyond the database, and where it stands:
 3. **Done** · Staff name: A6.2 stores the name in the account's auth metadata; `person_name` reads it after the
    profile and the request (`school_staff`, `audit_people`). Like those, it is self-entered.
 4. **Open** · Email: delivery is EML-01; the template needs `inviter_name`, `role` and `expires_on` placeholders
-   (`lib/admin/templates.ts`), and `first_name` can't be filled for an invitation. Until then A5.2 is the
+   (`src/lib/admin/templates.ts`), and `first_name` can't be filled for an invitation. Until then A5.2 is the
    copy-link result on the invite page, so the token never travels in a URL.
 5. **Open** · Two-factor: FND-11 (TOTP, `aal2` in `requireStaff` and the staff RPCs, audited platform-admin
    reset). Accepting leads straight to `/admin` until then.

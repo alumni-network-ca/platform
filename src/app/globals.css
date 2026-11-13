@@ -1,0 +1,232 @@
+/* Only the app's own code holds class names: Tailwind scans src/, not the docs, the design canvas or other checkouts. */
+@import "tailwindcss" source("..");
+@import "tw-animate-css";
+
+/* A laptop screen that is short rather than narrow: account creation tightens so its button stays in view. */
+@custom-variant short (@media (min-width: 801px) and (max-height: 760px));
+
+:root {
+  /* Herzliah's approved design is the default theme. A school with its own colours gets the brand and accent variables
+     from lib/theme.ts on <html> (ADR 0019): write brand colours as these variables, never as literal values. */
+  --brand: #0b2159;
+  --brand-deep: #071b45;
+  --ink: #0b2159;
+  --ink-soft: #3a4a70;
+  --on-brand-soft: #d2d7e4;
+  --on-brand-muted: #b8c0d8;
+  --on-brand-faint: #a6b0c9;
+  --on-brand-line: #6b7a9e;
+  --on-brand-accent: #eab6ce;
+  --on-brand-pill: #d6e2ff;
+  --on-brand-pill-line: #8fa6d6;
+  --on-deep-soft: #d5dae6;
+  --on-deep-muted: #9ca8c5;
+  --paper: #f7f7f6;
+  --paper-raised: #fff;
+  --accent: #7b1e3d;
+  --accent-dark: #611630;
+  --accent-soft: #f1dce3;
+  --accent-pale: #faeef3;
+  --accent-chip: #f7e6ee;
+  --accent-glow: #f9eaf1;
+  --accent-ring: #a7486c;
+  --pink: #eab6ce;
+  --pink-deep: #c9749e;
+  --line: #e2e5ee;
+  --slate: #66708a;
+  --teal: #0088a8;
+  --shadow: 0 20px 50px -28px color-mix(in srgb, var(--brand) 32%, transparent);
+
+  /* Neutrals and states, the same for every school (docs/design/ui-foundation.md). */
+  --text-muted: #4a5575;
+  --placeholder: #66728d;
+  --line-subtle: #eef0f4;
+  --line-strong: #c3c9d6;
+  --input-line: #8a93ab; /* 3:1 against white, WCAG 1.4.11 */
+  --surface-hover: #f1f3f8;
+  --surface-sunken: #f2f4f8;
+  --danger: #a1173b;
+  --danger-dark: #7a1030;
+  --danger-soft: #fbe9ed;
+  --good: #1b5e33;
+  --good-soft: #e3f3e8;
+  --good-dot: #2e8b57; /* the "visible" dot beside its words; too light for text */
+  --warn: #7a4b00;
+  --warn-soft: #fff4dc;
+  --info: #123e7a;
+  --info-soft: #e3eefc;
+
+  /* The platform console's own colours (design S1–S2): the same for every school. */
+  --platform: #15172b;
+  --platform-mark: #4b2a8a;
+  --platform-pill: #7b5bc4;
+  --platform-avatar: #d9cdf3;
+  --platform-soft: #f4f0fc;
+  --avatar-staff: #c9d6f2;
+}
+
+/*
+ * Tailwind's names for the tokens above. `inline` keeps the var() references, so a school's colours on <html> reach
+ * every class. Naming: `primary` is the action colour (the school's accent, burgundy for Herzliah) and `brand` is the
+ * nav bar's colour. shadcn's `accent` is a neutral hover surface, not our --accent.
+ */
+@theme inline {
+  --font-sans: var(--font-inter, Inter), Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-background: var(--paper);
+  --color-foreground: var(--ink);
+  --color-card: var(--paper-raised);
+  --color-card-foreground: var(--ink);
+  --color-popover: var(--paper-raised);
+  --color-popover-foreground: var(--ink);
+  --color-primary: var(--accent);
+  --color-primary-hover: var(--accent-dark);
+  --color-primary-foreground: #fff;
+  --color-primary-soft: var(--accent-pale);
+  --color-brand: var(--brand);
+  --color-brand-deep: var(--brand-deep);
+  --color-brand-foreground: #fff;
+  --color-secondary: var(--surface-sunken);
+  --color-secondary-foreground: var(--ink);
+  --color-muted: var(--line-subtle);
+  --color-muted-foreground: var(--text-muted);
+  --color-subtle-foreground: var(--ink-soft);
+  --color-placeholder: var(--placeholder);
+  --color-accent: var(--surface-hover);
+  --color-accent-foreground: var(--ink);
+  --color-destructive: var(--danger);
+  --color-destructive-hover: var(--danger-dark);
+  --color-destructive-soft: var(--danger-soft);
+  --color-success: var(--good);
+  --color-success-soft: var(--good-soft);
+  --color-success-dot: var(--good-dot);
+  --color-warning: var(--warn);
+  --color-warning-soft: var(--warn-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-border: var(--line);
+  --color-border-subtle: var(--line-subtle);
+  --color-border-strong: var(--line-strong);
+  --color-input: var(--input-line);
+  --color-ring: var(--accent-ring);
+  --color-primary-chip: var(--accent-chip);
+  --color-primary-tint: var(--accent-soft);
+  --color-pink: var(--pink);
+
+  /* Text, lines and pills on the brand colour (the nav bar, banners), set per school with the brand (lib/theme.ts). */
+  --color-on-brand-soft: var(--on-brand-soft);
+  --color-on-brand-muted: var(--on-brand-muted);
+  --color-on-brand-faint: var(--on-brand-faint);
+  --color-on-brand-line: var(--on-brand-line);
+  --color-on-brand-accent: var(--on-brand-accent);
+  --color-on-brand-pill: var(--on-brand-pill);
+  --color-on-brand-pill-line: var(--on-brand-pill-line);
+  --color-on-deep-soft: var(--on-deep-soft);
+  --color-on-deep-muted: var(--on-deep-muted);
+
+  --color-platform: var(--platform);
+  --color-platform-mark: var(--platform-mark);
+  --color-platform-pill: var(--platform-pill);
+  --color-platform-avatar: var(--platform-avatar);
+  --color-platform-soft: var(--platform-soft);
+  --color-avatar-staff: var(--avatar-staff);
+}
+
+@theme {
+  /* Corners: controls 8, cards 12, overlays 16, pills full. A part inside a padded box takes the box's radius minus the
+     padding, rounded to the scale. */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* The type scale of the design canvas. */
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1.4;
+  --text-sm: 0.8125rem;
+  --text-sm--line-height: 1.45;
+  --text-base: 0.875rem;
+  --text-base--line-height: 1.5;
+  --text-md: 0.9375rem;
+  --text-md--line-height: 1.55;
+  --text-lg: 1.0625rem;
+  --text-lg--line-height: 1.55;
+  --text-xl: 1.25rem;
+  --text-xl--line-height: 1.35;
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: 1.3;
+  --text-3xl: 1.75rem;
+  --text-3xl--line-height: 1.2;
+  --text-4xl: 2rem;
+  --text-4xl--line-height: 1.15;
+  --text-5xl: 2.5rem;
+  --text-5xl--line-height: 1.1;
+  --text-6xl: 3rem;
+  --text-6xl--line-height: 1.06;
+
+  /* Elevation, tinted with the school's colour like the design's shadows. */
+  --shadow-xs: 0 1px 2px color-mix(in srgb, var(--brand) 8%, transparent);
+  --shadow-sm:
+    0 1px 3px color-mix(in srgb, var(--brand) 10%, transparent),
+    0 1px 2px color-mix(in srgb, var(--brand) 6%, transparent);
+  --shadow-md: 0 16px 40px -16px color-mix(in srgb, var(--brand) 35%, transparent);
+  --shadow-lg: 0 24px 60px -20px color-mix(in srgb, var(--brand) 40%, transparent);
+  --shadow-xl: 0 30px 70px -20px color-mix(in srgb, var(--brand-deep) 50%, transparent);
+
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --default-transition-duration: 150ms;
+  --default-transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* The caret in an empty code box (components/CodeInput.tsx). */
+  --animate-caret: caret 1s steps(1) infinite;
+  @keyframes caret {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  /* A link's pending bar (components/LinkPending.tsx): a short segment sweeping across. */
+  --animate-link-pending: link-pending 1.1s ease-in-out infinite;
+  @keyframes link-pending {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(300%);
+    }
+  }
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  /* A bare `border` class draws in the line colour (Tailwind 4's default is the text colour), as shadcn expects. */
+  *,
+  ::before,
+  ::after {
+    border-color: var(--color-border);
+  }
+}
+
+/* Motion is decoration here: people who ask for less get none. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

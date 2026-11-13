@@ -6,7 +6,7 @@
 
 Every page re-read values that almost never change, through the visitor's session: career fields and networking
 options (profile, directory, home, onboarding, admin record), and the role → permission table (every admin page and
-action, as a separate step after the account read). Branding travelled from `proxy.ts` in the `x-school` header,
+action, as a separate step after the account read). Branding travelled from `src/proxy.ts` in the `x-school` header,
 cached for 60 s in each server's memory: no way to clear it after a change, and each school needs its own branding.
 
 ## Decision
@@ -16,7 +16,7 @@ cached for 60 s in each server's memory: no way to clear it after a change, and 
 - **Public, like `public_school`:** anon may call it, because the cache is shared by every visitor and never carries a
   session. None of it is personal data. This makes option labels and the permission table readable without signing in
   (they were members-only through RLS).
-- **Cached with `unstable_cache`** in `lib/tenant/config.ts`: shared by all servers on Vercel, deduplicated per request
+- **Cached with `unstable_cache`** in `src/lib/tenant/config.ts`: shared by all servers on Vercel, deduplicated per request
   with React `cache`. Key: the build's commit, so a deploy starts fresh. Tag: `school-config:<id>`. Safety net: 5 min.
   `'use cache'` replaces it once the app turns on `cacheComponents`; only that file changes.
 - **Branding comes from the cache, not the header.** `getSchool()` adds it to the proxy's school, so every

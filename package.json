@@ -18,7 +18,7 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:db": "supabase test db",
-    "db:types": "supabase gen types typescript --local --schema public > lib/database.types.ts && prettier --write lib/database.types.ts",
+    "db:types": "supabase gen types typescript --local --schema public > src/lib/database.types.ts && prettier --write src/lib/database.types.ts",
     "seed:perf": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/seed-perf.ts",
     "demo": "node scripts/demo/demo.mjs",
     "bench:directory": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/bench-directory.ts",

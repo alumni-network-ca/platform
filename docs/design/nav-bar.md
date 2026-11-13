@@ -2,15 +2,15 @@
 
 Source design: the "Layout" page of the **Alumni Full Flow** canvas (frames L0–L6). The markup in
 [`nav-bar.reference.html`](nav-bar.reference.html) is a design mock (a canvas component, not React): copy its
-look and structure, not its code. Copy below is English; every string needs an FR entry in `lib/i18n.ts`.
+look and structure, not its code. Copy below is English; every string needs an FR entry in `src/lib/i18n.ts`.
 
 One component renders the top bar on **every** page. What it shows depends on one derived value, the
 **nav role** of the signed-in person *at the school of the current address* (DEC-13).
 
 ## 1. Nav role
 
-Derive it on the server from `getAccount()` (`lib/auth/account.ts`) and the same helpers as `homeFor()` in
-`lib/auth/home.ts`. Never decide it in the client; pass it down as a prop.
+Derive it on the server from `getAccount()` (`src/lib/auth/account.ts`) and the same helpers as `homeFor()` in
+`src/lib/auth/home.ts`. Never decide it in the client; pass it down as a prop.
 
 | Nav role | When | Pill |
 |---|---|---|
