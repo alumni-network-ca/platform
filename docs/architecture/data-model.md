@@ -112,6 +112,7 @@ The duplicate hints admins see come from a view, `access_request_duplicates`: sa
 |---|:-:|:-:|:-:|
 | `directory.use` | ✓* | ✓* | ✓ |
 | `requests.read` · `requests.decide` | ✓ | ✓ | |
+| `requests.bulkapprove` | ✓ | | |
 | `records.read` | ✓ | ✓ | |
 | `records.edit` | ✓ | | |
 | `records.export` | ✓ | | |
@@ -171,6 +172,7 @@ All RPCs are `security definer` and `set search_path = ''`. Each one:
 | `reply_to_info_request(request_id, reply)` | request owner | Moves `needs_info` back to `pending`. |
 | `withdraw_access_request(request_id)` | request owner | |
 | `decide_access_request(request_id, decision, reason?, link_profile_id?)` | `requests.decide` | `approve` creates the profile, private row and active membership (or links `link_profile_id`, kept for the import), sets `last_confirmed_at`, and queues `access_approved`. `needs_info` and `reject` queue their emails. One transaction, audited, refuses already-decided requests. |
+| `approve_access_requests(request_ids[])` | `requests.bulkapprove` | ONB-08. Up to 200 ids. Approves each clean pending request through `decide_access_request` (profile, membership, email and audit row each), in its own savepoint. Skips, with a reason per id: `not_allowed` (unknown or another school), `not_pending`, `has_profile`, `possible_match` (anything `access_request_matches` suggests, student ID included) and `failed`. Writes one `access_request.bulk_approve` audit row per batch with the counts. A retry skips what was approved, so nobody gets a second email. |
 | `save_my_profile(inst, payload jsonb)` | profile owner | Profile, private fields, channels, education, experience and offers in one transaction, validated server-side. Records a confirmation (`alumnus_save`), resets `confirmation_due_at` and supersedes any open confirmation request (DEC-06). |
 | `set_my_visibility(inst, visibility)` | profile owner | Publishing needs a completed onboarding and an active consent. |
 | `confirm_still_accurate(token)` / `confirm_still_accurate_in_app(inst)` | token holder / owner | POST only (scanner-safe, E6). |

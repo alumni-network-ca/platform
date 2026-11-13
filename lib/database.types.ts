@@ -1242,6 +1242,20 @@ export type Database = {
     };
     Functions: {
       accept_staff_invitation: { Args: { p_token: string }; Returns: string };
+      access_request_match_rows: {
+        Args: { p_requests: string[] };
+        Returns: {
+          claimed: boolean;
+          first_name: string;
+          grad_year: number;
+          id_match: boolean;
+          last_name: string;
+          profile_id: string;
+          request_id: string;
+          school_student_id: string;
+          score: number;
+        }[];
+      };
       access_request_matches: {
         Args: { p_requests: string[] };
         Returns: {
@@ -1284,6 +1298,15 @@ export type Database = {
         }[];
       };
       admin_update_profile: { Args: { p_patch: Json; p_profile: string }; Returns: undefined };
+      approve_access_requests: {
+        Args: { p_requests: string[] };
+        Returns: {
+          outcome: string;
+          profile_id: string;
+          reason: string;
+          request_id: string;
+        }[];
+      };
       approve_email_template: {
         Args: {
           p_inst: string;

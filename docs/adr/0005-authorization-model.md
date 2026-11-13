@@ -10,6 +10,7 @@
 |---|:-:|:-:|:-:|
 | View roster, records, approval queue | ✓ | ✓ | — |
 | Approve / reject / needs-info on sign-ups | ✓ | ✓ | — |
+| Approve many sign-ups at once (skips any with a possible match) | ✓ | — | — |
 | View audit log, freshness reports | ✓ | ✓ | — |
 | Edit alumni records, suspend / reactivate / archive | ✓ | — | — |
 | Export CSV / XLSX | ✓ | — | — |
