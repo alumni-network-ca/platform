@@ -8,7 +8,6 @@ on:
     paths-ignore:
       - "**/*.md"
       - "docs/**"
-      - "documentation/**"
       - ".github/project/**"
   workflow_dispatch:
 
@@ -76,8 +75,8 @@ jobs:
       - name: Generated types match the migrations
         run: |
           npm run db:types
-          git diff --exit-code -- lib/database.types.ts \
-            || { echo "::error::lib/database.types.ts is out of date. Run 'npm run db:types' and commit it."; exit 1; }
+          git diff --exit-code -- src/lib/database.types.ts \
+            || { echo "::error::src/lib/database.types.ts is out of date. Run 'npm run db:types' and commit it."; exit 1; }
 
   e2e:
     name: Build and end-to-end

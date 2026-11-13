@@ -10,7 +10,29 @@ A private, verified professional network for school alumni. Each school (a *tena
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Branches, PRs, Definition of Done, releases, commands |
 | [docs/adr/](docs/adr/) · [docs/DECISIONS.md](docs/DECISIONS.md) | Architecture decisions and the decision register |
 | [docs/PRODUCT_ANALYSIS.md](docs/PRODUCT_ANALYSIS.md) | Audit of the initial MVP (findings F1–F27) and the target data model |
-| [documentation/diagrams/](documentation/diagrams/) | User flows and ERDs |
+| [docs/diagrams/](docs/diagrams/) | User flows and ERDs |
+
+## Project layout
+
+```
+src/
+  app/         routes (App Router): the root site in app/site, the console in app/console, the school sites elsewhere
+  components/  UI; shadcn parts in components/ui
+  config/      env vars (config/env) and shared settings (ADR 0017)
+  lib/         logic and data access: Supabase clients, tenancy, auth rules, email, i18n
+  types/       shared types
+  proxy.ts     runs before every request: resolves the site from the host
+  tests/
+    unit/      Vitest, at the same path as the code they test (unit/lib/auth/home.test.ts tests lib/auth/home.ts)
+    e2e/       Playwright, with fixtures/
+    factories/ test builders
+    setup.ts
+scripts/       tooling run with Node (i18n check, seeds, demo, backlog)
+supabase/      migrations, seed and pgTAP tests
+public/  docs/  .github/
+```
+
+The root holds only configuration. `@/` imports resolve to `src/`.
 
 ## Getting started
 
@@ -82,7 +104,7 @@ supabase stop                    # stop the local stack
 
 ## Current state
 
-The database runs the **v2 schema** ([data model](docs/architecture/data-model.md)): three migrations in `supabase/migrations/` (schema, access rules, RPCs), with the legacy MVP migrations kept in `supabase/legacy/` for history. The app is the V1–V4 MVP being rebuilt onto it, issue by issue. The directory already reads v2 through clients typed from the generated `lib/database.types.ts`. Sign-in is by emailed code; new people sign up at `/join` and wait on their account page until the school approves them. Onboarding, the profile editor and the admin pages still use the old tables through an untyped `createLegacyClient()`, and fail locally until their M2 issues rewire them (each file names its issue).
+The database runs the **v2 schema** ([data model](docs/architecture/data-model.md)): three migrations in `supabase/migrations/` (schema, access rules, RPCs), with the legacy MVP migrations kept in `supabase/legacy/` for history. The app is the V1–V4 MVP being rebuilt onto it, issue by issue. The directory already reads v2 through clients typed from the generated `src/lib/database.types.ts`. Sign-in is by emailed code; new people sign up at `/join` and wait on their account page until the school approves them. Onboarding, the profile editor and the admin pages still use the old tables through an untyped `createLegacyClient()`, and fail locally until their M2 issues rewire them (each file names its issue).
 
 Test accounts on the local stack (sign in with a code from Mailpit). After sign-in each one lands on its own home page:
 
@@ -108,4 +130,4 @@ The seed also holds 200 published Herzliah alumni and 20 at the second school (f
 
 ## Security
 
-Never commit secrets: `.env*` files are ignored except `.env.example` (no values) and `.env.development` (the cloud dev database's URL and publishable key, which every browser receives anyway). The secret scan allows Supabase publishable keys only ([.gitleaks.toml](.gitleaks.toml)). The Supabase **secret key** must never be exposed to the browser. The app reads environment variables only through `config/env/` (public, server, secrets), and shared settings such as cookie names live in `config/` ([ADR 0017](docs/adr/0017-configuration.md)); lint rejects `process.env` anywhere else in app code. Report vulnerabilities privately (see `.github/ISSUE_TEMPLATE/config.yml`).
+Never commit secrets: `.env*` files are ignored except `.env.example` (no values) and `.env.development` (the cloud dev database's URL and publishable key, which every browser receives anyway). The secret scan allows Supabase publishable keys only ([.gitleaks.toml](.gitleaks.toml)). The Supabase **secret key** must never be exposed to the browser. The app reads environment variables only through `src/config/env/` (public, server, secrets), and shared settings such as cookie names live in `src/config/` ([ADR 0017](docs/adr/0017-configuration.md)); lint rejects `process.env` anywhere else in app code. Report vulnerabilities privately (see `.github/ISSUE_TEMPLATE/config.yml`).

@@ -7,7 +7,7 @@
 // Local stack only. Target (DIR-01): p95 under 300 ms at 10,000 profiles per school.
 import { parseArgs } from "node:util";
 import { createClient } from "@supabase/supabase-js";
-import { accounts, LOCAL_PASSWORD } from "../e2e/fixtures/accounts.ts";
+import { accounts, LOCAL_PASSWORD } from "../src/tests/e2e/fixtures/accounts.ts";
 import { isLocal, localStack } from "./lib/supabase-admin.ts";
 import type { Database, Json } from "@/lib/database";
 

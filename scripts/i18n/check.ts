@@ -30,7 +30,9 @@ async function files(directory: string): Promise<string[]> {
   ).flat();
 }
 
-const names = (await Promise.all(["app", "components", "lib"].map(files))).flat().sort();
+const names = (await Promise.all(["src/app", "src/components", "src/lib"].map(files)))
+  .flat()
+  .sort();
 const program = ts.createProgram(names, {
   jsx: ts.JsxEmit.Preserve,
   target: ts.ScriptTarget.ESNext,

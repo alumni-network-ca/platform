@@ -11,7 +11,7 @@ const CI = !!process.env.CI;
 const stack = process.env.E2E_BASE_URL ? undefined : localStack();
 
 export default defineConfig({
-  testDir: "./e2e",
+  testDir: "./src/tests/e2e",
   fullyParallel: true,
   forbidOnly: CI,
   retries: CI ? 2 : 0,

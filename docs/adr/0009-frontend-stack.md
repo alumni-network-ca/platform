@@ -11,7 +11,7 @@
 ### Styling and components
 
 - **Tailwind CSS v4 + shadcn/ui** (Radix primitives) give accessible dialogs, menus, tables and forms with keyboard support.
-- The approved Herzliah design (`DESIGN_REFERENCE_PREVIOUS_PREVIEW.html`) becomes the default theme.
+- The approved Herzliah design (`docs/design/legacy/DESIGN_REFERENCE_PREVIOUS_PREVIEW.html`) becomes the default theme.
 - Per-institution colours and logo are injected as CSS variables from `institutions.branding`.
 
 ### Language

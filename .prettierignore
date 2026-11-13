@@ -9,7 +9,7 @@ next-env.d.ts
 # Authored docs and generated diagrams keep their own formatting.
 *.md
 *.html
-documentation/
+docs/diagrams/
 .github/project/
 
 # SQL is reviewed as written.
