@@ -36,6 +36,14 @@ The cloud canvas and these copies were changed together (ONB-09). The ID is opti
 | `AdmQueue` | An ID match reads "Dana Benhamou, 2014 · same student ID" in the possible-match column. |
 | `AdmRoster` | Search placeholder: "Name, name at school, email or student ID". |
 
+## Bulk approval · November 12, 2026
+
+Only these copies were changed (ONB-08); the cloud canvas still shows the queue without checkboxes.
+
+| Design | Change |
+|---|---|
+| `AdmQueue` | On the Pending tab, school admins get a checkbox per row and "Select all on this page". A bar shows "N selected · Clear selection · Approve N"; with nothing ticked it explains what gets skipped. "Approve N requests?" confirms, then a summary lists who was approved and who was skipped and why, each skip with a Review link. Rows with a possible match or an existing profile can be ticked but are always skipped. Reviewers see the queue without checkboxes. |
+
 ## Staff invitation flow · November 2, 2026
 
 Drawn on the cloud canvas and copied here. The cloud canvas now also holds the November 1 revision above, so the two copies match again. Spec: [`../staff-invite.md`](../staff-invite.md).
@@ -98,7 +106,7 @@ Signed-out pages use the `guest` role: FR, Sign in and the proposed Join now act
 | Screen | Route | Backlog | Database |
 |---|---|---|---|
 | **Built** · A1.1 Dashboard (`AdmDashboard`) | `/admin` | ADM-01, ADM-02 | `admin_dashboard`; period metrics and recent audit activity. Overdue confirmations need FRS-04, bounces EML-05 |
-| **Built** · A1.2 Approval queue (`AdmQueue`) | `/admin/approvals` | ADM-05 | `access_requests`, `access_request_matches`; matches distinguish claimed and unclaimed records |
+| **Built** · A1.2 Approval queue (`AdmQueue`) | `/admin/approvals` | ADM-05, ONB-08 | `access_requests`, `access_request_matches`; matches distinguish claimed and unclaimed records. School admins approve several at once with `approve_access_requests` |
 | **Built** · A1.3 Review a request (`AdmReview`) | `/admin/approvals/[id]` | ADM-05 | `decide_access_request` (approve and link or create, needs info, reject) |
 | **Built** · A2.1 Alumni roster (`AdmRoster`) | `/admin/alumni` | ADM-03 | `admin_roster`; the freshness filter needs FRS-04, the email column EML-05 |
 | **Built** · A2.2 Record and history (`AdmRecord`) | `/admin/alumni/[id]` | ADM-03 | `alumni_private`, `admin_profile_email`, `audit_people`, `audit_log`, `access_requests` |

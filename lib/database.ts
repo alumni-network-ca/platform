@@ -47,6 +47,10 @@ type Overrides = {
   decide_access_request: { Args: Fns["decide_access_request"]["Args"]; Returns: string | null };
   school_staff: { Args: Fns["school_staff"]["Args"]; Returns: SchoolStaff[] };
   admin_roster: { Args: Fns["admin_roster"]["Args"]; Returns: AdminRosterRow[] };
+  approve_access_requests: {
+    Args: Fns["approve_access_requests"]["Args"];
+    Returns: BulkApprovalRow[];
+  };
   public_school: { Args: Fns["public_school"]["Args"]; Returns: PublicSchool | null };
   school_config: { Args: Fns["school_config"]["Args"]; Returns: SchoolConfig | null };
   search_directory: { Args: Fns["search_directory"]["Args"]; Returns: DirectoryRow[] };
@@ -59,6 +63,12 @@ export type AdminDashboard = {
   published: number;
   oldest_pending_at: string | null;
 };
+/** Why approve_access_requests skipped a request (ONB-08). */
+export type BulkSkipReason =
+  "not_allowed" | "not_pending" | "has_profile" | "possible_match" | "failed";
+export type BulkApprovalRow =
+  | { request_id: string; outcome: "approved"; reason: null; profile_id: string }
+  | { request_id: string; outcome: "skipped"; reason: BulkSkipReason; profile_id: null };
 export type SchoolStaff = Omit<Fns["school_staff"]["Returns"][number], "name" | "email"> & {
   name: string | null;
   email: string | null;

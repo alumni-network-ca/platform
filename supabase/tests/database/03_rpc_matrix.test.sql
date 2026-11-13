@@ -84,7 +84,9 @@ select pg_temp.refused('11111111-1111-4111-8111-000000000004'::uuid, sql, descri
   ($$ select public.approve_email_template('aaaaaaaa-0000-4000-8000-000000000001', 'welcome', 'en') $$,
    'a reviewer cannot approve email texts'),
   ($$ select public.update_school_settings('aaaaaaaa-0000-4000-8000-000000000001', '{"default_locale": "fr"}') $$,
-   'a reviewer cannot change school settings')
+   'a reviewer cannot change school settings'),
+  ($$ select * from public.approve_access_requests(array['33333333-3333-4333-8333-000000000001']::uuid[]) $$,
+   'a reviewer cannot approve in bulk (ONB-08)')
 ) as t(sql, description);
 
 -- Alumni cannot use staff or platform RPCs ------------------------------------------------------------
@@ -118,7 +120,9 @@ select pg_temp.refused('11111111-1111-4111-8111-000000000002'::uuid, sql, descri
   ($$ select public.reply_to_info_request('33333333-3333-4333-8333-000000000003', 'Not my request') $$,
    'an alumnus cannot answer someone else''s request'),
   ($$ select public.withdraw_access_request('33333333-3333-4333-8333-000000000001') $$,
-   'an alumnus cannot withdraw someone else''s request')
+   'an alumnus cannot withdraw someone else''s request'),
+  ($$ select * from public.approve_access_requests(array['33333333-3333-4333-8333-000000000001']::uuid[]) $$,
+   'an alumnus cannot approve in bulk')
 ) as t(sql, description);
 
 -- Self-service RPCs only act at the caller's own school ------------------------------------------------
@@ -155,6 +159,10 @@ select pg_temp.refused(who::uuid, sql, description) from (values
    'a suspended alumnus cannot confirm their profile'),
   ('11111111-1111-4111-8111-000000000003', $$ select public.decide_access_request('33333333-3333-4333-8333-000000000001', 'approve') $$,
    'an applicant cannot approve their own request'),
+  ('11111111-1111-4111-8111-000000000003', $$ select * from public.approve_access_requests(array['33333333-3333-4333-8333-000000000001']::uuid[]) $$,
+   'an applicant cannot bulk-approve their own request'),
+  ('11111111-1111-4111-8111-000000000011', $$ select * from public.approve_access_requests(array['33333333-3333-4333-8333-000000000001']::uuid[]) $$,
+   'an outsider cannot approve in bulk'),
   ('11111111-1111-4111-8111-000000000009', $$ select public.decide_access_request('33333333-3333-4333-8333-000000000002', 'approve') $$,
    'a T applicant cannot approve their own request'),
   ('11111111-1111-4111-8111-000000000012', $$ select public.withdraw_access_request('33333333-3333-4333-8333-000000000002') $$,
@@ -196,6 +204,8 @@ reset role;
 select pg_temp.refused('11111111-1111-4111-8111-000000000006'::uuid, sql, description) from (values
   ($$ select public.decide_access_request('33333333-3333-4333-8333-000000000001', 'approve') $$,
    'a grant does not allow deciding requests'),
+  ($$ select * from public.approve_access_requests(array['33333333-3333-4333-8333-000000000001']::uuid[]) $$,
+   'a grant does not allow approving in bulk'),
   ($$ select public.set_profile_status('00000000-0000-4000-8000-000000000002', 'suspended', 'Support') $$,
    'a grant does not allow suspending records'),
   ($$ select public.invite_staff('aaaaaaaa-0000-4000-8000-000000000001', 'x@evil.test', 'school_admin') $$,

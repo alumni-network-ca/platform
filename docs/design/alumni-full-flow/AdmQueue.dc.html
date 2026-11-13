@@ -13,10 +13,10 @@
 body{margin:0}
 a{color:#7b1e3d}a:hover{color:#611630}
 button{font:inherit}
-button:focus-visible{outline:2px solid #7b1e3d;outline-offset:2px}
+button:focus-visible,input:focus-visible{outline:2px solid #7b1e3d;outline-offset:2px}
 </style>
 </helmet>
-<div style="min-height: 960px; background: #f7f7f6; font-family: Inter, Arial, sans-serif; color: #0b2159; display: flex; flex-direction: column">
+<div style="min-height: 960px; background: #f7f7f6; font-family: Inter, Arial, sans-serif; color: #0b2159; display: flex; flex-direction: column; position: relative">
   <dc-import name="NavBar" role="school_admin" active="admin" open="{{ false }}" hint-size="100%,66px"></dc-import>
   <div style="flex: 1; display: flex; flex-wrap: wrap">
     <nav aria-label="Admin" style="flex: 1 1 200px; max-width: 232px; background: #ffffff; border-right: 1px solid #e2e5ee; padding: 20px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px">
@@ -34,10 +34,36 @@ button:focus-visible{outline:2px solid #7b1e3d;outline-offset:2px}
           <button type="button" role="tab" aria-selected="{{t.selected}}" onClick="{{t.pick}}" style="padding: 12px 16px; border: 0; border-bottom: 3px solid {{t.line}}; background: transparent; color: #0b2159; font-size: 14px; font-weight: {{t.weight}}; cursor: pointer">{{t.label}} <span style="color: #4a5575; font-weight: 600">{{t.count}}</span></button>
         </sc-for>
       </div>
+      <sc-if value="{{hasResult}}" hint-placeholder-val="{{false}}">
+        <div role="status" style="display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border-radius: 10px; background: #e3f3e8; color: #1b5e33; font-size: 14px">
+          <strong style="font-size: 15px">{{resultTitle}}</strong>
+          <sc-if value="{{hasApproved}}" hint-placeholder-val="{{true}}"><span><strong>Approved:</strong> {{approvedNames}}</span></sc-if>
+          <sc-if value="{{hasSkipped}}" hint-placeholder-val="{{true}}">
+            <strong style="color: #7a4b00">Skipped:</strong>
+            <ul style="margin: 0; padding-left: 20px; color: #7a4b00; display: flex; flex-direction: column; gap: 3px">
+              <sc-for list="{{skipped}}" as="s" hint-placeholder-count="1">
+                <li>{{s.name}}: {{s.reason}} · <a href="AdmReview.dc.html" style="font-weight: 700">Review</a></li>
+              </sc-for>
+            </ul>
+          </sc-if>
+        </div>
+      </sc-if>
+      <sc-if value="{{showBulk}}" hint-placeholder-val="{{true}}">
+        <div style="min-height: 46px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; padding: {{barPad}}; border-radius: 10px; background: {{barBg}}; font-size: 14px">
+          <sc-if value="{{hasSelection}}" hint-placeholder-val="{{false}}">
+            <span role="status"><strong>{{selectedLabel}}</strong> · <button type="button" onClick="{{clear}}" style="padding: 0; border: 0; background: transparent; color: #7b1e3d; font-weight: 700; text-decoration: underline; cursor: pointer">Clear selection</button></span>
+            <button type="button" onClick="{{ask}}" style="padding: 10px 16px; border-radius: 7px; border: 0; background: #7b1e3d; color: #ffffff; font-weight: 700; font-size: 14px; cursor: pointer">{{approveLabel}}</button>
+          </sc-if>
+          <sc-if value="{{noSelection}}" hint-placeholder-val="{{true}}">
+            <span style="color: #4a5575">Requests with a possible match, or from someone who already has a profile, are skipped. Review those one by one.</span>
+          </sc-if>
+        </div>
+      </sc-if>
       <div style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; overflow-x: auto">
         <table style="width: 100%; min-width: 760px; border-collapse: collapse; font-size: 14px">
           <thead>
             <tr style="text-align: left; color: #3a4a70; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em">
+              <sc-if value="{{showBulk}}" hint-placeholder-val="{{true}}"><th style="padding: 14px 0 14px 18px; width: 18px"><input type="checkbox" aria-label="Select all on this page" checked="{{allChecked}}" onChange="{{toggleAll}}" style="accent-color: #7b1e3d; width: 18px; height: 18px; margin: 0; cursor: pointer"></th></sc-if>
               <th style="padding: 14px 18px; font-weight: 700">Applicant</th>
               <th style="padding: 14px 18px; font-weight: 700">Class</th>
               <th style="padding: 14px 18px; font-weight: 700">Possible match</th>
@@ -47,7 +73,8 @@ button:focus-visible{outline:2px solid #7b1e3d;outline-offset:2px}
           </thead>
           <tbody>
             <sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
-              <tr style="border-top: 1px solid #eef0f4">
+              <tr style="border-top: 1px solid #eef0f4; background: {{r.rowBg}}">
+                <sc-if value="{{showBulk}}" hint-placeholder-val="{{true}}"><td style="padding: 14px 0 14px 18px"><input type="checkbox" aria-label="{{r.selectLabel}}" checked="{{r.checked}}" onChange="{{r.toggle}}" style="accent-color: #7b1e3d; width: 18px; height: 18px; margin: 0; cursor: pointer"></td></sc-if>
                 <td style="padding: 14px 18px"><span style="display: flex; flex-direction: column; gap: 2px"><strong>{{r.name}}</strong><span style="font-size: 13px; color: #4a5575">{{r.email}}</span></span></td>
                 <td style="padding: 14px 18px">{{r.year}}</td>
                 <td style="padding: 14px 18px"><span style="padding: 4px 10px; border-radius: 999px; background: {{r.matchBg}}; color: {{r.matchFg}}; font-size: 12px; font-weight: 700">{{r.match}}</span></td>
@@ -61,13 +88,26 @@ button:focus-visible{outline:2px solid #7b1e3d;outline-offset:2px}
       <p style="margin: 0; font-size: 13px; color: #4a5575">Matches are suggestions only — the applicant never sees them, and nothing is merged automatically.</p>
     </main>
   </div>
+  <sc-if value="{{confirming}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: 100; background: rgba(11,33,89,0.45); display: flex; justify-content: center; align-items: flex-start; padding: 160px 24px 24px">
+      <section role="alertdialog" aria-modal="true" aria-labelledby="bulk-title" aria-describedby="bulk-body" style="width: 100%; max-width: 460px; background: #ffffff; border-radius: 14px; box-shadow: 0 30px 70px -20px rgba(5,18,49,0.5); padding: 26px 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px">
+        <h2 id="bulk-title" style="margin: 0; font-size: 22px; font-weight: 800">{{confirmTitle}}</h2>
+        <p id="bulk-body" style="margin: 0; font-size: 14px; line-height: 1.55; color: #3a4a70">Each person gets a profile and their approval email. Any request with a possible match, or from someone who already has a profile, is skipped so you can review it.</p>
+        <div style="display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; margin-top: 10px">
+          <button type="button" onClick="{{cancel}}" style="padding: 10px 16px; border-radius: 7px; border: 1px solid #8a93ab; background: #ffffff; color: #0b2159; font-weight: 700; font-size: 14px; cursor: pointer">Cancel</button>
+          <button type="button" onClick="{{run}}" style="padding: 10px 16px; border-radius: 7px; border: 0; background: #7b1e3d; color: #ffffff; font-weight: 700; font-size: 14px; cursor: pointer">{{confirmLabel}}</button>
+        </div>
+      </section>
+    </div>
+  </sc-if>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":960}}'>
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { tab: 'pending' };
+    // ONB-08: school admins tick pending requests and approve them together. Reviewers see no checkboxes.
+    this.state = { tab: 'pending', sel: {}, done: {}, confirming: false, result: null };
   }
   renderVals() {
     var self = this;
@@ -77,36 +117,82 @@ class Component extends DCLogic {
       var on = it[0] === active;
       return { label: it[1], href: it[2], badge: it[3] || 0, hasBadge: !!it[3], weight: on ? '700' : '500', bg: on ? '#faeef3' : 'transparent' };
     });
-    var none = { matchBg: '#eef0f4', matchFg: '#3a4a70' };
-    var dup = { matchBg: '#fff4dc', matchFg: '#7a4b00' };
-    var hit = { matchBg: '#e3f3e8', matchFg: '#1b5e33' };
-    function row(name, email, year, match, kind, when, cta) { return Object.assign({ name: name, email: email, year: year, match: match, when: when, cta: cta }, kind); }
+    var none = { matchBg: '#eef0f4', matchFg: '#3a4a70', skip: null };
+    var dup = { matchBg: '#fff4dc', matchFg: '#7a4b00', skip: 'Already has a profile' };
+    var hit = { matchBg: '#e3f3e8', matchFg: '#1b5e33', skip: 'Possible match: review it on its own page' };
+    function row(id, name, email, year, match, kind, when, cta) { return Object.assign({ id: id, name: name, email: email, year: year, match: match, when: when, cta: cta }, kind); }
     var data = {
       pending: [
-        row('Dana Levy', 'dana.levy@gmail.com', '2014', 'Dana Benhamou, 2014 · same student ID', hit, '4 days', 'Review'),
-        row('Jacob Ohana', 'j.ohana@outlook.com', '2002', 'No record found', none, '3 days', 'Review'),
-        row('Sarah Elbaz', 'sarah.elbaz@gmail.com', '2017', 'Already a member?', dup, '2 days', 'Review'),
-        row('Ben Toledano', 'bentoledano@icloud.com', '1995', 'No record found', none, '1 day', 'Review'),
-        row('Ilana Peretz', 'ilana.p@gmail.com', '2021', 'Ilana Peretz, 2021', hit, '6 h', 'Review'),
-        row('Marc Dahan', 'mdahan@videotron.ca', '1988', 'No record found', none, '2 h', 'Review'),
-        row('Noa Friedman', 'noa.f@gmail.com', '2010', 'Noa Friedman, 2010', hit, '1 h', 'Review')
+        row('dl', 'Dana Levy', 'dana.levy@gmail.com', '2014', 'Dana Benhamou, 2014 · same student ID', hit, '4 days', 'Review'),
+        row('jo', 'Jacob Ohana', 'j.ohana@outlook.com', '2002', 'No record found', none, '3 days', 'Review'),
+        row('se', 'Sarah Elbaz', 'sarah.elbaz@gmail.com', '2017', 'Already a member?', dup, '2 days', 'Review'),
+        row('bt', 'Ben Toledano', 'bentoledano@icloud.com', '1995', 'No record found', none, '1 day', 'Review'),
+        row('ip', 'Ilana Peretz', 'ilana.p@gmail.com', '2021', 'Ilana Peretz, 2021', hit, '6 h', 'Review'),
+        row('md', 'Marc Dahan', 'mdahan@videotron.ca', '1988', 'No record found', none, '2 h', 'Review'),
+        row('nf', 'Noa Friedman', 'noa.f@gmail.com', '2010', 'Noa Friedman, 2010', hit, '1 h', 'Review')
       ],
       info: [
-        row('Leo Mizrahi', 'leo.mizrahi@gmail.com', '2019', 'No record found', none, 'Asked yesterday', 'Open'),
-        row('Esther Nadler', 'enadler@gmail.com', '1999', 'Two possible records', dup, 'Asked 6 days ago', 'Open')
+        row('lm', 'Leo Mizrahi', 'leo.mizrahi@gmail.com', '2019', 'No record found', none, 'Asked yesterday', 'Open'),
+        row('en', 'Esther Nadler', 'enadler@gmail.com', '1999', 'Two possible records', dup, 'Asked 6 days ago', 'Open')
       ],
       decided: [
-        row('Maya Azoulay', 'maya.azoulay@[email]', '2009', 'Approved', hit, 'Sep 14', 'View'),
-        row('Paul Martin', 'p.martin@gmail.com', '—', 'Rejected — not a graduate', none, 'Sep 12', 'View')
+        row('ma', 'Maya Azoulay', 'maya.azoulay@[email]', '2009', 'Approved', hit, 'Sep 14', 'View'),
+        row('pm', 'Paul Martin', 'p.martin@gmail.com', '—', 'Rejected — not a graduate', none, 'Sep 12', 'View')
       ]
     };
-    var cur = this.state.tab;
+    var st = this.state;
+    var pending = data.pending.filter(function (r) { return !st.done[r.id]; });
+    var lists = { pending: pending, info: data.info, decided: data.decided };
+    var cur = st.tab;
+    var showBulk = cur === 'pending';
+    var picked = pending.filter(function (r) { return st.sel[r.id]; });
+    var n = picked.length;
     var tabs = [['pending', 'Pending'], ['info', 'Needs info'], ['decided', 'Decided']].map(function (t) {
       var on = t[0] === cur;
-      return { label: t[1], count: data[t[0]].length, selected: on ? 'true' : 'false', line: on ? '#7b1e3d' : 'transparent', weight: on ? '700' : '500', pick: function () { self.setState({ tab: t[0] }); } };
+      var count = lists[t[0]].length + (t[0] === 'decided' ? Object.keys(st.done).length : 0);
+      return { label: t[1], count: count, selected: on ? 'true' : 'false', line: on ? '#7b1e3d' : 'transparent', weight: on ? '700' : '500', pick: function () { self.setState({ tab: t[0], sel: {}, confirming: false }); } };
+    });
+    var rows = lists[cur].map(function (r) {
+      var on = !!st.sel[r.id];
+      return Object.assign({}, r, {
+        checked: on, rowBg: showBulk && on ? '#fdf6f9' : '#ffffff', selectLabel: 'Select ' + r.name,
+        toggle: function () { var s = Object.assign({}, self.state.sel); s[r.id] = !s[r.id]; self.setState({ sel: s }); }
+      });
     });
     var whenHeader = cur === 'pending' ? 'Waiting' : (cur === 'info' ? 'Status' : 'Decided');
-    return { nav: nav, tabs: tabs, rows: data[cur], whenHeader: whenHeader };
+    var res = st.result;
+    return {
+      nav: nav, tabs: tabs, rows: rows, whenHeader: whenHeader, showBulk: showBulk,
+      allChecked: pending.length > 0 && n === pending.length,
+      toggleAll: function () {
+        var all = n !== pending.length, s = {};
+        pending.forEach(function (r) { s[r.id] = all; });
+        self.setState({ sel: s });
+      },
+      hasSelection: n > 0, noSelection: n === 0,
+      barBg: n ? '#faeef3' : 'transparent', barPad: n ? '8px 12px' : '0 2px',
+      selectedLabel: n + ' selected', approveLabel: 'Approve ' + n,
+      clear: function () { self.setState({ sel: {} }); },
+      ask: function () { self.setState({ confirming: true }); },
+      confirming: st.confirming,
+      confirmTitle: n === 1 ? 'Approve 1 request?' : 'Approve ' + n + ' requests?',
+      confirmLabel: n === 1 ? 'Approve 1 request' : 'Approve ' + n + ' requests',
+      cancel: function () { self.setState({ confirming: false }); },
+      run: function () {
+        var done = Object.assign({}, self.state.done), approved = [], skipped = [];
+        picked.forEach(function (r) {
+          if (r.skip) skipped.push({ name: r.name, reason: r.skip });
+          else { approved.push(r.name); done[r.id] = true; }
+        });
+        self.setState({ done: done, sel: {}, confirming: false, result: { approved: approved, skipped: skipped } });
+      },
+      hasResult: !!res,
+      resultTitle: res ? res.approved.length + ' approved, ' + res.skipped.length + ' skipped' : '',
+      hasApproved: !!res && res.approved.length > 0,
+      approvedNames: res ? res.approved.join(', ') : '',
+      hasSkipped: !!res && res.skipped.length > 0,
+      skipped: res ? res.skipped : []
+    };
   }
 }
 </script>

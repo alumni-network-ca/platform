@@ -414,3 +414,100 @@ test("French staff copy renders on the server and in forms", async ({ page, cont
   await expect(page.getByLabel("Objet", { exact: true })).toBeVisible();
   expect(await blockingViolations(page)).toEqual([]);
 });
+test("a school admin approves several requests at once; a possible match is skipped", async ({
+  page,
+  context,
+  baseURL,
+}) => {
+  const owner = adminClient(stack);
+  // Unique names, so a parallel run (desktop and mobile) never ticks or matches the other's rows.
+  const tag = crypto.randomUUID().slice(0, 8);
+  const people = [
+    { first: "Quorra" + tag, last: "Velmont", grad_year: 1961, school_student_id: null },
+    { first: "Ysolde" + tag, last: "Brackwater", grad_year: 1962, school_student_id: null },
+    // Close enough to the seeded unclaimed record "Imported Unclaimed, 2010" to be a possible match, so never
+    // approved in bulk. A name match, not its student ID, so the student-ID test's badge stays unique.
+    { first: "Imported", last: "Unclaimed-" + tag, grad_year: 2010, school_student_id: null },
+  ];
+  const users: string[] = [];
+  const rows: { id: string; name: string }[] = [];
+  try {
+    for (const p of people) {
+      const email = "bulk-e2e-" + crypto.randomUUID() + "@example.test";
+      const created = await owner.auth.admin.createUser({ email, email_confirm: true });
+      if (created.error) throw created.error;
+      users.push(created.data.user.id);
+      const fixture = await owner
+        .from("access_requests")
+        .insert({
+          institution_id: school,
+          user_id: created.data.user.id,
+          email,
+          first_name: p.first,
+          last_name: p.last,
+          grad_year: p.grad_year,
+          school_student_id: p.school_student_id,
+        })
+        .select("id")
+        .single();
+      if (fixture.error) throw fixture.error;
+      rows.push({ id: fixture.data.id, name: p.first + " " + p.last });
+    }
+    const [one, two, matched] = rows;
+    if (!one || !two || !matched) throw new Error("fixtures missing");
+
+    // Reviewers decide one by one: no checkboxes.
+    await signInAs(context, baseURL!, accounts.reviewer);
+    await page.goto("/admin/approvals?tab=pending");
+    await expect(page.getByText(one.name)).toBeVisible();
+    await expect(page.getByRole("checkbox")).toHaveCount(0);
+
+    await signInAs(context, baseURL!, accounts.admin);
+    await page.goto("/admin/approvals?tab=pending");
+    for (const row of rows)
+      await page.getByRole("checkbox", { name: "Select " + row.name, exact: true }).check();
+    await expect(page.getByText("3 selected")).toBeVisible();
+    expect(await blockingViolations(page)).toEqual([]);
+    await page.getByRole("button", { name: "Approve 3", exact: true }).click();
+    const dialog = page.getByRole("alertdialog", { name: "Approve 3 requests?" });
+    await dialog.getByRole("button", { name: "Approve 3 requests", exact: true }).click();
+
+    const summary = page.getByRole("status").filter({ hasText: "2 approved, 1 skipped" });
+    await expect(summary).toBeVisible();
+    await expect(summary).toContainText(
+      matched.name + ": possible match, review it on its own page",
+    );
+    await expect(
+      page.getByRole("checkbox", { name: "Select " + one.name, exact: true }),
+    ).toHaveCount(0);
+    await expect(
+      page.getByRole("checkbox", { name: "Select " + matched.name, exact: true }),
+    ).not.toBeChecked();
+
+    const decided = await owner
+      .from("access_requests")
+      .select("id,status")
+      .in(
+        "id",
+        rows.map((r) => r.id),
+      );
+    expect(Object.fromEntries((decided.data ?? []).map((r) => [r.id, r.status]))).toEqual({
+      [one.id]: "approved",
+      [two.id]: "approved",
+      [matched.id]: "pending",
+    });
+    // App mail goes out through Resend, not Mailpit: check that the outbox holds exactly one email each.
+    const outbox = await owner
+      .from("email_outbox")
+      .select("subject_id")
+      .eq("template_key", "access_approved")
+      .in(
+        "subject_id",
+        rows.map((r) => r.id),
+      );
+    expect((outbox.data ?? []).map((r) => r.subject_id).sort()).toEqual([one.id, two.id].sort());
+  } finally {
+    await owner.from("alumni_profiles").delete().in("user_id", users);
+    for (const uid of users) await owner.auth.admin.deleteUser(uid);
+  }
+});

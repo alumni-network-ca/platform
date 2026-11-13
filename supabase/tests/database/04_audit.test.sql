@@ -55,6 +55,18 @@ select is(
                   '11111111-1111-4111-8111-000000000001'),
   array['access_request.reject'], 'rejecting writes one audit row'
 );
+-- ONB-08: a fresh applicant, so the batch has one clean pending request.
+insert into auth.users (id, aud, role, email, email_confirmed_at)
+values ('99999999-9999-4999-8999-000000000101', 'authenticated', 'authenticated', 'bulk-audit@example.test', now());
+insert into public.access_requests (id, institution_id, user_id, email, first_name, last_name, grad_year)
+values ('33333333-3333-4333-8333-000000000101', 'aaaaaaaa-0000-4000-8000-000000000001',
+        '99999999-9999-4999-8999-000000000101', 'bulk-audit@example.test', 'Quillon', 'Zarvesty', 1956);
+select is(
+  pg_temp.audited($$ select * from public.approve_access_requests(array['33333333-3333-4333-8333-000000000101']::uuid[]) $$,
+                  '11111111-1111-4111-8111-000000000001'),
+  array['access_request.approve', 'access_request.bulk_approve'],
+  'bulk approval audits each approval, then the batch'
+);
 select is(
   pg_temp.audited($$ select public.decide_access_request('33333333-3333-4333-8333-000000000002', 'needs_info', 'Quelle classe ?') $$,
                   '11111111-1111-4111-8111-000000000007'),
@@ -269,7 +281,7 @@ select set_eq(
        and (has_function_privilege('authenticated', p.oid, 'execute') or has_function_privilege('anon', p.oid, 'execute')) $$,
   array[
     -- audited, tested above
-    'request_access', 'withdraw_access_request', 'reply_to_info_request', 'decide_access_request',
+    'request_access', 'withdraw_access_request', 'reply_to_info_request', 'decide_access_request', 'approve_access_requests',
     'save_my_profile', 'record_consent', 'confirm_still_accurate_in_app', 'export_my_data', 'set_my_visibility',
     'withdraw_consent', 'delete_my_profile', 'confirm_still_accurate',
     'admin_update_profile', 'set_profile_status', 'invite_staff', 'accept_staff_invitation', 'change_staff_role',
