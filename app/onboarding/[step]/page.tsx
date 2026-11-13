@@ -154,7 +154,7 @@ export default async function OnboardingStepPage({
         ),
       );
     return (
-      <main data-ui className={frame.form}>
+      <main className={frame.form}>
         {rail}
         <ProfileForm className="contents" action={finish} t={t}>
           <PublishChoices
@@ -179,7 +179,7 @@ export default async function OnboardingStepPage({
   }
 
   return (
-    <main data-ui className={frame.form}>
+    <main className={frame.form}>
       {rail}
       <ProfileForm
         className="contents"

@@ -125,7 +125,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
     parts.filter((part) => part !== null && part !== undefined && part !== "").join(separator);
 
   return (
-    <main data-ui className={frame.split}>
+    <main className={frame.split}>
       <div className="basis-full">
         <Link className={cn(textLink, "text-base")} href="/directory">
           <BackArrow />

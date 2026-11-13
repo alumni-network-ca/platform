@@ -156,7 +156,6 @@ export function RowMenu({
       <button
         ref={button}
         type="button"
-        data-ui
         className="inline-flex size-9 cursor-pointer items-center justify-center rounded-md border border-transparent bg-transparent p-0 text-foreground outline-none hover:border-border hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-foreground aria-disabled:cursor-progress aria-disabled:opacity-60 aria-expanded:border-border aria-expanded:bg-accent"
         aria-haspopup="menu"
         aria-expanded={open}
@@ -185,7 +184,6 @@ export function RowMenu({
             id={`${id}menu`}
             role="menu"
             aria-label={label}
-            data-ui
             className={cn("absolute z-50", menuPanel)}
             style={{ top: place.top, left: place.left, width: MENU_WIDTH }}
           >

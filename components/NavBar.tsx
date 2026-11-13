@@ -67,7 +67,6 @@ export function NavBar({
 
   return (
     <header
-      data-ui
       className={cn(
         "sticky top-0 z-[100] flex min-h-[66px] flex-wrap items-center justify-between gap-4 px-8 py-3 text-white shadow-[0_8px_24px_rgba(5,18,49,0.12)] max-[720px]:px-4",
         model.theme === "platform" ? "bg-platform" : "bg-brand",

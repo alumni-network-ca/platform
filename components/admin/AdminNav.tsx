@@ -32,7 +32,6 @@ export function AdminNav({
   return (
     <nav
       ref={strip}
-      data-ui
       className="flex w-[232px] shrink-0 grow-0 basis-[232px] flex-col gap-0.5 border-r border-border bg-card px-3 py-5 max-[800px]:w-full max-[800px]:basis-full max-[800px]:flex-row max-[800px]:gap-1 max-[800px]:overflow-x-auto max-[800px]:border-r-0 max-[800px]:border-b max-[800px]:px-4 max-[800px]:py-2"
       aria-label={label}
     >

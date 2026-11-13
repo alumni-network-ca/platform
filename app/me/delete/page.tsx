@@ -34,7 +34,7 @@ export default async function DeletePage() {
   const recent = signedInRecently(me.user.last_sign_in_at, new Date());
 
   return (
-    <main data-ui className={cn(frame.form, frame.narrow)}>
+    <main className={cn(frame.form, frame.narrow)}>
       <section className={formCard}>
         <div className={formBody}>
           <FormHead

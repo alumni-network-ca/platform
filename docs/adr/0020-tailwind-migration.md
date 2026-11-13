@@ -1,6 +1,6 @@
 # 0020: Moving to Tailwind and shadcn/ui one screen at a time
 
-- **Status:** Accepted · **Date:** 2026-11-06 · **Related:** FND-02, [0009](0009-frontend-stack.md), [0019](0019-school-colours.md)
+- **Status:** Accepted, completed 2026-11-12 (#88) · **Date:** 2026-11-06 · **Related:** FND-02, [0009](0009-frontend-stack.md), [0019](0019-school-colours.md)
 
 ## Context
 
@@ -49,3 +49,10 @@ defaults.
   names; none is in use today.
 - shadcn components are copied into `components/ui` and edited to match the design. `npx shadcn add` output must be
   adapted to the token names and radius scale before it is committed.
+
+## Outcome (2026-11-12)
+
+Every screen now uses Tailwind and components/ui. `app/styles/legacy.css`, the `compat` layer and the `data-ui`
+marker are gone, and preflight applies everywhere. The base layer of `app/globals.css` keeps what the old stylesheet
+set on the page itself: the background, text colour, font and smooth scrolling. The shared pieces are listed in
+[docs/design/ui-foundation.md](../design/ui-foundation.md).

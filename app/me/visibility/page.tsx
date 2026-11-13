@@ -38,7 +38,7 @@ export default async function VisibilityPage() {
     );
 
   return (
-    <main data-ui className={cn(frame.form, frame.narrow)}>
+    <main className={cn(frame.form, frame.narrow)}>
       <ProfileForm className="contents" action={saveVisibility} t={t}>
         <PublishChoices
           t={t}

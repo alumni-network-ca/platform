@@ -5,10 +5,7 @@ export function ConsoleShell({ children }: { children: React.ReactNode }) {
     // Below the nav bar (66px), which the root layout renders.
     <div className="flex min-h-[calc(100vh-66px)] flex-col bg-background text-foreground">
       <div className="flex flex-1 flex-wrap">
-        <main
-          data-ui
-          className="flex min-w-0 flex-[999_1_640px] flex-col gap-5 px-9 py-7 max-[700px]:px-4 max-[700px]:py-5"
-        >
+        <main className="flex min-w-0 flex-[999_1_640px] flex-col gap-5 px-9 py-7 max-[700px]:px-4 max-[700px]:py-5">
           {children}
         </main>
       </div>

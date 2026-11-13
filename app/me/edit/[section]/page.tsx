@@ -34,7 +34,7 @@ export default async function EditSectionPage({
   const [title, intro] = titles[section];
 
   return (
-    <main data-ui className={cn(frame.form, frame.narrow)}>
+    <main className={cn(frame.form, frame.narrow)}>
       <ProfileForm
         className="contents"
         action={saveSection.bind(null, section)}

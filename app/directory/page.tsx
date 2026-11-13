@@ -91,7 +91,7 @@ export default async function DirectoryPage({
   const { shortName } = schoolBranding(school);
 
   return (
-    <main data-ui className={frame.stack}>
+    <main className={frame.stack}>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-1.5">
           <span className={eyebrow}>{t.eyebrow}</span>
