@@ -24,6 +24,7 @@ const actions = {
   "template.saved": "auditTemplateSaved",
   "template.approved": "auditTemplateApproved",
   "school.settings_updated": "auditSettings",
+  "school.features_updated": "auditFeatures",
   "platform.grant_opened": "auditGrantOpened",
   "platform.grant_revoked": "auditGrantRevoked",
   "consent.accepted": "auditConsent",

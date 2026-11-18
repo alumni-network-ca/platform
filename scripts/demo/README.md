@@ -60,3 +60,28 @@ Local stack only, password `LocalDev-Passw0rd` (from `supabase/seed.sql`), at ht
 `admin@maimonide.test`, `reviewer@maimonide.test`, `alumni@maimonide.test` (Yaël Ohayon), `pending@maimonide.test`.
 
 In a browser that has never chosen a language, click **EN** then **FR** once: some forms otherwise start in English.
+
+# Hebrew Academy demo school
+
+A second local demo school, `hebrew-academy`, with the **Yeshiva / Seminary** feature on (ADR 0021): 150 fictional
+graduates, about two in three with a yeshiva or seminary year in Israel. Open it at
+http://hebrew-academy.localhost:3000.
+
+1. With the local stack running, load it once (it stops if the school is already there):
+
+   ```bash
+   docker exec -i supabase_db_alumni-network psql -U postgres -d postgres < scripts/demo/hebrew-academy-demo.sql
+   ```
+
+2. Sign in with "Sign in with a password", password `LocalDev-Passw0rd`:
+   `admin@hebrew-academy.test`, `reviewer@hebrew-academy.test`, `alumni@hebrew-academy.test` (Daniel Weiss, class of
+   2010, a year at Yeshivat Har Etzion), `pending@hebrew-academy.test`, `pending2@…`, `needsinfo@…`.
+
+What to show:
+
+- **Profile:** Daniel's `/me` and any profile in the directory have a "Yeshiva / Seminary" section.
+- **Editing:** `/me/edit/career` has the Yeshiva / Seminary list under Previous roles.
+- **Directory:** search "Lindenbaum", or use the Yeshiva / Seminary filter. Rachel Goldberg (cardiologist, class of
+  2001, Midreshet Lindenbaum) is the profile to open.
+- **Per school:** Herzliah and Maïmonide show none of it. In the console (http://admin.localhost:3000, sign in as
+  `system@alumninetwork.test`), the school's page has a Features panel where the switch lives.

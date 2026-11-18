@@ -339,6 +339,51 @@ export type Database = {
           },
         ];
       };
+      alumni_yeshiva: {
+        Row: {
+          created_at: string;
+          end_year: number | null;
+          id: string;
+          institution_id: string;
+          location: string | null;
+          name: string;
+          profile_id: string;
+          sort_order: number;
+          start_year: number | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          end_year?: number | null;
+          id?: string;
+          institution_id: string;
+          location?: string | null;
+          name: string;
+          profile_id: string;
+          sort_order?: number;
+          start_year?: number | null;
+        };
+        Update: {
+          created_at?: string;
+          end_year?: number | null;
+          id?: string;
+          institution_id?: string;
+          location?: string | null;
+          name?: string;
+          profile_id?: string;
+          sort_order?: number;
+          start_year?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "alumni_yeshiva_profile_id_institution_id_fkey";
+            columns: ["profile_id", "institution_id"];
+            isOneToOne: false;
+            referencedRelation: "alumni_profiles";
+            referencedColumns: ["id", "institution_id"];
+          },
+        ];
+      };
       audit_log: {
         Row: {
           action: string;
@@ -843,6 +888,7 @@ export type Database = {
           custom_domain: string | null;
           default_locale: Database["public"]["Enums"]["locale"];
           email_display_name: string | null;
+          features: NonNullable<Json>;
           id: string;
           name: string;
           reply_to_email: string | null;
@@ -858,6 +904,7 @@ export type Database = {
           custom_domain?: string | null;
           default_locale?: Database["public"]["Enums"]["locale"];
           email_display_name?: string | null;
+          features?: NonNullable<Json>;
           id?: string;
           name: string;
           reply_to_email?: string | null;
@@ -872,6 +919,7 @@ export type Database = {
           custom_domain?: string | null;
           default_locale?: Database["public"]["Enums"]["locale"];
           email_display_name?: string | null;
+          features?: NonNullable<Json>;
           id?: string;
           name?: string;
           reply_to_email?: string | null;
@@ -1402,6 +1450,7 @@ export type Database = {
         Returns: string;
       };
       export_my_data: { Args: { p_inst: string }; Returns: Json };
+      feature_institutions: { Args: { p_key: string }; Returns: string[] };
       has_active_grant: { Args: { p_inst: string }; Returns: boolean };
       has_permission: { Args: { p_inst: string; p_perm: string }; Returns: boolean };
       hash_token: { Args: { p_token: string }; Returns: string };
@@ -1514,6 +1563,7 @@ export type Database = {
           status: string;
         }[];
       };
+      platform_set_school_features: { Args: { p_features: Json; p_inst: string }; Returns: Json };
       platform_set_school_status: {
         Args: { p_inst: string; p_reason?: string; p_status: string };
         Returns: undefined;
@@ -1570,6 +1620,7 @@ export type Database = {
       };
       save_my_profile: { Args: { p_inst: string; p_payload: Json }; Returns: string };
       school_config: { Args: { p_inst: string }; Returns: Json };
+      school_has_feature: { Args: { p_inst: string; p_key: string }; Returns: boolean };
       school_staff: {
         Args: { p_inst: string };
         Returns: {

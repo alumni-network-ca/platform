@@ -14,7 +14,7 @@ import {
   subSection,
 } from "./FormCard";
 import { SelectInput, TextArea, TextInput, field, fieldHint, fieldLabel } from "./ProfileForm";
-import { EducationRows, RoleRows } from "./Repeaters";
+import { EducationRows, RoleRows, YeshivaRows } from "./Repeaters";
 
 // The fields of each profile section, shared by the onboarding wizard (one step each) and /me (one edit page
 // each). Server-rendered; the inputs are client components that show the action's errors.
@@ -187,6 +187,18 @@ export function SectionFields({ section, me }: { section: Section; me: MyProfile
             </div>
             <RoleRows initial={me.experience} t={t} />
           </div>
+          {me.yeshivaOn && (
+            <div className={subSection}>
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <h2 className="text-lg leading-snug font-bold">{t.yeshivaTitle}</h2>
+                <span className="text-sm text-muted-foreground">{t.yeshivaHint}</span>
+              </div>
+              <YeshivaRows
+                t={t}
+                initial={me.yeshiva.map((row) => ({ ...row, location: row.location ?? "" }))}
+              />
+            </div>
+          )}
         </>
       );
 

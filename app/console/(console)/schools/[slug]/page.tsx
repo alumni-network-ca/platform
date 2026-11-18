@@ -5,6 +5,11 @@ import { schoolBranding } from "@/lib/school";
 import { schoolUrl } from "@/lib/tenant/address";
 import { getOrigin } from "@/lib/tenant/server";
 import { StaffPanel, type Invitation, type StaffMember } from "./StaffPanel";
+import { FeaturesForm } from "./FeaturesForm";
+import { FEATURES, hasFeature } from "@/lib/tenant/features";
+import { translations } from "@/lib/i18n";
+import { getServerLocale } from "@/lib/i18n-server";
+import type { SchoolFeatures } from "@/lib/database";
 import { BackArrow, ForwardArrow } from "@/components/icons";
 import { Badge } from "@/components/ui/badge";
 import { ui } from "@/components/admin/parts";
@@ -12,7 +17,7 @@ import { ui } from "@/components/admin/parts";
 const day = (iso: string) =>
   new Date(iso).toLocaleDateString("en-CA", { month: "short", day: "numeric", year: "numeric" });
 
-// S1.3 A school: its address, counts, staff and invitations, and settings. The launch checklist ("Open sign-ups") needs
+// S1.3 A school: its address, counts, staff and invitations, settings and features (SA-07). The launch checklist ("Open sign-ups") needs
 // a school status for setup, which comes with SA-05.
 export default async function SchoolPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -20,7 +25,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
   const { data: school } = await supabase
     .from("institutions")
     .select(
-      "id, name, slug, status, created_at, default_locale, reply_to_email, email_display_name, branding",
+      "id, name, slug, status, created_at, default_locale, reply_to_email, email_display_name, branding, features",
     )
     .eq("slug", slug)
     .maybeSingle();
@@ -70,6 +75,9 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
   const address = schoolUrl(origin, school.slug);
   const { shortName } = schoolBranding({ ...school, branding: school.branding });
   const suspended = school.status === "suspended";
+  const features = { features: school.features as SchoolFeatures };
+  const enabled = FEATURES.filter((key) => hasFeature(features, key));
+  const tf = translations[await getServerLocale()].consoleFeatures;
 
   return (
     <>
@@ -127,6 +135,11 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
             <dt>Replies go to</dt>
             <dd>{school.reply_to_email ?? "Not set"}</dd>
           </dl>
+        </section>
+        <section className={ui.panel}>
+          <h2>{tf.title}</h2>
+          <p className={ui.fieldHint}>{tf.intro}</p>
+          <FeaturesForm slug={school.slug} enabled={enabled} t={tf} />
         </section>
         <section className={ui.panel}>
           <h2>Support and status</h2>

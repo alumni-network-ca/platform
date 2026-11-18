@@ -397,6 +397,23 @@ items:
       - A school admin can't change the names, through the UI or by calling the database directly (pgTAP test).
       - The console list shows each school's long name in the console user's language.
 
+  - key: SA-07
+    title: "School features: platform admins switch parts of the product on per school"
+    epic: EPIC-SA
+    labels: [type:feature, area:platform, area:db, P1]
+    size: S
+    depends: [SA-01]
+    adr: "0021"
+    summary: |
+      Some schools need a part of the product others must not see (first: Yeshiva / Seminary for Hebrew Academy,
+      PRF-08). institutions.features holds on/off switches; platform_set_school_features (system admins only, known
+      keys only, audited) changes them from a Features panel on the console's school page. school_config hands them
+      to the app, and each feature is enforced in the database as well as the UI.
+    ac:
+      - Only a system admin can change a school's features; school admins and alumni are refused (pgTAP).
+      - Unknown keys and non-boolean values are dropped; every change writes a school.features_updated audit row.
+      - The school's pages show the change on their next request (refreshSchoolConfig).
+
   # ---------------------------------------------------------------- public pages (WS4)
   - key: PUB-01
     title: "Tenant landing page (branded, real or no stats)"

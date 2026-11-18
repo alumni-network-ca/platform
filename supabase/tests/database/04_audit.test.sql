@@ -209,6 +209,11 @@ select is(
                   '11111111-1111-4111-8111-000000000006'),
   array['school.suspended'], 'platform_set_school_status writes one audit row'
 );
+select is(
+  pg_temp.audited($$ select public.platform_set_school_features('aaaaaaaa-0000-4000-8000-000000000002', '{"yeshiva_seminary": true}') $$,
+                  '11111111-1111-4111-8111-000000000006'),
+  array['school.features_updated'], 'platform_set_school_features writes one audit row'
+);
 select set_config('test.invitation', (select id::text from public.staff_invitations where email = 'head@third.test'), true);
 select is(
   pg_temp.audited($$ select public.issue_staff_invitation_link(current_setting('test.invitation')::uuid) $$,
@@ -287,7 +292,7 @@ select set_eq(
     'admin_update_profile', 'set_profile_status', 'invite_staff', 'accept_staff_invitation', 'change_staff_role',
     'remove_staff', 'approve_email_template_version', 'save_email_template', 'approve_email_template', 'update_school_settings',
     'platform_create_school', 'platform_appoint_school_admin', 'platform_invite_staff', 'platform_open_grant',
-    'platform_revoke_grant', 'platform_set_school_status', 'issue_staff_invitation_link', 'revoke_staff_invitation',
+    'platform_revoke_grant', 'platform_set_school_status', 'platform_set_school_features', 'issue_staff_invitation_link', 'revoke_staff_invitation',
     -- not audited on purpose: reads, preferences, and contact reveals (contact_events)
     'public_school', 'school_config', 'search_directory', 'set_my_locale', 'initiate_contact', 'directory_facets',
     'profile_contact_types',
@@ -296,7 +301,7 @@ select set_eq(
     'staff_invitation_preview', 'my_staff_invitation',
     -- RLS helpers used inside policies (and by search_directory, which runs as the caller)
     'is_system_admin', 'has_active_grant', 'is_member', 'has_permission', 'permitted_institutions', 'my_profile_ids',
-    'directory_profile_ids'
+    'directory_profile_ids', 'feature_institutions'
   ],
   'every client-callable function is audited, deliberately unaudited, or an RLS helper'
 );

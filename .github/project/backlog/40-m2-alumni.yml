@@ -500,6 +500,24 @@ items:
     reqs: [F9]
     summary: Saved from the toggle once signed in. It drives the UI and email locale (DEC-07).
 
+  - key: PRF-08
+    title: "Yeshiva / Seminary on profiles, at schools that have it"
+    epic: EPIC-PRF
+    labels: [type:feature, area:profile, area:directory, P1]
+    size: M
+    depends: [SA-07, PRF-01, DIR-01]
+    adr: "0021"
+    summary: |
+      Jewish high-school alumni often study at a yeshiva or seminary after graduating. At a school with the
+      yeshiva_seminary feature (SA-07), the Career step and /me/edit/career get a "Yeshiva / Seminary" list (name,
+      city, from/to year), the profile and /me show it as its own section, and the directory's text search and a
+      "Yeshiva / Seminary" filter cover it. Rows live in alumni_yeshiva; switching the feature off hides them and
+      keeps them.
+    ac:
+      - Other schools never see the section, the filter or the rows; save_my_profile refuses yeshiva rows there (pgTAP).
+      - Alumni, staff and the directory read the rows under the education rules, at the school only.
+      - The data export always includes the alumnus's rows.
+
   # ---------------------------------------------------------------- directory (WS3)
   - key: DIR-01
     title: "search_directory RPC: combined filters, text search, pagination, indexes"

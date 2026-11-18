@@ -22,6 +22,7 @@ describe("readFilters", () => {
       q: "",
       field: "",
       school: "",
+      yeshiva: "",
       city: "",
       decade: null,
       gradYear: null,
@@ -37,6 +38,7 @@ describe("readFilters", () => {
         q: " lawyer ",
         field: "law",
         school: "McGill University",
+        yeshiva: " Yeshivat Har Etzion ",
         city: "Montreal",
         class: "2010",
         grad_year: "2014",
@@ -48,6 +50,7 @@ describe("readFilters", () => {
       q: "lawyer",
       field: "law",
       school: "McGill University",
+      yeshiva: "Yeshivat Har Etzion",
       city: "Montreal",
       decade: 2010,
       gradYear: 2014,
@@ -66,6 +69,17 @@ describe("readFilters", () => {
       page: 1,
       sort: "recent",
     });
+  });
+});
+
+describe("the yeshiva filter (PRF-08)", () => {
+  const f = { ...none, yeshiva: "Midreshet Lindenbaum" };
+  it("is sent to search_directory, kept in the URL and drawn as a chip", () => {
+    expect(rpcFilters(f)).toEqual({ yeshiva: "Midreshet Lindenbaum" });
+    expect(directoryHref(f)).toBe("/directory?yeshiva=Midreshet+Lindenbaum");
+    expect(activeChips(f, labels)).toEqual([
+      { key: "yeshiva", label: "Midreshet Lindenbaum", href: "/directory" },
+    ]);
   });
 });
 

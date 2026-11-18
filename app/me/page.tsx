@@ -2,7 +2,13 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { dateLabel } from "@/lib/admin/data";
 import { format, translations } from "@/lib/i18n";
-import { CHANNELS, initials, type Channel, repeatsCurrentRole } from "@/lib/profile/fields";
+import {
+  CHANNELS,
+  initials,
+  type Channel,
+  repeatsCurrentRole,
+  yeshivaYears,
+} from "@/lib/profile/fields";
 import { loadMyProfile } from "@/lib/profile/server";
 import { cn } from "@/lib/utils";
 import { confirmStillAccurate } from "./actions";
@@ -147,6 +153,22 @@ export default async function MyProfilePage({
             <p className={emptyText}>{t.noCareer}</p>
           )}
         </Section>
+
+        {me.yeshivaOn && (
+          <Section title={o.yeshivaTitle} edit="/me/edit/career" t={t}>
+            {me.yeshiva.length ? (
+              me.yeshiva.map((row, i) => (
+                <ProfileRow
+                  key={i}
+                  title={row.name}
+                  sub={join([row.location, yeshivaYears(row)])}
+                />
+              ))
+            ) : (
+              <p className={emptyText}>{o.yeshivaHint}</p>
+            )}
+          </Section>
+        )}
 
         <Section title={t.education} edit="/me/edit/education" t={t}>
           {me.education.map((row, i) => (
