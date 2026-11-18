@@ -225,6 +225,30 @@ items:
     ac:
       - The legacy project is paused or deleted; production has 0 demo profiles.
 
+  - key: OPS-09
+    title: "Move app hosting from Vercel to Cloudflare"
+    epic: EPIC-OPS
+    labels: [type:infra, area:ops, P0, launch-blocker]
+    size: L
+    depends: [BIZ-02]
+    reqs: [HL3, D1, D3]
+    summary: |
+      Vercel's free tier requires a public repository, and the repo must stay private. Move hosting to Cloudflare
+      (Workers or Pages, with the Next.js adapter) instead of paying for Vercel Pro. Cover: the build and deploy
+      from GitHub; production on main and staging on dev (*.staging.alumninetwork.ca); wildcard subdomains
+      (*.alumninetwork.ca) and admin.<root>; the DNS move from Vercel nameservers to Cloudflare, keeping the
+      ImprovMX MX and SPF and the Resend records intact; env vars and secrets; the cron jobs for email, freshness
+      and cleanup (today on Vercel, OPS-02); preview deployments for PRs; and replacing the Vercel-specific code
+      (VERCEL_ENV for the preview cookie, vercel.json, the .vercel link). Check that the Next.js version in use
+      runs on the Cloudflare runtime before committing. Update OPS-02, OPS-06, OPS-08, ADR 0001 and the runbooks to
+      match, and record the decision in docs/DECISIONS.md.
+    ac:
+      - herzliah.alumninetwork.ca and a staging school serve the app from Cloudflare over HTTPS, with the repo still private.
+      - Wildcard subdomains, sign-in, email delivery and the scheduled jobs work as they did on Vercel.
+      - No code or config refers to Vercel, and a rollback procedure is documented.
+    tests:
+      - "Manual: sign in on a school subdomain and on admin.<root> after cutover; a cron job runs and sends an email; inbound mail to admin@alumninetwork.ca still forwards."
+
   # ---------------------------------------------------------------- docs
   - key: DOC-01
     title: "Architecture, data model, roles and RLS documentation"
