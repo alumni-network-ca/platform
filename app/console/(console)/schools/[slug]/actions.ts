@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { requirePlatformAdmin } from "@/lib/auth/platform";
 import { invitationUrl } from "@/lib/staff/invitation";
+import { refreshSchoolConfig } from "@/lib/tenant/config";
+import { FEATURES } from "@/lib/tenant/features";
 
 type StaffRole = "school_admin" | "reviewer";
 
@@ -80,4 +82,31 @@ export async function manageInvitation(
     error: null,
     link: { url: await invitationUrl(slug, token), email: invitation.email, role: invitation.role },
   };
+}
+
+/** `error` is a consoleFeatures key the form shows. */
+export type FeaturesResult = { error: "failed" | null; saved?: boolean };
+
+/** SA-07: switch a school's features on or off (ADR 0021). Platform admins only; the RPC checks it again. */
+export async function saveFeatures(_: FeaturesResult, form: FormData): Promise<FeaturesResult> {
+  const slug = String(form.get("slug") ?? "");
+  const { supabase } = await requirePlatformAdmin(`/schools/${slug}`);
+  const { data: school } = await supabase
+    .from("institutions")
+    .select("id")
+    .eq("slug", slug)
+    .maybeSingle();
+  if (!school) return { error: "failed" };
+
+  const on = new Set(form.getAll("features").map(String));
+  const features = Object.fromEntries(FEATURES.map((key) => [key, on.has(key)]));
+  const { error } = await supabase.rpc("platform_set_school_features", {
+    p_inst: school.id,
+    p_features: features,
+  });
+  if (error) return { error: "failed" };
+  // Every page of the school reads its features from the cached config.
+  refreshSchoolConfig(school.id);
+  revalidatePath(`/console/schools/${slug}`);
+  return { error: null, saved: true };
 }

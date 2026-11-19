@@ -251,6 +251,56 @@ export function parseCareer(form: FormReader, careerFieldIds: readonly string[])
   });
 }
 
+/** A yeshiva or seminary, at schools with the feature on (PRF-08). Years only: "2006 – 2007". */
+export type YeshivaRow = {
+  name: string;
+  location: string;
+  start_year: number | null;
+  end_year: number | null;
+};
+
+/** Repeated rows, like education: blank rows are dropped, a row needs its name. */
+export function parseYeshiva(form: FormReader): Parsed<{ yeshiva: YeshivaRow[] }> {
+  const c = new Checker();
+  const [names, locations, starts, ends] = [
+    form.all("yeshiva_name"),
+    form.all("yeshiva_location"),
+    form.all("yeshiva_start"),
+    form.all("yeshiva_end"),
+  ];
+  const yeshiva = names
+    .map((name, i) => ({
+      i,
+      name,
+      location: locations[i] ?? "",
+      start: starts[i] ?? "",
+      end: ends[i] ?? "",
+    }))
+    .filter((row) => row.name || row.location || row.start || row.end)
+    .map(({ i, name, location, start, end }) => {
+      const row: YeshivaRow = {
+        name: c.text(`yeshiva_name.${i}`, name, MAX.school, true),
+        location: c.text(`yeshiva_location.${i}`, location, MAX.school),
+        start_year: c.year(`yeshiva_start.${i}`, start),
+        end_year: c.year(`yeshiva_end.${i}`, end),
+      };
+      // The database refuses an end year before the start year.
+      if (row.start_year && row.end_year && row.end_year < row.start_year)
+        c.errors[`yeshiva_end.${i}`] = { code: "yearOrder" };
+      return row;
+    });
+  return c.done({ yeshiva });
+}
+
+/** Two parts of one form: their data together, or every error of both. */
+export function combine<A, B>(a: Parsed<A>, b: Parsed<B>): Parsed<A & B> {
+  if (a.ok && b.ok) return { ok: true, data: { ...a.data, ...b.data } };
+  return {
+    ok: false,
+    errors: { ...(a.ok ? {} : a.errors), ...(b.ok ? {} : b.errors) },
+  };
+}
+
 /** Only keys the school offers are kept. */
 export function parseOffers(form: FormReader, offerKeys: readonly string[]): { offers: string[] } {
   return { offers: [...new Set(form.all("offers"))].filter((key) => offerKeys.includes(key)) };
@@ -346,3 +396,9 @@ export function optionsFor<
     .filter((row) => row.is_active)
     .sort((a, b) => a.sort_order - b.sort_order);
 }
+
+/** A yeshiva's years as a profile shows them: "2006 – 2007", "2006" or "". */
+export const yeshivaYears = (row: { start_year: number | null; end_year: number | null }) =>
+  row.start_year && row.end_year && row.end_year !== row.start_year
+    ? `${row.start_year} – ${row.end_year}`
+    : String(row.start_year ?? row.end_year ?? "");

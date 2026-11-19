@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { EducationRow } from "@/lib/profile/fields";
+import type { EducationRow, YeshivaRow } from "@/lib/profile/fields";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -153,6 +153,66 @@ export function RoleRows({ initial, t }: { initial: Role[]; t: ProfileCopy }) {
         </div>
       ))}
       <AddButton label={t.addRole} onClick={add} />
+    </div>
+  );
+}
+
+/** Yeshivas and seminaries (PRF-08), at schools with the feature on: name, city, then the years. */
+export function YeshivaRows({ initial, t }: { initial: YeshivaRow[]; t: ProfileCopy }) {
+  const { rows, add, remove } = useRows<YeshivaRow>(initial, {
+    name: "",
+    location: "",
+    start_year: null,
+    end_year: null,
+  });
+  return (
+    <div className={subSection}>
+      {rows.map(({ key, row }, i) => (
+        <div
+          key={key}
+          className={cn(rowBox, "grid-cols-2 max-[720px]:grid-cols-1")}
+          role="group"
+          aria-label={`${t.yeshivaTitle} ${i + 1}`}
+        >
+          <TextInput
+            name="yeshiva_name"
+            errorKey={`yeshiva_name.${i}`}
+            label={t.yeshivaName}
+            defaultValue={row.name}
+            maxLength={120}
+          />
+          <TextInput
+            name="yeshiva_location"
+            errorKey={`yeshiva_location.${i}`}
+            label={t.yeshivaLocation}
+            defaultValue={row.location}
+            maxLength={120}
+            optional
+          />
+          <TextInput
+            name="yeshiva_start"
+            errorKey={`yeshiva_start.${i}`}
+            label={t.yeshivaStart}
+            defaultValue={row.start_year}
+            inputMode="numeric"
+            maxLength={4}
+            digits
+            optional
+          />
+          <TextInput
+            name="yeshiva_end"
+            errorKey={`yeshiva_end.${i}`}
+            label={t.yeshivaEnd}
+            defaultValue={row.end_year}
+            inputMode="numeric"
+            maxLength={4}
+            digits
+            optional
+          />
+          <RemoveButton label={t.remove} onClick={() => remove(key)} />
+        </div>
+      ))}
+      <AddButton label={t.addYeshiva} onClick={add} />
     </div>
   );
 }

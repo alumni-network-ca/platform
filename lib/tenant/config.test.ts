@@ -31,6 +31,7 @@ const { rolePermissions } = await import("@/lib/auth/permissions");
 
 const config: SchoolConfig = {
   branding: { short_name: "Herzliah" },
+  features: {},
   career_fields: [],
   offer_types: [],
   role_permissions: { reviewer: ["directory.use", "requests.read"], alumni: ["directory.use"] },

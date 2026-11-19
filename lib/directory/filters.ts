@@ -10,6 +10,8 @@ export type Filters = {
   field: string;
   /** A university, as the facets list it. */
   school: string;
+  /** A yeshiva or seminary, as the facets list it (schools with the feature on). */
+  yeshiva: string;
   city: string;
   /** The first year of a decade: 2010 means 2010 to 2019. */
   decade: number | null;
@@ -36,6 +38,7 @@ export function readFilters(params: Params): Filters {
     q: one(params.q).slice(0, 100),
     field: one(params.field),
     school: one(params.school),
+    yeshiva: one(params.yeshiva),
     city: one(params.city),
     decade: decade !== null && decade % 10 === 0 ? decade : null,
     gradYear: year(one(params.grad_year)),
@@ -51,6 +54,7 @@ export function rpcFilters(f: Filters): Record<string, string | number | string[
   if (f.q) out.q = f.q;
   if (f.field) out.career_field = f.field;
   if (f.school) out.school = f.school;
+  if (f.yeshiva) out.yeshiva = f.yeshiva;
   if (f.city) out.city = f.city;
   if (f.decade !== null) {
     out.class_from = f.decade;
@@ -67,6 +71,7 @@ export function queryString(f: Filters): string {
   if (f.q) params.set("q", f.q);
   if (f.field) params.set("field", f.field);
   if (f.school) params.set("school", f.school);
+  if (f.yeshiva) params.set("yeshiva", f.yeshiva);
   if (f.city) params.set("city", f.city);
   if (f.decade !== null) params.set("class", String(f.decade));
   if (f.gradYear !== null) params.set("grad_year", String(f.gradYear));
@@ -100,6 +105,7 @@ export function activeChips(
   if (f.field)
     chips.push({ key: "field", label: label.field(f.field), href: without({ field: "" }) });
   if (f.school) chips.push({ key: "school", label: f.school, href: without({ school: "" }) });
+  if (f.yeshiva) chips.push({ key: "yeshiva", label: f.yeshiva, href: without({ yeshiva: "" }) });
   if (f.city) chips.push({ key: "city", label: f.city, href: without({ city: "" }) });
   if (f.decade !== null)
     chips.push({ key: "class", label: label.decade(f.decade), href: without({ decade: null }) });

@@ -44,7 +44,7 @@ Conventions for every table:
 
 | Table | Columns | Constraints and notes |
 |---|---|---|
-| `institutions` | `name`, `slug`, `status` (`active`/`suspended`), `default_locale`, `reply_to_email`, `email_display_name`, `branding` jsonb (logo path, colours), `confirmation_interval_months` int default 12, `custom_domain` null | `slug` unique, `^[a-z0-9-]{2,40}$`. `custom_domain` unique (later). |
+| `institutions` | `name`, `slug`, `status` (`active`/`suspended`), `default_locale`, `reply_to_email`, `email_display_name`, `branding` jsonb (logo path, colours), `features` jsonb (per-school switches such as `yeshiva_seminary`, set by platform admins only, ADR 0021), `confirmation_interval_months` int default 12, `custom_domain` null | `slug` unique, `^[a-z0-9-]{2,40}$`. `custom_domain` unique (later). |
 | `platform_admins` | `user_id` PK → `auth.users`, `created_by` | System admins (Gab, Noah). Not school members. |
 | `platform_access_grants` | `user_id` → `platform_admins`, `institution_id`, `reason`, `expires_at`, `revoked_at` | `expires_at <= created_at + 8 h`. Read-only access while active. Visible to the school's admins. |
 | `institution_memberships` | `institution_id`, `user_id` → `auth.users`, `role`, `status`, `status_reason`, `status_changed_by`, `status_changed_at` | Unique (`institution_id`, `user_id`). One role per person per school. |
@@ -69,6 +69,7 @@ The duplicate hints admins see come from a view, `access_request_duplicates`: sa
 | `profile_contact_channels` | `profile_id`, `institution_id`, `type`, `value`, `is_public`, `sort_order` | Unique (`profile_id`, `type`). Optional (DEC-02): zero rows means "No contact details shared". Value formats are checked per type (email, E.164 phone, https URL). |
 | `alumni_education` | `profile_id`, `institution_id`, `school`, `degree`, `field_of_study`, `graduation_year`, `sort_order` | |
 | `alumni_experience` | `profile_id`, `institution_id`, `job_title`, `employer`, `career_field_id`, `location`, `start_year`, `end_year`, `is_current`, `sort_order` | `end_year >= start_year`. Not both `end_year` and `is_current`. |
+| `alumni_yeshiva` | `profile_id`, `institution_id`, `name`, `location`, `start_year`, `end_year`, `sort_order` | Yeshivas and seminaries (PRF-08). Only at schools with `institutions.features.yeshiva_seminary` on (ADR 0021): hidden, not deleted, while it is off. `end_year >= start_year`. |
 | `career_fields` | `institution_id` null, `key`, `label_en`, `label_fr`, `sort_order`, `is_active` | Null `institution_id` = platform default. Seeded from `lib/profile-options.ts`. |
 | `offer_types` | `institution_id` null, `key`, `label_en`, `label_fr`, `audience` (`alumni`/`students`/`both`), `sort_order`, `is_active` | Seeded from `HELP_OPTIONS`. |
 | `profile_offers` | `profile_id`, `offer_type_id`, `institution_id` | PK (`profile_id`, `offer_type_id`). Replaces `availability_flags`. |
@@ -144,7 +145,7 @@ S = `SELECT` policy. Every write is through an RPC (§6), so no table has insert
 | `alumni_profiles` | | S visible | S own | S school | S school | grant only |
 | `alumni_private` | | | S own | S school | S school | grant only |
 | `profile_contact_channels` | | S visible profile, `is_public`, link types only | S own | S school | S school | grant only |
-| education · experience · offers | | S if parent visible | S own | S school | S school | grant only |
+| education · experience · yeshiva · offers | | S if parent visible | S own | S school | S school | grant only |
 | `career_fields` · `offer_types` | | S global + school | S | S | S | S |
 | `contact_events` | | S own as initiator | | S school (`metrics.read`) | S school | grant only |
 | `confirmation_requests` · `profile_confirmations` | | | S own | S school | S school | grant only |
@@ -173,7 +174,7 @@ All RPCs are `security definer` and `set search_path = ''`. Each one:
 | `withdraw_access_request(request_id)` | request owner | |
 | `decide_access_request(request_id, decision, reason?, link_profile_id?)` | `requests.decide` | `approve` creates the profile, private row and active membership (or links `link_profile_id`, kept for the import), sets `last_confirmed_at`, and queues `access_approved`. `needs_info` and `reject` queue their emails. One transaction, audited, refuses already-decided requests. |
 | `approve_access_requests(request_ids[])` | `requests.bulkapprove` | ONB-08. Up to 200 ids. Approves each clean pending request through `decide_access_request` (profile, membership, email and audit row each), in its own savepoint. Skips, with a reason per id: `not_allowed` (unknown or another school), `not_pending`, `has_profile`, `possible_match` (anything `access_request_matches` suggests, student ID included) and `failed`. Writes one `access_request.bulk_approve` audit row per batch with the counts. A retry skips what was approved, so nobody gets a second email. |
-| `save_my_profile(inst, payload jsonb)` | profile owner | Profile, private fields, channels, education, experience and offers in one transaction, validated server-side. Records a confirmation (`alumnus_save`), resets `confirmation_due_at` and supersedes any open confirmation request (DEC-06). |
+| `save_my_profile(inst, payload jsonb)` | profile owner | Profile, private fields, channels, education, experience, yeshiva (only where the school has the feature) and offers in one transaction, validated server-side. Records a confirmation (`alumnus_save`), resets `confirmation_due_at` and supersedes any open confirmation request (DEC-06). |
 | `set_my_visibility(inst, visibility)` | profile owner | Publishing needs a completed onboarding and an active consent. |
 | `confirm_still_accurate(token)` / `confirm_still_accurate_in_app(inst)` | token holder / owner | POST only (scanner-safe, E6). |
 | `initiate_contact(profile_id, channel)` | `directory.use` | Same school, visible target, public channel. Returns the value, logs `contact_events` with a 24 h dedupe. |

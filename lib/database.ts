@@ -27,8 +27,12 @@ export type ReferenceOption = {
   sort_order: number;
 };
 
+/** Parts of the product a platform admin switches on for one school (institutions.features, ADR 0021). */
+export type SchoolFeatures = { yeshiva_seminary?: boolean };
+
 export type SchoolConfig = {
   branding: Json;
+  features: SchoolFeatures;
   career_fields: ReferenceOption[];
   offer_types: ReferenceOption[];
   role_permissions: Partial<Record<Generated["public"]["Enums"]["member_role"], string[]>>;

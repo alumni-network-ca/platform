@@ -186,11 +186,25 @@ export const translations = {
       reference: "Reference: {digest}",
     },
 
+    // The console's Features panel on a school's page (SA-07, ADR 0021).
+    consoleFeatures: {
+      title: "Features",
+      intro: "Parts of the product this school has. Only platform admins change these.",
+      save: "Save features",
+      saving: "Saving…",
+      saved: "Saved. The school's pages show the change on their next load.",
+      failed: "The features did not change. Reload the page and try again.",
+      yeshiva_seminary: "Yeshiva / Seminary",
+      yeshiva_seminaryHint:
+        "Alumni list the yeshivas and seminaries they attended after graduating, on their profile and in the directory.",
+    },
+
     // An alumnus's profile as other alumni see it (DIR-03, CON-02).
     profile: {
       back: "Back to directory",
       about: "About",
       workHistory: "Work history",
+      yeshiva: "Yeshiva / Seminary",
       education: "Education",
       now: "now",
       classOf: "Class of {year}",
@@ -224,6 +238,8 @@ export const translations = {
       anyField: "Any field",
       university: "University",
       anyUniversity: "Any university",
+      yeshiva: "Yeshiva / Seminary",
+      anyYeshiva: "Any yeshiva or seminary",
       city: "City",
       anywhere: "Anywhere",
       gradClass: "Graduating class",
@@ -574,6 +590,7 @@ export const translations = {
       auditTemplateSaved: "saved an email template draft",
       auditTemplateApproved: "approved an email template",
       auditSettings: "updated school settings",
+      auditFeatures: "changed the school's features",
       auditGrantOpened: "opened support access",
       auditGrantRevoked: "closed support access",
       auditDeleted: "deleted their profile",
@@ -653,6 +670,13 @@ export const translations = {
       endHint: "Leave empty if you still work there.",
       monthPlaceholder: "YYYY-MM",
       addRole: "Add a role",
+      yeshivaTitle: "Yeshiva / Seminary",
+      yeshivaHint: "Optional — where you studied after graduating, most recent first",
+      yeshivaName: "Yeshiva or seminary",
+      yeshivaLocation: "City",
+      yeshivaStart: "From (year)",
+      yeshivaEnd: "To (year)",
+      addYeshiva: "Add a yeshiva or seminary",
       networkingTitle: "How would you like to help?",
       networkingIntro:
         "These show as “Open to” on your profile and power the directory's filters. Pick any — you can change them anytime.",
@@ -1108,10 +1132,24 @@ export const translations = {
       reference: "Référence : {digest}",
     },
 
+    consoleFeatures: {
+      title: "Fonctionnalités",
+      intro:
+        "Les parties du produit offertes à cette école. Seuls les administrateurs de la plateforme les modifient.",
+      save: "Enregistrer",
+      saving: "Enregistrement…",
+      saved: "Enregistré. Les pages de l'école changent à leur prochain chargement.",
+      failed: "Les fonctionnalités n'ont pas changé. Rechargez la page et réessayez.",
+      yeshiva_seminary: "Yeshiva / Séminaire",
+      yeshiva_seminaryHint:
+        "Les anciens indiquent les yeshivas et séminaires fréquentés après leurs études, sur leur profil et dans le répertoire.",
+    },
+
     profile: {
       back: "Retour au répertoire",
       about: "À propos",
       workHistory: "Parcours professionnel",
+      yeshiva: "Yeshiva / Séminaire",
       education: "Formation",
       now: "aujourd'hui",
       classOf: "Promotion {year}",
@@ -1144,6 +1182,8 @@ export const translations = {
       anyField: "Tous les domaines",
       university: "Université",
       anyUniversity: "Toutes les universités",
+      yeshiva: "Yeshiva / Séminaire",
+      anyYeshiva: "Toutes les yeshivas et séminaires",
       city: "Ville",
       anywhere: "Partout",
       gradClass: "Promotion",
@@ -1500,6 +1540,7 @@ export const translations = {
       auditTemplateSaved: "a enregistré un brouillon de modèle",
       auditTemplateApproved: "a approuvé un modèle de courriel",
       auditSettings: "a mis à jour les paramètres de l’école",
+      auditFeatures: "a modifié les fonctionnalités de l’école",
       auditGrantOpened: "a ouvert un accès de soutien",
       auditGrantRevoked: "a fermé un accès de soutien",
       auditDeleted: "a supprimé son profil",
@@ -1580,6 +1621,13 @@ export const translations = {
       endHint: "Laissez vide si vous y travaillez encore.",
       monthPlaceholder: "AAAA-MM",
       addRole: "Ajouter un poste",
+      yeshivaTitle: "Yeshiva / Séminaire",
+      yeshivaHint: "Facultatif — vos études après le secondaire, la plus récente en premier",
+      yeshivaName: "Yeshiva ou séminaire",
+      yeshivaLocation: "Ville",
+      yeshivaStart: "De (année)",
+      yeshivaEnd: "À (année)",
+      addYeshiva: "Ajouter une yeshiva ou un séminaire",
       networkingTitle: "Comment aimeriez-vous aider?",
       networkingIntro:
         "Ces choix s'affichent sous « Disponible pour » sur votre profil et servent de filtres dans le répertoire. Choisissez librement — vous pourrez les modifier en tout temps.",

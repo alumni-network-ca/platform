@@ -6,13 +6,16 @@ import {
   parseAbout,
   parseCareer,
   parseChannels,
+  combine,
   parseEducation,
   parseOffers,
+  parseYeshiva,
   parsePublish,
   readForm,
   repeatsCurrentRole,
   resumeStep,
   signedInRecently,
+  yeshivaYears,
   type FormReader,
 } from "./fields";
 
@@ -207,6 +210,78 @@ describe("parseCareer", () => {
 
   it("accepts no field at all", () => {
     expect(parseCareer(form([["career_field_id", ""]]), ["tech"]).ok).toBe(true);
+  });
+});
+
+describe("parseYeshiva", () => {
+  const row = (name: string, location: string, start: string, end: string): [string, string][] => [
+    ["yeshiva_name", name],
+    ["yeshiva_location", location],
+    ["yeshiva_start", start],
+    ["yeshiva_end", end],
+  ];
+
+  it("keeps filled rows in order and drops blank ones", () => {
+    expect(
+      parseYeshiva(
+        form([
+          ...row(" Yeshivat Har Etzion ", "Alon Shvut", "2006", "2007"),
+          ...row("", "", "", ""),
+          ...row("Midreshet Lindenbaum", "", "", ""),
+        ]),
+      ),
+    ).toEqual({
+      ok: true,
+      data: {
+        yeshiva: [
+          { name: "Yeshivat Har Etzion", location: "Alon Shvut", start_year: 2006, end_year: 2007 },
+          { name: "Midreshet Lindenbaum", location: "", start_year: null, end_year: null },
+        ],
+      },
+    });
+  });
+
+  it("needs a name, four-digit years and an end after the start, per row", () => {
+    expect(
+      parseYeshiva(
+        form([
+          ...row("", "Jerusalem", "", ""),
+          ...row("Shaalvim", "", "06", ""),
+          ...row("X", "", "2008", "2007"),
+        ]),
+      ),
+    ).toEqual({
+      ok: false,
+      errors: {
+        "yeshiva_name.0": { code: "required" },
+        "yeshiva_start.1": { code: "year" },
+        "yeshiva_end.2": { code: "yearOrder" },
+      },
+    });
+  });
+});
+
+describe("combine", () => {
+  it("merges the data of two parts, or every error of both", () => {
+    expect(combine({ ok: true, data: { a: 1 } }, { ok: true, data: { b: 2 } })).toEqual({
+      ok: true,
+      data: { a: 1, b: 2 },
+    });
+    expect(
+      combine(
+        { ok: false, errors: { x: { code: "required" } } },
+        { ok: false, errors: { y: { code: "year" } } },
+      ),
+    ).toEqual({ ok: false, errors: { x: { code: "required" }, y: { code: "year" } } });
+  });
+});
+
+describe("yeshivaYears", () => {
+  it("shows a range, a single year or nothing", () => {
+    expect(yeshivaYears({ start_year: 2006, end_year: 2007 })).toBe("2006 – 2007");
+    expect(yeshivaYears({ start_year: 2006, end_year: 2006 })).toBe("2006");
+    expect(yeshivaYears({ start_year: null, end_year: 2008 })).toBe("2008");
+    expect(yeshivaYears({ start_year: null, end_year: null })).toBe("");
   });
 });
 

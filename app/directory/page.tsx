@@ -8,6 +8,7 @@ import { getServerLocale } from "@/lib/i18n-server";
 import { initials, optionsFor } from "@/lib/profile/fields";
 import { schoolBranding } from "@/lib/school";
 import { schoolConfig } from "@/lib/tenant/config";
+import { hasFeature } from "@/lib/tenant/features";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { NativeSelect } from "@/components/ui/native-select";
@@ -31,7 +32,13 @@ import { SubmitButton } from "@/components/ui/submit-button";
 // published profiles at this school, and only to someone who may use the directory (RLS and has_permission).
 
 type Facet = { value: string; count: number };
-type Facets = { total: number; cities: Facet[]; schools: Facet[]; decades: Facet[] };
+type Facets = {
+  total: number;
+  cities: Facet[];
+  schools: Facet[];
+  yeshivas: Facet[];
+  decades: Facet[];
+};
 
 /** Avatar colours from the design, one per person so the grid is easy to scan. */
 const tint = (id: string) =>
@@ -65,7 +72,8 @@ export default async function DirectoryPage({
     read(supabase.rpc("directory_facets", { p_inst: school.id })),
     schoolConfig(school.id),
   ]);
-  const { total: members, cities, schools, decades } = facets as unknown as Facets;
+  const { total: members, cities, schools, yeshivas = [], decades } = facets as unknown as Facets;
+  const yeshivaOn = hasFeature(config, "yeshiva_seminary");
   const label = (row: { label_en: string; label_fr: string }) =>
     locale === "fr" ? row.label_fr : row.label_en;
   const fields = optionsFor(config.career_fields, school.id);
@@ -152,6 +160,15 @@ export default async function DirectoryPage({
               value={f.school}
               options={schools.map((x) => ({ value: x.value, label: x.value }))}
             />
+            {yeshivaOn && (
+              <Select
+                name="yeshiva"
+                label={t.yeshiva}
+                any={t.anyYeshiva}
+                value={f.yeshiva}
+                options={yeshivas.map((x) => ({ value: x.value, label: x.value }))}
+              />
+            )}
             <Select
               name="city"
               label={t.city}

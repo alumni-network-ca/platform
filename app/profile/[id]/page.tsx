@@ -3,7 +3,8 @@ import { ContactReveal } from "@/components/directory/ContactReveal";
 import { publishedProfile } from "@/lib/directory/profile";
 import { format, translations } from "@/lib/i18n";
 import { getServerLocale } from "@/lib/i18n-server";
-import { initials, optionsFor, repeatsCurrentRole } from "@/lib/profile/fields";
+import { initials, optionsFor, repeatsCurrentRole, yeshivaYears } from "@/lib/profile/fields";
+import { hasFeature } from "@/lib/tenant/features";
 import { schoolBranding } from "@/lib/school";
 import { schoolConfig } from "@/lib/tenant/config";
 import { cn } from "@/lib/utils";
@@ -60,37 +61,47 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
   const t = translations[locale].profile;
   const o = translations[locale].onboarding;
 
-  const [education, experience, offerIds, links, contactTypes, config] = await Promise.all([
-    read(
-      supabase
-        .from("alumni_education")
-        .select("school, degree, field_of_study, graduation_year")
-        .eq("profile_id", id)
-        .order("sort_order"),
-    ),
-    read(
-      supabase
-        .from("alumni_experience")
-        .select(
-          "job_title, employer, location, start_year, start_month, end_year, end_month, is_current",
-        )
-        .eq("profile_id", id)
-        .order("sort_order"),
-    ),
-    read(supabase.from("profile_offers").select("offer_type_id").eq("profile_id", id)),
-    // Public links only, whoever reads: staff RLS could return the private channels too.
-    read(
-      supabase
-        .from("profile_contact_channels")
-        .select("type, value")
-        .eq("profile_id", id)
-        .eq("is_public", true)
-        .in("type", [...LINKS])
-        .order("sort_order"),
-    ),
-    read(supabase.rpc("profile_contact_types", { p_profile: id })),
-    schoolConfig(school.id),
-  ]);
+  const [education, experience, yeshiva, offerIds, links, contactTypes, config] = await Promise.all(
+    [
+      read(
+        supabase
+          .from("alumni_education")
+          .select("school, degree, field_of_study, graduation_year")
+          .eq("profile_id", id)
+          .order("sort_order"),
+      ),
+      read(
+        supabase
+          .from("alumni_experience")
+          .select(
+            "job_title, employer, location, start_year, start_month, end_year, end_month, is_current",
+          )
+          .eq("profile_id", id)
+          .order("sort_order"),
+      ),
+      // RLS returns none at a school without the feature (PRF-08).
+      read(
+        supabase
+          .from("alumni_yeshiva")
+          .select("name, location, start_year, end_year")
+          .eq("profile_id", id)
+          .order("sort_order"),
+      ),
+      read(supabase.from("profile_offers").select("offer_type_id").eq("profile_id", id)),
+      // Public links only, whoever reads: staff RLS could return the private channels too.
+      read(
+        supabase
+          .from("profile_contact_channels")
+          .select("type, value")
+          .eq("profile_id", id)
+          .eq("is_public", true)
+          .in("type", [...LINKS])
+          .order("sort_order"),
+      ),
+      read(supabase.rpc("profile_contact_types", { p_profile: id })),
+      schoolConfig(school.id),
+    ],
+  );
 
   const label = (row: { label_en: string; label_fr: string }) =>
     locale === "fr" ? row.label_fr : row.label_en;
@@ -189,6 +200,15 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
                   sub={join([role.location, dates(role)])}
                 />
               ))}
+          </section>
+        )}
+
+        {hasFeature(config, "yeshiva_seminary") && (yeshiva ?? []).length > 0 && (
+          <section className={profileSection} aria-label={t.yeshiva}>
+            <SectionHead title={t.yeshiva} />
+            {(yeshiva ?? []).map((row, i) => (
+              <ProfileRow key={i} title={row.name} sub={join([row.location, yeshivaYears(row)])} />
+            ))}
           </section>
         )}
 

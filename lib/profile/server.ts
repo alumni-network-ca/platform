@@ -4,15 +4,18 @@ import { translations } from "@/lib/i18n";
 import { getServerLocale } from "@/lib/i18n-server";
 import { schoolBranding } from "@/lib/school";
 import { schoolConfig } from "@/lib/tenant/config";
+import { hasFeature } from "@/lib/tenant/features";
 import type { FormState } from "@/components/profile/ProfileForm";
 import type { Json } from "@/lib/database";
 import {
+  combine,
   optionsFor,
   parseAbout,
   parseCareer,
   parseChannels,
   parseEducation,
   parseOffers,
+  parseYeshiva,
   readForm,
   type Channel,
   type Parsed,
@@ -31,65 +34,77 @@ async function read<T>(query: PromiseLike<{ data: T; error: { message: string } 
  */
 export async function loadMyProfile(path: string) {
   const { school, supabase, user, state } = await requireAccess(path);
-  const [locale, { career_fields: careerFields, offer_types: offerTypes }, profile] =
-    await Promise.all([
-      getServerLocale(),
-      schoolConfig(school.id),
-      read(
-        supabase
-          .from("alumni_profiles")
-          .select(
-            "id, first_name, last_name, preferred_name, grad_year, city, country, bio, job_title, employer, career_field_id, languages, visibility, onboarding_step, onboarding_completed_at, last_confirmed_at, confirmation_due_at",
-          )
-          .eq("institution_id", school.id)
-          .eq("user_id", user.id)
-          .eq("status", "active")
-          .single(),
-      ),
-    ]);
-  // single() already errors without a row; this narrows the type.
-  if (!profile) throw new Error("Could not load the profile: no active profile");
-  const [privateRow, education, experience, channels, offers, consents] = await Promise.all([
+  const [locale, config, profile] = await Promise.all([
+    getServerLocale(),
+    schoolConfig(school.id),
     read(
       supabase
-        .from("alumni_private")
-        .select("maiden_name")
-        .eq("profile_id", profile.id)
-        .maybeSingle(),
-    ),
-    read(
-      supabase
-        .from("alumni_education")
-        .select("school, degree, field_of_study, graduation_year")
-        .eq("profile_id", profile.id)
-        .order("sort_order"),
-    ),
-    read(
-      supabase
-        .from("alumni_experience")
+        .from("alumni_profiles")
         .select(
-          "job_title, employer, location, start_year, start_month, end_year, end_month, is_current",
+          "id, first_name, last_name, preferred_name, grad_year, city, country, bio, job_title, employer, career_field_id, languages, visibility, onboarding_step, onboarding_completed_at, last_confirmed_at, confirmation_due_at",
         )
-        .eq("profile_id", profile.id)
-        .order("sort_order"),
-    ),
-    read(
-      supabase
-        .from("profile_contact_channels")
-        .select("type, value, is_public")
-        .eq("profile_id", profile.id)
-        .order("sort_order"),
-    ),
-    read(supabase.from("profile_offers").select("offer_type_id").eq("profile_id", profile.id)),
-    read(
-      supabase
-        .from("consents")
-        .select("document, version")
         .eq("institution_id", school.id)
         .eq("user_id", user.id)
-        .is("withdrawn_at", null),
+        .eq("status", "active")
+        .single(),
     ),
   ]);
+  const { career_fields: careerFields, offer_types: offerTypes } = config;
+  // At a school with the feature on (PRF-08). Elsewhere RLS hides the rows anyway.
+  const yeshivaOn = hasFeature(config, "yeshiva_seminary");
+  // single() already errors without a row; this narrows the type.
+  if (!profile) throw new Error("Could not load the profile: no active profile");
+  const [privateRow, education, experience, yeshiva, channels, offers, consents] =
+    await Promise.all([
+      read(
+        supabase
+          .from("alumni_private")
+          .select("maiden_name")
+          .eq("profile_id", profile.id)
+          .maybeSingle(),
+      ),
+      read(
+        supabase
+          .from("alumni_education")
+          .select("school, degree, field_of_study, graduation_year")
+          .eq("profile_id", profile.id)
+          .order("sort_order"),
+      ),
+      read(
+        supabase
+          .from("alumni_experience")
+          .select(
+            "job_title, employer, location, start_year, start_month, end_year, end_month, is_current",
+          )
+          .eq("profile_id", profile.id)
+          .order("sort_order"),
+      ),
+      yeshivaOn
+        ? read(
+            supabase
+              .from("alumni_yeshiva")
+              .select("name, location, start_year, end_year")
+              .eq("profile_id", profile.id)
+              .order("sort_order"),
+          )
+        : [],
+      read(
+        supabase
+          .from("profile_contact_channels")
+          .select("type, value, is_public")
+          .eq("profile_id", profile.id)
+          .order("sort_order"),
+      ),
+      read(supabase.from("profile_offers").select("offer_type_id").eq("profile_id", profile.id)),
+      read(
+        supabase
+          .from("consents")
+          .select("document, version")
+          .eq("institution_id", school.id)
+          .eq("user_id", user.id)
+          .is("withdrawn_at", null),
+      ),
+    ]);
 
   const keyOf = new Map(offerTypes.map((o) => [o.id, o.key]));
   const label = (row: { label_en: string; label_fr: string }) =>
@@ -105,6 +120,8 @@ export async function loadMyProfile(path: string) {
     maidenName: privateRow?.maiden_name ?? "",
     education: education ?? [],
     experience: experience ?? [],
+    yeshivaOn,
+    yeshiva: yeshiva ?? [],
     channels: new Map((channels ?? []).map((c) => [c.type as Channel, c])),
     offers: (offers ?? []).flatMap((o) => keyOf.get(o.offer_type_id) ?? []),
     careerFields: optionsFor(careerFields, school.id).map((f) => ({
@@ -134,11 +151,14 @@ export function parseSection(section: Section, form: FormData, me: MyProfile): P
       return parseAbout(reader);
     case "education":
       return parseEducation(reader);
-    case "career":
-      return parseCareer(
+    case "career": {
+      const career = parseCareer(
         reader,
         me.careerFields.map((field) => field.id),
       );
+      // Only where the form showed the yeshiva rows: save_my_profile refuses them elsewhere.
+      return me.yeshivaOn ? combine(career, parseYeshiva(reader)) : career;
+    }
     case "networking":
       return {
         ok: true,
