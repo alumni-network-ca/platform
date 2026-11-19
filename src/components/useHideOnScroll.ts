@@ -57,8 +57,11 @@ export function useHideOnScroll(
         setHidden(false);
         return;
       }
-      setHidden((current) => nextHidden(lastY, y, current, bar.offsetHeight));
-      if (Math.abs(y - lastY) >= THRESHOLD || y <= 0) lastY = y;
+      // Copy first: React may run the updater after lastY has moved on.
+      const prevY = lastY;
+      const height = bar.offsetHeight;
+      setHidden((current) => nextHidden(prevY, y, current, height));
+      if (Math.abs(y - prevY) >= THRESHOLD || y <= 0) lastY = y;
     }
 
     function onScroll() {
