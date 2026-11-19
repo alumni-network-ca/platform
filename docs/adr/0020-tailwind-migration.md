@@ -15,9 +15,9 @@ defaults.
 
 - **Cascade layers keep the old and new styles apart.** `src/app/globals.css` declares
   `@layer theme, base, compat, legacy, components, utilities` and loads the old stylesheet, now
-  `src/app/styles/legacy.css`, into the `legacy` layer. Later layers win whatever the selector's specificity, so a
+  `app/styles/legacy.css` (before the move to `src/`), into the `legacy` layer. Later layers win whatever the selector's specificity, so a
   Tailwind class always beats a legacy rule, and a legacy rule beats preflight.
-- **A `compat` layer undoes preflight outside components/ui.** Every shadcn part carries `data-slot`. Outside those
+- **A `compat` layer undoes preflight outside `src/components/ui`.** Every shadcn part carries `data-slot`. Outside those
   parts, `compat` sets the properties that preflight touches back to the browser's values (`revert`). The legacy
   screens therefore render as before, and components get the reset they expect. It reverts named properties only:
   `all: revert` would also drop SVG `fill`/`stroke` and image `width`/`height` attributes, which browsers treat as
@@ -44,7 +44,7 @@ defaults.
 
 - Screens move one at a time without visual regressions. The before/after screenshot capture checks each step.
 - Until the end, there are two ways to style a screen. New and rebuilt screens use Tailwind classes and
-  components/ui. A change to a screen not yet rebuilt may still edit `legacy.css`.
+  `src/components/ui`. A change to a screen not yet rebuilt may still edit `legacy.css`.
 - A legacy class whose name matches a Tailwind utility (such as `.table`) is overridden by that utility. Avoid such
   names; none is in use today.
 - shadcn components are copied into `src/components/ui` and edited to match the design. `npx shadcn add` output must be
@@ -52,7 +52,7 @@ defaults.
 
 ## Outcome (2026-11-12)
 
-Every screen now uses Tailwind and components/ui. `src/app/styles/legacy.css`, the `compat` layer and the `data-ui`
+Every screen now uses Tailwind and `src/components/ui`. `app/styles/legacy.css`, the `compat` layer and the `data-ui`
 marker are gone, and preflight applies everywhere. The base layer of `src/app/globals.css` keeps what the old stylesheet
 set on the page itself: the background, text colour, font and smooth scrolling. The shared pieces are listed in
 [docs/design/ui-foundation.md](../design/ui-foundation.md).

@@ -1,6 +1,6 @@
 import { vi } from "vitest";
 
-// Test builders for the email outbox (unit/lib/email/outbox.test.ts). Test-only: never imported by app code.
+// Test builders for the email outbox (tests/unit/lib/email/outbox.test.ts). Test-only: never imported by app code.
 
 /** An outbox row as claim_email_outbox returns it: claimed once, for an approval email. */
 export function outboxRow(overrides: Record<string, unknown> = {}) {

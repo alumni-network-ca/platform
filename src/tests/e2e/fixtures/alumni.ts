@@ -2,7 +2,7 @@
 // makes a fresh account, so no test edits a shared seed account. Local stack only (seed passwords, secret key).
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/database";
-import { adminClient } from "../../../../scripts/lib/supabase-admin.ts";
+import { adminClient } from "@scripts/lib/supabase-admin.ts";
 import { accounts, LOCAL_PASSWORD } from "./accounts";
 import { newAddress } from "./mailpit";
 import { stack } from "./session";

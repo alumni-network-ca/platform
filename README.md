@@ -93,7 +93,7 @@ supabase stop
 ```bash
 supabase db reset                # rebuild the local DB from migrations + seed
 supabase migration new <name>    # new schema change; never edit applied migrations
-npm run db:types                 # regenerate lib/database.types.ts after a migration
+npm run db:types                 # regenerate src/lib/database.types.ts after a migration
 npm run seed:perf                # add 10,000 alumni per school (local only; db reset removes them)
 npm run bench:directory          # time the directory search (p50/p95) after seed:perf
 npm run check                    # lint + typecheck + format check + unit tests
@@ -104,7 +104,7 @@ supabase stop                    # stop the local stack
 
 ## Current state
 
-The database runs the **v2 schema** ([data model](docs/architecture/data-model.md)): three migrations in `supabase/migrations/` (schema, access rules, RPCs), with the legacy MVP migrations kept in `supabase/legacy/` for history. The app is the V1–V4 MVP being rebuilt onto it, issue by issue. The directory already reads v2 through clients typed from the generated `src/lib/database.types.ts`. Sign-in is by emailed code; new people sign up at `/join` and wait on their account page until the school approves them. Onboarding, the profile editor and the admin pages still use the old tables through an untyped `createLegacyClient()`, and fail locally until their M2 issues rewire them (each file names its issue).
+The database runs the **v2 schema** ([data model](docs/architecture/data-model.md)): migrations in `supabase/migrations/` (the clean baseline: schema, access rules, RPCs, then forward-only changes), with the legacy MVP migrations kept in `supabase/legacy/` for history. The app is the V1–V4 MVP being rebuilt onto it, issue by issue. Every page reads and writes v2 through clients typed from the generated `src/lib/database.types.ts`. Sign-in is by emailed code; new people sign up at `/join` and wait on their account page until the school approves them.
 
 Test accounts on the local stack (sign in with a code from Mailpit). After sign-in each one lands on its own home page:
 

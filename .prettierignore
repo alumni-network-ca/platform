@@ -10,6 +10,9 @@ next-env.d.ts
 *.md
 *.html
 docs/diagrams/
+
+# Local Claude Code scratch and worktrees.
+.claude/
 .github/project/
 
 # SQL is reviewed as written.

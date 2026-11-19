@@ -1,5 +1,5 @@
-// Sign-in and signup settings. The first two mirror supabase/config.toml, which Supabase Auth enforces; tests/unit/config/auth.test.ts
-// fails if they drift apart.
+// Sign-in and signup settings. The first two mirror supabase/config.toml, which Supabase Auth enforces;
+// tests/unit/config/auth.test.ts fails if they drift apart.
 
 /** Mirrors [auth] minimum_password_length. */
 export const MIN_PASSWORD_LENGTH = 10;

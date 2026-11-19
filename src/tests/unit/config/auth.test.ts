@@ -1,11 +1,13 @@
 // @vitest-environment node
 import { readFileSync } from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { CODE_LENGTH, MIN_PASSWORD_LENGTH } from "@/config/auth";
 
 // Supabase Auth enforces these settings; the app repeats them in its forms and messages. Hosted projects get them from
 // the same file through `supabase config push` (FND-16).
-const toml = readFileSync(new URL("../../../../supabase/config.toml", import.meta.url), "utf8");
+// Vitest runs from the repository root.
+const toml = readFileSync(path.join(process.cwd(), "supabase/config.toml"), "utf8");
 
 /** A number setting of one [section] in supabase/config.toml. */
 function setting(section: string, key: string): number {

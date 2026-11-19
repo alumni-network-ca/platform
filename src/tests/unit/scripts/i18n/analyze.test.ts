@@ -1,8 +1,8 @@
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
 import ts from "typescript";
-import { analyze } from "../../../../../scripts/i18n/analyze";
-import { checkBaseline, summarize } from "../../../../../scripts/i18n/baseline";
+import { analyze } from "@scripts/i18n/analyze";
+import { checkBaseline, summarize } from "@scripts/i18n/baseline";
 
 function scan(code: string) {
   const filename = "app/example.tsx";

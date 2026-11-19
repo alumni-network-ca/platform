@@ -1,6 +1,6 @@
 # Diagrams
 
-Open [the interactive viewer](index.html) for rendered diagrams and the permissions matrix. The Markdown files contain editable Mermaid source. Current behavior is verified against the checked-in code and migrations; live-only database objects are identified from [PRODUCT_ANALYSIS](../../docs/PRODUCT_ANALYSIS.md), not a fresh production schema pull.
+Open [the interactive viewer](index.html) for rendered diagrams and the permissions matrix. The Markdown files contain editable Mermaid source. Current behavior is verified against the checked-in code and migrations; live-only database objects are identified from [PRODUCT_ANALYSIS](../PRODUCT_ANALYSIS.md), not a fresh production schema pull.
 
 ## User flows
 
@@ -19,7 +19,7 @@ Open [the interactive viewer](index.html) for rendered diagrams and the permissi
 
 ## Data model
 
-> The target ERDs (21–26) predate the 2026-10-26 decisions and are superseded by [docs/architecture/data-model.md](../../docs/architecture/data-model.md).
+> The target ERDs (21–26) predate the 2026-10-26 decisions and are superseded by [docs/architecture/data-model.md](../architecture/data-model.md).
 
 - [Current schema ERD](20-erd-current.md)
 - [Target schema overview](21-erd-target-overview.md)

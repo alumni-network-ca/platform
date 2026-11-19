@@ -133,4 +133,4 @@ Enums: `member_role`, `member_status`, `profile_status`, `profile_visibility`, `
 
 ## Notes
 
-- See [PRODUCT_ANALYSIS](../../docs/PRODUCT_ANALYSIS.md) for the source model.
+- See [PRODUCT_ANALYSIS](../PRODUCT_ANALYSIS.md) for the source model.

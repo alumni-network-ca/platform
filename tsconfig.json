@@ -19,7 +19,7 @@
     "jsx": "react-jsx",
     "incremental": true,
     "plugins": [{ "name": "next" }],
-    "paths": { "@/*": ["./src/*"] }
+    "paths": { "@/*": ["./src/*"], "@scripts/*": ["./scripts/*"] }
   },
   "include": [
     "next-env.d.ts",

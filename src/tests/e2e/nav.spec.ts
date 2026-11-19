@@ -4,7 +4,8 @@ import { accounts } from "./fixtures/accounts";
 import { addressOf, signInAs } from "./fixtures/session";
 
 // The nav bar on every page (docs/design/nav-bar.md): what each nav role sees, the account menu's keyboard
-// behaviour, and accessibility with the menu open. tests/unit/lib/auth/nav.test.ts covers every role's mapping in detail.
+// behaviour, and accessibility with the menu open. tests/unit/lib/auth/nav.test.ts covers every role's mapping in
+// detail.
 
 /** The platform console's address: admin.localhost, a label swap of the base URL like a school's. */
 const admin = (baseURL: string, path = "/") => addressOf(baseURL, "admin", path);

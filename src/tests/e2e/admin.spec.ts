@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { adminClient } from "../../../scripts/lib/supabase-admin";
+import { adminClient } from "@scripts/lib/supabase-admin";
 import { accounts } from "./fixtures/accounts";
 import { signInAs, stack, addressOf } from "./fixtures/session";
 import { blockingViolations } from "./fixtures/a11y";

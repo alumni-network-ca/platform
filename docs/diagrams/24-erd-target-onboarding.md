@@ -80,4 +80,4 @@ import_batches |o--o{ alumni_profiles : imports
 
 ## Notes
 
-- See [PRODUCT_ANALYSIS](../../docs/PRODUCT_ANALYSIS.md) for the source model.
+- See [PRODUCT_ANALYSIS](../PRODUCT_ANALYSIS.md) for the source model.

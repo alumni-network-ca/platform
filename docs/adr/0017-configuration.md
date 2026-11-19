@@ -1,4 +1,4 @@
-# 0017: Configuration: env vars and shared settings in config/
+# 0017: Configuration: env vars and shared settings in src/config/
 
 - **Status:** Accepted · **Date:** 2026-11-03 · **Related:** FND-16
 

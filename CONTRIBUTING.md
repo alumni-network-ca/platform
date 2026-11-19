@@ -32,7 +32,7 @@ How we plan, build, review and release the Alumni Network platform. The rules ar
 |---|---|
 | `npm run check` | Lint + translation check + typecheck + format check + unit tests. Run it before every PR (CI runs the same). |
 | `npm run i18n:check` / `npm run i18n:audit` | Prevent new untranslated UI literals and invalid EN/FR dictionaries / report every existing finding. See [translation checks](docs/i18n-checks.md). |
-| `npm test` / `npm run test:watch` | Vitest unit and component tests (`*.test.ts(x)` next to the code) |
+| `npm test` / `npm run test:watch` | Vitest unit and component tests in `src/tests/unit/`, at the path of the code they test |
 | `npm run test:e2e` | Playwright end-to-end and axe accessibility tests in `src/tests/e2e/`, desktop and mobile. Starts its own `next dev` on the local Supabase stack (Docker), so stop `npm run dev` first. First run `npx playwright install chromium`. |
 | `npm run test:db` | pgTAP database tests (`supabase/tests/`); needs the local Supabase stack (Docker) |
 | `npm run db:types` | Regenerates `src/lib/database.types.ts` from the local database. Run it after every migration and commit the result. |
@@ -99,7 +99,7 @@ To reproduce a CI failure locally, run the same commands. The Supabase CLI versi
 
 - Every schema change is a migration file (`supabase migration new <name>`). **Never** make changes in the dashboard SQL editor.
 - Never edit a migration that has already been applied. Write a new one instead.
-- Query the database through `createClient()` from `src/lib/supabase/{server,client}.ts`, typed from the generated `src/lib/database.types.ts`. Where the generator is too loose (jsonb results, nullable function columns), narrow the type in `src/lib/database.ts`. `createLegacyClient()` is left from the legacy schema; no page uses it and lint rejects new imports.
+- Query the database through `createClient()` from `src/lib/supabase/{server,client}.ts`, typed from the generated `src/lib/database.types.ts`. Where the generator is too loose (jsonb results, nullable function columns), narrow the type in `src/lib/database.ts`.
 - Every table holding institution data has `institution_id`, RLS enabled, and pgTAP tests for each role.
 - Every `security definer` function sets `search_path`, checks permissions in its first statement, and revokes `execute` from `public`/`anon` unless anon access is intended.
 - RLS policies test membership in per-statement sets (`institution_id in (select public.permitted_institutions('…'))`), never a function call per row. `00_structure` enforces it.

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { getServerTranslations } from "@/lib/i18n-server";
 import { adminUrl } from "@/lib/tenant/address";
 import { getOrigin } from "@/lib/tenant/server";

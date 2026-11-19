@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import { join } from "node:path";
 import { createClient } from "@supabase/supabase-js";
-import { adminClient } from "../../../scripts/lib/supabase-admin";
+import { adminClient } from "@scripts/lib/supabase-admin";
 import { blockingViolations } from "./fixtures/a11y";
 import { accounts, LOCAL_PASSWORD } from "./fixtures/accounts";
 import { authLinkFor, clearInbox, codeFor, newAddress } from "./fixtures/mailpit";

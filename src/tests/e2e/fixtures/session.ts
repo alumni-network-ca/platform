@@ -2,7 +2,7 @@
 // rewrite the Supabase session cookie. Local stack only: seed accounts keep a local password (ADR 0014).
 import type { BrowserContext } from "@playwright/test";
 import { createClient } from "@supabase/supabase-js";
-import { localStack } from "../../../../scripts/lib/supabase-admin.ts";
+import { localStack } from "@scripts/lib/supabase-admin.ts";
 import { LOCAL_PASSWORD } from "./accounts";
 
 export const stack = localStack();

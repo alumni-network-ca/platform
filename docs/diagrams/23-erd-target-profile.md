@@ -148,4 +148,4 @@ offer_types ||--o{ profile_offers : defines
 
 ## Notes
 
-- See [PRODUCT_ANALYSIS](../../docs/PRODUCT_ANALYSIS.md) for the source model.
+- See [PRODUCT_ANALYSIS](../PRODUCT_ANALYSIS.md) for the source model.

@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
-import { adminClient } from "../../../scripts/lib/supabase-admin.ts";
+import { adminClient } from "@scripts/lib/supabase-admin.ts";
 import { blockingViolations } from "./fixtures/a11y";
 import { directoryHits, onboardedAlumnus, publish } from "./fixtures/alumni";
 import { addressOf, signInAs, stack } from "./fixtures/session";

@@ -1,5 +1,4 @@
 import { createServerClient } from "@supabase/ssr";
-import type { SupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { publicEnv } from "@/config/env/public";
 import type { Database } from "@/lib/database";
@@ -30,10 +29,4 @@ export async function createClient() {
       },
     }
   );
-}
-
-// Untyped escape for the pages still written against the legacy schema; their queries fail on v2 until
-// M2 rewires them. eslint.config.mjs lists the only files allowed to import it.
-export async function createLegacyClient() {
-  return (await createClient()) as unknown as SupabaseClient;
 }
