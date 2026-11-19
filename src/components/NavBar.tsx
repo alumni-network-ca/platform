@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import landing from "@/app/site/landing.module.css";
 import type { NavLink, NavModel } from "@/lib/auth/nav";
@@ -12,6 +13,7 @@ import { Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { onBar } from "./navStyles";
 import { LinkPending } from "./LinkPending";
+import { useHideOnScroll } from "./useHideOnScroll";
 
 /** The link for the current page: the one whose activeOn path matches most closely. */
 function currentLink(links: NavLink[], pathname: string) {
@@ -46,6 +48,7 @@ export function NavBar({
   platformLandingLabel?: string;
 }) {
   const pathname = usePathname();
+  const barRef = useRef<HTMLElement>(null);
   const router = useRouter();
   const { setLocale } = useLanguage();
   const current = currentLink(model.links, pathname);
@@ -65,10 +68,15 @@ export function NavBar({
     window.location.assign(model.signOutTo);
   }
 
+  // On phones the bar tucks away on scroll down and returns on scroll up. The landing bar isn't sticky there.
+  const hidden = useHideOnScroll(barRef, !landingTagline, pathname);
+
   return (
     <header
+      ref={barRef}
+      data-hidden={hidden}
       className={cn(
-        "sticky top-0 z-[100] flex min-h-[66px] flex-wrap items-center justify-between gap-4 px-8 py-3 text-white shadow-[0_8px_24px_rgba(5,18,49,0.12)] max-[720px]:px-4",
+        "sticky top-0 z-[100] flex min-h-[66px] flex-wrap items-center justify-between gap-4 px-8 py-3 text-white shadow-[0_8px_24px_rgba(5,18,49,0.12)] transition-transform duration-200 ease-out max-[720px]:px-4 max-[720px]:data-[hidden=true]:-translate-y-full max-[720px]:data-[hidden=true]:shadow-none",
         model.theme === "platform" ? "bg-platform" : "bg-brand",
         landingTagline && landing.platformHeader,
       )}
