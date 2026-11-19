@@ -13,7 +13,7 @@ insert into public.institutions (id, name, slug, default_locale, reply_to_email,
 values ('aaaaaaaa-0000-4000-8000-00000000d002', 'Hebrew Academy', 'hebrew-academy', 'en', 'alumni@hebrew-academy.test',
   'Hebrew Academy Alumni Network',
   '{"short_name": "Hebrew Academy", "logo": "/institutes/logos/hebrew-academy.png",
-    "favicon": "/institutes/favicons/hebrew-academy.png", "primary_color": "#1F3A68", "accent_color": "#C9A227"}',
+    "favicon": "/institutes/favicons/hebrew-academy.png", "primary_color": "#004990", "accent_color": "#919295"}',
   '{"yeshiva_seminary": true}');
 
 insert into public.email_templates (institution_id, key, locale, status, subject, body, approved_at)
