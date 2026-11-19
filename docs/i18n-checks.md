@@ -2,7 +2,7 @@
 
 Every user-facing string should have English and French copy. CI runs `npm run i18n:check`, also included in `npm run check`, without a server, database, or credentials.
 
-The check parses application sources under `app/`, `components/`, and `lib/` using the installed TypeScript compiler. Tests and declaration files are excluded. It checks:
+The check parses application sources under `src/app/`, `src/components/`, and `src/lib/` using the installed TypeScript compiler. Tests and declaration files are excluded. It checks:
 
 - Literal JSX text, rendered string expressions, templates, conditional branches, concatenation, and fallbacks.
 - Text props: `alt`, `title`, `placeholder`, accessible labels/descriptions, `label`, `description`, `heading`, `message`, `text`, `children`, `confirm`, `helpText`, `emptyMessage`, and `submitLabel`. Submit/reset/button input values are checked too.

@@ -14,7 +14,7 @@
 - The **v2 baseline** implements [docs/architecture/data-model.md](../architecture/data-model.md) as three reviewed migrations: schema, access rules (RLS and grants) and RPCs.
 - New migrations use Supabase CLI timestamped names (`supabase migration new`), so parallel branches don't collide.
 - Migrations are forward-only. Seed and demo data live in `supabase/seed.sql`, applied only to local and staging environments.
-- Generated TypeScript types (`lib/database.types.ts`) are regenerated in CI and must match the committed copy.
+- Generated TypeScript types (`src/lib/database.types.ts`) are regenerated in CI and must match the committed copy.
 
 ## Consequences
 

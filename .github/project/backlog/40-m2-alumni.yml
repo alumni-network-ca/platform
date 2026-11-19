@@ -252,7 +252,7 @@ items:
         RESEND_API_KEY, EMAIL_FROM_DOMAIN and CRON_SECRET are required: a missing one fails the send, and the
         row stays queued for the sweeper.
       - **Logs:** ids and statuses only.
-      Built with EML-08 (2026-11-05): lib/email/ (renderer, Resend transport, worker), settings in config/email.ts,
+      Built with EML-08 (2026-11-05): src/lib/email/ (renderer, Resend transport, worker), settings in src/config/email.ts,
       claim_email_outbox, after() sends from the server actions and /api/cron/email.
       Still open here: emailing staff invitations (the link is shown to copy for now, TODO(EML-01)), scheduling
       the sweeper on Vercel, and showing failed sends to admins.
@@ -363,7 +363,7 @@ items:
       - Ten sign-ins within an hour all get their email.
       - Checked on staging before LCH-01, and on production before LCH-03.
     tests:
-      - "Manual, with real inboxes, on staging then production. Mailpit covers the same flows locally and in CI (e2e/auth.spec.ts)."
+      - "Manual, with real inboxes, on staging then production. Mailpit covers the same flows locally and in CI (src/tests/e2e/auth.spec.ts)."
 
   - key: EML-08
     title: "Status emails: request received, withdrawn, access suspended and reactivated"

@@ -130,7 +130,7 @@ items:
     title: "EN/FR language switcher (partial)"
     labels: [type:feature, area:i18n]
     class: Refactor
-    summary: Only Nav and Directory are translated. Other pages are English-only, <html lang> is fixed, and lib/i18n-server.ts is unused (F24).
+    summary: Only Nav and Directory are translated. Other pages are English-only, <html lang> is fixed, and src/lib/i18n-server.ts is unused (F24).
     findings: [F24]
     related: [FND-03]
 

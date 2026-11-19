@@ -18,7 +18,7 @@ only branding, reference options (career fields, networking options) and the ema
   school setting, so `update_school_settings` never reads it and school admins cannot change it (ADR 0005 already
   gives system admins "create and configure schools").
 - **The console's school page has a Features panel** listing every feature from `FEATURES` in
-  `lib/tenant/features.ts`. Adding a feature means adding its key there and in the RPC's list.
+  `src/lib/tenant/features.ts`. Adding a feature means adding its key there and in the RPC's list.
 - **The app reads features from the cached school config** (`school_config()`, ADR 0018); the console action calls
   `refreshSchoolConfig` so the school's pages change on their next request. `hasFeature(config, key)` treats a config
   cached before this change as "all off".

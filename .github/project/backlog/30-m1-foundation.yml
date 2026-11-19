@@ -48,7 +48,7 @@ items:
     reqs: [F9, QA3]
     class: Refactor
     summary: |
-      Replace lib/i18n.ts with next-intl, migrating the existing EN/FR strings. Locale order: profile preference →
+      Replace src/lib/i18n.ts with next-intl, migrating the existing EN/FR strings. Locale order: profile preference →
       NEXT_LOCALE cookie → Accept-Language → institution default → en. Set <html lang> from it. Messages live in
       messages/{en,fr}/<namespace>.json. Validation messages are localized through Zod.
     ac:
@@ -371,4 +371,4 @@ items:
       - public/herzliah-logo.png no longer exists and no file in the repo refers to /herzliah-logo.png.
       - The Herzliah nav bar and the sign-in page still show the logo, on a fresh seed and on the hosted dev database.
     tests:
-      - "Unit: lib/school.test.ts and lib/auth/nav.test.ts use the new path. Manual: the logo shows for Herzliah."
+      - "Unit: src/tests/unit/lib/school.test.ts and src/tests/unit/lib/auth/nav.test.ts use the new path. Manual: the logo shows for Herzliah."

@@ -40,7 +40,7 @@ Inter, from `next/font`. The scale is `text-xs` 12, `sm` 13, `base` 14, `md` 15,
 `4xl` 32, `5xl` 40 and `6xl` 48. Note that `text-base` is 14px, the app's body size, not Tailwind's 16px. Form fields
 are 16px on phones so iOS doesn't zoom. Use `tabular-nums` for counts, stats and table columns.
 
-## Buttons (`components/ui/button.tsx`)
+## Buttons (`src/components/ui/button.tsx`)
 
 | Variant | Use |
 |---|---|
@@ -64,60 +64,60 @@ are 16px on phones so iOS doesn't zoom. Use `tabular-nums` for counts, stats and
   ring in the school's colour.
 - Use `NativeSelect` rather than a custom listbox. It keeps form submission, submit-on-change and the phone's own
   picker.
-- A radio or checkbox drawn as a card (`optionCard` in `components/profile/FormCard.tsx`) shows its choice with a
+- A radio or checkbox drawn as a card (`optionCard` in `src/components/profile/FormCard.tsx`) shows its choice with a
   second line of the school's colour inside the border, so nothing moves. A toggle chip whose label can wrap uses
   `rounded-xl`, not `rounded-full`, so two lines make a rounded box rather than a stretched pill.
 
 ## Page parts
 
-The alumni pages (home, directory, `/me`, a profile, onboarding) build from `components/alumni/parts.tsx` and
-`components/alumni/profile.tsx`: page frames and columns, the white `panel`, `Avatar`, `Tags`, `PersonCard` and
+The alumni pages (home, directory, `/me`, a profile, onboarding) build from `src/components/alumni/parts.tsx` and
+`src/components/alumni/profile.tsx`: page frames and columns, the white `panel`, `Avatar`, `Tags`, `PersonCard` and
 `textLink`. Their skeletons use the same classes, so a page and its skeleton cannot drift apart.
 
-Sign-in, account creation, a request's status and a staff invitation build from `components/auth/parts.tsx`: one
+Sign-in, account creation, a request's status and a staff invitation build from `src/components/auth/parts.tsx`: one
 card (`AuthCard`, 16px corners, as on the canvas's SignIn and Join), the step markers, `Callout` (a note with a line of
 the school's colour down its side), `Facts` and `AbilityList`.
 
-The school admin and the platform console build from `ui` in `components/admin/parts.ts`: the page title, panels,
+The school admin and the platform console build from `ui` in `src/components/admin/parts.ts`: the page title, panels,
 the stat grid (`auto-fit`, so the cards fill the row), tables in a scroll box with tabular figures, fields, role
 cards and the welcome banner. A table's box is `relative`, so a screen-reader-only header can't widen the page.
 
 - Text links are in the school's colour (`primary`) and underline on hover, as on the canvas.
-- A form's result is an `Alert` (`components/ui/alert.tsx`): `error` for what went wrong, `success`, `warning` or
+- A form's result is an `Alert` (`src/components/ui/alert.tsx`): `error` for what went wrong, `success`, `warning` or
   `info`. Errors are red for every school, never the school's colour.
 - A clickable card changes its border and adds `shadow-sm` on hover. It never moves.
 
 ## Loading and feedback
 
-- **Skeletons.** Every page you navigate to has its own `loading.tsx`, built from `components/skeletons/`.
+- **Skeletons.** Every page you navigate to has its own `loading.tsx`, built from `src/components/skeletons/`.
   - A skeleton reuses its page's layout classes, so nothing moves when the content arrives.
-  - The grey blocks (`components/ui/skeleton.tsx`) are hidden from screen readers. One `LoadingStatus` says "Loading…".
+  - The grey blocks (`src/components/ui/skeleton.tsx`) are hidden from screen readers. One `LoadingStatus` says "Loading…".
   - Give each page its own file: a parent's skeleton is not shown again when you move between its children. An
-    index page goes in a route group, as in `app/admin/(overview)/`, so its skeleton does not wrap its siblings.
+    index page goes in a route group, as in `src/app/admin/(overview)/`, so its skeleton does not wrap its siblings.
 - **Status codes.** Once a skeleton streams, the response is a 200, whatever `notFound()` or `forbidden()` says next.
   A 403 or 404 that must reach the browser is decided in a `layout.tsx` above the `loading.tsx`, through a `cache()`d
-  read the page shares: `app/admin/staff/layout.tsx`, `app/profile/[id]/layout.tsx`.
+  read the page shares: `src/app/admin/staff/layout.tsx`, `src/app/profile/[id]/layout.tsx`.
 - **Prefetching.** In production a `<Link>` prefetches the next page's skeleton, so a click shows it at once. A link
   whose page checks access in a layout is not prefetched when there are many of them (`prefetch={false}` on the
   directory's profile cards): each prefetch would run that check.
 - **Links.** `LinkPending` (`useLinkStatus`) draws a thin bar on a link whose navigation outlasts 150 ms.
 - **Buttons.** A button that waits on the server shows `loading` (a spinner and `aria-busy`). In a form rendered by a
   server component, use `SubmitButton`, which reads `useFormStatus`. A form whose action then loads another page
-  returns `leaveTo(url)` (`lib/leave.ts`), which keeps the button busy until that page loads.
+  returns `leaveTo(url)` (`src/lib/leave.ts`), which keeps the button busy until that page loads.
 - **Filters.** A GET form uses `next/form`. Changing a filter keeps the filters on screen and marks the results busy
   (`DirectoryResults`); the page skeleton is for arriving on a page.
 - **Errors.** `not-found.tsx`, `forbidden.tsx` and `error.tsx` use `StatusPage`: what happened, what to do next. An
   error shows its reference (`digest`), never its message.
-- **Confirmation.** An action that is hard to undo asks first in a `ConfirmDialog` (`components/ui/confirm-dialog.tsx`),
+- **Confirmation.** An action that is hard to undo asks first in a `ConfirmDialog` (`src/components/ui/confirm-dialog.tsx`),
   never `window.confirm`. Its title is the question, its button repeats the action ("Remove"), and Cancel comes first.
   The one exception is the unsaved-changes prompt when leaving a form, which guards a navigation.
-- **Empty lists.** Use `EmptyState` (`components/EmptyState.tsx`): an icon, one line on what is missing, an optional hint
+- **Empty lists.** Use `EmptyState` (`src/components/EmptyState.tsx`): an icon, one line on what is missing, an optional hint
   and the action that fills it.
 
 ## Motion
 
 Colour changes take 150ms and overlays 200ms, with ease-out. Animate transform and opacity only.
-`prefers-reduced-motion` turns animation off globally (`app/globals.css`).
+`prefers-reduced-motion` turns animation off globally (`src/app/globals.css`).
 
 ## Icons
 

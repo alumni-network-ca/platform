@@ -30,7 +30,7 @@ Signed Resend webhooks for delivered, bounced and complained update the outbox a
 
 - **The text lives in the database** (`email_templates`: school, template, locale, subject, body, status draft/approved). Each school starts from platform defaults in EN and FR.
 - School admins edit the text only, with a fixed set of placeholders (`{first_name}`, `{school_name}`, `{confirm_link}`…), then preview and approve it. HTML and unknown placeholders are rejected. A template that is not approved is never sent.
-- A branded HTML layout wraps the text and adds a plain-text part. It is built in `lib/email/render.ts` (escaped text in a small table layout, no extra dependency), not with React Email.
+- A branded HTML layout wraps the text and adds a plain-text part. It is built in `src/lib/email/render.ts` (escaped text in a small table layout, no extra dependency), not with React Email.
 - Logs keep ids and statuses only. Never email bodies or tokens.
 
 ### Environments
