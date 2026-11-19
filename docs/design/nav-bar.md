@@ -32,7 +32,7 @@ Derive it on the server from `getAccount()` (`lib/auth/account.ts`) and the same
 ## 2. Bar layout
 
 Left → right: **brand** · **primary links** · **right cluster** (role pill + avatar button).
-Height ≈ 66px, padding `12px 32px`, `flex-wrap: wrap` so it stacks on phones. Sticky top, existing `.topnav`.
+Height ≈ 66px, padding `12px 32px`, `flex-wrap: wrap` so it stacks on phones. Sticky top, existing `.topnav`. On phones (≤720px) it tucks away when the page scrolls down and returns as soon as it scrolls up; it stays visible at the top of the page and while focus or the account menu is inside it (`components/useHideOnScroll.ts`).
 
 | Theme | Bar background | Brand | Sub-label |
 |---|---|---|---|
