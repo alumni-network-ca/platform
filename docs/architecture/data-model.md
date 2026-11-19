@@ -1,6 +1,6 @@
 # Data model v2
 
-The target schema for the clean baseline migration (FND-04) and its access rules (FND-05). It implements the decisions of 2026-10-26 ([DECISIONS.md](../DECISIONS.md)) and replaces PRODUCT_ANALYSIS §6 and the target ERDs 21–26 in `documentation/diagrams/`.
+The target schema for the clean baseline migration (FND-04) and its access rules (FND-05). It implements the decisions of 2026-10-26 ([DECISIONS.md](../DECISIONS.md)) and replaces PRODUCT_ANALYSIS §6 and the target ERDs 21–26 in `docs/diagrams/`.
 
 **Issue:** AUDIT-09 · **Feeds:** FND-04 (schema), FND-05 (RLS + RPCs), FND-06 (isolation tests)
 
@@ -70,7 +70,7 @@ The duplicate hints admins see come from a view, `access_request_duplicates`: sa
 | `alumni_education` | `profile_id`, `institution_id`, `school`, `degree`, `field_of_study`, `graduation_year`, `sort_order` | |
 | `alumni_experience` | `profile_id`, `institution_id`, `job_title`, `employer`, `career_field_id`, `location`, `start_year`, `end_year`, `is_current`, `sort_order` | `end_year >= start_year`. Not both `end_year` and `is_current`. |
 | `alumni_yeshiva` | `profile_id`, `institution_id`, `name`, `location`, `start_year`, `end_year`, `sort_order` | Yeshivas and seminaries (PRF-08). Only at schools with `institutions.features.yeshiva_seminary` on (ADR 0021): hidden, not deleted, while it is off. `end_year >= start_year`. |
-| `career_fields` | `institution_id` null, `key`, `label_en`, `label_fr`, `sort_order`, `is_active` | Null `institution_id` = platform default. Seeded from `lib/profile-options.ts`. |
+| `career_fields` | `institution_id` null, `key`, `label_en`, `label_fr`, `sort_order`, `is_active` | Null `institution_id` = platform default. Seeded from `src/lib/profile-options.ts`. |
 | `offer_types` | `institution_id` null, `key`, `label_en`, `label_fr`, `audience` (`alumni`/`students`/`both`), `sort_order`, `is_active` | Seeded from `HELP_OPTIONS`. |
 | `profile_offers` | `profile_id`, `offer_type_id`, `institution_id` | PK (`profile_id`, `offer_type_id`). Replaces `availability_flags`. |
 

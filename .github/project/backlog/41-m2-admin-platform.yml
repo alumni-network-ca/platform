@@ -378,7 +378,7 @@ items:
     reqs: [MT6]
     summary: |
       Today a school has one name (institutions.name) and one short name (branding.short_name), shown the same in
-      both languages, and lib/school.ts builds the network name in English only ("{short} Alumni Network") while the
+      both languages, and src/lib/school.ts builds the network name in English only ("{short} Alumni Network") while the
       nav uses the translated template. A school gets four names instead: long name EN/FR ("Herzliah High School" /
       "École secondaire Herzliah") and short name EN/FR ("Herzliah"). All four are required; there is no fallback.
       - **Data:** name_en, name_fr, short_name_en, short_name_fr on institutions (not null, trimmed, non-empty), backfilled

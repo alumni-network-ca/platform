@@ -1,1122 +1,1122 @@
 [
   {
-    "file": "app/account/platform/page.tsx",
+    "file": "src/app/account/platform/page.tsx",
     "rule": "ui-literal",
     "text": "&apos;s alumni data. To help the school, open support access from the console: it is read-only, ends on its own, and the school&apos;s admins see it in their audit log.",
     "count": 1
   },
   {
-    "file": "app/account/platform/page.tsx",
+    "file": "src/app/account/platform/page.tsx",
     "rule": "ui-literal",
     "text": "graduate: join the network",
     "count": 1
   },
   {
-    "file": "app/account/platform/page.tsx",
+    "file": "src/app/account/platform/page.tsx",
     "rule": "ui-literal",
     "text": "I am a",
     "count": 1
   },
   {
-    "file": "app/account/platform/page.tsx",
+    "file": "src/app/account/platform/page.tsx",
     "rule": "ui-literal",
     "text": "is open until",
     "count": 1
   },
   {
-    "file": "app/account/platform/page.tsx",
+    "file": "src/app/account/platform/page.tsx",
     "rule": "ui-literal",
     "text": "Open the console",
     "count": 1
   },
   {
-    "file": "app/account/platform/page.tsx",
+    "file": "src/app/account/platform/page.tsx",
     "rule": "ui-literal",
     "text": "Platform admins don&apos;t see",
     "count": 1
   },
   {
-    "file": "app/account/platform/page.tsx",
+    "file": "src/app/account/platform/page.tsx",
     "rule": "ui-literal",
     "text": "You are signed in as a platform admin",
     "count": 1
   },
   {
-    "file": "app/account/platform/page.tsx",
+    "file": "src/app/account/platform/page.tsx",
     "rule": "ui-literal",
     "text": "You have no support access open for",
     "count": 1
   },
   {
-    "file": "app/account/platform/page.tsx",
+    "file": "src/app/account/platform/page.tsx",
     "rule": "ui-literal",
     "text": "Your support access to",
     "count": 1
   },
   {
-    "file": "app/admin/templates/page.tsx",
+    "file": "src/app/admin/templates/page.tsx",
     "rule": "ui-literal",
     "text": "· FR:",
     "count": 1
   },
   {
-    "file": "app/admin/templates/page.tsx",
+    "file": "src/app/admin/templates/page.tsx",
     "rule": "ui-literal",
     "text": "EN:",
     "count": 1
   },
   {
-    "file": "app/join/page.tsx",
+    "file": "src/app/join/page.tsx",
     "rule": "ui-literal",
     "text": "It starts with",
     "count": 1
   },
   {
-    "file": "app/join/page.tsx",
+    "file": "src/app/join/page.tsx",
     "rule": "ui-literal",
     "text": "Tout commence par votre compte.",
     "count": 1
   },
   {
-    "file": "app/join/page.tsx",
+    "file": "src/app/join/page.tsx",
     "rule": "ui-literal",
     "text": "your account.",
     "count": 1
   },
   {
-    "file": "app/join/SignupForm.tsx",
+    "file": "src/app/join/SignupForm.tsx",
     "rule": "ui-literal",
     "text": "you@example.com",
     "count": 1
   },
   {
-    "file": "app/join/verify/page.tsx",
+    "file": "src/app/join/verify/page.tsx",
     "rule": "ui-literal",
     "text": "Nous avons envoyé un lien de confirmation à",
     "count": 1
   },
   {
-    "file": "app/join/verify/page.tsx",
+    "file": "src/app/join/verify/page.tsx",
     "rule": "ui-literal",
     "text": "We sent a confirmation link to",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "Built for useful connections",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "Private network · Verified graduates only",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "Alumni control their own information. The school approves every member before they can see the directory.",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "Alumni stay in control",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "Built to stay current",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "Cities represented",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "community",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "Connected",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "Demo alumni ready to explore",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "Directory",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "Every class,",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "Explore the directory",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "Find physicians open to shadowing, lawyers willing to mentor, founders open to introductions, or alumni hiring interns.",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "Find",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "graduates by career, city and expertise — then connect for mentorship, advice, internships, introductions and opportunities.",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "Home",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "Join the network",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "manages membership and verification.",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "More than an alumni list.",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "Name visible to members",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "network",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "one",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "Private community for verified graduates.",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "professional home.",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "Professional sectors",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "Profile freshness and reconfirmation are part of the platform so the network does not become a stale directory.",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "Profiles, contact preferences and visibility are managed by the alumnus, while",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "Recently joined",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "Search with intent",
     "count": 1
   },
   {
-    "file": "app/page.tsx",
+    "file": "src/app/page.tsx",
     "rule": "ui-literal",
     "text": "Sign in",
     "count": 1
   },
   {
-    "file": "app/console/(console)/no-access/page.tsx",
+    "file": "src/app/console/(console)/no-access/page.tsx",
     "rule": "ui-literal",
     "text": "is not a platform admin. To use a school&apos;s network, go to its own address, such as herzliah.alumninetwork.ca.",
     "count": 1
   },
   {
-    "file": "app/console/(console)/no-access/page.tsx",
+    "file": "src/app/console/(console)/no-access/page.tsx",
     "rule": "ui-literal",
     "text": "No access to the console",
     "count": 1
   },
   {
-    "file": "app/console/(console)/no-access/page.tsx",
+    "file": "src/app/console/(console)/no-access/page.tsx",
     "rule": "ui-literal",
     "text": "Sign in with another account",
     "count": 1
   },
   {
-    "file": "app/console/(console)/(overview)/page.tsx",
+    "file": "src/app/console/(console)/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Active members",
     "count": 1
   },
   {
-    "file": "app/console/(console)/(overview)/page.tsx",
+    "file": "src/app/console/(console)/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Each school is a private network at its own address. Counts only, no alumni data here.",
     "count": 1
   },
   {
-    "file": "app/console/(console)/(overview)/page.tsx",
+    "file": "src/app/console/(console)/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Find a school",
     "count": 1
   },
   {
-    "file": "app/console/(console)/(overview)/page.tsx",
+    "file": "src/app/console/(console)/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "invited, not accepted",
     "count": 1
   },
   {
-    "file": "app/console/(console)/(overview)/page.tsx",
+    "file": "src/app/console/(console)/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Live schools",
     "count": 1
   },
   {
-    "file": "app/console/(console)/(overview)/page.tsx",
+    "file": "src/app/console/(console)/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Live",
     "count": 1
   },
   {
-    "file": "app/console/(console)/(overview)/page.tsx",
+    "file": "src/app/console/(console)/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Members",
     "count": 1
   },
   {
-    "file": "app/console/(console)/(overview)/page.tsx",
+    "file": "src/app/console/(console)/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Name or address",
     "count": 1
   },
   {
-    "file": "app/console/(console)/(overview)/page.tsx",
+    "file": "src/app/console/(console)/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "New school",
     "count": 1
   },
   {
-    "file": "app/console/(console)/(overview)/page.tsx",
+    "file": "src/app/console/(console)/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "`No school matches “${q.trim()}”.`",
     "count": 1
   },
   {
-    "file": "app/console/(console)/(overview)/page.tsx",
+    "file": "src/app/console/(console)/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "No schools yet. Create the first one.",
     "count": 1
   },
   {
-    "file": "app/console/(console)/(overview)/page.tsx",
+    "file": "src/app/console/(console)/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Open support grants",
     "count": 1
   },
   {
-    "file": "app/console/(console)/(overview)/page.tsx",
+    "file": "src/app/console/(console)/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Pending sign-ups",
     "count": 1
   },
   {
-    "file": "app/console/(console)/(overview)/page.tsx",
+    "file": "src/app/console/(console)/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "School",
     "count": 1
   },
   {
-    "file": "app/console/(console)/(overview)/page.tsx",
+    "file": "src/app/console/(console)/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Schools",
     "count": 1
   },
   {
-    "file": "app/console/(console)/(overview)/page.tsx",
+    "file": "src/app/console/(console)/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Staff",
     "count": 1
   },
   {
-    "file": "app/console/(console)/(overview)/page.tsx",
+    "file": "src/app/console/(console)/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Status",
     "count": 1
   },
   {
-    "file": "app/console/(console)/(overview)/page.tsx",
+    "file": "src/app/console/(console)/(overview)/page.tsx",
     "rule": "ui-literal",
     "text": "Suspended",
     "count": 2
   },
   {
-    "file": "app/console/(console)/schools/[slug]/page.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/page.tsx",
     "rule": "ui-literal",
     "text": "· created",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/page.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/page.tsx",
     "rule": "ui-literal",
     "text": "` by ${creator}`",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/page.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/page.tsx",
     "rule": "ui-literal",
     "text": "Schools",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/page.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/page.tsx",
     "rule": "ui-literal",
     "text": "Alumni Network",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/page.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/page.tsx",
     "rule": "ui-literal",
     "text": "Default language",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/page.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/page.tsx",
     "rule": "ui-literal",
     "text": "Email sender",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/page.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/page.tsx",
     "rule": "ui-literal",
     "text": "English",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/page.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/page.tsx",
     "rule": "ui-literal",
     "text": "Français",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/page.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/page.tsx",
     "rule": "ui-literal",
     "text": "Live",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/page.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/page.tsx",
     "rule": "ui-literal",
     "text": "Members",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/page.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/page.tsx",
     "rule": "ui-literal",
     "text": "Network name",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/page.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/page.tsx",
     "rule": "ui-literal",
     "text": "Not set",
     "count": 2
   },
   {
-    "file": "app/console/(console)/schools/[slug]/page.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/page.tsx",
     "rule": "ui-literal",
     "text": "Open support access",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/page.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/page.tsx",
     "rule": "ui-literal",
     "text": "Open support grants",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/page.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/page.tsx",
     "rule": "ui-literal",
     "text": "Pending sign-ups",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/page.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/page.tsx",
     "rule": "ui-literal",
     "text": "Reactivate the school…",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/page.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/page.tsx",
     "rule": "ui-literal",
     "text": "Replies go to",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/page.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/page.tsx",
     "rule": "ui-literal",
     "text": "Settings",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/page.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/page.tsx",
     "rule": "ui-literal",
     "text": "Staff",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/page.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/page.tsx",
     "rule": "ui-literal",
     "text": "Support and status",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/page.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/page.tsx",
     "rule": "ui-literal",
     "text": "Suspend the school…",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/page.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/page.tsx",
     "rule": "ui-literal",
     "text": "Suspended",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/page.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/page.tsx",
     "rule": "ui-literal",
     "text": "The school&apos;s admins change these on their Settings page.",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/StaffPanel.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/StaffPanel.tsx",
     "rule": "ui-literal",
     "text": "). It works once, only for that address, and expires in 7 days. Getting a new link cancels this one.",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/StaffPanel.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/StaffPanel.tsx",
     "rule": "ui-literal",
     "text": "Actions",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/StaffPanel.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/StaffPanel.tsx",
     "rule": "ui-literal",
     "text": "Active",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/StaffPanel.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/StaffPanel.tsx",
     "rule": "ui-literal",
     "text": "Copied",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/StaffPanel.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/StaffPanel.tsx",
     "rule": "ui-literal",
     "text": "Copy link",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/StaffPanel.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/StaffPanel.tsx",
     "rule": "ui-literal",
     "text": "Current staff",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/StaffPanel.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/StaffPanel.tsx",
     "rule": "ui-literal",
     "text": "Email",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/StaffPanel.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/StaffPanel.tsx",
     "rule": "ui-literal",
     "text": "Invitation link",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/StaffPanel.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/StaffPanel.tsx",
     "rule": "ui-literal",
     "text": "Invitations",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/StaffPanel.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/StaffPanel.tsx",
     "rule": "ui-literal",
     "text": "Invite a school admin or a reviewer. They accept while signed in with that email. Emails aren&apos;t sent yet, so copy the link and send it to them.",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/StaffPanel.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/StaffPanel.tsx",
     "rule": "ui-literal",
     "text": "Joined",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/StaffPanel.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/StaffPanel.tsx",
     "rule": "ui-literal",
     "text": "name@school.ca",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/StaffPanel.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/StaffPanel.tsx",
     "rule": "ui-literal",
     "text": "New link",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/StaffPanel.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/StaffPanel.tsx",
     "rule": "ui-literal",
     "text": "No staff yet. Invite the school&apos;s first admin above.",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/StaffPanel.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/StaffPanel.tsx",
     "rule": "ui-literal",
     "text": "Person",
     "count": 2
   },
   {
-    "file": "app/console/(console)/schools/[slug]/StaffPanel.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/StaffPanel.tsx",
     "rule": "ui-literal",
     "text": "Reviewer",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/StaffPanel.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/StaffPanel.tsx",
     "rule": "ui-literal",
     "text": "Revoke",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/StaffPanel.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/StaffPanel.tsx",
     "rule": "ui-literal",
     "text": "Role",
     "count": 3
   },
   {
-    "file": "app/console/(console)/schools/[slug]/StaffPanel.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/StaffPanel.tsx",
     "rule": "ui-literal",
     "text": "School admin",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/StaffPanel.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/StaffPanel.tsx",
     "rule": "ui-literal",
     "text": "Send invitation",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/StaffPanel.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/StaffPanel.tsx",
     "rule": "ui-literal",
     "text": "Send this link to",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/StaffPanel.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/StaffPanel.tsx",
     "rule": "ui-literal",
     "text": "Sending…",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/StaffPanel.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/StaffPanel.tsx",
     "rule": "ui-literal",
     "text": "Staff",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/StaffPanel.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/StaffPanel.tsx",
     "rule": "ui-literal",
     "text": "Status",
     "count": 2
   },
   {
-    "file": "app/console/(console)/schools/[slug]/StaffPanel.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/StaffPanel.tsx",
     "rule": "ui-literal",
     "text": "To change a role or remove someone, the school&apos;s admins use their Staff page.",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/status/page.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/status/page.tsx",
     "rule": "ui-literal",
     "text": "Reactivate",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/status/page.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/status/page.tsx",
     "rule": "ui-literal",
     "text": "Suspend",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/status/StatusForm.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/status/StatusForm.tsx",
     "rule": "ui-literal",
     "text": "(optional)",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/status/StatusForm.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/status/StatusForm.tsx",
     "rule": "ui-literal",
     "text": "Cancel",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/status/StatusForm.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/status/StatusForm.tsx",
     "rule": "ui-literal",
     "text": "Export the school&apos;s data, then delete it after the retention period (DEC-08). Comes with the retention job.",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/status/StatusForm.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/status/StatusForm.tsx",
     "rule": "ui-literal",
     "text": "Kept in the school&apos;s audit log.",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/status/StatusForm.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/status/StatusForm.tsx",
     "rule": "ui-literal",
     "text": "Offboard",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/status/StatusForm.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/status/StatusForm.tsx",
     "rule": "ui-literal",
     "text": "Reactivate school",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/status/StatusForm.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/status/StatusForm.tsx",
     "rule": "ui-literal",
     "text": "Reactivating opens the school&apos;s address again. Its staff and members get their access back on their next page load.",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/status/StatusForm.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/status/StatusForm.tsx",
     "rule": "ui-literal",
     "text": "Reason",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/status/StatusForm.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/status/StatusForm.tsx",
     "rule": "ui-literal",
     "text": "Saving…",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/status/StatusForm.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/status/StatusForm.tsx",
     "rule": "ui-literal",
     "text": "Suspend school",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/status/StatusForm.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/status/StatusForm.tsx",
     "rule": "ui-literal",
     "text": "Suspend",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/status/StatusForm.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/status/StatusForm.tsx",
     "rule": "ui-literal",
     "text": "The school&apos;s address stops answering. Nobody can sign in, and its staff lose their access. All data is kept, and you can reactivate it at any time.",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/status/StatusForm.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/status/StatusForm.tsx",
     "rule": "ui-literal",
     "text": "to confirm",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/status/StatusForm.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/status/StatusForm.tsx",
     "rule": "ui-literal",
     "text": "Type",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/[slug]/status/StatusForm.tsx",
+    "file": "src/app/console/(console)/schools/[slug]/status/StatusForm.tsx",
     "rule": "ui-literal",
     "text": "What do you want to do?",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/NewSchoolForm.tsx",
+    "file": "src/app/console/(console)/schools/new/NewSchoolForm.tsx",
     "rule": "ui-literal",
     "text": "/school-logo.png or https://…",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/NewSchoolForm.tsx",
+    "file": "src/app/console/(console)/schools/new/NewSchoolForm.tsx",
     "rule": "ui-literal",
     "text": "`${shortName || \"School\"} Alumni Network`",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/NewSchoolForm.tsx",
+    "file": "src/app/console/(console)/schools/new/NewSchoolForm.tsx",
     "rule": "ui-literal",
     "text": "A path on this site or an https address. Upload comes later.",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/NewSchoolForm.tsx",
+    "file": "src/app/console/(console)/schools/new/NewSchoolForm.tsx",
     "rule": "ui-literal",
     "text": "Accent colour",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/NewSchoolForm.tsx",
+    "file": "src/app/console/(console)/schools/new/NewSchoolForm.tsx",
     "rule": "ui-literal",
     "text": "Alumni Network”. Empty: the full name.",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/NewSchoolForm.tsx",
+    "file": "src/app/console/(console)/schools/new/NewSchoolForm.tsx",
     "rule": "ui-literal",
     "text": "alumni@school.ca",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/NewSchoolForm.tsx",
+    "file": "src/app/console/(console)/schools/new/NewSchoolForm.tsx",
     "rule": "ui-literal",
     "text": "Branding and email",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/NewSchoolForm.tsx",
+    "file": "src/app/console/(console)/schools/new/NewSchoolForm.tsx",
     "rule": "ui-literal",
     "text": "Cancel",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/NewSchoolForm.tsx",
+    "file": "src/app/console/(console)/schools/new/NewSchoolForm.tsx",
     "rule": "ui-literal",
     "text": "Create school",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/NewSchoolForm.tsx",
+    "file": "src/app/console/(console)/schools/new/NewSchoolForm.tsx",
     "rule": "ui-literal",
     "text": "Creating…",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/NewSchoolForm.tsx",
+    "file": "src/app/console/(console)/schools/new/NewSchoolForm.tsx",
     "rule": "ui-literal",
     "text": "Default language",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/NewSchoolForm.tsx",
+    "file": "src/app/console/(console)/schools/new/NewSchoolForm.tsx",
     "rule": "ui-literal",
     "text": "Email sender name",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/NewSchoolForm.tsx",
+    "file": "src/app/console/(console)/schools/new/NewSchoolForm.tsx",
     "rule": "ui-literal",
     "text": "English",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/NewSchoolForm.tsx",
+    "file": "src/app/console/(console)/schools/new/NewSchoolForm.tsx",
     "rule": "ui-literal",
     "text": "Français",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/NewSchoolForm.tsx",
+    "file": "src/app/console/(console)/schools/new/NewSchoolForm.tsx",
     "rule": "ui-literal",
     "text": "Identity",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/NewSchoolForm.tsx",
+    "file": "src/app/console/(console)/schools/new/NewSchoolForm.tsx",
     "rule": "ui-literal",
     "text": "Logo",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/NewSchoolForm.tsx",
+    "file": "src/app/console/(console)/schools/new/NewSchoolForm.tsx",
     "rule": "ui-literal",
     "text": "Pick an address",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/NewSchoolForm.tsx",
+    "file": "src/app/console/(console)/schools/new/NewSchoolForm.tsx",
     "rule": "ui-literal",
     "text": "Primary colour",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/NewSchoolForm.tsx",
+    "file": "src/app/console/(console)/schools/new/NewSchoolForm.tsx",
     "rule": "ui-literal",
     "text": "Replies go to",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/NewSchoolForm.tsx",
+    "file": "src/app/console/(console)/schools/new/NewSchoolForm.tsx",
     "rule": "ui-literal",
     "text": "School name",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/NewSchoolForm.tsx",
+    "file": "src/app/console/(console)/schools/new/NewSchoolForm.tsx",
     "rule": "ui-literal",
     "text": "School",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/NewSchoolForm.tsx",
+    "file": "src/app/console/(console)/schools/new/NewSchoolForm.tsx",
     "rule": "ui-literal",
     "text": "Short name",
     "count": 2
   },
   {
-    "file": "app/console/(console)/schools/new/NewSchoolForm.tsx",
+    "file": "src/app/console/(console)/schools/new/NewSchoolForm.tsx",
     "rule": "ui-literal",
     "text": "The school starts with the platform&apos;s default career fields, “Open to” options and email templates in English and French.",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/NewSchoolForm.tsx",
+    "file": "src/app/console/(console)/schools/new/NewSchoolForm.tsx",
     "rule": "ui-literal",
     "text": "Used in “",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/NewSchoolForm.tsx",
+    "file": "src/app/console/(console)/schools/new/NewSchoolForm.tsx",
     "rule": "ui-literal",
     "text": "Web address",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/page.tsx",
+    "file": "src/app/console/(console)/schools/new/page.tsx",
     "rule": "ui-literal",
     "text": "Schools",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/page.tsx",
+    "file": "src/app/console/(console)/schools/new/page.tsx",
     "rule": "ui-literal",
     "text": "New school",
     "count": 1
   },
   {
-    "file": "app/console/(console)/schools/new/page.tsx",
+    "file": "src/app/console/(console)/schools/new/page.tsx",
     "rule": "ui-literal",
     "text": "The school&apos;s network is live at its address as soon as it is created.",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/GrantForms.tsx",
+    "file": "src/app/console/(console)/support/GrantForms.tsx",
     "rule": "ui-literal",
     "text": "· ends in",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/GrantForms.tsx",
+    "file": "src/app/console/(console)/support/GrantForms.tsx",
     "rule": "ui-literal",
     "text": "” · opened by",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/GrantForms.tsx",
+    "file": "src/app/console/(console)/support/GrantForms.tsx",
     "rule": "ui-literal",
     "text": "1 hour",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/GrantForms.tsx",
+    "file": "src/app/console/(console)/support/GrantForms.tsx",
     "rule": "ui-literal",
     "text": "4 hours",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/GrantForms.tsx",
+    "file": "src/app/console/(console)/support/GrantForms.tsx",
     "rule": "ui-literal",
     "text": "8 hours (maximum)",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/GrantForms.tsx",
+    "file": "src/app/console/(console)/support/GrantForms.tsx",
     "rule": "ui-literal",
     "text": "Active:",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/GrantForms.tsx",
+    "file": "src/app/console/(console)/support/GrantForms.tsx",
     "rule": "ui-literal",
     "text": "e.g. The school admin asked us to fix a wrongly approved record",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/GrantForms.tsx",
+    "file": "src/app/console/(console)/support/GrantForms.tsx",
     "rule": "ui-literal",
     "text": "End now",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/GrantForms.tsx",
+    "file": "src/app/console/(console)/support/GrantForms.tsx",
     "rule": "ui-literal",
     "text": "For how long",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/GrantForms.tsx",
+    "file": "src/app/console/(console)/support/GrantForms.tsx",
     "rule": "ui-literal",
     "text": "Go to the school",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/GrantForms.tsx",
+    "file": "src/app/console/(console)/support/GrantForms.tsx",
     "rule": "ui-literal",
     "text": "Grant opened. It ends on its own, or you can end it early above.",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/GrantForms.tsx",
+    "file": "src/app/console/(console)/support/GrantForms.tsx",
     "rule": "ui-literal",
     "text": "Open a grant",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/GrantForms.tsx",
+    "file": "src/app/console/(console)/support/GrantForms.tsx",
     "rule": "ui-literal",
     "text": "Open grant",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/GrantForms.tsx",
+    "file": "src/app/console/(console)/support/GrantForms.tsx",
     "rule": "ui-literal",
     "text": "Opening…",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/GrantForms.tsx",
+    "file": "src/app/console/(console)/support/GrantForms.tsx",
     "rule": "ui-literal",
     "text": "Reason (required; the school sees this)",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/GrantForms.tsx",
+    "file": "src/app/console/(console)/support/GrantForms.tsx",
     "rule": "ui-literal",
     "text": "Reason: “",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/GrantForms.tsx",
+    "file": "src/app/console/(console)/support/GrantForms.tsx",
     "rule": "ui-literal",
     "text": "School",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/page.tsx",
+    "file": "src/app/console/(console)/support/page.tsx",
     "rule": "ui-literal",
     "text": "`ended early after ${duration(Date.parse(g.revoked_at) - Date.parse(g.created_at))}`",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/page.tsx",
+    "file": "src/app/console/(console)/support/page.tsx",
     "rule": "ui-literal",
     "text": "None yet.",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/page.tsx",
+    "file": "src/app/console/(console)/support/page.tsx",
     "rule": "ui-literal",
     "text": "Past grants",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/page.tsx",
+    "file": "src/app/console/(console)/support/page.tsx",
     "rule": "ui-literal",
     "text": "Platform admins can&apos;t see a school&apos;s alumni data by default. Open a grant to help with a specific problem: it gives read-only access, ends on its own, and the school&apos;s admins see it in their audit log.",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/page.tsx",
+    "file": "src/app/console/(console)/support/page.tsx",
     "rule": "ui-literal",
     "text": "Reason",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/page.tsx",
+    "file": "src/app/console/(console)/support/page.tsx",
     "rule": "ui-literal",
     "text": "School",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/page.tsx",
+    "file": "src/app/console/(console)/support/page.tsx",
     "rule": "ui-literal",
     "text": "Support access",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/page.tsx",
+    "file": "src/app/console/(console)/support/page.tsx",
     "rule": "ui-literal",
     "text": "When",
     "count": 1
   },
   {
-    "file": "app/console/(console)/support/page.tsx",
+    "file": "src/app/console/(console)/support/page.tsx",
     "rule": "ui-literal",
     "text": "Who",
     "count": 1

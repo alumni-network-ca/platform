@@ -20,7 +20,7 @@ Only create files under docs/diagrams/.
 Read first, fully:
 - docs/PRODUCT_ANALYSIS.md: source of truth. Actors A1–A8, findings F1–F27, backlog ids (0.1, 1.2, …),
   target data model in section 6.
-- app/**, components/**, lib/**, supabase/migrations/*.sql, to verify every "as-built" step you draw.
+- src/app/**, src/components/**, src/lib/**, src/proxy.ts, supabase/migrations/*.sql, to verify every "as-built" step you draw.
 - Known drift (F1): the LIVE database also has columns alumni_profiles.work_city, work_country,
   contact_topics, student_contact_allowed, availability_flags.student_questions and RPCs
   request_alumni_access, approve_access_request, reveal_contact_email that are NOT in migrations.
@@ -93,7 +93,7 @@ Mark the RLS node partial ⚠ F3 F4 F5 and the RPC node broken ⛔ F1 F2.
 
 ```text
 Create docs/diagrams/02-sitemap-and-guards.md (`flowchart TD`).
-Verify every redirect against the code in app/**/page.tsx and components/AuthActions.tsx.
+Verify every redirect against the code in src/app/**/page.tsx, src/proxy.ts and src/lib/auth/home.ts.
 Built routes and their guards:
   / (public) · /login (public; next param ⛔ F7) · /claim (signed-in → redirect /onboarding)
   /request-access (public) · /auth/callback (code exchange; ⛔ F7 F9)
