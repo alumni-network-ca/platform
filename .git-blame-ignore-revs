@@ -1,5 +1,8 @@
-# Formatting-only changes, skipped by `git blame` (GitHub honours this file automatically).
+# Formatting-only and move-only changes, skipped by `git blame` (GitHub honours this file automatically).
 # Locally: git config blame.ignoreRevsFile .git-blame-ignore-revs
 
 # PR #203 (squash-merged): codebase-wide Prettier formatting plus the dev tooling setup
 c07b6698c3136b5c9204e16925c8ff147ec0f93a
+
+# PR #300 (squash-merged): app code moved into src/, tests into src/tests/ (renames and import rewrites)
+cf60651961dfe953113b0d2f46316358222ce7a3
