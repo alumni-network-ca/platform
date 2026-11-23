@@ -24,6 +24,35 @@ const mainNav = (page: Page) => page.getByRole("navigation", { name: "Main" });
 const navLinks = (page: Page) => mainNav(page).getByRole("link").allTextContents();
 
 test.describe("nav bar", () => {
+  test("on a phone the bar tucks away on scroll down and returns on scroll up", async ({
+    page,
+    context,
+    baseURL,
+  }) => {
+    await signInAs(context, baseURL!, accounts.alumni);
+    await page.goto("/directory");
+    // Make sure there is room to scroll whatever the page holds.
+    await page.evaluate(() => {
+      const spacer = document.createElement("div");
+      spacer.style.height = "3000px";
+      document.body.append(spacer);
+    });
+    const header = page.getByRole("banner");
+    const phone = (page.viewportSize()?.width ?? 1280) <= 720;
+    const scrollTo = async (y: number) => {
+      await page.evaluate((top) => window.scrollTo({ top, behavior: "instant" }), y);
+      await page.waitForTimeout(350); // the slide takes 200ms
+    };
+
+    await scrollTo(0);
+    await expect(header).toBeInViewport({ ratio: 1 });
+    await scrollTo(800);
+    if (phone) await expect(header).not.toBeInViewport();
+    else await expect(header).toBeInViewport({ ratio: 1 });
+    await scrollTo(700);
+    await expect(header).toBeInViewport({ ratio: 1 });
+  });
+
   test("a signed-out visitor sees the brand, the language switch and sign-in", async ({ page }) => {
     await page.goto("/");
     const header = page.getByRole("banner");
