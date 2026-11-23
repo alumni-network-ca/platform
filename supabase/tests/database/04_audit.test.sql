@@ -289,7 +289,7 @@ select set_eq(
     'request_access', 'withdraw_access_request', 'reply_to_info_request', 'decide_access_request', 'approve_access_requests',
     'save_my_profile', 'record_consent', 'confirm_still_accurate_in_app', 'export_my_data', 'set_my_visibility',
     'withdraw_consent', 'delete_my_profile', 'confirm_still_accurate',
-    'admin_update_profile', 'set_profile_status', 'invite_staff', 'accept_staff_invitation', 'change_staff_role',
+    'admin_update_profile', 'set_profile_status', 'invite_staff', 'accept_staff_invitation', 'accept_my_staff_invitation', 'change_staff_role',
     'remove_staff', 'approve_email_template_version', 'save_email_template', 'approve_email_template', 'update_school_settings',
     'platform_create_school', 'platform_appoint_school_admin', 'platform_invite_staff', 'platform_open_grant',
     'platform_revoke_grant', 'platform_set_school_status', 'platform_set_school_features', 'issue_staff_invitation_link', 'revoke_staff_invitation',
@@ -298,7 +298,7 @@ select set_eq(
     'profile_contact_types',
     'platform_school_summaries', 'platform_admin_emails', 'platform_school_staff',
     'school_staff', 'audit_people', 'admin_dashboard', 'admin_roster', 'admin_profile_email', 'access_request_matches',
-    'staff_invitation_preview', 'my_staff_invitation',
+    'staff_invitation_preview', 'my_staff_invitation', 'my_staff_invitation_preview',
     -- RLS helpers used inside policies (and by search_directory, which runs as the caller)
     'is_system_admin', 'has_active_grant', 'is_member', 'has_permission', 'permitted_institutions', 'my_profile_ids',
     'directory_profile_ids', 'feature_institutions'

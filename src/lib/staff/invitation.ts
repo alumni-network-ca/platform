@@ -55,3 +55,23 @@ export async function previewInvitation(
     endedAt: row.ended_at,
   };
 }
+
+/**
+ * The signed-in person's open invitation at this school, found by their email (my_staff_invitation_preview): the
+ * accept page without a link, for an invitee whose sign-in dropped it (ADR 0016). Invalid when there is none.
+ */
+export async function myInvitation(supabase: Supabase, schoolId: string): Promise<Invitation> {
+  const { data, error } = await supabase.rpc("my_staff_invitation_preview", { p_inst: schoolId });
+  if (error) throw new Error(`Could not read the invitation: ${error.message}`);
+  const row = data?.[0];
+  if (!row) return { status: "invalid" };
+  return {
+    status: "open",
+    role: row.role,
+    email: row.email,
+    inviterName: row.inviter_name,
+    invitedAt: row.invited_at,
+    expiresAt: row.expires_at,
+    endedAt: null,
+  };
+}

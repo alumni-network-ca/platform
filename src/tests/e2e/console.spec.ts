@@ -23,11 +23,9 @@ async function createSchool(page: Page, baseURL: string, name: string) {
   return slug;
 }
 
-/** A new invitee opens the link, creates a staff account with the invited address, confirms it and accepts. */
-async function acceptAsNewStaff(
+/** A new invitee opens the link, creates a staff account with the invited address and confirms it. */
+async function createStaffAccount(
   browser: Browser,
-  baseURL: string,
-  slug: string,
   link: string,
   email: string,
   firstName: string,
@@ -50,6 +48,24 @@ async function acceptAsNewStaff(
   ).toBeVisible();
   await invited.goto(await authLinkFor(email, "signup"));
   await expect(invited).toHaveURL(link);
+  return { context: theirs, page: invited };
+}
+
+/** A new invitee creates and confirms a staff account from the link, then accepts. */
+async function acceptAsNewStaff(
+  browser: Browser,
+  baseURL: string,
+  slug: string,
+  link: string,
+  email: string,
+  firstName: string,
+) {
+  const { context: theirs, page: invited } = await createStaffAccount(
+    browser,
+    link,
+    email,
+    firstName,
+  );
   await expect(invited.getByText("Matches the invitation", { exact: true })).toBeVisible();
   expect(await blockingViolations(invited)).toEqual([]);
   await invited.getByRole("button", { name: "Accept and continue" }).click();
@@ -117,6 +133,47 @@ test.describe("platform console", () => {
     );
     const team = page.getByRole("table", { name: "Current staff" });
     await expect(team.getByRole("row", { name: new RegExp(head) })).toContainText("School admin");
+  });
+
+  test("an invitee who signs in without the link lands on the invitation, not the alumni sign-up", async ({
+    page,
+    context,
+    browser,
+    baseURL,
+  }) => {
+    await signInAs(context, admin(baseURL!), accounts.system);
+    const slug = await createSchool(page, baseURL!, "Cedar Hill School");
+    const reviewer = newAddress("later");
+    await page.getByLabel("Email", { exact: true }).fill(reviewer);
+    await page.getByLabel("Role").selectOption("reviewer");
+    await page.getByRole("button", { name: "Send invitation" }).click();
+    const link = await page.getByLabel("Invitation link").inputValue();
+
+    // They create the account from the link but leave before accepting.
+    const created = await createStaffAccount(browser, link, reviewer, "Lea");
+    await created.context.close();
+
+    // Later they sign in from the school's sign-in page, which knows nothing of the link.
+    const later = await browser.newContext();
+    const them = await later.newPage();
+    await them.goto(addressOf(baseURL!, slug, "/login"));
+    await them.getByLabel("Email address").fill(reviewer);
+    await them.getByLabel("Password", { exact: true }).fill(LOCAL_PASSWORD);
+    await them.getByRole("button", { name: "Sign in", exact: true }).click();
+    await expect(them).toHaveURL(addressOf(baseURL!, slug, "/staff/accept"));
+    await expect(them.getByText("Matches the invitation", { exact: true })).toBeVisible();
+    expect(await blockingViolations(them)).toEqual([]);
+
+    // The alumni sign-up is not theirs.
+    await them.goto(addressOf(baseURL!, slug, "/join"));
+    await expect(them).toHaveURL(addressOf(baseURL!, slug, "/staff/accept"));
+
+    await them.getByRole("button", { name: "Accept and continue" }).click();
+    await expect(them).toHaveURL(addressOf(baseURL!, slug, "/admin?welcome=1"));
+    await expect(
+      them.getByRole("heading", { name: "Welcome to the team, Lea", exact: true }),
+    ).toBeVisible();
+    await later.close();
   });
 
   test("a platform admin invites a reviewer, who can't manage staff", async ({

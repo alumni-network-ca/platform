@@ -267,14 +267,15 @@ export function navModel(input: NavInput): NavModel {
   }
 
   if (role === "invitee" && input.invitation) {
-    // The invitation link lives only in the email, so the menu names the invitation instead of linking to it.
-    status = {
-      text: format(t.staffInvitation, {
-        role: input.invitation.role === "reviewer" ? t.reviewer : t.schoolAdmin,
-      }),
-      tone: "warn",
-    };
-    sections = [section("account", [language], t.accountSection)];
+    // /staff/accept without the link finds the invitation by the account's email (ADR 0016).
+    const invitedAs = input.invitation.role === "reviewer" ? t.reviewer : t.schoolAdmin;
+    status = { text: format(t.staffInvitation, { role: invitedAs }), tone: "warn" };
+    sections = [
+      section("invitation", [
+        item("finishStaffSetup", "/staff/accept", { chip: { text: invitedAs, kind: "info" } }),
+      ]),
+      section("account", [language], t.accountSection),
+    ];
   }
 
   if ((role === "reviewer" || role === "school_admin") && state && school) {

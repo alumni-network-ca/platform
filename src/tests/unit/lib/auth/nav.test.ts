@@ -189,14 +189,15 @@ describe("navModel", () => {
   });
 
   describe("invitee", () => {
-    it("names the invitation, without links or a pill", () => {
+    it("names the invitation and leads to it, without links or a pill", () => {
       const model = at({
         user: { ...ruth, name: "Claire Roy" },
-        state: none,
+        state: { ...none, invitation: "reviewer" },
         invitation: { role: "reviewer" },
       });
       expect(model.links).toEqual([]);
       expect(model.pill).toBeNull();
+      expect(model.brand.href).toBe("/staff/accept");
       expect(model.account).toMatchObject({
         name: "Claire Roy",
         initials: "CR",
@@ -204,9 +205,15 @@ describe("navModel", () => {
         status: { text: "Staff invitation · Reviewer", tone: "warn" },
       });
       expect(menu(model)).toEqual([
+        ["invitation", ["finishStaffSetup"]],
         ["account", ["language"]],
         ["signOut", ["signOut"]],
       ]);
+      expect(item(model, "finishStaffSetup")).toMatchObject({
+        label: "Finish staff setup",
+        href: "/staff/accept",
+        chip: { text: "Reviewer", kind: "info" },
+      });
     });
   });
 
