@@ -166,6 +166,18 @@ items:
     labels: [type:epic, launch-blocker]
     summary: Acceptance, training, the production release, opening sign-ups, pilot monitoring and the pilot review.
 
+  - key: EPIC-EVT
+    title: "Epic: Events and reunions"
+    milestone: M5
+    labels: [type:epic, area:admin, P1]
+    summary: School admins and alumni plan reunions and other events, choose who can see them, collect RSVPs and send reminders. No payments; an optional external ticket link. Supersedes FUT-02 and FUT-04.
+
+  - key: EPIC-POSTS
+    title: "Epic: School posts (news and fundraising)"
+    milestone: M5
+    labels: [type:epic, area:admin, P1]
+    summary: One School posts page where schools publish news and updates and links to their own fundraising pages (GoFundMe or any other), and alumni read them. In-app only, with an optional notification email; the platform never handles payments. Full newsletter campaigns stay in FUT-13.
+
   - key: EPIC-FUT
     title: "Epic: Future modules (need separate scope approval)"
     milestone: FUT

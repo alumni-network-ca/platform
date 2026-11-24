@@ -1,0 +1,253 @@
+# Requested by Herzliah after the pilot scope was fixed. They apply to every school, with no per-school switch (ADR 0021 not used).
+# Each epic needs Noah's go-ahead on the open questions in its items before work starts.
+defaults:
+  milestone: M5
+  assignee: Gderhy
+  track: Tech
+
+items:
+  # ---------------------------------------------------------------- events and reunions
+  - key: EVT-01
+    title: "Events data model, RLS and audit (needs an ADR)"
+    epic: EPIC-EVT
+    labels: [type:feature, area:db, P1]
+    size: L
+    summary: |
+      Tables for events and RSVPs, scoped to the school like every other table. An event has a title, description
+      (EN/FR optional), a kind (reunion or other), start and end, a place or online link, an optional external ticket
+      or registration link, an audience (EVT-03), a status (draft, pending approval, published, cancelled), its
+      organizers, and an optional graduation year for class reunions. Who may see, create, edit or RSVP is enforced in
+      SQL, not only in the UI. Write the ADR first (audience model, approval states, what organizers can see about
+      RSVPs). Creation, approval, cancellation and RSVP changes write audit rows.
+    ac:
+      - An ADR records the model and is linked from docs/adr/README.md.
+      - A user at school A can't read or change school B's events or RSVPs (pgTAP isolation test).
+      - Alumni who aren't active members of the school can't read its events.
+      - Every status change writes an audit row.
+
+  - key: EVT-02
+    title: "Create and manage events (school admins and alumni)"
+    epic: EPIC-EVT
+    labels: [type:feature, area:admin, area:directory, P1]
+    size: L
+    depends: [EVT-01]
+    summary: |
+      Both school staff and active alumni can start an event or reunion from a form: title, description, date and
+      time, place or online link, optional ticket link, audience and optional capacity. Organizers edit, cancel and
+      add co-organizers. Admins can edit or cancel any event of their school. Past events stay visible as history.
+      Ticket and other links go through the same safe-URL check as fundraising posts (POST-01).
+    ac:
+      - An alumnus can create, edit and cancel their own events but not someone else's.
+      - A school admin can edit or cancel any event of their school; a reviewer can't create or edit events.
+      - Cancelling asks for confirmation and keeps the event visible as cancelled, with a notice to RSVPs (EVT-06).
+      - Dates show in the school's time zone and the viewer's language.
+
+  - key: EVT-03
+    title: "Event audience: whole school, chosen graduation years, or invite-only"
+    epic: EPIC-EVT
+    labels: [type:feature, area:db, area:directory, P1]
+    size: M
+    depends: [EVT-01]
+    summary: |
+      The organizer chooses who sees the event and may RSVP: every active alumnus of the school, one or more
+      graduation years (a class reunion), or only people they invite. Only the audience sees the event, in the list
+      and by direct link, and only they can RSVP. The audience is evaluated in the database from the viewer's own
+      record, so it cannot be bypassed from the client. An invite-only event never reveals who is on the list.
+    ac:
+      - A user outside a graduation-year audience gets no event row and a not-found page on the direct link (pgTAP and e2e).
+      - Changing the audience takes effect on the next request and leaves earlier RSVPs from people now outside it hidden from other attendees.
+      - An organizer can't add someone from another school to an invite list.
+
+  - key: EVT-04
+    title: "Admin approval for events created by alumni"
+    epic: EPIC-EVT
+    labels: [type:feature, area:admin, P1, needs-noah]
+    size: M
+    depends: [EVT-02]
+    summary: |
+      Events created by alumni stay pending until a school admin approves or rejects them with a reason; events
+      created by admins publish at once. The queue follows the existing approval queue's pattern, and organizers see
+      their event's state and the rejection reason. Provisional rule chosen 2026-11-24: approval required. Herzliah
+      has not confirmed it; ask them whether alumni events need review, whether this should be a school setting, and
+      who at the school reviews them.
+    ac:
+      - A pending event is visible only to its organizers and to admins; nobody else can read it, not even by direct link.
+      - Approve and reject write audit rows and email the organizer (EVT-06).
+      - Only owners and admins can review; a reviewer can't.
+      - The provisional rule and its owner are recorded in docs/DECISIONS.md until Herzliah answers.
+
+  - key: EVT-05
+    title: "Events list, event page and RSVP"
+    epic: EPIC-EVT
+    labels: [type:feature, area:directory, area:ui, P1]
+    size: L
+    depends: [EVT-03]
+    summary: |
+      An Events page lists upcoming events the viewer may see (and past ones behind a filter), with a page per event
+      showing details, place, organizers and an RSVP of going, maybe or can't go, an optional guest count and an
+      optional note. The organizer sees totals, and attendee names only for people whose profile visibility allows
+      it; no email, phone or other contact detail is ever shown. The RSVP can be changed or withdrawn, and capacity
+      is respected. Provides "add to calendar" (.ics).
+    ac:
+      - The organizer's attendee list shows names only where the person's visibility allows (test with each setting).
+      - A full event refuses new "going" RSVPs and offers a waitlist or the maybe answer (decision recorded in the ADR).
+      - The .ics file has the right time zone and the event link.
+      - Page is keyboard accessible and passes the accessibility check used in QA.
+
+  - key: EVT-06
+    title: "Event emails: invitation, RSVP confirmation, reminder, change and cancellation"
+    epic: EPIC-EVT
+    labels: [type:feature, area:email, P1]
+    size: M
+    depends: [EVT-05]
+    summary: |
+      Through the existing outbox and templates (ADR 0007): a notice to the audience when an event is published, a
+      confirmation after RSVP, a reminder before the date, and a notice when an event changes or is cancelled. EN and
+      FR, in the school's branding. Respects suppressions and an alumnus's notification choice, and sends in throttled
+      batches so a large school can't exceed the sending limits. Each message links to the event, never lists
+      other attendees, and sends no more than one reminder per person per event.
+    ac:
+      - A suppressed or opted-out address receives nothing; the audience email is not sent to anyone outside it.
+      - Re-publishing or re-saving without a material change doesn't resend notices.
+      - Both languages are covered by the i18n checks in docs/i18n-checks.md.
+
+  - key: EVT-07
+    title: "Class reunion helper: start a reunion for a graduation year"
+    epic: EPIC-EVT
+    labels: [type:feature, area:directory, P1]
+    size: M
+    depends: [EVT-05]
+    summary: |
+      A shortcut for the common case (replaces FUT-02): from a class year, start a reunion event with the audience
+      preset to that class, show how many classmates are in the directory, and let classmates register interest
+      without exposing anyone's contact details. Organizers can message the class only through the event's emails
+      (EVT-06). Any alumnus of that year can offer to organize and an admin can appoint organizers.
+    ac:
+      - The class count includes only people who allow being found by their class year and never reveals who they are.
+      - A reunion can be started by an admin or by an alumnus of that year, and by nobody else.
+
+  - key: EVT-08
+    title: "Events navigation, English and French copy, and design screens"
+    epic: EPIC-EVT
+    labels: [type:feature, area:ui, area:i18n, P1]
+    size: M
+    depends: [EVT-05]
+    summary: |
+      Add Events to the shared nav bar (docs/design/nav-bar.md) as one shared component, plus the admin queue entry.
+      No design-canvas screen exists for events yet: Noah or the designer draws list, detail, create/edit and queue
+      before building, and the build follows docs/design/ui-foundation.md. Wording in EN and FR is reviewed by
+      the school.
+    ac:
+      - The nav entry shows only for roles and schools that can use it, on desktop and phone.
+      - The design screens exist in docs/design/alumni-full-flow/ before the UI is built.
+
+  - key: EVT-09
+    title: "Events test evidence: isolation, audience, roles, e2e"
+    epic: EPIC-EVT
+    labels: [type:test, area:db, P1]
+    size: M
+    depends: [EVT-06, EVT-07]
+    summary: |
+      pgTAP for isolation, audience, role and status rules; Playwright for create → approve → RSVP → reminder across
+      two schools and the three roles, including a hostile attempt to read a pending or invite-only event.
+    ac:
+      - Cross-school, audience and pending-event leaks all fail in the tests.
+      - The tests run in CI.
+
+  # ---------------------------------------------------------------- school posts (news and fundraising)
+  - key: POST-01
+    title: "School posts data model, RLS and audit (news and fundraising kinds)"
+    epic: EPIC-POSTS
+    labels: [type:feature, area:db, P1]
+    size: M
+    summary: |
+      One table of school posts scoped to the school, with a kind: news or fundraising. Both have a title, a short
+      description or rich-text body, EN and FR versions (optional), an optional cover image, a status (draft,
+      scheduled, published, archived), an author and a publish date. A news post may carry an optional external
+      link and categories. A fundraising post must carry an external https link (GoFundMe or any service), plus an
+      optional goal note, end date and display order; the platform never handles payments or donor data. Alumni
+      read published posts of their own school only; only owners and admins write. Every change is audited. News
+      bodies are sanitized on save and on render.
+    ac:
+      - Alumni of school A can't read school B's posts, nor any draft or scheduled post of their own school (pgTAP).
+      - A reviewer and alumni can't create or edit posts by calling the database directly.
+      - A fundraising post without an https link, or with a javascript: or other scheme or credentials in the URL, is refused by a database constraint (pgTAP).
+      - Script tags, event handlers and javascript: links in a news body are removed (unit test).
+
+  - key: POST-02
+    title: "Admin: write, preview, schedule and publish school posts"
+    epic: EPIC-POSTS
+    labels: [type:feature, area:admin, area:ui, P1]
+    size: L
+    depends: [POST-01]
+    summary: |
+      An admin "School posts" section with a type chooser (News or Fundraising). News uses a rich-text editor limited
+      to headings, bold/italic, lists, links and quotes. Fundraising uses a simple form (title, description, link,
+      goal note, end date). Both take one cover image (type and size validated, stored privately per school in
+      Supabase Storage, shares the storage setup of FUT-10). Admins preview as alumni see it, save a draft, schedule,
+      publish, unpublish, archive and reorder fundraising posts. Owners and admins only.
+    ac:
+      - Preview matches the published rendering.
+      - A scheduled post appears at its time and not before, in the school's time zone.
+      - An upload of the wrong type or over the size limit is refused; another school's image can't be fetched.
+      - Links open in a new tab with rel="noopener noreferrer".
+
+  - key: POST-03
+    title: "Alumni: School posts page, article page and Support section"
+    epic: EPIC-POSTS
+    labels: [type:feature, area:ui, area:directory, P1]
+    size: L
+    depends: [POST-01]
+    summary: |
+      One School posts page for signed-in alumni with the latest posts and a filter (All, News, Fundraising). News
+      posts open an article page; fundraising posts show their description, a clear "you will leave this site,
+      payments happen on the campaign's own page" note, and an outbound button. EN/FR with fallback to the available
+      language, and a latest-posts block on the home page. The page and its nav entry are hidden when the school has no
+      published posts; a school with only news or only fundraising shows only that.
+    ac:
+      - Only published posts appear (fundraising ones past their end date drop off), newest first, with pagination.
+      - The page shows no payment fields, and a school only ever sees its own posts (isolation test).
+      - Page is keyboard accessible, passes the accessibility check, works in EN and FR and on phones.
+      - The nav entry is the shared nav component, with no per-page copy.
+
+  - key: POST-04
+    title: "Optional notification email when a post is published"
+    epic: EPIC-POSTS
+    labels: [type:feature, area:email, P1]
+    size: S
+    depends: [POST-02]
+    summary: |
+      When publishing, the admin can tick "notify alumni". It sends a short transactional email (title, excerpt and a
+      link to the post) through the outbox in throttled batches, EN or FR by each person's language. Respects
+      suppressions and alumni notification preferences. This is not a marketing campaign; CASL consent management and
+      digests remain FUT-13.
+    ac:
+      - A post notifies at most once, even if edited and re-published.
+      - Suppressed and opted-out addresses receive nothing.
+      - Drafts and scheduled posts never trigger an email before they publish.
+
+  - key: POST-05
+    title: "School posts test evidence and content-safety checks"
+    epic: EPIC-POSTS
+    labels: [type:test, area:db, P1]
+    size: S
+    depends: [POST-03, POST-04]
+    summary: |
+      pgTAP for isolation, roles, status rules and URL validation; unit tests for sanitization; Playwright for draft,
+      preview, schedule, publish and read across two schools, for both kinds.
+    ac:
+      - Cross-school and draft leaks fail in tests, and the tests run in CI.
+
+  - key: POST-06
+    title: "Fundraising wording and charity status check"
+    epic: EPIC-POSTS
+    labels: [type:legal, area:public, P1, needs-noah]
+    track: Legal
+    assignee: castielnoah-art
+    size: XS
+    summary: |
+      Check with Herzliah and counsel whether fundraising posts need wording on charitable status, tax receipts or
+      who is responsible for the external campaign, and agree the "you are leaving this site" text in EN and FR.
+      Also ask Noah whether to count clicks on fundraising links (default: no tracking beyond a count per post).
+    ac:
+      - Approved wording is recorded and used by POST-03.
