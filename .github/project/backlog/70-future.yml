@@ -75,4 +75,4 @@ items:
   - key: FUT-13
     title: "Newsletters and marketing campaigns"
     size: M
-    summary: CASL-compliant campaigns with consent management and unsubscribe, including periodic digests. Outside transactional email. In-app school news is NEWS-01..NEWS-05 (M5).
+    summary: CASL-compliant campaigns with consent management and unsubscribe, including periodic digests. Outside transactional email. In-app school posts (news and fundraising) are POST-01..POST-06 (M5).

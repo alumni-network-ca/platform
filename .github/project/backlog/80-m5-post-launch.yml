@@ -35,7 +35,7 @@ items:
       Both school staff and active alumni can start an event or reunion from a form: title, description, date and
       time, place or online link, optional ticket link, audience and optional capacity. Organizers edit, cancel and
       add co-organizers. Admins can edit or cancel any event of their school. Past events stay visible as history.
-      Ticket and other links go through the same safe-URL check as fundraising links (FUND-01).
+      Ticket and other links go through the same safe-URL check as fundraising posts (POST-01).
     ac:
       - An alumnus can create, edit and cancel their own events but not someone else's.
       - A school admin can edit or cancel any event of their school; a reviewer can't create or edit events.
@@ -154,110 +154,71 @@ items:
       - Cross-school, audience and pending-event leaks all fail in the tests.
       - The tests run in CI.
 
-  # ---------------------------------------------------------------- fundraising links
-  - key: FUND-01
-    title: "Fundraising campaigns: admins manage links to the school's own fundraising pages"
-    epic: EPIC-FUND
-    labels: [type:feature, area:admin, area:db, P1]
-    size: M
-    summary: |
-      Schools raise money on a page they already own (GoFundMe or any other service); the platform only links to it
-      and never touches payments or donor data. School admins add campaigns with a title and short description (EN and
-      FR), an external link, an optional goal note and end date, an order and an active switch. The link must be
-      https, is checked on save (no javascript: or other schemes, no credentials in the URL), and opens in a new tab
-      with rel="noopener noreferrer". Only owners and admins manage campaigns; they are scoped to the school in RLS.
-    ac:
-      - Non-https and malformed links are refused by the form and by a database constraint (pgTAP).
-      - A reviewer and alumni can't create or edit campaigns by calling the database directly.
-      - A campaign past its end date or switched off is hidden from alumni and kept for admins.
-      - Create, edit, hide and delete write audit rows.
-
-  - key: FUND-02
-    title: "Support the school page and entry points"
-    epic: EPIC-FUND
-    labels: [type:feature, area:ui, area:public, P1]
-    size: M
-    depends: [FUND-01]
-    summary: |
-      A page for signed-in alumni listing the active campaigns with the school's branding, a clear "you will leave
-      this site" note that payments happen on the campaign's own page, and a link from the home page and nav. The
-      page and entries are hidden when the school has no active campaign. Whether to record clicks is a question for
-      Noah (default: no tracking beyond a count per campaign, no user identity).
-    ac:
-      - A school with no active campaigns shows no Support entry anywhere.
-      - Every link opens the external site in a new tab and the page shows no payment fields.
-      - A school only ever sees its own campaigns (isolation test).
-      - Page works in EN and FR and passes the accessibility check.
-
-  - key: FUND-03
-    title: "Fundraising wording and charity status check"
-    epic: EPIC-FUND
-    labels: [type:legal, area:public, P1, needs-noah]
-    track: Legal
-    assignee: castielnoah-art
-    size: XS
-    summary: |
-      Check with Herzliah and counsel whether the Support page needs wording on charitable status, tax receipts or
-      who is responsible for the external campaign, and agree the "you are leaving this site" text in EN and FR.
-    ac:
-      - Approved wording is recorded and used by FUND-02.
-
-  # ---------------------------------------------------------------- school news
-  - key: NEWS-01
-    title: "News data model, RLS and audit"
-    epic: EPIC-NEWS
+  # ---------------------------------------------------------------- school posts (news and fundraising)
+  - key: POST-01
+    title: "School posts data model, RLS and audit (news and fundraising kinds)"
+    epic: EPIC-POSTS
     labels: [type:feature, area:db, P1]
     size: M
     summary: |
-      Tables for news posts scoped to the school: title, rich-text body, optional cover image, optional external
-      link, optional categories, EN and FR versions (optional), status (draft, scheduled, published, archived),
-      author and publish date. Alumni read published posts of their own school only; only owners and admins write.
-      Publish, edit, archive and delete write audit rows. Body HTML is sanitized on save and on render.
+      One table of school posts scoped to the school, with a kind: news or fundraising. Both have a title, a short
+      description or rich-text body, EN and FR versions (optional), an optional cover image, a status (draft,
+      scheduled, published, archived), an author and a publish date. A news post may carry an optional external
+      link and categories. A fundraising post must carry an external https link (GoFundMe or any service), plus an
+      optional goal note, end date and display order; the platform never handles payments or donor data. Alumni
+      read published posts of their own school only; only owners and admins write. Every change is audited. News
+      bodies are sanitized on save and on render.
     ac:
       - Alumni of school A can't read school B's posts, nor any draft or scheduled post of their own school (pgTAP).
       - A reviewer and alumni can't create or edit posts by calling the database directly.
-      - Script tags, event handlers and javascript: links in the body are removed (unit test).
+      - A fundraising post without an https link, or with a javascript: or other scheme or credentials in the URL, is refused by a database constraint (pgTAP).
+      - Script tags, event handlers and javascript: links in a news body are removed (unit test).
 
-  - key: NEWS-02
-    title: "Admin: write, preview, schedule and publish news"
-    epic: EPIC-NEWS
+  - key: POST-02
+    title: "Admin: write, preview, schedule and publish school posts"
+    epic: EPIC-POSTS
     labels: [type:feature, area:admin, area:ui, P1]
     size: L
-    depends: [NEWS-01]
+    depends: [POST-01]
     summary: |
-      An admin section to create and edit posts with a rich-text editor limited to headings, bold/italic, lists,
-      links and quotes, plus one cover image (type and size validated, stored privately per school in Supabase
-      Storage, shares the storage setup of FUT-10), a preview as alumni see it, save as draft, schedule, publish,
-      unpublish and archive. Owners and admins only.
+      An admin "School posts" section with a type chooser (News or Fundraising). News uses a rich-text editor limited
+      to headings, bold/italic, lists, links and quotes. Fundraising uses a simple form (title, description, link,
+      goal note, end date). Both take one cover image (type and size validated, stored privately per school in
+      Supabase Storage, shares the storage setup of FUT-10). Admins preview as alumni see it, save a draft, schedule,
+      publish, unpublish, archive and reorder fundraising posts. Owners and admins only.
     ac:
       - Preview matches the published rendering.
       - A scheduled post appears at its time and not before, in the school's time zone.
       - An upload of the wrong type or over the size limit is refused; another school's image can't be fetched.
+      - Links open in a new tab with rel="noopener noreferrer".
 
-  - key: NEWS-03
-    title: "Alumni: news list and article page"
-    epic: EPIC-NEWS
+  - key: POST-03
+    title: "Alumni: School posts page, article page and Support section"
+    epic: EPIC-POSTS
     labels: [type:feature, area:ui, area:directory, P1]
-    size: M
-    depends: [NEWS-01]
+    size: L
+    depends: [POST-01]
     summary: |
-      A News page for signed-in alumni with the latest posts (cover, title, date, excerpt, category filter), an
-      article page, EN/FR display with fallback to the available language, and a latest-news block on the home page.
-      Hidden from the nav when the school has no published posts.
+      One School posts page for signed-in alumni with the latest posts and a filter (All, News, Fundraising). News
+      posts open an article page; fundraising posts show their description, a clear "you will leave this site,
+      payments happen on the campaign's own page" note, and an outbound button. EN/FR with fallback to the available
+      language, and a latest-posts block on the home page. The page and its nav entry are hidden when the school has no
+      published posts; a school with only news or only fundraising shows only that.
     ac:
-      - Only published posts appear, newest first, with pagination.
-      - Page is keyboard accessible, passes the accessibility check and works on phones.
+      - Only published posts appear (fundraising ones past their end date drop off), newest first, with pagination.
+      - The page shows no payment fields, and a school only ever sees its own posts (isolation test).
+      - Page is keyboard accessible, passes the accessibility check, works in EN and FR and on phones.
       - The nav entry is the shared nav component, with no per-page copy.
 
-  - key: NEWS-04
-    title: "Optional notification email when news is published"
-    epic: EPIC-NEWS
+  - key: POST-04
+    title: "Optional notification email when a post is published"
+    epic: EPIC-POSTS
     labels: [type:feature, area:email, P1]
     size: S
-    depends: [NEWS-02]
+    depends: [POST-02]
     summary: |
       When publishing, the admin can tick "notify alumni". It sends a short transactional email (title, excerpt and a
-      link to the article) through the outbox in throttled batches, EN or FR by each person's language. Respects
+      link to the post) through the outbox in throttled batches, EN or FR by each person's language. Respects
       suppressions and alumni notification preferences. This is not a marketing campaign; CASL consent management and
       digests remain FUT-13.
     ac:
@@ -265,14 +226,28 @@ items:
       - Suppressed and opted-out addresses receive nothing.
       - Drafts and scheduled posts never trigger an email before they publish.
 
-  - key: NEWS-05
-    title: "News test evidence and content-safety checks"
-    epic: EPIC-NEWS
+  - key: POST-05
+    title: "School posts test evidence and content-safety checks"
+    epic: EPIC-POSTS
     labels: [type:test, area:db, P1]
     size: S
-    depends: [NEWS-03, NEWS-04]
+    depends: [POST-03, POST-04]
     summary: |
-      pgTAP for isolation, roles and status rules; unit tests for sanitization; Playwright for draft, preview,
-      schedule, publish and read across two schools.
+      pgTAP for isolation, roles, status rules and URL validation; unit tests for sanitization; Playwright for draft,
+      preview, schedule, publish and read across two schools, for both kinds.
     ac:
       - Cross-school and draft leaks fail in tests, and the tests run in CI.
+
+  - key: POST-06
+    title: "Fundraising wording and charity status check"
+    epic: EPIC-POSTS
+    labels: [type:legal, area:public, P1, needs-noah]
+    track: Legal
+    assignee: castielnoah-art
+    size: XS
+    summary: |
+      Check with Herzliah and counsel whether fundraising posts need wording on charitable status, tax receipts or
+      who is responsible for the external campaign, and agree the "you are leaving this site" text in EN and FR.
+      Also ask Noah whether to count clicks on fundraising links (default: no tracking beyond a count per post).
+    ac:
+      - Approved wording is recorded and used by POST-03.
