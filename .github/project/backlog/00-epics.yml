@@ -168,19 +168,19 @@ items:
 
   - key: EPIC-EVT
     title: "Epic: Events and reunions"
-    milestone: M5
+    milestone: M2
     labels: [type:epic, area:admin, P1]
     summary: School admins and alumni plan reunions and other events, choose who can see them, collect RSVPs and send reminders. No payments; an optional external ticket link. Supersedes FUT-02 and FUT-04.
 
   - key: EPIC-POSTS
     title: "Epic: School posts (news and fundraising)"
-    milestone: M5
+    milestone: M2
     labels: [type:epic, area:admin, P1]
     summary: One School posts page where schools publish news and updates and links to their own fundraising pages (GoFundMe or any other), and alumni read them. In-app only, with an optional notification email; the platform never handles payments. Full newsletter campaigns stay in FUT-13.
 
   - key: EPIC-SCHOOL
     title: "Epic: School page"
-    milestone: M5
+    milestone: M2
     labels: [type:epic, area:admin, P1]
     summary: A page for signed-in alumni with the school's own links and contacts (website, donate link, socials, about, address, alumni office), all optional and edited by school admins. The platform never handles payments.
 
@@ -193,13 +193,3 @@ items:
     summary: |
       Product direction outside the launch baseline (§7). None of these is built until Noah approves its scope,
       requirements and acceptance criteria. Architectural preparation that avoids a foreseeable rebuild is recorded in the ADRs.
-
-  - key: EPIC-POST
-    title: "Epic: School posts (news and fundraising)"
-    milestone: FUT
-    labels: [type:epic, area:posts, P2]
-    summary: |
-      One "School posts" feature per school with two kinds: news (rich text) and fundraising (a short card that sends
-      alumni to the school's own https donation page; no money passes through the platform). School admins write,
-      alumni read published posts only. Outbound fundraising clicks are recorded (decided by Gab 2026-11-24) but not
-      shown to school admins yet. Design: docs/design/school-posts.md and screens A7.1–A7.4, 3.5–3.6.

@@ -1,7 +1,7 @@
-# Requested by Herzliah after the pilot scope was fixed. They apply to every school, with no per-school switch (ADR 0021 not used).
+# Requested by Herzliah after the pilot scope was fixed; moved from M5 to M2 on 2026-11-24 (no launch date any more). They apply to every school, with no per-school switch (ADR 0021 not used).
 # Each epic needs Noah's go-ahead on the open questions in its items before work starts.
 defaults:
-  milestone: M5
+  milestone: M2
   assignee: Gderhy
   track: Tech
 
@@ -168,11 +168,17 @@ items:
       optional goal note, end date and display order; the platform never handles payments or donor data. Alumni
       read published posts of their own school only; only owners and admins write. Every change is audited. News
       bodies are sanitized on save and on render.
+
+      Outbound clicks on fundraising links are recorded (decided by Gab 2026-11-24): a `post_link_clicks` table
+      (post, school, alumnus, time), written only by a `record_post_click(post_id)` RPC that checks the caller is a
+      member and the post is a published fundraising post, at most one row per alumnus, post and day. School staff
+      get no read policy on it; only platform admins can read it. Showing counts to schools is POST-07.
     ac:
       - Alumni of school A can't read school B's posts, nor any draft or scheduled post of their own school (pgTAP).
       - A reviewer and alumni can't create or edit posts by calling the database directly.
       - A fundraising post without an https link, or with a javascript: or other scheme or credentials in the URL, is refused by a database constraint (pgTAP).
       - Script tags, event handlers and javascript: links in a news body are removed (unit test).
+      - A school admin can't read `post_link_clicks`, directly or through any RPC (pgTAP).
 
   - key: POST-02
     title: "Admin: write, preview, schedule and publish school posts"
@@ -201,7 +207,8 @@ items:
     summary: |
       One School posts page for signed-in alumni with the latest posts and a filter (All, News, Fundraising). News
       posts open an article page; fundraising posts show their description, a clear "you will leave this site,
-      payments happen on the campaign's own page" note, and an outbound button. EN/FR with fallback to the available
+      payments happen on the campaign's own page" note, and an outbound button that shows the destination host,
+      records the click (POST-01) and opens the link in a new tab. A failed record never blocks the redirect. EN/FR with fallback to the available
       language, and a latest-posts block on the home page. The page and its nav entry are hidden when the school has no
       published posts; a school with only news or only fundraising shows only that.
     ac:
@@ -248,9 +255,22 @@ items:
     summary: |
       Check with Herzliah and counsel whether fundraising posts need wording on charitable status, tax receipts or
       who is responsible for the external campaign, and agree the "you are leaving this site" text in EN and FR.
-      Also ask Noah whether to count clicks on fundraising links (default: no tracking beyond a count per post).
+      Click recording is decided (Gab, 2026-11-24: record each outbound click, don't show schools yet), so the
+      privacy policy needs a line saying outbound fundraising clicks are recorded.
     ac:
-      - Approved wording is recorded and used by POST-03.
+      - Approved wording is recorded and used by POST-03, including the privacy policy line on click recording.
+
+  - key: POST-07
+    title: "Show fundraising click counts to school admins"
+    epic: EPIC-POSTS
+    labels: [type:feature, area:admin, P2, needs-noah]
+    size: S
+    depends: [POST-01, POST-06]
+    summary: |
+      Later. A clicks column on the admin posts list (A7.1): aggregate counts only, never who clicked, once Noah
+      agrees schools should see it. Until then `post_link_clicks` has no school-staff read.
+    ac:
+      - Counts are per post and never identify an alumnus.
 
   # ---------------------------------------------------------------- school page (links and contacts)
   - key: SCH-01

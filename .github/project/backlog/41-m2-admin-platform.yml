@@ -232,7 +232,6 @@ items:
   - key: EXP-03
     title: "Export column sets: each school chooses and saves the columns of its alumni export"
     epic: EPIC-IMPEXP
-    milestone: M5
     labels: [type:feature, area:import-export, P1]
     size: M
     depends: [EXP-01, EXP-02]
@@ -253,7 +252,6 @@ items:
   - key: EXP-04
     title: "Get Herzliah's CSV column list and load it as their preset"
     epic: EPIC-IMPEXP
-    milestone: M5
     labels: [type:business, area:import-export, P1, needs-noah]
     assignee: castielnoah-art
     track: Business
