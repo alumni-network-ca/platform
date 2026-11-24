@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>School posts</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7b1e3d}a:hover{color:#611630}
+button,input,select,textarea{font:inherit}
+button:focus-visible,input:focus,select:focus,textarea:focus,a:focus-visible{outline:2px solid #7b1e3d;outline-offset:1px}
+</style>
+</helmet>
+<div style="min-height: 1100px; background: #f7f7f6; font-family: Inter, Arial, sans-serif; color: #0b2159; display: flex; flex-direction: column">
+  <dc-import name="NavBar" role="alumnus" active="posts" open="{{ false }}" hint-size="100%,66px"></dc-import>
+  <main style="flex: 1; width: 100%; max-width: 1120px; margin: 0 auto; box-sizing: border-box; padding: 32px 24px 56px; display: flex; flex-direction: column; gap: 22px">
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <h1 style="margin: 0; font-size: 30px; font-weight: 800">News from Herzliah</h1>
+      <p style="margin: 0; font-size: 15px; color: #3a4a70">Updates and campaigns from the school, for verified alumni.</p>
+    </div>
+    <div role="group" aria-label="Show" style="display: flex; gap: 8px; flex-wrap: wrap"><button type="button" aria-pressed="true" style="padding: 8px 16px; border-radius: 999px; font-size: 14px; font-weight: 700; cursor: pointer; background: #0b2159; color: #ffffff; border: 1px solid #0b2159">All</button><button type="button" aria-pressed="false" style="padding: 8px 16px; border-radius: 999px; font-size: 14px; font-weight: 700; cursor: pointer; background: #ffffff; color: #0b2159; border: 1px solid #c8cfdf">News</button><button type="button" aria-pressed="false" style="padding: 8px 16px; border-radius: 999px; font-size: 14px; font-weight: 700; cursor: pointer; background: #ffffff; color: #0b2159; border: 1px solid #c8cfdf">Fundraising</button></div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; align-items: start">
+          <article style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column">
+            <div role="img" aria-label="Library campaign 2027 cover" style="height: 150px; background: linear-gradient(135deg, #7b1e3d 0%, #c45b7d 100%); display: flex; align-items: flex-end; padding: 12px 16px; box-sizing: border-box; color: rgba(255,255,255,0.85); font-size: 12px; font-weight: 600">Cover image</div>
+            <div style="padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 10px">
+              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap"><span style="padding: 3px 9px; border-radius: 6px; background: #f1dce3; color: #611630; font-size: 12px; font-weight: 700">Fundraising</span><span style="font-size: 13px; color: #4a5575">Until Jun 30, 2027</span></div>
+              <h2 style="margin: 0; font-size: 19px; font-weight: 800">Library campaign 2027</h2>
+              <p style="margin: 0; font-size: 15px; line-height: 1.55; color: #3a4a70">We're renewing the library: new study rooms, a maker corner and 4,000 new books. Alumni gifts make it happen.</p>
+              <span style="font-size: 14px; font-weight: 700">Goal: $250,000 by June</span>
+              <div style="display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: 8px; background: #f7f7f6; border: 1px solid #e2e5ee; font-size: 13px; line-height: 1.5; color: #3a4a70">
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3a4a70" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex: none; margin-top: 2px"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg>
+                <span>You will leave Herzliah Alumni Network. Donations are handled by Herzliah High School on its own website.</span>
+              </div>
+              <a href="#" target="_blank" rel="noopener noreferrer" style="padding: 11px 20px; border-radius: 7px; border: 0; background: #7b1e3d; color: #ffffff; font-weight: 700; font-size: 14px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; align-self: flex-start">Give on herzliah.ca<span aria-hidden="true">↗</span><span style="position: absolute; left: -9999px">(opens in a new tab)</span></a>
+            </div>
+          </article>
+          <article style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column">
+            <div role="img" aria-label="Class of 2016 reunion recap cover" style="height: 150px; background: linear-gradient(135deg, #1b5e33 0%, #5fa77a 100%); display: flex; align-items: flex-end; padding: 12px 16px; box-sizing: border-box; color: rgba(255,255,255,0.85); font-size: 12px; font-weight: 600">Cover image</div>
+            <div style="padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 10px">
+              <div style="display: flex; gap: 8px; align-items: center"><span style="padding: 3px 9px; border-radius: 6px; background: #e8edf8; color: #0b2159; font-size: 12px; font-weight: 700">News</span><span style="font-size: 13px; color: #4a5575">Nov 12, 2026</span></div>
+              <h2 style="margin: 0; font-size: 19px; font-weight: 800">Class of 2016 reunion recap</h2>
+              <p style="margin: 0; font-size: 15px; line-height: 1.55; color: #3a4a70">Over 80 graduates came back for an evening of stories, old yearbooks and a tour of the new wing. Photos inside.</p>
+              <a href="PostDetail.dc.html" style="font-size: 14px; font-weight: 700; align-self: flex-start">Read more →</a>
+            </div>
+          </article>
+          <article style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column">
+            <div role="img" aria-label="Mazal tov to our debate team cover" style="height: 150px; background: linear-gradient(135deg, #0b2159 0%, #3a4f8f 100%); display: flex; align-items: flex-end; padding: 12px 16px; box-sizing: border-box; color: rgba(255,255,255,0.85); font-size: 12px; font-weight: 600">Cover image</div>
+            <div style="padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 10px">
+              <div style="display: flex; gap: 8px; align-items: center"><span style="padding: 3px 9px; border-radius: 6px; background: #e8edf8; color: #0b2159; font-size: 12px; font-weight: 700">News</span><span style="font-size: 13px; color: #4a5575">Nov 3, 2026</span></div>
+              <h2 style="margin: 0; font-size: 19px; font-weight: 800">Mazal tov to our debate team</h2>
+              <p style="margin: 0; font-size: 15px; line-height: 1.55; color: #3a4a70">Herzliah placed second at the Quebec provincial championship, its best result in ten years.</p>
+              <a href="PostDetail.dc.html" style="font-size: 14px; font-weight: 700; align-self: flex-start">Read more →</a>
+            </div>
+          </article>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1100}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

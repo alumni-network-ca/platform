@@ -68,6 +68,18 @@ Two new rows on the **School admin** page take a staff member from the invitatio
 
 The preview's Next screen control switches between applicant, email and staff contexts for review. These controls are outside the product screen and never grant applicant access to staff functionality. Sample people and email addresses are mock data. The application includes French signup and request copy. Terms/Privacy destinations remain with PUB-02; the application does not present placeholder consent links. The prototype retains its draft wording. School decision notifications keep their existing outbox dependency (EML-01); the implemented waiting page directs applicants to sign in to check status.
 
+## School posts · November 24, 2026
+
+Only these copies were changed (EPIC-POST, milestone Future); the cloud canvas doesn't have these screens yet. Spec: [`../school-posts.md`](../school-posts.md).
+
+| Design | Change |
+|---|---|
+| `AdmPosts`, `AdmPostNews`, `AdmPostFundraising`, `AdmPostPreview` | New **A7** row on the School admin page: list with a News / Fundraising chooser, rich-text news editor, fundraising form (https link error state), preview. |
+| `Posts`, `PostDetail` | New alumni screens 3.5–3.6: filtered list with the fundraising leave-site note and outbound button, and a news article. |
+| Admin sidebar in every `Adm*` and `StaffInvite*` screen, `NavBar` | "Posts" added to the admin sidebar and the school admin menu; alumni get a **Posts** link, drawn as if the school has published posts. |
+
+Outbound fundraising clicks are recorded but not shown to schools (decided 2026-11-24; POST-07 waits for Noah).
+
 ## Rules drawn on the canvas
 
 - **School admin** sees every school admin page. **Reviewer** sees the dashboard, decides sign-ups, reads the roster, records and audit log; no record actions, exports, templates, staff or settings (ADR 0005).
@@ -127,6 +139,10 @@ Signed-out pages use the `guest` role: FR, Sign in and the proposed Join now act
 | **Built** · A6.7 Link problems (`StaffInviteProblem`) | `/staff/accept?token=` | SA-02 | `staff_invitation_preview` |
 | **Built** · A4.2 School settings (`AdmSettings`) | `/admin/settings` | ADM-08 | `update_school_settings`; logo upload needs storage |
 | **Built** · A4.3 Audit log (`AdmAudit`) | `/admin/audit` | ADM-07 | `audit_people`; RLS audit reads |
+| A7.1 School posts (`AdmPosts`) | `/admin/posts` | POST-02 | new: `school_posts`, `posts.manage` (POST-01) |
+| A7.2 News post (`AdmPostNews`) | `/admin/posts/new?kind=news`, `/admin/posts/[id]` | POST-02, POST-04 | new: `save_post`, `publish_post`; cover upload needs storage |
+| A7.3 Fundraising post (`AdmPostFundraising`) | `/admin/posts/new?kind=fundraising`, `/admin/posts/[id]` | POST-02, POST-06 | new: https check constraint on `school_posts` |
+| A7.4 Preview (`AdmPostPreview`) | `/admin/posts/[id]/preview` | POST-02 | new |
 
 ### Alumni
 
@@ -142,6 +158,8 @@ Signed-out pages use the `guest` role: FR, Sign in and the proposed Join now act
 | **Built** · 3.2 Directory (`Directory`) | `/directory` | DIR-02 |
 | **Built** · 3.3 Profile and message (`Profile`) | `/profile/[id]` | DIR-03, CON-02 |
 | 3.4 Relay email (`RecipientEmail`) | email | CON-02 |
+| 3.5 School posts (`Posts`) | `/posts`; hidden when the school has no published post | POST-03 |
+| 3.6 News post (`PostDetail`) | `/posts/[id]` | POST-03 |
 
 Implementation notes: A2.3 uses a dedicated route with dialog styling. The record edit route was added to cover the fields accepted by `admin_update_profile`; it is not drawn on the canvas. French admin copy and empty states need Noah’s language review.
 

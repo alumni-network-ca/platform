@@ -102,7 +102,7 @@ class Component extends DCLogic {
       guest: { name: '', initials: '', email: '', subline: '', subFg: '#3a4a70', avatarBg: '#eab6ce', links: [], sections: [] },
       alumnus: {
         name: 'Dana Levy', initials: 'DL', email: 'dana.levy@gmail.com', subline: 'Class of 2014 · Verified graduate', subFg: '#1b5e33', avatarBg: '#eab6ce',
-        links: [['Home', 'Home.dc.html', true], ['Directory', 'Directory.dc.html']],
+        links: [['Home', 'Home.dc.html', true], ['Directory', 'Directory.dc.html'], ['Posts', 'Posts.dc.html']],
         sections: [
           sec('', [item('My profile', 'Me.dc.html'), item('Edit profile', 'OnbAbout.dc.html'), item('Who can see me', 'OnbPublish.dc.html', 'Verified alumni', 'good')]),
           sec('Account', [item('Email and sign-in', '#'), langItem, item('Download my data', '#')]),
@@ -133,7 +133,7 @@ class Component extends DCLogic {
         name: 'Ruth Klein', initials: 'RK', email: 'rklein@[school domain]', subline: 'Herzliah High School', subFg: '#3a4a70', avatarBg: '#c9d6f2',
         links: [['Admin', 'AdmDashboard.dc.html', true, 7], ['Directory', 'Directory.dc.html']],
         sections: [
-          sec('Admin', [item('Dashboard', 'AdmDashboard.dc.html'), item('Approvals', 'AdmQueue.dc.html', '7', 'count'), item('Alumni', 'AdmRoster.dc.html'), item('Staff', 'AdmStaff.dc.html'), item('School settings', 'AdmSettings.dc.html')]),
+          sec('Admin', [item('Dashboard', 'AdmDashboard.dc.html'), item('Approvals', 'AdmQueue.dc.html', '7', 'count'), item('Alumni', 'AdmRoster.dc.html'), item('Posts', 'AdmPosts.dc.html'), item('Staff', 'AdmStaff.dc.html'), item('School settings', 'AdmSettings.dc.html')]),
           sec('Account', [item('Two-factor and sign-in', '#', 'On', 'good'), langItem]),
           signOut
         ]
@@ -171,7 +171,7 @@ class Component extends DCLogic {
     var sections = p.sections.slice();
     if (role === 'school_admin' && also) {
       p = Object.assign({}, p, { subline: 'Herzliah High School · Class of 1998' });
-      sections.splice(1, 0, sec('You are also an alumnus', [item('Alumni home', 'Home.dc.html'), item('My alumni profile', 'Me.dc.html'), item('Browse as an alumnus', 'Directory.dc.html')]));
+      sections.splice(1, 0, sec('You are also an alumnus', [item('Alumni home', 'Home.dc.html'), item('My alumni profile', 'Me.dc.html'), item('Browse as an alumnus', 'Directory.dc.html'), item('School posts', 'Posts.dc.html')]));
     }
     var pill = { reviewer: ['Reviewer', 'transparent', '#d6e2ff', '1px solid #8fa6d6'], school_admin: ['School admin', '#eab6ce', '#0b2159', '0'], platform_admin: ['Platform admin', '#7b5bc4', '#ffffff', '0'] }[role];
     var act = (this.props.active || '').toLowerCase();

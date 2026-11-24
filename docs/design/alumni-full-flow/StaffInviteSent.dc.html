@@ -20,7 +20,7 @@ a:focus-visible,button:focus-visible,input:focus,select:focus{outline:2px solid 
   <dc-import name="NavBar" role="school_admin" active="admin" open="{{ false }}" hint-size="100%,66px"></dc-import>
   <div style="flex: 1; display: flex; flex-wrap: wrap">
     <nav aria-label="Admin" style="flex: 1 1 200px; max-width: 232px; background: #ffffff; border-right: 1px solid #e2e5ee; padding: 20px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px">
-      <sc-for list="{{nav}}" as="n" hint-placeholder-count="9">
+      <sc-for list="{{nav}}" as="n" hint-placeholder-count="10">
         <a href="{{n.href}}" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: {{n.weight}}; background: {{n.bg}}; color: #0b2159; text-decoration: none">{{n.label}}<sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{false}}"><span style="min-width: 22px; padding: 2px 7px; box-sizing: border-box; border-radius: 999px; background: #7b1e3d; color: #ffffff; font-size: 12px; font-weight: 700; text-align: center">{{n.badge}}</span></sc-if></a>
       </sc-for>
     </nav>
@@ -100,7 +100,7 @@ class Component extends DCLogic {
   renderVals() {
     var self = this;
     var active = 'staff';
-    var items = [['dashboard', 'Dashboard', 'AdmDashboard.dc.html'], ['queue', 'Approvals', 'AdmQueue.dc.html', 7], ['roster', 'Alumni', 'AdmRoster.dc.html'], ['templates', 'Email templates', 'AdmTemplates.dc.html'], ['freshness', 'Freshness', 'AdmFreshness.dc.html'], ['exports', 'Exports', 'AdmExport.dc.html'], ['staff', 'Staff', 'AdmStaff.dc.html'], ['audit', 'Audit log', 'AdmAudit.dc.html'], ['settings', 'Settings', 'AdmSettings.dc.html']];
+    var items = [['dashboard', 'Dashboard', 'AdmDashboard.dc.html'], ['queue', 'Approvals', 'AdmQueue.dc.html', 7], ['roster', 'Alumni', 'AdmRoster.dc.html'], ['templates', 'Email templates', 'AdmTemplates.dc.html'], ['posts', 'Posts', 'AdmPosts.dc.html'], ['freshness', 'Freshness', 'AdmFreshness.dc.html'], ['exports', 'Exports', 'AdmExport.dc.html'], ['staff', 'Staff', 'AdmStaff.dc.html'], ['audit', 'Audit log', 'AdmAudit.dc.html'], ['settings', 'Settings', 'AdmSettings.dc.html']];
     var nav = items.map(function (it) {
       var on = it[0] === active;
       return { label: it[1], href: it[2], badge: it[3] || 0, hasBadge: !!it[3], weight: on ? '700' : '500', bg: on ? '#faeef3' : 'transparent' };

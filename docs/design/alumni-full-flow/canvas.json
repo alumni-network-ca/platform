@@ -597,6 +597,66 @@
       "w": 1280,
       "x": 0,
       "y": 2880
+    },
+    "AdmPosts.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A7.1 School posts — list and new-post chooser",
+      "w": 1280,
+      "x": 0,
+      "y": 8280
+    },
+    "AdmPostNews.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A7.2 News post — rich-text editor, schedule",
+      "w": 1280,
+      "x": 1360,
+      "y": 8280
+    },
+    "AdmPostFundraising.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A7.3 Fundraising post — https link (error state)",
+      "w": 1280,
+      "x": 2720,
+      "y": 8280
+    },
+    "AdmPostPreview.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "school-admin",
+      "title": "A7.4 Preview as alumni see it",
+      "w": 1280,
+      "x": 4080,
+      "y": 8280
+    },
+    "Posts.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "is_interactive": true,
+      "page": "alumni",
+      "title": "3.5 School posts — All / News / Fundraising",
+      "w": 1280,
+      "x": 6800,
+      "y": 3000
+    },
+    "PostDetail.dc.html": {
+      "expand": "fill",
+      "h": 1200,
+      "is_interactive": true,
+      "page": "alumni",
+      "title": "3.6 News post",
+      "w": 1280,
+      "x": 8160,
+      "y": 3000
     }
   },
   "createdOnFiles": {
@@ -629,7 +689,10 @@
     "adm5",
     "adm6",
     "admInviteRules",
-    "admInviteNeeds"
+    "admInviteNeeds",
+    "adm7",
+    "admPostsRules",
+    "alumniPostsRules"
   ],
   "notes": {
     "adm5": {
@@ -822,6 +885,31 @@
       "w": 240,
       "x": 0,
       "y": 2580
+    },
+    "adm7": {
+      "kind": "title1",
+      "maxW": 4000,
+      "page": "school-admin",
+      "text": "A7 · School posts (Future, EPIC-POST)",
+      "w": 240,
+      "x": 0,
+      "y": 7980
+    },
+    "admPostsRules": {
+      "fill": "blue",
+      "page": "school-admin",
+      "text": "School posts\n\nTwo kinds in one list: News (rich text) and Fundraising (a card that links to the school's own donation page).\n\nFundraising links must start with https:// — the database refuses anything else.\n\nAlumni see published posts only. Drafts and scheduled posts stay hidden.\n\nOutbound clicks are recorded but not shown to the school yet (POST-07).\n\nReviewers don't see Posts. Spec: docs/design/school-posts.md",
+      "w": 420,
+      "x": 5440,
+      "y": 8280
+    },
+    "alumniPostsRules": {
+      "fill": "blue",
+      "page": "alumni",
+      "text": "School posts\n\nThe Posts link and page exist only when the school has at least one published post.\n\nFundraising cards always show the destination host and the leave-site note before the button. The button opens a new tab.",
+      "w": 420,
+      "x": 9520,
+      "y": 3000
     }
   },
   "order": [
@@ -848,6 +936,8 @@
     "Directory.dc.html",
     "Profile.dc.html",
     "RecipientEmail.dc.html",
+    "Posts.dc.html",
+    "PostDetail.dc.html",
     "AdmDashboard.dc.html",
     "AdmQueue.dc.html",
     "AdmReview.dc.html",
@@ -871,6 +961,10 @@
     "StaffMfa.dc.html",
     "StaffWelcome.dc.html",
     "StaffInviteProblem.dc.html",
+    "AdmPosts.dc.html",
+    "AdmPostNews.dc.html",
+    "AdmPostFundraising.dc.html",
+    "AdmPostPreview.dc.html",
     "SaSchools.dc.html",
     "SaCreate.dc.html",
     "SaSetup.dc.html",

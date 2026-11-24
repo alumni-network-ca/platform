@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin — School posts</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7b1e3d}a:hover{color:#611630}
+button,input,select,textarea{font:inherit}
+button:focus-visible,input:focus,select:focus,textarea:focus,a:focus-visible{outline:2px solid #7b1e3d;outline-offset:1px}
+</style>
+</helmet>
+<div style="min-height: 960px; background: #f7f7f6; font-family: Inter, Arial, sans-serif; color: #0b2159; display: flex; flex-direction: column">
+  <dc-import name="NavBar" role="school_admin" active="admin" open="{{ false }}" hint-size="100%,66px"></dc-import>
+  <div style="flex: 1; display: flex; flex-wrap: wrap">
+    <nav aria-label="Admin" style="flex: 1 1 200px; max-width: 232px; background: #ffffff; border-right: 1px solid #e2e5ee; padding: 20px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px">
+      <a href="AdmDashboard.dc.html" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: 500; background: transparent; color: #0b2159; text-decoration: none">Dashboard</a>
+      <a href="AdmQueue.dc.html" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: 500; background: transparent; color: #0b2159; text-decoration: none">Approvals<span style="min-width: 22px; padding: 2px 7px; box-sizing: border-box; border-radius: 999px; background: #7b1e3d; color: #ffffff; font-size: 12px; font-weight: 700; text-align: center">7</span></a>
+      <a href="AdmRoster.dc.html" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: 500; background: transparent; color: #0b2159; text-decoration: none">Alumni</a>
+      <a href="AdmTemplates.dc.html" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: 500; background: transparent; color: #0b2159; text-decoration: none">Email templates</a>
+      <a href="AdmPosts.dc.html" aria-current="page" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: 700; background: #faeef3; color: #0b2159; text-decoration: none">Posts</a>
+      <a href="AdmFreshness.dc.html" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: 500; background: transparent; color: #0b2159; text-decoration: none">Freshness</a>
+      <a href="AdmExport.dc.html" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: 500; background: transparent; color: #0b2159; text-decoration: none">Exports</a>
+      <a href="AdmStaff.dc.html" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: 500; background: transparent; color: #0b2159; text-decoration: none">Staff</a>
+      <a href="AdmAudit.dc.html" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: 500; background: transparent; color: #0b2159; text-decoration: none">Audit log</a>
+      <a href="AdmSettings.dc.html" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: 500; background: transparent; color: #0b2159; text-decoration: none">Settings</a>
+    </nav>
+    <main style="flex: 999 1 640px; min-width: 0; padding: 28px 36px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px; max-width: 1040px">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 14px">
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <h1 style="margin: 0; font-size: 28px; font-weight: 800">School posts</h1>
+          <p style="margin: 0; font-size: 15px; color: #3a4a70">News and fundraising for Herzliah alumni. Only published posts are visible to them.</p>
+        </div>
+        <button type="button" aria-haspopup="dialog" aria-expanded="true" style="padding: 11px 20px; border-radius: 7px; border: 0; background: #7b1e3d; color: #ffffff; font-weight: 700; font-size: 14px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px"><span aria-hidden="true" style="font-size: 18px; line-height: 1">+</span>New post</button>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-start">
+        <section style="flex: 999 1 520px; min-width: 0; background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; overflow: hidden">
+          <div role="tablist" aria-label="Kind" style="display: flex; gap: 8px; padding: 16px; border-bottom: 1px solid #eef0f4; flex-wrap: wrap">
+            <a href="#" aria-current="true" style="padding: 7px 14px; border-radius: 999px; font-size: 14px; font-weight: 700; text-decoration: none; background: #0b2159; color: #ffffff">All <span style="font-weight: 500; opacity: 0.8">5</span></a><a href="#" style="padding: 7px 14px; border-radius: 999px; font-size: 14px; font-weight: 700; text-decoration: none; background: #ffffff; color: #0b2159; border: 1px solid #d5d9e3">News <span style="font-weight: 500; opacity: 0.8">2</span></a><a href="#" style="padding: 7px 14px; border-radius: 999px; font-size: 14px; font-weight: 700; text-decoration: none; background: #ffffff; color: #0b2159; border: 1px solid #d5d9e3">Fundraising <span style="font-weight: 500; opacity: 0.8">3</span></a>
+          </div>
+          <div style="overflow-x: auto">
+          <table style="width: 100%; border-collapse: collapse; font-size: 14px">
+            <thead><tr style="text-align: left; color: #4a5575; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em">
+              <th scope="col" style="padding: 12px 16px; font-weight: 700">Title</th><th scope="col" style="padding: 12px 16px; font-weight: 700">Kind</th><th scope="col" style="padding: 12px 16px; font-weight: 700">Status</th><th scope="col" style="padding: 12px 16px; font-weight: 700">Date</th><th scope="col" style="padding: 12px 16px"><span style="position: absolute; left: -9999px">Actions</span></th>
+            </tr></thead>
+            <tbody>
+          <tr style="border-top: 1px solid #eef0f4">
+            <td style="padding: 14px 16px"><a href="AdmPostFundraising.dc.html" style="color: #0b2159; font-weight: 700; text-decoration: none">Library campaign 2027</a></td>
+            <td style="padding: 14px 16px"><span style="padding: 3px 9px; border-radius: 6px; background: #f1dce3; color: #611630; font-size: 12px; font-weight: 700">Fundraising</span></td>
+            <td style="padding: 14px 16px"><span style="padding: 4px 10px; border-radius: 999px; background: #e3f3e8; color: #1b5e33; font-size: 12px; font-weight: 700; white-space: nowrap">Published</span></td>
+            <td style="padding: 14px 16px; color: #4a5575">Nov 18, 2026</td>
+            <td style="padding: 14px 16px; text-align: right"><a href="AdmPostFundraising.dc.html" style="font-weight: 600">Edit</a></td>
+          </tr>
+          <tr style="border-top: 1px solid #eef0f4">
+            <td style="padding: 14px 16px"><a href="AdmPostNews.dc.html" style="color: #0b2159; font-weight: 700; text-decoration: none">Class of 2016 reunion recap</a></td>
+            <td style="padding: 14px 16px"><span style="padding: 3px 9px; border-radius: 6px; background: #e8edf8; color: #0b2159; font-size: 12px; font-weight: 700">News</span></td>
+            <td style="padding: 14px 16px"><span style="padding: 4px 10px; border-radius: 999px; background: #e3f3e8; color: #1b5e33; font-size: 12px; font-weight: 700; white-space: nowrap">Published</span></td>
+            <td style="padding: 14px 16px; color: #4a5575">Nov 12, 2026</td>
+            <td style="padding: 14px 16px; text-align: right"><a href="AdmPostNews.dc.html" style="font-weight: 600">Edit</a></td>
+          </tr>
+          <tr style="border-top: 1px solid #eef0f4">
+            <td style="padding: 14px 16px"><a href="AdmPostNews.dc.html" style="color: #0b2159; font-weight: 700; text-decoration: none">New robotics lab opens</a></td>
+            <td style="padding: 14px 16px"><span style="padding: 3px 9px; border-radius: 6px; background: #e8edf8; color: #0b2159; font-size: 12px; font-weight: 700">News</span></td>
+            <td style="padding: 14px 16px"><span style="padding: 4px 10px; border-radius: 999px; background: #fff4dc; color: #7a4b00; font-size: 12px; font-weight: 700; white-space: nowrap">Scheduled</span></td>
+            <td style="padding: 14px 16px; color: #4a5575">Dec 2, 2026 · 9:00</td>
+            <td style="padding: 14px 16px; text-align: right"><a href="AdmPostNews.dc.html" style="font-weight: 600">Edit</a></td>
+          </tr>
+          <tr style="border-top: 1px solid #eef0f4">
+            <td style="padding: 14px 16px"><a href="AdmPostFundraising.dc.html" style="color: #0b2159; font-weight: 700; text-decoration: none">Scholarship fund — winter appeal</a></td>
+            <td style="padding: 14px 16px"><span style="padding: 3px 9px; border-radius: 6px; background: #f1dce3; color: #611630; font-size: 12px; font-weight: 700">Fundraising</span></td>
+            <td style="padding: 14px 16px"><span style="padding: 4px 10px; border-radius: 999px; background: #eef0f4; color: #3a4a70; font-size: 12px; font-weight: 700; white-space: nowrap">Draft</span></td>
+            <td style="padding: 14px 16px; color: #4a5575">Edited Nov 23</td>
+            <td style="padding: 14px 16px; text-align: right"><a href="AdmPostFundraising.dc.html" style="font-weight: 600">Edit</a></td>
+          </tr>
+          <tr style="border-top: 1px solid #eef0f4">
+            <td style="padding: 14px 16px"><a href="AdmPostFundraising.dc.html" style="color: #0b2159; font-weight: 700; text-decoration: none">Annual gala 2026</a></td>
+            <td style="padding: 14px 16px"><span style="padding: 3px 9px; border-radius: 6px; background: #f1dce3; color: #611630; font-size: 12px; font-weight: 700">Fundraising</span></td>
+            <td style="padding: 14px 16px"><span style="padding: 4px 10px; border-radius: 999px; background: #eef0f4; color: #4a5575; font-size: 12px; font-weight: 700; white-space: nowrap">Ended</span></td>
+            <td style="padding: 14px 16px; color: #4a5575">Ended Oct 31, 2026</td>
+            <td style="padding: 14px 16px; text-align: right"><a href="AdmPostFundraising.dc.html" style="font-weight: 600">Edit</a></td>
+          </tr>
+            </tbody>
+          </table>
+          </div>
+        </section>
+        <div role="dialog" aria-label="New post" style="flex: 1 1 280px; background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; box-shadow: 0 12px 32px rgba(11,33,89,0.12); padding: 18px; display: flex; flex-direction: column; gap: 10px">
+          <h2 style="margin: 0 0 4px; font-size: 15px; font-weight: 700">What are you posting?</h2>
+          <a href="AdmPostNews.dc.html" style="display: flex; flex-direction: column; gap: 4px; padding: 14px; border: 1px solid #d5d9e3; border-radius: 10px; text-decoration: none; color: #0b2159">
+            <span style="display: flex; gap: 8px; align-items: center; font-weight: 700; font-size: 15px">News</span>
+            <span style="font-size: 13px; color: #3a4a70; line-height: 1.45">An update or story, with formatting and images.</span>
+          </a>
+          <a href="AdmPostFundraising.dc.html" style="display: flex; flex-direction: column; gap: 4px; padding: 14px; border: 1px solid #d5d9e3; border-radius: 10px; text-decoration: none; color: #0b2159">
+            <span style="display: flex; gap: 8px; align-items: center; font-weight: 700; font-size: 15px">Fundraising</span>
+            <span style="font-size: 13px; color: #3a4a70; line-height: 1.45">A short card that links to your school's donation page. No money goes through the network.</span>
+          </a>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":960}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

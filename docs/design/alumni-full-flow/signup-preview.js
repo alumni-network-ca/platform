@@ -19,7 +19,13 @@ const screens = {
   OnbCareer: ["Existing design · career", "OnbNetwork", "Existing onboarding design."],
   OnbNetwork: ["Existing design · network", "OnbPublish", "Existing onboarding design."],
   OnbPublish: ["Existing design · visibility", "AccessApproved", "Existing onboarding design."],
-  AdmQueue: ["Existing design · school approval queue", "SignupReview", "The new reviewer snapshot focuses on this applicant's admission."]
+  AdmQueue: ["Existing design · school approval queue", "SignupReview", "The new reviewer snapshot focuses on this applicant's admission."],
+  AdmPosts: ["A7.1 · School posts list", "AdmPostNews", "School admins choose News or Fundraising first. Reviewers don't see Posts."],
+  AdmPostNews: ["A7.2 · News post editor", "AdmPostFundraising", "Rich text, cover, draft, schedule and an optional alumni email."],
+  AdmPostFundraising: ["A7.3 · Fundraising post form", "AdmPostPreview", "The link must be https; the database enforces it too."],
+  AdmPostPreview: ["A7.4 · Preview as alumni see it", "Posts", "Only staff can see a preview."],
+  Posts: ["3.5 · School posts for alumni", "PostDetail", "Hidden when the school has no published post. Outbound clicks are recorded, not shown to the school."],
+  PostDetail: ["3.6 · News post", "Posts", "A news article in full."]
 };
 let mobile = window.matchMedia("(max-width: 760px)").matches;
 let revision = 0;
