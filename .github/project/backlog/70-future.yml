@@ -20,7 +20,7 @@ items:
   - key: FUT-02
     title: "Class reunion organizer"
     size: L
-    summary: Gab's idea. Help a graduating class organize a reunion using the directory (class lists, opt-in RSVP, organizer tools) without exposing contact details beyond what each alumnus allows.
+    summary: "Superseded by EVT-01..EVT-09 (milestone M5). Original idea: help a graduating class organize a reunion using the directory without exposing contact details beyond what each alumnus allows."
 
   - key: FUT-03
     title: "Jobs and opportunities board"
@@ -30,7 +30,7 @@ items:
   - key: FUT-04
     title: "Events (listings, registration, invitations)"
     size: L
-    summary: Event listings, registration and invitations per institution.
+    summary: "Superseded by EVT-01..EVT-09 (milestone M5): event listings, RSVP and invitations per institution."
 
   - key: FUT-05
     title: "Class communities, groups and chapters"
@@ -75,4 +75,4 @@ items:
   - key: FUT-13
     title: "Newsletters and marketing campaigns"
     size: M
-    summary: CASL-compliant campaigns with consent management and unsubscribe. Outside transactional email.
+    summary: CASL-compliant campaigns with consent management and unsubscribe, including periodic digests. Outside transactional email. In-app school news is NEWS-01..NEWS-05 (M5).

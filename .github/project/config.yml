@@ -91,6 +91,10 @@ milestones:
     description: "Acceptance, training, production release, invitation waves, pilot monitoring. Target 2026-12-01. (§10 phase 5)"
     start: 2026-11-23
     due: 2026-12-01
+  - key: M5
+    title: "M5 · Post-launch features"
+    description: "Features Herzliah asked for after the pilot scope was fixed, for every school: configurable export columns, events and reunions, fundraising links."
+    start: 2026-12-02
   - key: FUT
     title: "Future · Post-launch modules"
     description: "Outside the launch baseline. Each needs a separate scope decision with requirements and acceptance criteria."

@@ -229,6 +229,43 @@ items:
     ac:
       - "Changing the export id, or using another tenant's id, returns 404 or 403. Expired links fail."
 
+  - key: EXP-03
+    title: "Export column sets: each school chooses and saves the columns of its alumni export"
+    epic: EPIC-IMPEXP
+    milestone: M5
+    labels: [type:feature, area:import-export, P1]
+    size: M
+    depends: [EXP-01, EXP-02]
+    summary: |
+      Herzliah wants to export all its alumni data to CSV with a column list it will supply, and every school will
+      want its own. An admin picks and orders columns from the fields their role may read, and saves them as a named
+      preset per school; the school's list becomes its default. The export keeps EXP-01's rules (roster filters,
+      caller's RLS, formula neutralization) and EXP-02's storage, signed links and audit. Only owners and admins
+      can export (DEC-04); reviewers cannot. Contact fields need the export permission and only appear for people who
+      allow the admin to see them. The first preset is Herzliah's list (see EXP-04).
+    ac:
+      - An admin can build, name, reorder, edit and delete presets, and export with one; a reviewer sees no export.
+      - A column the role may not read is refused by the database when called directly, not only hidden in the UI (pgTAP).
+      - The file has exactly the preset's columns in its order, with a header row in the admin's language, and round-trips in Excel and Google Sheets with accents intact (UTF-8 with BOM).
+      - Every export writes an audit row with the preset, filters, columns and row count.
+      - One school's presets are invisible to another school (isolation test).
+
+  - key: EXP-04
+    title: "Get Herzliah's CSV column list and load it as their preset"
+    epic: EPIC-IMPEXP
+    milestone: M5
+    labels: [type:business, area:import-export, P1, needs-noah]
+    assignee: castielnoah-art
+    track: Business
+    size: XS
+    summary: |
+      Herzliah will provide the exact columns they want in the CSV, with headers and order. Collect the list in
+      writing and confirm for each column that it exists on the profile or record, who may see it, and whether alumni
+      agreed to share it with admins. Anything missing becomes a profile-field question, not a silent addition.
+    ac:
+      - The column list is attached to the issue and each column is mapped to a field (or flagged as missing).
+      - The mapped list is loaded as Herzliah's default preset once EXP-03 ships.
+
   # ---------------------------------------------------------------- freshness (WS4)
   - key: FRS-01
     title: "Freshness data model with provenance"
