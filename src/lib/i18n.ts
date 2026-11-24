@@ -554,6 +554,7 @@ export const translations = {
       donateHint:
         "Opens the school's own donation page. This network never handles payments or donor details.",
       httpsHint: "Must start with https://",
+      urlPlaceholder: "https://",
       socialSection: "Social media",
       aboutSection: "About",
       aboutEn: "About (English)",
@@ -1552,6 +1553,7 @@ export const translations = {
       donateHint:
         "Ouvre la page de dons de l'école. Ce réseau ne gère jamais les paiements ni les renseignements des donateurs.",
       httpsHint: "Doit commencer par https://",
+      urlPlaceholder: "https://",
       socialSection: "Réseaux sociaux",
       aboutSection: "À propos",
       aboutEn: "À propos (anglais)",

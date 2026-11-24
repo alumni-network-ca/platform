@@ -6,13 +6,13 @@
 
 -- https only, a host with no user:password@, no spaces.
 create function public.is_https_url(p_url text) returns boolean
-language sql immutable as $$
+language sql immutable security definer set search_path = '' as $$
   select p_url is null or (length(p_url) <= 500 and p_url ~ '^https://[^/@\s]+\.[^/@\s]+(/\S*)?$');
 $$;
 
 -- An object whose keys are known networks and whose values are https links.
 create function public.is_social_links(p_links jsonb) returns boolean
-language sql immutable as $$
+language sql immutable security definer set search_path = '' as $$
   select jsonb_typeof(p_links) = 'object'
     and not exists (
       select 1 from jsonb_each(p_links) e
@@ -39,8 +39,10 @@ create table public.school_pages (
 
 alter table public.school_pages enable row level security;
 create policy school_pages_read on public.school_pages for select to authenticated
-  using (public.has_permission(institution_id, 'directory.use') or public.has_permission(institution_id, 'settings.manage')
-         or public.is_system_admin());
+  using (
+    institution_id in (select public.permitted_institutions('directory.use'))
+    or institution_id in (select public.permitted_institutions('settings.manage'))
+  );
 grant select on public.school_pages to authenticated;
 
 -- Replaces the page with p_page: a missing or blank field is cleared. Returns nothing; the app re-reads the row.
@@ -75,5 +77,8 @@ begin
     jsonb_build_object('fields', coalesce(to_jsonb(v_filled), '[]'::jsonb)));
 end $$;
 
+-- The link checks run inside the table's constraints, as the role that writes (set_school_page's owner).
+revoke execute on function public.is_https_url(text), public.is_social_links(jsonb)
+  from public, anon, authenticated;
 revoke execute on function public.set_school_page(uuid, jsonb) from public, anon;
 grant execute on function public.set_school_page(uuid, jsonb) to authenticated;

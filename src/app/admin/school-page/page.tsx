@@ -32,7 +32,7 @@ export default async function SchoolPageAdmin() {
         type="url"
         inputMode="url"
         maxLength={500}
-        placeholder="https://"
+        placeholder={t.urlPlaceholder}
         defaultValue={value ?? ""}
       />
       <span className="text-sm font-normal text-subtle-foreground">
