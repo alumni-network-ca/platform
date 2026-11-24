@@ -73,7 +73,8 @@ select is(
    where n.nspname = 'public' and has_function_privilege('authenticated', p.oid, 'execute')
      and p.proname in ('log_audit', 'enqueue_email', 'mint_token', 'record_confirmation', 'hit_rate_limit',
                        'create_staff_invitation', 'assert_permission', 'resolve_email_template', 'assert_last_school_admin_kept',
-                       'person_name', 'list_school_staff', 'access_request_match_rows')),
+                       'person_name', 'list_school_staff', 'access_request_match_rows',
+                       'grant_staff_invitation', 'staff_inviter_name')),
   null,
   'internal helpers are not executable by authenticated users'
 );

@@ -83,6 +83,26 @@ describe("homeFor", () => {
     ["nothing at this school", none, "/join"],
     ["platform admin with no role here", { ...none, platformAdmin: true }, "/account/platform"],
     [
+      "invited to the staff, nothing else here",
+      { ...none, invitation: "reviewer" },
+      "/staff/accept",
+    ],
+    [
+      "invited after withdrawing an alumni request",
+      { ...none, request: "withdrawn", invitation: "school_admin" },
+      "/staff/accept",
+    ],
+    [
+      "invited while an alumni request is pending",
+      { ...none, request: "pending", invitation: "reviewer" },
+      "/account/pending",
+    ],
+    [
+      "platform admin invited to the staff here",
+      { ...none, platformAdmin: true, invitation: "school_admin" },
+      "/staff/accept",
+    ],
+    [
       "platform admin who is also an alumnus here",
       {
         membership: member("alumni"),
@@ -143,6 +163,15 @@ describe("canOpen", () => {
     expect(canOpen(none, "/account/platform")).toBe(false);
     expect(canOpen({ ...none, platformAdmin: true }, "/account/platform")).toBe(true);
     expect(canOpen({ ...none, platformAdmin: true }, "/join")).toBe(true);
+  });
+
+  it("keeps a staff invitee off the alumni sign-up and on the invitation", () => {
+    const invitee: AccountState = { ...none, invitation: "reviewer" };
+    expect(canOpen(invitee, "/join")).toBe(false);
+    expect(canOpen(invitee, "/join/edit")).toBe(false);
+    expect(canOpen(invitee, "/staff/accept")).toBe(true);
+    expect(canOpen(invitee, "/admin")).toBe(false);
+    expect(canOpen({ ...invitee, platformAdmin: true }, "/join")).toBe(false);
   });
 
   it("does not treat look-alike prefixes as the same page", () => {

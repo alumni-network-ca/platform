@@ -1289,6 +1289,7 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      accept_my_staff_invitation: { Args: { p_inst: string }; Returns: string };
       accept_staff_invitation: { Args: { p_token: string }; Returns: string };
       access_request_match_rows: {
         Args: { p_requests: string[] };
@@ -1451,6 +1452,7 @@ export type Database = {
       };
       export_my_data: { Args: { p_inst: string }; Returns: Json };
       feature_institutions: { Args: { p_key: string }; Returns: string[] };
+      grant_staff_invitation: { Args: { p_invitation: string }; Returns: string };
       has_active_grant: { Args: { p_inst: string }; Returns: boolean };
       has_permission: { Args: { p_inst: string; p_perm: string }; Returns: boolean };
       hash_token: { Args: { p_token: string }; Returns: string };
@@ -1499,6 +1501,16 @@ export type Database = {
       my_staff_invitation: {
         Args: { p_inst: string };
         Returns: Database["public"]["Enums"]["member_role"];
+      };
+      my_staff_invitation_preview: {
+        Args: { p_inst: string };
+        Returns: {
+          email: string;
+          expires_at: string;
+          invited_at: string;
+          inviter_name: string;
+          role: Database["public"]["Enums"]["member_role"];
+        }[];
       };
       normalize_student_id: { Args: { p_value: string }; Returns: string };
       owns_profile: { Args: { p_profile: string }; Returns: boolean };
@@ -1688,6 +1700,7 @@ export type Database = {
           status: string;
         }[];
       };
+      staff_inviter_name: { Args: { p_inst: string; p_invited_by: string }; Returns: string };
       update_school_settings: { Args: { p_inst: string; p_patch: Json }; Returns: undefined };
       validate_template_text: { Args: { p_body: string; p_subject: string }; Returns: undefined };
       withdraw_access_request: { Args: { p_request: string }; Returns: undefined };

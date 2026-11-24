@@ -184,7 +184,9 @@ select pg_temp.refused(who::uuid, sql, description) from (values
   ('11111111-1111-4111-8111-000000000011', $$ select public.decide_access_request('33333333-3333-4333-8333-000000000001', 'approve') $$,
    'an outsider cannot decide requests'),
   ('11111111-1111-4111-8111-000000000011', $$ select public.accept_staff_invitation('guessed-token') $$,
-   'a guessed staff invitation token does nothing')
+   'a guessed staff invitation token does nothing'),
+  ('11111111-1111-4111-8111-000000000011', $$ select public.accept_my_staff_invitation('aaaaaaaa-0000-4000-8000-000000000001') $$,
+   'an outsider with no invitation cannot join the staff by email')
 ) as t(who, sql, description);
 
 select pg_temp.login('11111111-1111-4111-8111-000000000010');

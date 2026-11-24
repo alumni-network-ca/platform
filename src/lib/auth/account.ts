@@ -48,14 +48,24 @@ export const getAccount = cache(async () => {
   const error = membership.error ?? profile.error ?? request.error ?? platformAdmin.error;
   if (error) throw new Error(`Could not load the account: ${error.message}`);
 
+  // A staff invitation matters only to someone with no active membership and no open alumni request here (the
+  // nav bar's invitee, homeFor's /staff/accept), so everyone else skips the lookup.
+  const requestStatus = request.data?.status ?? null;
+  const invitation =
+    membership.data?.status !== "active" && (!requestStatus || requestStatus === "withdrawn")
+      ? await supabase.rpc("my_staff_invitation", { p_inst: school.id })
+      : null;
+  if (invitation?.error) throw new Error(`Could not load the account: ${invitation.error.message}`);
+
   const state: AccountState = {
     membership: membership.data,
     profile: profile.data && {
       status: profile.data.status,
       onboardingComplete: profile.data.onboarding_completed_at !== null,
     },
-    request: request.data?.status ?? null,
+    request: requestStatus,
     platformAdmin: platformAdmin.data === true,
+    invitation: invitation?.data ?? null,
   };
   return { school, supabase, user, state };
 });

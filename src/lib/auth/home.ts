@@ -12,6 +12,8 @@ export type AccountState = {
   request: Enums<"request_status"> | null;
   /** A platform admin (ADR 0005): no access to a school's data without a support grant. */
   platformAdmin?: boolean;
+  /** The role of an open staff invitation here for the account's email (my_staff_invitation), if any. */
+  invitation?: Enums<"member_role"> | null;
 };
 
 const STAFF: Enums<"member_role">[] = ["school_admin", "reviewer"];
@@ -40,8 +42,10 @@ export function homeFor(state: AccountState): string {
     case "rejected":
       return "/account/rejected";
     default:
-      // No relationship yet, a withdrawn request, or a revoked membership (self-deleted, removed staff). A platform
-      // admin with no role here gets a page about support access and the console, not the sign-up form.
+      // No relationship yet, a withdrawn request, or a revoked membership (self-deleted, removed staff). Someone
+      // invited to the staff here finishes that invitation, even if signing in dropped the link (ADR 0016). A
+      // platform admin with no role here gets a page about support access and the console, not the sign-up form.
+      if (state.invitation) return "/staff/accept";
       return state.platformAdmin ? "/account/platform" : "/join";
   }
 }

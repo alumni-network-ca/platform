@@ -3,11 +3,11 @@ import { redirect } from "next/navigation";
 import { SignOutButton } from "@/components/SignOutButton";
 import { dateLabel } from "@/lib/admin/data";
 import { getAccount } from "@/lib/auth/account";
-import { isStaff } from "@/lib/auth/home";
+import { homeFor, isStaff } from "@/lib/auth/home";
 import { format, translations } from "@/lib/i18n";
 import { getServerLocale } from "@/lib/i18n-server";
 import { schoolBranding } from "@/lib/school";
-import { previewInvitation } from "@/lib/staff/invitation";
+import { myInvitation, previewInvitation } from "@/lib/staff/invitation";
 import { AcceptForm } from "./AcceptForm";
 import { InvitationLanding } from "./InvitationLanding";
 import { Button } from "@/components/ui/button";
@@ -39,6 +39,8 @@ type Problem = "wrong_account" | "expired" | "revoked" | "used";
 // Where a staff invitation link leads (SA-02, ADM-06; docs/design/staff-invite.md §3). Signed out, it shows the
 // invitation and the way in (A6.1); signed in with the invited address, the acceptance (A6.4); otherwise why the
 // link doesn't work (A6.7). accept_staff_invitation remains the check that the session's email is the invited one.
+// Without a token, a signed-in invitee sees their open invitation found by email (ADR 0016): signing in at /login
+// drops the link, and homeFor sends them here.
 export default async function AcceptStaffPage({
   searchParams,
 }: {
@@ -46,7 +48,12 @@ export default async function AcceptStaffPage({
 }) {
   const { token = "" } = await searchParams;
   const { school, supabase, user, state } = await getAccount();
-  const invitation = await previewInvitation(supabase, token, school.id);
+  const byEmail = !token && !!user;
+  const invitation = byEmail
+    ? await myInvitation(supabase, school.id)
+    : await previewInvitation(supabase, token, school.id);
+  // Nothing open for this account: back to wherever it belongs here.
+  if (byEmail && invitation.status === "invalid") redirect(homeFor(state!));
   const email = (user?.email ?? "").toLowerCase();
   // Someone who already joined with this link goes straight to their admin pages.
   if (invitation.status === "accepted" && state && isStaff(state) && email === invitation.email)
@@ -55,7 +62,9 @@ export default async function AcceptStaffPage({
   const locale = await getServerLocale();
   const t = translations[locale].staffInvite;
   const { shortName } = schoolBranding(school);
-  const self = `/staff/accept?token=${encodeURIComponent(token)}`;
+  const self = byEmail ? "/staff/accept" : `/staff/accept?token=${encodeURIComponent(token)}`;
+  // Signing out of the page without a link has nothing to return to but sign-in, which comes back here.
+  const switchTo = byEmail ? `/login?next=${encodeURIComponent(self)}` : self;
   const date = (value: string | null) => dateLabel(value, locale);
 
   if (invitation.status === "invalid") {
@@ -251,7 +260,7 @@ export default async function AcceptStaffPage({
           t={{ accept: t.acceptButton, accepting: t.accepting, failed: t.acceptFailed }}
         />
         <Divider>
-          {t.notYou} <SignOutButton to={self} label={t.switchAccount} className="text-sm" />
+          {t.notYou} <SignOutButton to={switchTo} label={t.switchAccount} className="text-sm" />
         </Divider>
         <p className={fine}>{format(t.staysOpen, { date: date(invitation.expiresAt) })}</p>
       </AuthCard>

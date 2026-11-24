@@ -105,6 +105,10 @@ FND-11 ships).
 - **Accept and continue** → `accept_staff_invitation` → `/admin` (A6.6). Then two-factor once FND-11 exists.
 - "Not you? Sign out and use another account". "The invitation stays open until {date}."
 - Signed in with a different email: render A6.7 `wrong_account` instead of the accept button.
+- Also at `/staff/accept` without a token, signed in: the invitation found by the account's email
+  (`my_staff_invitation_preview`), accepted with `accept_my_staff_invitation`. Signing in at `/login` drops the
+  link, so this is an invitee's home page (ADR 0016 amendment); "Not you?" signs out to `/login`. With no open
+  invitation it redirects to the person's home page.
 
 **A6.5 Two-factor setup** (FND-11, not built yet)
 - Drawn for the future: authenticator QR or key, 6-digit check, done. Recovery is a platform-admin reset
@@ -131,8 +135,8 @@ FND-11 ships).
 
 New nav role `invitee` ([`nav-bar.md`](nav-bar.md) §1, §4): signed in, no active membership at this school, an
 open invitation for the account's email (`my_staff_invitation`), no alumni request. No pill; status line
-"Staff invitation · {role}"; menu Language, Sign out. The canvas draws a "Finish staff setup" item, but the
-invitation link exists only in the email, so the menu doesn't link to it.
+"Staff invitation · {role}"; menu **Finish staff setup** → `/staff/accept` (chip: the role), Language, Sign out.
+The logo also leads to `/staff/accept`, the invitee's home page.
 
 ## 5. Accessibility and layout
 
@@ -158,6 +162,10 @@ What the design needed beyond the database, and where it stands:
    copy-link result on the invite page, so the token never travels in a URL.
 5. **Open** · Two-factor: FND-11 (TOTP, `aal2` in `requireStaff` and the staff RPCs, audited platform-admin
    reset). Accepting leads straight to `/admin` until then.
+
+6. **Done** · Accepting without the link (migration `20261123000100`): `my_staff_invitation_preview(p_inst)`
+   and `accept_my_staff_invitation(p_inst)` find the open invitation by the signed-in, confirmed email. Both
+   accept paths share one internal grant helper.
 
 `accept_staff_invitation`'s email check stays the real guard; the matching chip on A6.4 is only a hint.
 
