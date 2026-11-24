@@ -47,7 +47,7 @@ inactive = `#d2d7e4`, 500):
 | Nav role | Links |
 |---|---|
 | guest, applicant, invitee | none |
-| alumnus | Home · Directory |
+| alumnus | Home · Directory · Posts (only when the school has a published post; EPIC-POST, [`school-posts.md`](school-posts.md)) |
 | reviewer, school_admin | Admin (badge = pending sign-ups) · Directory |
 | platform_admin | Schools · Support (badge = active grants) · Health |
 
@@ -122,12 +122,12 @@ canvas draws a "Finish staff setup" item).
 - Sign out
 
 **school_admin** — status line = school name
-- *Admin*: Dashboard · Approvals (count chip) · Alumni · Staff · School settings
+- *Admin*: Dashboard · Approvals (count chip) · Alumni · Posts (`posts.manage`; EPIC-POST) · Staff · School settings
 - *Account*: Two-factor and sign-in (chip "On") · Language
 - Sign out
 
 **school_admin or reviewer with `alsoAlumnus`** — status line "{School} · Class of {year}"; insert after *Admin*:
-- *You are also an alumnus*: Alumni home → `/home` · My alumni profile → `/me` · Browse as an alumnus → `/directory`
+- *You are also an alumnus*: Alumni home → `/home` · My alumni profile → `/me` · Browse as an alumnus → `/directory` · School posts → `/posts` (only when the school has a published post)
 
 **platform_admin** — status line "All schools" (purple)
 - *Console*: Schools (chip = count) · Support access (chip "{n} active", warn) · Platform health (chip "{n} alert(s)" when any, warn)

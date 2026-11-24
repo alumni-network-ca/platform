@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>School post</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7b1e3d}a:hover{color:#611630}
+button,input,select,textarea{font:inherit}
+button:focus-visible,input:focus,select:focus,textarea:focus,a:focus-visible{outline:2px solid #7b1e3d;outline-offset:1px}
+</style>
+</helmet>
+<div style="min-height: 1200px; background: #f7f7f6; font-family: Inter, Arial, sans-serif; color: #0b2159; display: flex; flex-direction: column">
+  <dc-import name="NavBar" role="alumnus" active="posts" open="{{ false }}" hint-size="100%,66px"></dc-import>
+  <main style="flex: 1; width: 100%; max-width: 760px; margin: 0 auto; box-sizing: border-box; padding: 28px 24px 56px; display: flex; flex-direction: column; gap: 18px">
+    <a href="Posts.dc.html" style="font-size: 14px; font-weight: 600; text-decoration: none">← All posts</a>
+    <article style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; overflow: hidden">
+      <div role="img" aria-label="Reunion photo" style="height: 300px; background: linear-gradient(135deg, #1b5e33 0%, #5fa77a 100%); display: flex; align-items: flex-end; padding: 12px 16px; box-sizing: border-box; color: rgba(255,255,255,0.85); font-size: 12px; font-weight: 600">Cover image</div>
+      <div style="padding: 28px 32px 36px; display: flex; flex-direction: column; gap: 14px">
+        <div style="display: flex; gap: 8px; align-items: center"><span style="padding: 3px 9px; border-radius: 6px; background: #e8edf8; color: #0b2159; font-size: 12px; font-weight: 700">News</span><span style="font-size: 13px; color: #4a5575">November 12, 2026</span></div>
+        <h1 style="margin: 0; font-size: 30px; font-weight: 800; line-height: 1.2">Class of 2016 reunion recap</h1>
+        <div style="font-size: 16px; line-height: 1.7; color: #1c2a4f; display: flex; flex-direction: column; gap: 14px">
+          <p style="margin: 0">Over 80 graduates of the Class of 2016 came back to Herzliah on November 8 for an evening of stories, old yearbooks and a first look at the new science wing.</p>
+          <h2 style="margin: 6px 0 0; font-size: 20px">Ten years later</h2>
+          <p style="margin: 0">Graduates travelled from Toronto, New York and Tel Aviv. Many met teachers they hadn't seen since graduation, and several signed up to mentor current students.</p>
+          <ul style="margin: 0; padding-left: 22px"><li>The full photo album is on the school's website.</li><li>The Class of 2017 reunion is planned for spring.</li></ul>
+          <blockquote style="margin: 0; padding: 4px 0 4px 16px; border-left: 3px solid #eab6ce; color: #3a4a70">"It felt like no time had passed." — a 2016 graduate</blockquote>
+        </div>
+      </div>
+    </article>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1200}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

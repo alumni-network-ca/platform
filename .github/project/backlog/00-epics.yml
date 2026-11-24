@@ -175,3 +175,13 @@ items:
     summary: |
       Product direction outside the launch baseline (§7). None of these is built until Noah approves its scope,
       requirements and acceptance criteria. Architectural preparation that avoids a foreseeable rebuild is recorded in the ADRs.
+
+  - key: EPIC-POST
+    title: "Epic: School posts (news and fundraising)"
+    milestone: FUT
+    labels: [type:epic, area:posts, P2]
+    summary: |
+      One "School posts" feature per school with two kinds: news (rich text) and fundraising (a short card that sends
+      alumni to the school's own https donation page; no money passes through the platform). School admins write,
+      alumni read published posts only. Outbound fundraising clicks are recorded (decided by Gab 2026-11-24) but not
+      shown to school admins yet. Design: docs/design/school-posts.md and screens A7.1–A7.4, 3.5–3.6.
