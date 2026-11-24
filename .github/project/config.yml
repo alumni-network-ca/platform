@@ -49,7 +49,6 @@ labels:
   - { name: "area:ci", color: "BFDADC", description: "CI/CD and developer tooling" }
   - { name: "area:process", color: "BFDADC", description: "Project management and workflow" }
   - { name: "area:public", color: "BFDADC", description: "Public landing and legal pages" }
-  - { name: "area:posts", color: "BFDADC", description: "School posts: news and fundraising" }
   # priority and flags
   - { name: "P0", color: "B60205", description: "Critical path / launch-critical" }
   - { name: "P1", color: "D93F0B", description: "Needed for launch, not on critical path" }
@@ -92,10 +91,6 @@ milestones:
     description: "Acceptance, training, production release, invitation waves, pilot monitoring. Target 2026-12-01. (§10 phase 5)"
     start: 2026-11-23
     due: 2026-12-01
-  - key: M5
-    title: "M5 · Post-launch features"
-    description: "Features Herzliah asked for after the pilot scope was fixed, for every school: configurable export columns, events and reunions, fundraising links."
-    start: 2026-12-02
   - key: FUT
     title: "Future · Post-launch modules"
     description: "Outside the launch baseline. Each needs a separate scope decision with requirements and acceptance criteria."
@@ -149,7 +144,6 @@ fields:
         - { name: ci, color: GRAY, description: "" }
         - { name: process, color: GRAY, description: "" }
         - { name: public, color: GRAY, description: "" }
-        - { name: posts, color: GRAY, description: "" }
   text:
     - Requirements
     - Key

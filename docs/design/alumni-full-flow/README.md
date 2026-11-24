@@ -70,7 +70,7 @@ The preview's Next screen control switches between applicant, email and staff co
 
 ## School posts · November 24, 2026
 
-Only these copies were changed (EPIC-POST, milestone Future); the cloud canvas doesn't have these screens yet. Spec: [`../school-posts.md`](../school-posts.md).
+Only these copies were changed (EPIC-POSTS, milestone M2); the cloud canvas doesn't have these screens yet. Spec: [`../school-posts.md`](../school-posts.md).
 
 | Design | Change |
 |---|---|

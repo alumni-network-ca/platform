@@ -1,10 +1,13 @@
 # School posts — design spec
 
-Backlog: EPIC-POST (POST-01 … POST-07), milestone Future. Screens: A7.1–A7.4 on the **School admin** page and
+Backlog: EPIC-POSTS (POST-01 … POST-07), milestone M2, in `.github/project/backlog/42-m2-school-requests.yml`. Screens: A7.1–A7.4 on the **School admin** page and
 3.5–3.6 on the **Alumni** page of [`alumni-full-flow/`](alumni-full-flow/README.md). These screens were drawn in
 this repository's copy on 2026-11-24; the cloud canvas does not have them yet.
 
 Copy below is English; every string needs an FR entry.
+
+In the backlog but not drawn yet: optional EN and FR versions of each post, news categories, the order of
+fundraising posts, and a latest-posts block on the alumni home page (POST-01 to POST-03).
 
 ## 1. What a post is
 
@@ -35,7 +38,7 @@ No money passes through the platform. A fundraising post is a signpost, never a 
 ## 3. Status
 
 `Draft` → `Scheduled` (publish time in the future) → `Published` → `Archived`. "Unpublish" returns a post to Draft.
-A fundraising post past its end date stays published but shows an **Ended** chip and no button.
+A fundraising post past its end date drops off the alumni page (POST-03); the admin list shows it with an **Ended** chip.
 
 Chips: Draft `#eef0f4/#3a4a70` · Scheduled `#fff4dc/#7a4b00` · Published `#e3f3e8/#1b5e33` · Ended / Archived
 `#eef0f4/#4a5575`.

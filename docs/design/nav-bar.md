@@ -47,7 +47,7 @@ inactive = `#d2d7e4`, 500):
 | Nav role | Links |
 |---|---|
 | guest, applicant, invitee | none |
-| alumnus | Home · Directory · Posts (only when the school has a published post; EPIC-POST, [`school-posts.md`](school-posts.md)) |
+| alumnus | Home · Directory · Posts (only when the school has a published post; EPIC-POSTS, [`school-posts.md`](school-posts.md)) |
 | reviewer, school_admin | Admin (badge = pending sign-ups) · Directory |
 | platform_admin | Schools · Support (badge = active grants) · Health |
 
@@ -120,7 +120,7 @@ exist yet and leave a TODO with the backlog key.
 - Sign out
 
 **school_admin** — status line = school name
-- *Admin*: Dashboard · Approvals (count chip) · Alumni · Posts (`posts.manage`; EPIC-POST) · Staff · School settings
+- *Admin*: Dashboard · Approvals (count chip) · Alumni · Posts (`posts.manage`; EPIC-POSTS) · Staff · School settings
 - *Account*: Two-factor and sign-in (chip "On") · Language
 - Sign out
 
