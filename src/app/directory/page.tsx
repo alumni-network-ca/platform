@@ -1,5 +1,10 @@
 import Link from "next/link";
-import { DirectoryForm, DirectoryResults, FilterPanel } from "@/components/directory/DirectoryForm";
+import {
+  DirectoryForm,
+  DirectoryResults,
+  FilterPanel,
+  ResetLink,
+} from "@/components/directory/DirectoryForm";
 import { AVATAR_TINTS } from "@/config/ui";
 import { requireAccess } from "@/lib/auth/account";
 import { PAGE_SIZE, activeChips, pages, readFilters, rpcFilters } from "@/lib/directory/filters";
@@ -110,7 +115,18 @@ export default async function DirectoryPage({
         </span>
       </div>
 
-      <DirectoryForm>
+      <DirectoryForm
+        values={{
+          q: f.q,
+          field: f.field,
+          school: f.school,
+          yeshiva: f.yeshiva,
+          city: f.city,
+          class: f.decade === null ? "" : String(f.decade),
+          offer: f.offers,
+          sort: f.sort,
+        }}
+      >
         <div
           className="flex items-center gap-3 rounded-lg border border-input bg-card py-1.5 pr-1.5 pl-4.5 shadow-xs transition-[border-color,box-shadow] focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/25"
           role="search"
@@ -142,9 +158,9 @@ export default async function DirectoryPage({
           >
             <div className="flex items-center justify-between">
               <h2 className="text-md font-bold">{t.filters}</h2>
-              <Link href="/directory" className={cn(textLink, "text-sm font-bold")}>
+              <ResetLink href="/directory" className={cn(textLink, "text-sm font-bold")}>
                 {t.clear}
-              </Link>
+              </ResetLink>
             </div>
             <Select
               name="field"
@@ -247,9 +263,9 @@ export default async function DirectoryPage({
                     </li>
                   ))}
                 </ul>
-                <Link href="/directory" className={cn(textLink, "text-sm font-bold")}>
+                <ResetLink href="/directory" className={cn(textLink, "text-sm font-bold")}>
                   {t.resetAll}
-                </Link>
+                </ResetLink>
               </div>
             )}
 
@@ -281,7 +297,7 @@ export default async function DirectoryPage({
                 action={
                   chips.length > 0 && (
                     <Button asChild variant="secondary">
-                      <Link href="/directory">{t.resetAll}</Link>
+                      <ResetLink href="/directory">{t.resetAll}</ResetLink>
                     </Button>
                   )
                 }
