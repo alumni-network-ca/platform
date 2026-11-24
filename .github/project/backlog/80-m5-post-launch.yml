@@ -251,3 +251,67 @@ items:
       Also ask Noah whether to count clicks on fundraising links (default: no tracking beyond a count per post).
     ac:
       - Approved wording is recorded and used by POST-03.
+
+  # ---------------------------------------------------------------- school page (links and contacts)
+  - key: SCH-01
+    title: "School page data model, RLS and audit (needs an ADR)"
+    epic: EPIC-SCHOOL
+    labels: [type:feature, area:db, P1]
+    size: M
+    summary: |
+      Optional profile fields per school, every one skippable: website, a single permanent donate link, social links
+      (Facebook, Instagram, LinkedIn, YouTube, X), an About / mission text (EN and FR), an address with an optional
+      map link, and the school alumni office contact (name, email, phone). Active alumni of the school read it; only
+      owners and admins write. All links must be https with no credentials. The donate link is one standing button
+      to the school's own page; campaign-specific fundraising stays in POST-01..03, and the platform never handles
+      payments. Changes write audit rows. Write a short ADR first.
+    ac:
+      - An ADR records the model and is linked from docs/adr/README.md.
+      - Alumni of school A can't read school B's page data, and a reviewer or alumnus can't write it by calling the database directly (pgTAP).
+      - A link with a javascript: or other scheme, or with credentials, is refused by a database constraint (pgTAP).
+      - An empty profile is valid, and every change writes an audit row.
+
+  - key: SCH-02
+    title: "Admin: edit the school page"
+    epic: EPIC-SCHOOL
+    labels: [type:feature, area:admin, area:ui, P1]
+    size: M
+    depends: [SCH-01]
+    summary: |
+      A "School page" section in /admin with one form where every field is optional: links, About (EN/FR tabs),
+      address and the alumni office contact. Admins preview it as alumni see it, then save. Owners and admins only.
+    ac:
+      - Saving with every field empty works; invalid links show a clear error in EN and FR.
+      - Preview matches the published rendering.
+      - The server re-checks the role; a reviewer gets 403.
+
+  - key: SCH-03
+    title: "Alumni: School page and nav entry"
+    epic: EPIC-SCHOOL
+    labels: [type:feature, area:ui, area:directory, P1]
+    size: M
+    depends: [SCH-01]
+    summary: |
+      A School page for signed-in alumni showing only the fields the school filled in: website and donate buttons,
+      social links, About, address with a plain map link (no embedded map, no third-party tracking), and the alumni
+      office contact. The donate button says the alumni will leave this site and payment happens on the school's own
+      page. The page and its nav entry are hidden when nothing is filled in. The nav entry goes in the shared nav
+      component (docs/design/nav-bar.md), never per page. No design mock exists yet: add the screen to
+      docs/design/alumni-full-flow/ first.
+    ac:
+      - The screen is designed in docs/design/alumni-full-flow/ and the README maps it to its route and backlog key.
+      - Only the school's own data shows, and only to signed-in alumni of that school (isolation test).
+      - External links open in a new tab with rel="noopener noreferrer".
+      - Keyboard accessible, passes the accessibility check, works in EN and FR and on phones.
+
+  - key: SCH-04
+    title: "School page test evidence"
+    epic: EPIC-SCHOOL
+    labels: [type:test, area:db, P1]
+    size: S
+    depends: [SCH-02, SCH-03]
+    summary: |
+      pgTAP for isolation, roles and URL validation; Playwright for edit, preview, save and read across two schools,
+      including an empty page hiding the nav entry.
+    ac:
+      - Cross-school leaks fail in tests, and the tests run in CI.
