@@ -1214,6 +1214,63 @@ export type Database = {
         };
         Relationships: [];
       };
+      school_pages: {
+        Row: {
+          about_en: string | null;
+          about_fr: string | null;
+          address: string | null;
+          donate_url: string | null;
+          institution_id: string;
+          map_url: string | null;
+          office_email: string | null;
+          office_name: string | null;
+          office_phone: string | null;
+          social_links: Json;
+          updated_at: string;
+          updated_by: string | null;
+          website_url: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          about_en?: string | null;
+          about_fr?: string | null;
+          address?: string | null;
+          donate_url?: string | null;
+          institution_id: string;
+          map_url?: string | null;
+          office_email?: string | null;
+          office_name?: string | null;
+          office_phone?: string | null;
+          social_links?: Json;
+          updated_at?: string;
+          updated_by?: string | null;
+          website_url?: string | null;
+        };
+        Update: {
+          about_en?: string | null;
+          about_fr?: string | null;
+          address?: string | null;
+          donate_url?: string | null;
+          institution_id?: string;
+          map_url?: string | null;
+          office_email?: string | null;
+          office_name?: string | null;
+          office_phone?: string | null;
+          social_links?: Json;
+          updated_at?: string;
+          updated_by?: string | null;
+          website_url?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "school_pages_institution_id_fkey";
+            columns: ["institution_id"];
+            isOneToOne: true;
+            referencedRelation: "institutions";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       staff_invitations: {
         Row: {
           accepted_at: string | null;
@@ -1472,7 +1529,9 @@ export type Database = {
         };
         Returns: string;
       };
+      is_https_url: { Args: { p_url: string }; Returns: boolean };
       is_member: { Args: { p_inst: string }; Returns: boolean };
+      is_social_links: { Args: { p_links: Json }; Returns: boolean };
       is_system_admin: { Args: Record<PropertyKey, never>; Returns: boolean };
       issue_staff_invitation_link: { Args: { p_invitation: string }; Returns: string };
       list_school_staff: {
@@ -1687,6 +1746,7 @@ export type Database = {
         };
         Returns: undefined;
       };
+      set_school_page: { Args: { p_inst: string; p_page: Json }; Returns: undefined };
       staff_invitation_preview: {
         Args: { p_token: string };
         Returns: {

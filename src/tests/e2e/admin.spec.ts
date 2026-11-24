@@ -9,7 +9,7 @@ for (const role of ["admin", "reviewer"] as const) {
     await signInAs(context, baseURL!, accounts[role]);
     await page.goto("/admin");
     const sidebar = page.getByRole("navigation", { name: "Dashboard", exact: true });
-    await expect(sidebar.getByRole("link")).toHaveCount(role === "reviewer" ? 4 : 7);
+    await expect(sidebar.getByRole("link")).toHaveCount(role === "reviewer" ? 4 : 8);
     await expect(page.getByRole("heading", { name: "Dashboard", exact: true })).toBeVisible();
     expect(await blockingViolations(page)).toEqual([]);
   });
