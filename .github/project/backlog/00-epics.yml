@@ -178,6 +178,12 @@ items:
     labels: [type:epic, area:admin, P1]
     summary: One School posts page where schools publish news and updates and links to their own fundraising pages (GoFundMe or any other), and alumni read them. In-app only, with an optional notification email; the platform never handles payments. Full newsletter campaigns stay in FUT-13.
 
+  - key: EPIC-SCHOOL
+    title: "Epic: School page"
+    milestone: M5
+    labels: [type:epic, area:admin, P1]
+    summary: A page for signed-in alumni with the school's own links and contacts (website, donate link, socials, about, address, alumni office), all optional and edited by school admins. The platform never handles payments.
+
   - key: EPIC-FUT
     title: "Epic: Future modules (need separate scope approval)"
     milestone: FUT
