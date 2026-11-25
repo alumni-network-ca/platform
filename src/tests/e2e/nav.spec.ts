@@ -188,6 +188,7 @@ test.describe("nav bar", () => {
       "Dashboard",
       "Approvals",
       "Alumni",
+      "School posts",
       "Staff",
       "School page",
       "School settings",

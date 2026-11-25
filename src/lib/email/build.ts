@@ -114,6 +114,11 @@ export async function buildEmail(
       row.template_key === "access_needs_info"
         ? schoolUrl(origin, school.data.slug, SIGN_IN_PATH)
         : null,
+    // A new school post (POST-04): its page, which asks a signed-out reader to sign in first.
+    post_link:
+      row.template_key === "post_published" && row.subject_id
+        ? schoolUrl(origin, school.data.slug, `/posts/${row.subject_id}`)
+        : null,
   };
   const rendered = renderEmail(template.data, values, {
     networkName: brand.networkName,
@@ -133,6 +138,7 @@ export async function buildEmail(
 /** The person's first name, and the school's question or reason, from the request or the record. */
 async function loadSubject(client: OutboxClient, row: OutboxRow): Promise<Placeholders> {
   if (!row.subject_id) throw new PermanentDataError("outbox row has no subject");
+  if (row.template_key === "post_published") return loadPost(client, row, row.subject_id);
   if (row.template_key.startsWith("access_")) {
     const { data, error } = await client
       .from("access_requests")
@@ -158,5 +164,36 @@ async function loadSubject(client: OutboxClient, row: OutboxRow): Promise<Placeh
   return {
     first_name: data.preferred_name?.trim() || data.first_name,
     graduation_year: String(data.grad_year),
+  };
+}
+
+/** A new school post (POST-04): its title and excerpt, and the recipient's first name from their profile. */
+async function loadPost(
+  client: OutboxClient,
+  row: OutboxRow,
+  postId: string,
+): Promise<Placeholders> {
+  const [post, person] = await Promise.all([
+    client
+      .from("school_posts")
+      .select("title, summary, status, publish_at")
+      .eq("id", postId)
+      .maybeSingle(),
+    client
+      .from("alumni_profiles")
+      .select("first_name, preferred_name")
+      .eq("institution_id", row.institution_id!)
+      .eq("user_id", row.to_user_id ?? "")
+      .maybeSingle(),
+  ]);
+  if (post.error) throw new Error(`post lookup failed: ${post.error.code}`);
+  if (person.error) throw new Error(`profile lookup failed: ${person.error.code}`);
+  // Unpublishing drops the waiting emails; one claimed at that very moment must not announce a hidden post.
+  if (!post.data || post.data.status !== "published")
+    throw new PermanentDataError("the post is no longer published");
+  return {
+    first_name: person.data?.preferred_name?.trim() || person.data?.first_name || "",
+    post_title: post.data.title,
+    post_excerpt: post.data.summary,
   };
 }

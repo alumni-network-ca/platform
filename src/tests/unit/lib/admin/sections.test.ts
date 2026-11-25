@@ -7,6 +7,7 @@ describe("school console navigation", () => {
       "approvals",
       "alumni",
       "templates",
+      "posts",
       "staff",
       "schoolPage",
       "audit",

@@ -1067,6 +1067,49 @@ export type Database = {
         };
         Relationships: [];
       };
+      post_link_clicks: {
+        Row: {
+          clicked_on: string;
+          created_at: string;
+          id: string;
+          institution_id: string;
+          post_id: string;
+          user_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          clicked_on: string;
+          created_at?: string;
+          id?: string;
+          institution_id: string;
+          post_id: string;
+          user_id: string;
+        };
+        Update: {
+          clicked_on?: string;
+          created_at?: string;
+          id?: string;
+          institution_id?: string;
+          post_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "post_link_clicks_institution_id_fkey";
+            columns: ["institution_id"];
+            isOneToOne: false;
+            referencedRelation: "institutions";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "post_link_clicks_post_id_fkey";
+            columns: ["post_id"];
+            isOneToOne: false;
+            referencedRelation: "school_posts";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       profile_confirmations: {
         Row: {
           actor_user_id: string | null;
@@ -1271,6 +1314,75 @@ export type Database = {
           },
         ];
       };
+      school_posts: {
+        Row: {
+          body: Json | null;
+          cover_path: string | null;
+          created_at: string;
+          created_by: string | null;
+          ends_on: string | null;
+          external_url: string | null;
+          goal_note: string | null;
+          id: string;
+          institution_id: string;
+          kind: Database["public"]["Enums"]["post_kind"];
+          notified_at: string | null;
+          publish_at: string | null;
+          status: Database["public"]["Enums"]["post_status"];
+          summary: string | null;
+          title: string;
+          updated_at: string;
+          updated_by: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          body?: Json | null;
+          cover_path?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          ends_on?: string | null;
+          external_url?: string | null;
+          goal_note?: string | null;
+          id?: string;
+          institution_id: string;
+          kind: Database["public"]["Enums"]["post_kind"];
+          notified_at?: string | null;
+          publish_at?: string | null;
+          status?: Database["public"]["Enums"]["post_status"];
+          summary?: string | null;
+          title: string;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Update: {
+          body?: Json | null;
+          cover_path?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          ends_on?: string | null;
+          external_url?: string | null;
+          goal_note?: string | null;
+          id?: string;
+          institution_id?: string;
+          kind?: Database["public"]["Enums"]["post_kind"];
+          notified_at?: string | null;
+          publish_at?: string | null;
+          status?: Database["public"]["Enums"]["post_status"];
+          summary?: string | null;
+          title?: string;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "school_posts_institution_id_fkey";
+            columns: ["institution_id"];
+            isOneToOne: false;
+            referencedRelation: "institutions";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       staff_invitations: {
         Row: {
           accepted_at: string | null;
@@ -1431,6 +1543,7 @@ export type Database = {
         };
         Returns: undefined;
       };
+      archive_post: { Args: { p_post: string }; Returns: undefined };
       assert_last_school_admin_kept: {
         Args: { p_inst: string; p_user: string };
         Returns: undefined;
@@ -1444,6 +1557,7 @@ export type Database = {
           user_id: string;
         }[];
       };
+      cancel_post_emails: { Args: { p_post: string }; Returns: undefined };
       career_field_allowed: { Args: { p_field: string; p_inst: string }; Returns: boolean };
       change_staff_role: {
         Args: {
@@ -1495,6 +1609,7 @@ export type Database = {
         Returns: string;
       };
       delete_my_profile: { Args: { p_inst: string }; Returns: undefined };
+      delete_post: { Args: { p_post: string }; Returns: undefined };
       directory_facets: { Args: { p_inst: string }; Returns: Json };
       directory_profile_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
       enqueue_email: {
@@ -1644,6 +1759,10 @@ export type Database = {
         Returns: Database["public"]["Enums"]["channel_type"][];
       };
       public_school: { Args: { p_slug: string }; Returns: Json };
+      publish_post: {
+        Args: { p_notify?: boolean; p_post: string; p_publish_at?: string };
+        Returns: number;
+      };
       record_confirmation: {
         Args: { p_profile: string; p_source: Database["public"]["Enums"]["confirmation_source"] };
         Returns: undefined;
@@ -1656,6 +1775,7 @@ export type Database = {
         };
         Returns: undefined;
       };
+      record_post_click: { Args: { p_post: string }; Returns: string };
       remove_staff: { Args: { p_inst: string; p_user: string }; Returns: undefined };
       reply_to_info_request: { Args: { p_reply: string; p_request: string }; Returns: undefined };
       request_access: {
@@ -1690,6 +1810,21 @@ export type Database = {
         Returns: undefined;
       };
       save_my_profile: { Args: { p_inst: string; p_payload: Json }; Returns: string };
+      save_post: {
+        Args: {
+          p_body?: Json;
+          p_cover_path?: string;
+          p_ends_on?: string;
+          p_external_url?: string;
+          p_goal_note?: string;
+          p_inst: string;
+          p_kind?: Database["public"]["Enums"]["post_kind"];
+          p_post?: string;
+          p_summary?: string;
+          p_title?: string;
+        };
+        Returns: string;
+      };
       school_config: { Args: { p_inst: string }; Returns: Json };
       school_has_feature: { Args: { p_inst: string; p_key: string }; Returns: boolean };
       school_staff: {
@@ -1703,6 +1838,7 @@ export type Database = {
           user_id: string;
         }[];
       };
+      school_today: { Args: Record<PropertyKey, never>; Returns: string };
       search_directory: {
         Args: {
           p_filters?: Json;
@@ -1761,6 +1897,7 @@ export type Database = {
         }[];
       };
       staff_inviter_name: { Args: { p_inst: string; p_invited_by: string }; Returns: string };
+      unpublish_post: { Args: { p_post: string }; Returns: undefined };
       update_school_settings: { Args: { p_inst: string; p_patch: Json }; Returns: undefined };
       validate_template_text: { Args: { p_body: string; p_subject: string }; Returns: undefined };
       withdraw_access_request: { Args: { p_request: string }; Returns: undefined };
@@ -1795,10 +1932,13 @@ export type Database = {
         | "access_received"
         | "access_withdrawn"
         | "membership_suspended"
-        | "membership_reactivated";
+        | "membership_reactivated"
+        | "post_published";
       locale: "en" | "fr";
       member_role: "school_admin" | "reviewer" | "alumni" | "student";
       member_status: "active" | "suspended" | "revoked";
+      post_kind: "news" | "fundraising";
+      post_status: "draft" | "published" | "archived";
       profile_status: "active" | "suspended" | "archived" | "deceased" | "deleted";
       profile_visibility: "hidden" | "members";
       request_source: "signup" | "import";
@@ -1942,10 +2082,13 @@ export const Constants = {
         "access_withdrawn",
         "membership_suspended",
         "membership_reactivated",
+        "post_published",
       ],
       locale: ["en", "fr"],
       member_role: ["school_admin", "reviewer", "alumni", "student"],
       member_status: ["active", "suspended", "revoked"],
+      post_kind: ["news", "fundraising"],
+      post_status: ["draft", "published", "archived"],
       profile_status: ["active", "suspended", "archived", "deceased", "deleted"],
       profile_visibility: ["hidden", "members"],
       request_source: ["signup", "import"],

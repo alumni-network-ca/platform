@@ -148,6 +148,14 @@ describe("canOpen", () => {
     expect(canOpen({ ...staff, profile: profile() }, "/directory")).toBe(true);
   });
 
+  it("opens School posts to alumni who finished onboarding and to staff (POST-03)", () => {
+    expect(canOpen(alumnus, "/posts")).toBe(true);
+    expect(canOpen(alumnus, "/posts/abc/go")).toBe(true);
+    expect(canOpen(staff, "/posts")).toBe(true);
+    expect(canOpen(pending, "/posts")).toBe(false);
+    expect(canOpen({ ...alumnus, profile: profile(false) }, "/posts")).toBe(false);
+  });
+
   it("opens an account page only for the matching state", () => {
     expect(canOpen(pending, "/account/pending")).toBe(true);
     expect(canOpen(pending, "/account/rejected")).toBe(false);

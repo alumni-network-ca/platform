@@ -56,6 +56,8 @@ export function canOpen(state: AccountState, path: string): boolean {
   const under = (prefix: string) => pathname === prefix || pathname.startsWith(`${prefix}/`);
   if (under("/home") || under("/directory") || under("/profile") || under("/school"))
     return canUseDirectory(state);
+  // School posts (POST-03): alumni who use the network, and staff, who read posts like alumni.
+  if (under("/posts")) return isStaff(state) || canUseDirectory(state);
   if (under("/admin")) return isStaff(state);
   if (under("/onboarding") || under("/me")) return hasActiveProfile(state);
   // Sign-in settings are open to anyone signed in, whatever their state at this school.

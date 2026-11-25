@@ -91,10 +91,13 @@ select throws_ok(
 );
 
 -- Reference data.
-select is((select count(*)::int from public.role_permissions where role = 'alumni'), 1, 'alumni hold only directory.use');
+select is(
+  (select array_agg(permission order by permission) from public.role_permissions where role = 'alumni'),
+  array['directory.use', 'posts.read'], 'alumni hold only directory.use and posts.read'
+);
 select is(
   (select count(*)::int from public.email_templates where institution_id is null),
-  24, 'platform defaults exist for 12 templates in EN and FR'
+  26, 'platform defaults exist for 13 templates in EN and FR'
 );
 
 select * from finish();

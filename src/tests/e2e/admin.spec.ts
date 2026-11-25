@@ -9,7 +9,7 @@ for (const role of ["admin", "reviewer"] as const) {
     await signInAs(context, baseURL!, accounts[role]);
     await page.goto("/admin");
     const sidebar = page.getByRole("navigation", { name: "Dashboard", exact: true });
-    await expect(sidebar.getByRole("link")).toHaveCount(role === "reviewer" ? 4 : 8);
+    await expect(sidebar.getByRole("link")).toHaveCount(role === "reviewer" ? 4 : 9);
     await expect(page.getByRole("heading", { name: "Dashboard", exact: true })).toBeVisible();
     expect(await blockingViolations(page)).toEqual([]);
   });
@@ -160,6 +160,11 @@ test("school admin invites and revokes staff", async ({ page, context, baseURL }
   await menu.getByRole("menuitem", { name: "Revoke", exact: true }).click();
   // Revoking asks first, in a dialog (not window.confirm).
   const ask = page.getByRole("alertdialog");
+  // Check contrast once the dialog has faded in: mid-animation its buttons are half transparent.
+  await expect(ask).toBeVisible();
+  await ask.evaluate((el) =>
+    Promise.all(el.getAnimations({ subtree: true }).map((a) => a.finished)),
+  );
   expect(await blockingViolations(page)).toEqual([]);
   await ask.getByRole("button", { name: "Revoke", exact: true }).click();
   await expect(invitation).toContainText("Revoked");

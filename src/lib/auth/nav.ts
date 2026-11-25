@@ -107,6 +107,8 @@ export type NavInput = {
   } | null;
   /** An open staff invitation here for the person's email (my_staff_invitation). */
   invitation?: { role: Enums<"member_role"> } | null;
+  /** The school has at least one live post (POST-03): only then is there a School posts page to link to. */
+  hasPosts?: boolean;
 };
 
 /** The person's nav role at this address (docs/design/nav-bar.md §1). */
@@ -194,6 +196,9 @@ export function navModel(input: NavInput): NavModel {
         href: "/directory",
         activeOn: ["/directory", "/profile"],
       },
+      ...(input.hasPosts
+        ? [{ key: "posts", label: t.posts, href: "/posts", activeOn: ["/posts"] }]
+        : []),
       ...(input.schoolPage
         ? [{ key: "school", label: t.school, href: "/school", activeOn: ["/school"] }]
         : []),
@@ -325,6 +330,7 @@ export function navModel(input: NavInput): NavModel {
             item("alumni", "/admin/alumni", {
               chip: can.has("records.edit") ? undefined : { text: t.readOnly, kind: "info" },
             }),
+          can.has("posts.manage") && item("schoolPosts", "/admin/posts"),
           can.has("staff.manage") && item("staff", "/admin/staff"),
           can.has("settings.manage") && item("schoolPage", "/admin/school-page"),
           can.has("settings.manage") && item("schoolSettings", "/admin/settings"),
@@ -339,6 +345,7 @@ export function navModel(input: NavInput): NavModel {
             item("alumniHome", "/home"),
             item("myAlumniProfile", "/me"),
             item("browseAsAlumnus", "/directory"),
+            input.hasPosts && item("schoolPosts", "/posts"),
           ],
           t.alsoAlumnusSection,
         ),

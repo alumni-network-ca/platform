@@ -139,10 +139,10 @@ Signed-out pages use the `guest` role: FR, Sign in and the proposed Join now act
 | **Built** · A6.7 Link problems (`StaffInviteProblem`) | `/staff/accept?token=` | SA-02 | `staff_invitation_preview` |
 | **Built** · A4.2 School settings (`AdmSettings`) | `/admin/settings` | ADM-08 | `update_school_settings`; logo upload needs storage |
 | **Built** · A4.3 Audit log (`AdmAudit`) | `/admin/audit` | ADM-07 | `audit_people`; RLS audit reads |
-| A7.1 School posts (`AdmPosts`) | `/admin/posts` | POST-02 | new: `school_posts`, `posts.manage` (POST-01) |
-| A7.2 News post (`AdmPostNews`) | `/admin/posts/new?kind=news`, `/admin/posts/[id]` | POST-02, POST-04 | new: `save_post`, `publish_post`; cover upload needs storage |
-| A7.3 Fundraising post (`AdmPostFundraising`) | `/admin/posts/new?kind=fundraising`, `/admin/posts/[id]` | POST-02, POST-06 | new: https check constraint on `school_posts` |
-| A7.4 Preview (`AdmPostPreview`) | `/admin/posts/[id]/preview` | POST-02 | new |
+| **Built** · A7.1 School posts (`AdmPosts`) | `/admin/posts` | POST-02 | `school_posts` (RLS), `posts.manage`. The kind chooser is a side panel, always shown, instead of a pop-up |
+| **Built** · A7.2 News post (`AdmPostNews`) | `/admin/posts/new?kind=news`, `/admin/posts/[id]` | POST-02, POST-04 | `save_post`, `publish_post`, `unpublish_post`, `archive_post`, `delete_post`; covers in the private `post-covers` bucket |
+| **Built** · A7.3 Fundraising post (`AdmPostFundraising`) | `/admin/posts/new?kind=fundraising`, `/admin/posts/[id]` | POST-02, POST-06 | https check constraint on `school_posts` |
+| **Built** · A7.4 Preview (`AdmPostPreview`) | `/admin/posts/[id]/preview` | POST-02 | `school_posts` |
 
 ### Alumni
 
@@ -158,8 +158,8 @@ Signed-out pages use the `guest` role: FR, Sign in and the proposed Join now act
 | **Built** · 3.2 Directory (`Directory`) | `/directory` | DIR-02 |
 | **Built** · 3.3 Profile and message (`Profile`) | `/profile/[id]` | DIR-03, CON-02 |
 | 3.4 Relay email (`RecipientEmail`) | email | CON-02 |
-| 3.5 School posts (`Posts`) | `/posts`; hidden when the school has no published post | POST-03 |
-| 3.6 News post (`PostDetail`) | `/posts/[id]` | POST-03 |
+| **Built** · 3.5 School posts (`Posts`) | `/posts`; a 404 and no nav entry when the school has no live post. The outbound button goes through `/posts/[id]/go`, which records the click | POST-03 |
+| **Built** · 3.6 News post (`PostDetail`) | `/posts/[id]` | POST-03 |
 | 3.7 School page (`SchoolPage`) | `/school`; hidden when the school filled in nothing | SCH-03 |
 
 Implementation notes: A2.3 uses a dedicated route with dialog styling. The record edit route was added to cover the fields accepted by `admin_update_profile`; it is not drawn on the canvas. French admin copy and empty states need Noah’s language review.
