@@ -1225,7 +1225,7 @@ export type Database = {
           office_email: string | null;
           office_name: string | null;
           office_phone: string | null;
-          social_links: Json;
+          social_links: NonNullable<Json>;
           updated_at: string;
           updated_by: string | null;
           website_url: string | null;
@@ -1241,7 +1241,7 @@ export type Database = {
           office_email?: string | null;
           office_name?: string | null;
           office_phone?: string | null;
-          social_links?: Json;
+          social_links?: NonNullable<Json>;
           updated_at?: string;
           updated_by?: string | null;
           website_url?: string | null;
@@ -1256,7 +1256,7 @@ export type Database = {
           office_email?: string | null;
           office_name?: string | null;
           office_phone?: string | null;
-          social_links?: Json;
+          social_links?: NonNullable<Json>;
           updated_at?: string;
           updated_by?: string | null;
           website_url?: string | null;

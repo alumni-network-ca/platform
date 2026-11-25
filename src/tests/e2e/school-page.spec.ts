@@ -34,7 +34,7 @@ test.describe("school page", () => {
     await signInAs(context, baseURL!, accounts.admin);
     await page.goto("/admin/school-page");
     await page.getByLabel("Donate link").fill("http://give.example.org");
-    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await page.getByRole("button", { name: "Save changes", exact: true }).click();
     await expect(page.getByRole("alert")).toBeVisible();
     const rows = await adminClient(stack).from("school_pages").select("institution_id");
     expect(rows.data).toEqual([]);
@@ -54,7 +54,7 @@ test.describe("school page", () => {
     await page.getByLabel("About (English)").fill("A school in Montreal.");
     await page.getByLabel("Name", { exact: true }).fill("Alumni Relations");
     await page.getByLabel("Email", { exact: true }).fill("alumni@herzliah.example");
-    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await page.getByRole("button", { name: "Save changes", exact: true }).click();
     await expect(page.getByRole("status")).toContainText("Changes saved");
     const preview = page.getByRole("region", { name: "How alumni see it" });
     await expect(
