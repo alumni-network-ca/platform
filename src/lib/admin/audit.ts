@@ -1,5 +1,6 @@
 import type { Database, Tables } from "@/lib/database";
 import type { AdminCopy } from "./forms";
+import { format } from "@/lib/i18n";
 export type AuditPerson = Database["public"]["Functions"]["audit_people"]["Returns"][number];
 const actions = {
   "access_request.approve": "auditApprove",
@@ -15,6 +16,7 @@ const actions = {
   "profile.visibility": "auditVisibility",
   "profile.self_deleted": "auditDeleted",
   "profile.data_exported": "auditExport",
+  "export.alumni": "auditAlumniExport",
   "staff.invited": "auditStaffInvited",
   "staff.joined": "auditStaffJoined",
   "staff.role_changed": "auditStaffRole",
@@ -72,6 +74,7 @@ export function describeAudit(
     typeof metadata.to === "string" ? "→ " + statusLabel(metadata.to) : null,
     typeof metadata.reason === "string" ? metadata.reason : null,
     typeof metadata.locale === "string" ? metadata.locale.toUpperCase() : null,
+    typeof metadata.rows === "number" ? format(t.exportRows, { count: metadata.rows }) : null,
   ]
     .filter(Boolean)
     .join(" · ");

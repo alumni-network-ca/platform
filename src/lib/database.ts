@@ -51,6 +51,7 @@ type Overrides = {
   decide_access_request: { Args: Fns["decide_access_request"]["Args"]; Returns: string | null };
   school_staff: { Args: Fns["school_staff"]["Args"]; Returns: SchoolStaff[] };
   admin_roster: { Args: Fns["admin_roster"]["Args"]; Returns: AdminRosterRow[] };
+  admin_export_alumni: { Args: Fns["admin_export_alumni"]["Args"]; Returns: AlumniExportRow[] };
   approve_access_requests: {
     Args: Fns["approve_access_requests"]["Args"];
     Returns: BulkApprovalRow[];
@@ -86,6 +87,16 @@ export type AdminRosterRow = {
     : K extends "state"
       ? RosterState
       : Fns["admin_roster"]["Returns"][number][K];
+};
+
+/** One row of the alumni CSV export (EXP-01): grad_year, names, id and state are always set. */
+export type AlumniExportRow = {
+  [K in keyof Fns["admin_export_alumni"]["Returns"][number]]: K extends
+    "id" | "first_name" | "last_name" | "grad_year"
+    ? Fns["admin_export_alumni"]["Returns"][number][K]
+    : K extends "state"
+      ? RosterState
+      : Fns["admin_export_alumni"]["Returns"][number][K] | null;
 };
 
 export type Database = Omit<Generated, "public"> & {
