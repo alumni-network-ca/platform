@@ -2,12 +2,13 @@ import "server-only";
 import type { User } from "@supabase/supabase-js";
 import { rolePermissions } from "@/lib/auth/permissions";
 import { getAccount } from "@/lib/auth/account";
-import { isActiveMember, isStaff } from "@/lib/auth/home";
+import { hasActiveProfile, isActiveMember, isStaff } from "@/lib/auth/home";
 import { navModel, type NavInput } from "@/lib/auth/nav";
 import { getPlatformAdmin } from "@/lib/auth/platform";
 import { translations } from "@/lib/i18n";
 import { getServerLocale } from "@/lib/i18n-server";
 import { schoolBranding } from "@/lib/school";
+import { hasSchoolPage, schoolPageFromRow } from "@/lib/school-page";
 import { createClient } from "@/lib/supabase/server";
 import { getOrigin, getSchool, getSite } from "@/lib/tenant/server";
 import { NavBar } from "./NavBar";
@@ -65,55 +66,61 @@ async function readSchool(): Promise<Reads> {
   if (!user || !state) return { now, school: site, user: null, state: null };
 
   const staff = isStaff(state);
-  const [profile, request, institution, permissions, pendingRequests, grant] = await Promise.all([
-    state.profile &&
-      read(
-        supabase
-          .from("alumni_profiles")
-          .select("first_name, last_name, preferred_name, grad_year, visibility")
-          .eq("institution_id", school.id)
-          .eq("user_id", user.id)
-          .maybeSingle(),
-      ),
-    !state.profile &&
-      state.request &&
-      read(
-        supabase
-          .from("access_requests")
-          .select("first_name, last_name")
-          .eq("institution_id", school.id)
-          .eq("user_id", user.id)
-          .order("created_at", { ascending: false })
-          .limit(1)
-          .maybeSingle(),
-      ),
-    // Members (and platform admins) may read the school's row, with its reply-to address; applicants may not.
-    (isActiveMember(state) || state.platformAdmin) &&
-      read(
-        supabase.from("institutions").select("reply_to_email").eq("id", school.id).maybeSingle(),
-      ),
-    staff && rolePermissions(school.id, state.membership!.role),
-    staff &&
-      count(
-        supabase
-          .from("access_requests")
-          .select("id", { count: "exact", head: true })
-          .eq("institution_id", school.id)
-          .eq("status", "pending"),
-      ),
-    state.platformAdmin &&
-      read(
-        supabase
-          .from("platform_access_grants")
-          .select("id")
-          .eq("institution_id", school.id)
-          .eq("user_id", user.id)
-          .is("revoked_at", null)
-          .gt("expires_at", now.toISOString())
-          .limit(1)
-          .maybeSingle(),
-      ),
-  ]);
+  const [profile, request, institution, permissions, pendingRequests, grant, schoolPage] =
+    await Promise.all([
+      state.profile &&
+        read(
+          supabase
+            .from("alumni_profiles")
+            .select("first_name, last_name, preferred_name, grad_year, visibility")
+            .eq("institution_id", school.id)
+            .eq("user_id", user.id)
+            .maybeSingle(),
+        ),
+      !state.profile &&
+        state.request &&
+        read(
+          supabase
+            .from("access_requests")
+            .select("first_name, last_name")
+            .eq("institution_id", school.id)
+            .eq("user_id", user.id)
+            .order("created_at", { ascending: false })
+            .limit(1)
+            .maybeSingle(),
+        ),
+      // Members (and platform admins) may read the school's row, with its reply-to address; applicants may not.
+      (isActiveMember(state) || state.platformAdmin) &&
+        read(
+          supabase.from("institutions").select("reply_to_email").eq("id", school.id).maybeSingle(),
+        ),
+      staff && rolePermissions(school.id, state.membership!.role),
+      staff &&
+        count(
+          supabase
+            .from("access_requests")
+            .select("id", { count: "exact", head: true })
+            .eq("institution_id", school.id)
+            .eq("status", "pending"),
+        ),
+      state.platformAdmin &&
+        read(
+          supabase
+            .from("platform_access_grants")
+            .select("id")
+            .eq("institution_id", school.id)
+            .eq("user_id", user.id)
+            .is("revoked_at", null)
+            .gt("expires_at", now.toISOString())
+            .limit(1)
+            .maybeSingle(),
+        ),
+      // The School link shows only when the school filled in its page (RLS: members read their own school's).
+      hasActiveProfile(state) &&
+        read(
+          supabase.from("school_pages").select("*").eq("institution_id", school.id).maybeSingle(),
+        ),
+    ]);
 
   const named = profile || request;
   const metadataName = [user.user_metadata?.first_name, user.user_metadata?.last_name]
@@ -130,6 +137,7 @@ async function readSchool(): Promise<Reads> {
     profile: profile ? { gradYear: profile.grad_year, visibility: profile.visibility } : null,
     permissions: permissions || [],
     pendingRequests: pendingRequests || 0,
+    schoolPage: hasSchoolPage(schoolPageFromRow(schoolPage || null)),
     platform: grant ? await readPlatform(supabase, user.id, now, true) : null,
     // Invited to the staff here (getAccount reads it for people with no membership or request yet).
     invitation: state.invitation ? { role: state.invitation } : null,

@@ -657,6 +657,16 @@
       "w": 1280,
       "x": 8160,
       "y": 3000
+    },
+    "SchoolPage.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "alumni",
+      "title": "3.7 School page",
+      "w": 1280,
+      "x": 9520,
+      "y": 3000
     }
   },
   "createdOnFiles": {
@@ -938,6 +948,7 @@
     "RecipientEmail.dc.html",
     "Posts.dc.html",
     "PostDetail.dc.html",
+    "SchoolPage.dc.html",
     "AdmDashboard.dc.html",
     "AdmQueue.dc.html",
     "AdmReview.dc.html",

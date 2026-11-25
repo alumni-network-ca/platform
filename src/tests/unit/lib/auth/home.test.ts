@@ -135,6 +135,7 @@ describe("canOpen", () => {
     expect(canOpen(alumnus, "/home")).toBe(true);
     expect(canOpen(alumnus, "/directory")).toBe(true);
     expect(canOpen(alumnus, "/profile/abc?x=1")).toBe(true);
+    expect(canOpen(alumnus, "/school")).toBe(true);
     expect(canOpen(alumnus, "/admin")).toBe(false);
     expect(canOpen(alumnus, "/join")).toBe(false);
   });
@@ -142,6 +143,7 @@ describe("canOpen", () => {
   it("keeps staff without an alumni profile out of the directory (DEC-04)", () => {
     expect(canOpen(staff, "/admin/requests")).toBe(true);
     expect(canOpen(staff, "/directory")).toBe(false);
+    expect(canOpen(staff, "/school")).toBe(false);
     expect(canOpen(staff, "/home")).toBe(false);
     expect(canOpen({ ...staff, profile: profile() }, "/directory")).toBe(true);
   });

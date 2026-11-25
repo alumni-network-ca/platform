@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>School page</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7b1e3d}a:hover{color:#611630}
+a:focus-visible{outline:2px solid #7b1e3d;outline-offset:1px}
+</style>
+</helmet>
+<div style="min-height: 1000px; background: #f7f7f6; font-family: Inter, Arial, sans-serif; color: #0b2159; display: flex; flex-direction: column">
+  <dc-import name="NavBar" role="alumnus" active="school" open="{{ false }}" hint-size="100%,66px"></dc-import>
+  <main style="flex: 1; width: 100%; max-width: 1120px; margin: 0 auto; box-sizing: border-box; padding: 32px 24px 56px; display: flex; flex-direction: column; gap: 22px">
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <h1 style="margin: 0; font-size: 30px; font-weight: 800">Herzliah High School</h1>
+      <p style="margin: 0; font-size: 15px; color: #3a4a70">Links and contacts from your school, for verified alumni.</p>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+      <div style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+        <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+          <h2 style="margin: 0; font-size: 19px; font-weight: 800">About</h2>
+          <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #3a4a70">Herzliah has been educating Montreal's Jewish community since 1953. Our graduates go on to lead in medicine, law, technology, the arts and community life, and we want to keep every one of them close.</p>
+        </section>
+        <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+          <h2 style="margin: 0; font-size: 19px; font-weight: 800">Support the school</h2>
+          <div style="display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: 8px; background: #f7f7f6; border: 1px solid #e2e5ee; font-size: 13px; line-height: 1.5; color: #3a4a70">
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3a4a70" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex: none; margin-top: 2px"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg>
+            <span>You will leave Herzliah Alumni Network. Donations are handled by Herzliah High School on its own website.</span>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 12px">
+            <a href="#" target="_blank" rel="noopener noreferrer" style="padding: 11px 20px; border-radius: 7px; background: #7b1e3d; color: #ffffff; font-weight: 700; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px">Donate on give.herzliah.ca<span aria-hidden="true">↗</span><span style="position: absolute; left: -9999px">(opens in a new tab)</span></a>
+            <a href="#" target="_blank" rel="noopener noreferrer" style="padding: 10px 20px; border-radius: 7px; border: 1px solid #c8cfdf; background: #ffffff; color: #0b2159; font-weight: 700; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px">School website<span aria-hidden="true">↗</span><span style="position: absolute; left: -9999px">(opens in a new tab)</span></a>
+          </div>
+        </section>
+        <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+          <h2 style="margin: 0; font-size: 19px; font-weight: 800">Follow Herzliah</h2>
+          <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 10px">
+            <li><a href="#" target="_blank" rel="noopener noreferrer" style="padding: 8px 16px; border-radius: 999px; border: 1px solid #c8cfdf; font-size: 14px; font-weight: 700; color: #0b2159; text-decoration: none; display: inline-block">Instagram<span style="position: absolute; left: -9999px"> (opens in a new tab)</span></a></li>
+            <li><a href="#" target="_blank" rel="noopener noreferrer" style="padding: 8px 16px; border-radius: 999px; border: 1px solid #c8cfdf; font-size: 14px; font-weight: 700; color: #0b2159; text-decoration: none; display: inline-block">Facebook<span style="position: absolute; left: -9999px"> (opens in a new tab)</span></a></li>
+            <li><a href="#" target="_blank" rel="noopener noreferrer" style="padding: 8px 16px; border-radius: 999px; border: 1px solid #c8cfdf; font-size: 14px; font-weight: 700; color: #0b2159; text-decoration: none; display: inline-block">LinkedIn<span style="position: absolute; left: -9999px"> (opens in a new tab)</span></a></li>
+            <li><a href="#" target="_blank" rel="noopener noreferrer" style="padding: 8px 16px; border-radius: 999px; border: 1px solid #c8cfdf; font-size: 14px; font-weight: 700; color: #0b2159; text-decoration: none; display: inline-block">YouTube<span style="position: absolute; left: -9999px"> (opens in a new tab)</span></a></li>
+          </ul>
+        </section>
+      </div>
+      <aside style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+        <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 10px">
+          <h2 style="margin: 0; font-size: 19px; font-weight: 800">Alumni office</h2>
+          <span style="font-size: 15px; font-weight: 700">Alumni Relations Office</span>
+          <a href="mailto:alumni@herzliah.example" style="font-size: 15px; font-weight: 600">alumni@herzliah.example</a>
+          <a href="tel:+15145550100" style="font-size: 15px; font-weight: 600">514-555-0100</a>
+        </section>
+        <section style="background: #ffffff; border: 1px solid #e2e5ee; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 10px">
+          <h2 style="margin: 0; font-size: 19px; font-weight: 800">Find us</h2>
+          <address style="margin: 0; font-style: normal; font-size: 15px; line-height: 1.55; color: #3a4a70">5000 Rue Kent<br>Montréal, QC H3W 1H9</address>
+          <a href="#" target="_blank" rel="noopener noreferrer" style="font-size: 14px; font-weight: 700">Open in maps ↗<span style="position: absolute; left: -9999px"> (opens in a new tab)</span></a>
+        </section>
+      </aside>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
