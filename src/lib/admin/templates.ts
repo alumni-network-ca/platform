@@ -12,6 +12,7 @@ export const templateKeys = [
   "annual_confirmation",
   "confirmation_reminder_1",
   "confirmation_reminder_2",
+  "post_published",
 ] as const satisfies readonly Enums<"email_template_key">[];
 // lib/email/outbox.ts fills each of these when it sends the email.
 export const templatePlaceholders: Record<Enums<"email_template_key">, readonly string[]> = {
@@ -34,4 +35,5 @@ export const templatePlaceholders: Record<Enums<"email_template_key">, readonly 
   annual_confirmation: ["first_name", "school_name", "confirm_link"],
   confirmation_reminder_1: ["first_name", "school_name", "confirm_link"],
   confirmation_reminder_2: ["first_name", "school_name", "confirm_link"],
+  post_published: ["first_name", "school_name", "post_title", "post_excerpt", "post_link"],
 };

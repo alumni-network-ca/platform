@@ -6,8 +6,9 @@ this repository's copy on 2026-11-24; the cloud canvas does not have them yet.
 
 Copy below is English; every string needs an FR entry.
 
-In the backlog but not drawn yet: optional EN and FR versions of each post, news categories, the order of
-fundraising posts, and a latest-posts block on the alumni home page (POST-01 to POST-03).
+Built on 2026-11-24 (A7.1–A7.4, 3.5–3.6). In the backlog but neither drawn nor built yet: optional EN and FR
+versions of each post, news categories, the order of fundraising posts, and a latest-posts block on the alumni
+home page (POST-01 to POST-03).
 
 ## 1. What a post is
 

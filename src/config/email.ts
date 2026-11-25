@@ -34,6 +34,7 @@ export const SENDABLE_TEMPLATES = [
   "membership_suspended",
   "membership_reactivated",
   "welcome",
+  "post_published",
 ] as const satisfies readonly EmailTemplateKey[];
 
 /** Wait before attempt 2, 3, 4 and 5; after the fifth failure the row is failed for good. */
@@ -54,6 +55,7 @@ export const LINK_PLACEHOLDERS = [
   "action_link",
   "onboarding_link",
   "confirm_link",
+  "post_link",
 ] as const;
 
 /** A {placeholder} in a template's subject or body. */

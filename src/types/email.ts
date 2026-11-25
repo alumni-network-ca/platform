@@ -20,7 +20,10 @@ export type Placeholders = Partial<
     | "reason"
     | "message"
     | "graduation_year"
-    | "onboarding_link",
+    | "onboarding_link"
+    | "post_title"
+    | "post_excerpt"
+    | "post_link",
     string | null
   >
 >;

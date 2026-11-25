@@ -1,12 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { adminSections } from "@/lib/admin/sections";
 describe("school console navigation", () => {
-  it("shows seven admin sections in canvas order", () => {
+  it("shows eight admin sections in canvas order", () => {
     expect(adminSections(() => true, 3).map((s) => s.key)).toEqual([
       "dashboard",
       "approvals",
       "alumni",
       "templates",
+      "posts",
       "staff",
       "audit",
       "settings",

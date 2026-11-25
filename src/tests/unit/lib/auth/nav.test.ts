@@ -34,6 +34,8 @@ const ADMIN = [
   "metrics.read",
   "staff.manage",
   "settings.manage",
+  "posts.manage",
+  "posts.read",
 ];
 const REVIEWER = [
   "directory.use",
@@ -347,6 +349,15 @@ describe("navModel", () => {
       });
     });
 
+    it("School posts only while the school has a live post (POST-03)", () => {
+      expect(links(at({ ...alumnus, hasPosts: true }))).toEqual([
+        ["home", "/home"],
+        ["directory", "/directory"],
+        ["posts", "/posts"],
+      ]);
+      expect(links(at({ ...alumnus, hasPosts: false })).map(([key]) => key)).not.toContain("posts");
+    });
+
     it("still onboarding: no directory yet, and editing continues onboarding", () => {
       const model = at({
         ...alumnus,
@@ -396,7 +407,7 @@ describe("navModel", () => {
       expect(model.pill).toEqual({ role: "school_admin", label: "School admin" });
       expect(menu(model)[0]).toEqual([
         "admin",
-        ["dashboard", "approvals", "alumni", "staff", "schoolSettings", "auditLog"],
+        ["dashboard", "approvals", "alumni", "schoolPosts", "staff", "schoolSettings", "auditLog"],
       ]);
       expect(item(model, "approvals")?.chip).toBeUndefined();
       expect(item(model, "alumni")?.chip).toBeUndefined();
@@ -435,6 +446,17 @@ describe("navModel", () => {
         ["alumniHome", "myAlumniProfile", "browseAsAlumnus"],
       ]);
       expect(item(model, "alumniHome")?.href).toBe("/home");
+      expect(item(model, "schoolPosts")?.href).toBe("/admin/posts");
+      const withPosts = at({
+        state: { membership: member("school_admin"), profile: profile(), request: "approved" },
+        profile: { gradYear: 1998, visibility: "members" },
+        permissions: ADMIN,
+        hasPosts: true,
+      });
+      expect(menu(withPosts)[1]).toEqual([
+        "alsoAlumnus",
+        ["alumniHome", "myAlumniProfile", "browseAsAlumnus", "schoolPosts"],
+      ]);
       expect(model.account?.sections[1]?.title).toBe("You are also an alumnus");
     });
   });
