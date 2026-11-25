@@ -190,6 +190,7 @@ test.describe("nav bar", () => {
       "Alumni",
       "School posts",
       "Staff",
+      "School page",
       "School settings",
       "Audit log",
       "Two-factor and sign-in",

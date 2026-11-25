@@ -276,6 +276,7 @@ items:
   - key: SCH-01
     title: "School page data model, RLS and audit (needs an ADR)"
     epic: EPIC-SCHOOL
+    state: closed
     labels: [type:feature, area:db, P1]
     size: M
     summary: |
@@ -294,6 +295,7 @@ items:
   - key: SCH-02
     title: "Admin: edit the school page"
     epic: EPIC-SCHOOL
+    state: closed
     labels: [type:feature, area:admin, area:ui, P1]
     size: M
     depends: [SCH-01]
@@ -308,6 +310,7 @@ items:
   - key: SCH-03
     title: "Alumni: School page and nav entry"
     epic: EPIC-SCHOOL
+    state: closed
     labels: [type:feature, area:ui, area:directory, P1]
     size: M
     depends: [SCH-01]
@@ -327,6 +330,7 @@ items:
   - key: SCH-04
     title: "School page test evidence"
     epic: EPIC-SCHOOL
+    state: closed
     labels: [type:test, area:db, P1]
     size: S
     depends: [SCH-02, SCH-03]

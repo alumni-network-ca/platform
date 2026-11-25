@@ -8,6 +8,7 @@ export function adminSections(can: (permission: string) => boolean, pending: num
       { key: "templates", href: "/admin/templates", permission: "templates.manage", badge: 0 },
       { key: "posts", href: "/admin/posts", permission: "posts.manage", badge: 0 },
       { key: "staff", href: "/admin/staff", permission: "staff.manage", badge: 0 },
+      { key: "schoolPage", href: "/admin/school-page", permission: "settings.manage", badge: 0 },
       { key: "audit", href: "/admin/audit", permission: "audit.read", badge: 0 },
       { key: "settings", href: "/admin/settings", permission: "settings.manage", badge: 0 },
     ] as const

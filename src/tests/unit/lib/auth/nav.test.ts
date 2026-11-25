@@ -311,6 +311,17 @@ describe("navModel", () => {
       school: { ...herzliah, replyTo: "alumni@herzliah.test" },
     };
 
+    it("adds a School link only when the school filled in its page (SCH-03)", () => {
+      expect(links(at(alumnus)).map(([key]) => key)).not.toContain("school");
+      const model = at({ ...alumnus, schoolPage: true });
+      expect(links(model)).toEqual([
+        ["home", "/home"],
+        ["directory", "/directory"],
+        ["school", "/school"],
+      ]);
+      expect(model.links[2]).toMatchObject({ label: "School", activeOn: ["/school"] });
+    });
+
     it("Home and Directory, no pill, the profile and account menu", () => {
       const model = at(alumnus);
       expect(links(model)).toEqual([
@@ -407,7 +418,16 @@ describe("navModel", () => {
       expect(model.pill).toEqual({ role: "school_admin", label: "School admin" });
       expect(menu(model)[0]).toEqual([
         "admin",
-        ["dashboard", "approvals", "alumni", "schoolPosts", "staff", "schoolSettings", "auditLog"],
+        [
+          "dashboard",
+          "approvals",
+          "alumni",
+          "schoolPosts",
+          "staff",
+          "schoolPage",
+          "schoolSettings",
+          "auditLog",
+        ],
       ]);
       expect(item(model, "approvals")?.chip).toBeUndefined();
       expect(item(model, "alumni")?.chip).toBeUndefined();

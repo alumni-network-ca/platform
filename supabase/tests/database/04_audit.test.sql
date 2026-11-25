@@ -176,6 +176,11 @@ select is(
                   '11111111-1111-4111-8111-000000000001'),
   array['school.settings_updated'], 'update_school_settings writes one audit row'
 );
+select is(
+  pg_temp.audited($$ select public.set_school_page('aaaaaaaa-0000-4000-8000-000000000001', '{"website_url": "https://www.herzliah.test"}') $$,
+                  '11111111-1111-4111-8111-000000000001'),
+  array['school.page_updated'], 'set_school_page writes one audit row'
+);
 
 -- Platform --------------------------------------------------------------------------------------------
 select is(
@@ -321,7 +326,7 @@ select set_eq(
     'save_my_profile', 'record_consent', 'confirm_still_accurate_in_app', 'export_my_data', 'set_my_visibility',
     'withdraw_consent', 'delete_my_profile', 'confirm_still_accurate',
     'admin_update_profile', 'set_profile_status', 'invite_staff', 'accept_staff_invitation', 'accept_my_staff_invitation', 'change_staff_role',
-    'remove_staff', 'approve_email_template_version', 'save_email_template', 'approve_email_template', 'update_school_settings',
+    'remove_staff', 'approve_email_template_version', 'save_email_template', 'approve_email_template', 'update_school_settings', 'set_school_page',
     'platform_create_school', 'platform_appoint_school_admin', 'platform_invite_staff', 'platform_open_grant',
     'platform_revoke_grant', 'platform_set_school_status', 'platform_set_school_features', 'issue_staff_invitation_link', 'revoke_staff_invitation',
     'save_post', 'publish_post', 'unpublish_post', 'archive_post', 'delete_post',

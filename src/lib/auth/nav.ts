@@ -96,6 +96,8 @@ export type NavInput = {
   /** The permissions of their staff role at this school (role_permissions). */
   permissions?: string[];
   pendingRequests?: number;
+  /** The school filled in its School page (SCH-03): the alumni nav links to it. */
+  schoolPage?: boolean;
   /** Only for a platform admin: on the root domain, or on a school's address. */
   platform?: {
     /** An open support grant at this school (school addresses only). */
@@ -196,6 +198,9 @@ export function navModel(input: NavInput): NavModel {
       },
       ...(input.hasPosts
         ? [{ key: "posts", label: t.posts, href: "/posts", activeOn: ["/posts"] }]
+        : []),
+      ...(input.schoolPage
+        ? [{ key: "school", label: t.school, href: "/school", activeOn: ["/school"] }]
         : []),
     ];
     if (input.profile) {
@@ -327,6 +332,7 @@ export function navModel(input: NavInput): NavModel {
             }),
           can.has("posts.manage") && item("schoolPosts", "/admin/posts"),
           can.has("staff.manage") && item("staff", "/admin/staff"),
+          can.has("settings.manage") && item("schoolPage", "/admin/school-page"),
           can.has("settings.manage") && item("schoolSettings", "/admin/settings"),
           can.has("audit.read") && item("auditLog", "/admin/audit"),
         ],

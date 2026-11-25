@@ -25,7 +25,8 @@ const screens = {
   AdmPostFundraising: ["A7.3 · Fundraising post form", "AdmPostPreview", "The link must be https; the database enforces it too."],
   AdmPostPreview: ["A7.4 · Preview as alumni see it", "Posts", "Only staff can see a preview."],
   Posts: ["3.5 · School posts for alumni", "PostDetail", "Hidden when the school has no published post. Outbound clicks are recorded, not shown to the school."],
-  PostDetail: ["3.6 · News post", "Posts", "A news article in full."]
+  PostDetail: ["3.6 · News post", "Posts", "A news article in full."],
+  SchoolPage: ["3.7 · School page", "Home", 'Shown to signed-in alumni. Every field is optional; empty fields are hidden, and so is the page when nothing is filled in. Donate always carries the leave-site note.']
 };
 let mobile = window.matchMedia("(max-width: 760px)").matches;
 let revision = 0;

@@ -9,6 +9,7 @@ describe("school console navigation", () => {
       "templates",
       "posts",
       "staff",
+      "schoolPage",
       "audit",
       "settings",
     ]);

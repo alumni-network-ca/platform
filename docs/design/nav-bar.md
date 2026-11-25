@@ -47,7 +47,7 @@ inactive = `#d2d7e4`, 500):
 | Nav role | Links |
 |---|---|
 | guest, applicant, invitee | none |
-| alumnus | Home · Directory · Posts (only when the school has a published post; EPIC-POSTS, [`school-posts.md`](school-posts.md)) |
+| alumnus | Home · Directory · Posts (only when the school has a published post; EPIC-POSTS, [`school-posts.md`](school-posts.md)) · School (only when the school filled in its page; EPIC-SCHOOL, SCH-03) |
 | reviewer, school_admin | Admin (badge = pending sign-ups) · Directory |
 | platform_admin | Schools · Support (badge = active grants) · Health |
 
