@@ -56,6 +56,38 @@ test.describe("directory", () => {
     await page.getByRole("link", { name: "Reset all" }).first().click();
     await expect(page).toHaveURL(/\/directory$/);
     await expect(chips).toHaveCount(0);
+    // The fields follow the URL, not just the chips.
+    await expect(page.getByLabel("Career field")).toHaveValue("");
+    await expect(page.getByLabel("City")).toHaveValue("");
+  });
+
+  test("keeps the open-to options in step with their chips and the reset", async ({
+    page,
+    isMobile,
+  }) => {
+    await page.goto("/directory");
+    if (isMobile) await page.getByRole("button", { name: "Filters", exact: true }).click();
+    const mentoring = page.getByRole("checkbox", { name: "Mentoring" });
+    await mentoring.check({ force: true });
+    await expect(page).toHaveURL(/offer=mentoring/);
+    await expect(mentoring).toBeChecked();
+
+    // Its chip unticks it, and the next filter does not bring it back.
+    const chips = page.getByRole("list", { name: "Active filters" });
+    await chips.getByRole("link", { name: /^Mentoring/ }).click();
+    await expect(page).toHaveURL(/\/directory$/);
+    await expect(mentoring).not.toBeChecked();
+    await page.getByLabel("City").selectOption("Toronto");
+    await expect(page).toHaveURL(/city=Toronto/);
+    expect(page.url()).not.toContain("offer=");
+
+    // Clear empties every field, options included.
+    await mentoring.check({ force: true });
+    await expect(page).toHaveURL(/offer=mentoring/);
+    await page.getByRole("link", { name: "Clear" }).click();
+    await expect(page).toHaveURL(/\/directory$/);
+    await expect(mentoring).not.toBeChecked();
+    await expect(page.getByLabel("City")).toHaveValue("");
   });
 
   test("searches names and universities, and several options must all match", async ({ page }) => {
