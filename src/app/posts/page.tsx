@@ -4,14 +4,14 @@ import { requireAccess } from "@/lib/auth/account";
 import { format } from "@/lib/i18n";
 import { getServerTranslations } from "@/lib/i18n-server";
 import { coverUrls, liveKinds, livePostsQuery, type PostRow } from "@/lib/posts/data";
-import { hostOf, SCHOOL_TIME_ZONE } from "@/lib/posts/posts";
+import { groupByMonth, hostOf, SCHOOL_TIME_ZONE } from "@/lib/posts/posts";
 import { schoolBranding } from "@/lib/school";
 import { cn } from "@/lib/utils";
 import { frame, pageTitle } from "@/components/alumni/parts";
-import { FundraisingCard, NewsCard } from "@/components/posts/PostCards";
+import { FundraisingEntry, MonthGroup, NewsEntry, whenOf } from "@/components/posts/PostTimeline";
 
-// 3.5 School posts (POST-03): the school's published, live posts, newest first, with an All / News / Fundraising
-// filter that lists only the kinds the school has. A school with no live post has no page (and no nav entry).
+// 3.5 School posts (POST-03): the school's published, live posts, newest first and grouped by month on a timeline,
+// with an All / News / Fundraising filter that lists only the kinds the school has. A school with no live post has no page (and no nav entry).
 
 const PAGE_SIZE = 24;
 
@@ -40,10 +40,17 @@ export default async function Posts({
     posts.map((post) => post.cover_path),
   );
   const { shortName, networkName } = schoolBranding(school);
-  const dates = new Intl.DateTimeFormat(locale === "fr" ? "fr-CA" : "en-CA", {
-    dateStyle: "medium",
-    timeZone: SCHOOL_TIME_ZONE,
+  const lang = locale === "fr" ? "fr-CA" : "en-CA";
+  const dates = new Intl.DateTimeFormat(lang, { dateStyle: "medium", timeZone: SCHOOL_TIME_ZONE });
+  const months = new Intl.DateTimeFormat(lang, {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
   });
+  const monthLabel = (month: string) => {
+    const label = months.format(new Date(`${month}-15T12:00:00Z`));
+    return label.charAt(0).toLocaleUpperCase(lang) + label.slice(1);
+  };
   const chips = [
     { key: undefined, label: t.all, show: kinds.news > 0 && kinds.fundraising > 0 },
     { key: "news" as const, label: t.news, show: kinds.news > 0 },
@@ -61,7 +68,7 @@ export default async function Posts({
     "inline-flex h-9 items-center rounded-full border border-border-strong bg-card px-4 text-base font-bold text-foreground outline-none hover:border-input focus-visible:ring-[3px] focus-visible:ring-ring/45 aria-[current=page]:border-brand aria-[current=page]:bg-brand aria-[current=page]:text-brand-foreground";
 
   return (
-    <main className={frame.stack}>
+    <main className={cn(frame.stack, "max-w-[880px]")}>
       <div className="flex flex-col gap-1.5">
         <h1 className={pageTitle}>{format(t.pageTitle, { school: shortName })}</h1>
         <p className="text-md text-subtle-foreground">{t.pageIntro}</p>
@@ -80,42 +87,49 @@ export default async function Posts({
           ))}
         </nav>
       )}
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] items-start gap-5">
-        {posts.map((post) => {
-          const cover = post.cover_path ? covers.get(post.cover_path) : null;
-          const date = dates.format(new Date(post.publish_at!));
-          return post.kind === "fundraising" ? (
-            <FundraisingCard
-              key={post.id}
-              title={post.title}
-              description={post.summary}
-              goal={post.goal_note ? format(t.goal, { goal: post.goal_note }) : null}
-              until={
-                post.ends_on
-                  ? format(t.until, { date: dates.format(new Date(`${post.ends_on}T12:00:00Z`)) })
-                  : null
-              }
-              cover={cover}
-              outboundHref={`/posts/${post.id}/go`}
-              t={{
-                fundraising: t.fundraising,
-                leaveNote: format(t.leaveNote, { network: networkName, school: shortName }),
-                give: format(t.give, { host: hostOf(post.external_url ?? "") }),
-                newTab: t.newTab,
-              }}
-            />
-          ) : (
-            <NewsCard
-              key={post.id}
-              href={`/posts/${post.id}`}
-              title={post.title}
-              excerpt={post.summary}
-              date={date}
-              cover={cover}
-              t={{ news: t.news, readMore: t.readMore }}
-            />
-          );
-        })}
+      <div className="flex flex-col gap-7">
+        {groupByMonth(posts).map(({ month, posts: inMonth }) => (
+          <MonthGroup key={month} id={`month-${month}`} label={monthLabel(month)}>
+            {inMonth.map((post) => {
+              const cover = post.cover_path ? covers.get(post.cover_path) : null;
+              const when = whenOf(new Date(post.publish_at!), lang, SCHOOL_TIME_ZONE);
+              return post.kind === "fundraising" ? (
+                <FundraisingEntry
+                  key={post.id}
+                  heading={post.title}
+                  description={post.summary}
+                  goal={post.goal_note ? format(t.goal, { goal: post.goal_note }) : null}
+                  until={
+                    post.ends_on
+                      ? format(t.until, {
+                          date: dates.format(new Date(`${post.ends_on}T12:00:00Z`)),
+                        })
+                      : null
+                  }
+                  when={when}
+                  cover={cover}
+                  outboundHref={`/posts/${post.id}/go`}
+                  t={{
+                    fundraising: t.fundraising,
+                    leaveNote: format(t.leaveNote, { network: networkName, school: shortName }),
+                    give: format(t.give, { host: hostOf(post.external_url ?? "") }),
+                    newTab: t.newTab,
+                  }}
+                />
+              ) : (
+                <NewsEntry
+                  key={post.id}
+                  href={`/posts/${post.id}`}
+                  heading={post.title}
+                  excerpt={post.summary}
+                  when={when}
+                  cover={cover}
+                  t={{ news: t.news }}
+                />
+              );
+            })}
+          </MonthGroup>
+        ))}
       </div>
       {pages > 1 && (
         <nav aria-label={t.pagination} className="flex items-center justify-center gap-4 text-base">

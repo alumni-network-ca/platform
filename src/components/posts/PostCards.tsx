@@ -1,9 +1,8 @@
-import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { panel } from "@/components/alumni/parts";
 
-// The cards of the School posts page (design 3.5, A7.4). Strings arrive translated; the cards decide nothing.
+// The fundraising card of a post page (design 3.6) and the tag and cover the list (PostTimeline) shares. Strings arrive translated; the cards decide nothing.
 
 const KIND_TAG = {
   news: "bg-info-soft text-info",
@@ -53,46 +52,6 @@ const card = cn(panel, "flex h-full flex-col overflow-hidden");
 const cardBody = "flex flex-1 flex-col gap-2.5 px-5 pt-4.5 pb-5";
 const cardTitle = "text-[1.1875rem] leading-snug font-extrabold";
 const cardText = "text-md leading-normal text-subtle-foreground";
-
-export function NewsCard({
-  href,
-  title,
-  excerpt,
-  date,
-  cover,
-  t,
-}: {
-  href: string;
-  title: string;
-  excerpt: string | null;
-  date: string;
-  cover: string | null | undefined;
-  t: { news: string; readMore: string };
-}) {
-  return (
-    <article className={card}>
-      <Cover src={cover} kind="news" />
-      <div className={cardBody}>
-        <div className="flex flex-wrap items-center gap-2">
-          <KindTag kind="news" label={t.news} />
-          <span className="text-sm text-muted-foreground">{date}</span>
-        </div>
-        <h2 className={cardTitle}>
-          <Link href={href} className="outline-none hover:underline focus-visible:underline">
-            {title}
-          </Link>
-        </h2>
-        {excerpt && <p className={cardText}>{excerpt}</p>}
-        <Link
-          href={href}
-          className="mt-auto self-start text-base font-bold text-primary hover:underline"
-        >
-          {t.readMore} <span aria-hidden="true">→</span>
-        </Link>
-      </div>
-    </article>
-  );
-}
 
 export function FundraisingCard({
   title,

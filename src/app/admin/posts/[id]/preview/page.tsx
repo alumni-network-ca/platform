@@ -7,7 +7,7 @@ import { coverUrls, POST_COLUMNS, type PostRow } from "@/lib/posts/data";
 import { hostOf, SCHOOL_TIME_ZONE } from "@/lib/posts/posts";
 import { schoolBranding } from "@/lib/school";
 import { ui } from "@/components/admin/parts";
-import { FundraisingCard, NewsCard } from "@/components/posts/PostCards";
+import { FundraisingEntry, MonthGroup, NewsEntry, whenOf } from "@/components/posts/PostTimeline";
 import { PostArticle } from "@/components/posts/PostArticle";
 import { Button } from "@/components/ui/button";
 
@@ -29,11 +29,16 @@ export default async function PreviewPost({ params }: { params: Promise<{ id: st
   const covers = await coverUrls(supabase, [post.cover_path]);
   const cover = post.cover_path ? covers.get(post.cover_path) : null;
   const { shortName, networkName } = schoolBranding(school);
-  const dates = new Intl.DateTimeFormat(locale === "fr" ? "fr-CA" : "en-CA", {
-    dateStyle: "medium",
+  const lang = locale === "fr" ? "fr-CA" : "en-CA";
+  const dates = new Intl.DateTimeFormat(lang, { dateStyle: "medium", timeZone: SCHOOL_TIME_ZONE });
+  const published = post.publish_at ? new Date(post.publish_at) : new Date();
+  const date = dates.format(published);
+  const when = whenOf(published, lang, SCHOOL_TIME_ZONE);
+  const month = new Intl.DateTimeFormat(lang, {
+    month: "long",
+    year: "numeric",
     timeZone: SCHOOL_TIME_ZONE,
-  });
-  const date = dates.format(post.publish_at ? new Date(post.publish_at) : new Date());
+  }).format(published);
 
   return (
     <>
@@ -54,36 +59,44 @@ export default async function PreviewPost({ params }: { params: Promise<{ id: st
           {t.previewBanner}
         </p>
         <div className="flex flex-col items-center gap-8 px-4 py-7">
-          <div className="w-full max-w-[420px]">
-            {post.kind === "fundraising" ? (
-              <FundraisingCard
-                title={post.title}
-                description={post.summary}
-                goal={post.goal_note ? format(t.goal, { goal: post.goal_note }) : null}
-                until={
-                  post.ends_on
-                    ? format(t.until, { date: dates.format(new Date(`${post.ends_on}T12:00:00Z`)) })
-                    : null
-                }
-                cover={cover}
-                outboundHref={null}
-                t={{
-                  fundraising: t.fundraising,
-                  leaveNote: format(t.leaveNote, { network: networkName, school: shortName }),
-                  give: format(t.give, { host: hostOf(post.external_url ?? "") }),
-                  newTab: t.newTab,
-                }}
-              />
-            ) : (
-              <NewsCard
-                href={`/admin/posts/${post.id}/preview`}
-                title={post.title}
-                excerpt={post.summary}
-                date={date}
-                cover={cover}
-                t={{ news: t.news, readMore: t.readMore }}
-              />
-            )}
+          <div className="w-full max-w-[760px]">
+            <MonthGroup
+              id="preview-month"
+              label={month.charAt(0).toLocaleUpperCase(lang) + month.slice(1)}
+            >
+              {post.kind === "fundraising" ? (
+                <FundraisingEntry
+                  heading={post.title}
+                  description={post.summary}
+                  goal={post.goal_note ? format(t.goal, { goal: post.goal_note }) : null}
+                  until={
+                    post.ends_on
+                      ? format(t.until, {
+                          date: dates.format(new Date(`${post.ends_on}T12:00:00Z`)),
+                        })
+                      : null
+                  }
+                  when={when}
+                  cover={cover}
+                  outboundHref={null}
+                  t={{
+                    fundraising: t.fundraising,
+                    leaveNote: format(t.leaveNote, { network: networkName, school: shortName }),
+                    give: format(t.give, { host: hostOf(post.external_url ?? "") }),
+                    newTab: t.newTab,
+                  }}
+                />
+              ) : (
+                <NewsEntry
+                  href={`/admin/posts/${post.id}/preview`}
+                  heading={post.title}
+                  excerpt={post.summary}
+                  when={when}
+                  cover={cover}
+                  t={{ news: t.news }}
+                />
+              )}
+            </MonthGroup>
           </div>
           {post.kind === "news" && (
             <div className="w-full max-w-[760px]">

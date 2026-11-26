@@ -62,11 +62,15 @@ Chips: Draft `#eef0f4/#3a4a70` · Scheduled `#fff4dc/#7a4b00` · Published `#e3f
 ## 5. Alumni screens (3.5–3.6)
 
 - **3.5 School posts** (`/posts`) — heading "News from {School}", filter chips All · News · Fundraising (a chip
-  appears only if that kind has posts). Newest first.
-  - News card: cover, "News" tag, date, title, two-line excerpt, *Read more*.
-  - Fundraising card: cover, "Fundraising" tag, title, description, goal note, "Until {date}", then the leave-site
-    note — *"You will leave {School} Alumni Network. Donations are handled by {School} on its own website."* — and
-    a burgundy button **Give on {host} ↗**. The host is always printed. Opens a new tab.
+  appears only if that kind has posts). Newest first, as a **timeline grouped by month** (chosen by Gab on
+  2026-11-25, replacing the card grid drawn in `Posts`): a heading per month ("November 2026", in the school's time
+  zone), a line down the left with a dot per post (navy for news, burgundy for fundraising), the day and weekday in
+  a column, and the cover as a small image on the right (left out when there is none, and on phones).
+  - News entry: "News" tag, title (the whole row links to the post), two-line excerpt.
+  - Fundraising entry, on a pale burgundy row: "Fundraising" tag, "Until {date}", title, description, goal note,
+    then the leave-site note — *"You will leave {School} Alumni Network. Donations are handled by {School} on its
+    own website."* — and a burgundy button **Give on {host} ↗**. The host is always printed. Opens a new tab.
+  - The admin preview (A7.4) shows the post as one entry of this timeline.
 - **3.6 Post** (`/posts/[id]`) — a news article: cover, title, date, body, "← All posts".
 - **Hidden when empty**: no published posts → no "Posts" link in the nav bar and `/posts` is a 404. Never an empty
   page.

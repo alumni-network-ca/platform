@@ -110,3 +110,23 @@ export function toSchoolTime(date: Date): string {
   const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
   return `${get("year")}-${get("month")}-${get("day")}T${get("hour")}:${get("minute")}`;
 }
+
+/** "2026-11": the month a post went live, in the schools' zone. The list (3.5) groups posts under these. */
+export function schoolMonth(instant: Date): string {
+  return schoolToday(instant).slice(0, 7);
+}
+
+/** Posts in the order given (newest first), with each run of posts from one month under that month. */
+export function groupByMonth<T extends { publish_at: string | null }>(
+  posts: T[],
+): { month: string; posts: T[] }[] {
+  const groups: { month: string; posts: T[] }[] = [];
+  for (const post of posts) {
+    if (!post.publish_at) continue;
+    const month = schoolMonth(new Date(post.publish_at));
+    const last = groups.at(-1);
+    if (last?.month === month) last.posts.push(post);
+    else groups.push({ month, posts: [post] });
+  }
+  return groups;
+}
