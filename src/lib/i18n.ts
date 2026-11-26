@@ -1022,6 +1022,7 @@ export const translations = {
       fundraising: "Fundraising",
       readMore: "Read more",
       allPosts: "All posts",
+      alsoIn: "Also in {month}",
       until: "Until {date}",
       goal: "Goal: {goal}",
       leaveNote: "You will leave {network}. Donations are handled by {school} on its own website.",
@@ -2184,6 +2185,7 @@ export const translations = {
       fundraising: "Collecte de fonds",
       readMore: "Lire la suite",
       allPosts: "Toutes les publications",
+      alsoIn: "Aussi en {month}",
       until: "Jusqu’au {date}",
       goal: "Objectif : {goal}",
       leaveNote:

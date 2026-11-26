@@ -7,6 +7,10 @@ import {
   schoolTimeToDate,
   schoolToday,
   toSchoolTime,
+  groupByMonth,
+  monthBounds,
+  monthLabel,
+  schoolMonth,
 } from "@/lib/posts/posts";
 
 describe("isHttpsUrl (the database's check on fundraising links)", () => {
@@ -73,5 +77,43 @@ describe("school time", () => {
   it("round-trips through the field's format", () => {
     expect(toSchoolTime(new Date("2026-12-02T14:00:00Z"))).toBe("2026-12-02T09:00");
     expect(toSchoolTime(schoolTimeToDate("2026-03-08T12:30")!)).toBe("2026-03-08T12:30");
+  });
+});
+
+describe("groupByMonth (the posts list's month headings)", () => {
+  it("reads the month in the schools' zone, not UTC", () => {
+    // 1 December 03:00 UTC is still 30 November in Montreal.
+    expect(schoolMonth(new Date("2026-12-01T03:00:00Z"))).toBe("2026-11");
+    expect(schoolMonth(new Date("2026-12-01T06:00:00Z"))).toBe("2026-12");
+  });
+
+  it("keeps the order and starts a group at each new month", () => {
+    const posts = [
+      { id: "a", publish_at: "2026-11-20T15:00:00Z" },
+      { id: "b", publish_at: "2026-11-02T15:00:00Z" },
+      { id: "c", publish_at: "2026-10-28T15:00:00Z" },
+      { id: "d", publish_at: null },
+      { id: "e", publish_at: "2025-11-15T15:00:00Z" },
+    ];
+    expect(groupByMonth(posts).map((g) => [g.month, g.posts.map((p) => p.id)])).toEqual([
+      ["2026-11", ["a", "b"]],
+      ["2026-10", ["c"]],
+      ["2025-11", ["e"]],
+    ]);
+  });
+});
+
+describe("monthLabel and monthBounds", () => {
+  it("names a month in either language, capitalised", () => {
+    expect(monthLabel("2026-11", "en-CA")).toBe("November 2026");
+    expect(monthLabel("2026-11", "fr-CA")).toBe("Novembre 2026");
+    expect(monthLabel("2026-11", "fr-CA", { heading: false })).toBe("novembre 2026");
+  });
+
+  it("starts and ends a month at midnight in Montreal, across the year end", () => {
+    const [start, end] = monthBounds("2026-12");
+    expect(start.toISOString()).toBe("2026-12-01T05:00:00.000Z");
+    expect(end.toISOString()).toBe("2027-01-01T05:00:00.000Z");
+    expect(monthBounds("2026-07")[0].toISOString()).toBe("2026-07-01T04:00:00.000Z");
   });
 });

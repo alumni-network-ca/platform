@@ -110,3 +110,43 @@ export function toSchoolTime(date: Date): string {
   const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
   return `${get("year")}-${get("month")}-${get("day")}T${get("hour")}:${get("minute")}`;
 }
+
+/** "2026-11": the month a post went live, in the schools' zone. The list (3.5) groups posts under these. */
+export function schoolMonth(instant: Date): string {
+  return schoolToday(instant).slice(0, 7);
+}
+
+/** Posts in the order given (newest first), with each run of posts from one month under that month. */
+export function groupByMonth<T extends { publish_at: string | null }>(
+  posts: T[],
+): { month: string; posts: T[] }[] {
+  const groups: { month: string; posts: T[] }[] = [];
+  for (const post of posts) {
+    if (!post.publish_at) continue;
+    const month = schoolMonth(new Date(post.publish_at));
+    const last = groups.at(-1);
+    if (last?.month === month) last.posts.push(post);
+    else groups.push({ month, posts: [post] });
+  }
+  return groups;
+}
+
+/**
+ * "November 2026" / "Novembre 2026": a "YYYY-MM" month as a heading, capitalised in either language. Inside a
+ * sentence pass `heading: false`, so French keeps its lower-case month ("Aussi en novembre 2026").
+ */
+export function monthLabel(month: string, lang: string, { heading = true } = {}): string {
+  const label = new Intl.DateTimeFormat(lang, {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(`${month}-15T12:00:00Z`));
+  return heading ? label.charAt(0).toLocaleUpperCase(lang) + label.slice(1) : label;
+}
+
+/** The instants a "YYYY-MM" month starts and ends at in the schools' zone: [start, end). */
+export function monthBounds(month: string): [Date, Date] {
+  const [y, m] = month.split("-").map(Number) as [number, number];
+  const next = m === 12 ? `${y + 1}-01` : `${y}-${String(m + 1).padStart(2, "0")}`;
+  return [schoolTimeToDate(`${month}-01T00:00`)!, schoolTimeToDate(`${next}-01T00:00`)!];
+}
