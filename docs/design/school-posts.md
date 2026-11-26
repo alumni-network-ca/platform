@@ -71,7 +71,13 @@ Chips: Draft `#eef0f4/#3a4a70` · Scheduled `#fff4dc/#7a4b00` · Published `#e3f
     then the leave-site note — *"You will leave {School} Alumni Network. Donations are handled by {School} on its
     own website."* — and a burgundy button **Give on {host} ↗**. The host is always printed. Opens a new tab.
   - The admin preview (A7.4) shows the post as one entry of this timeline.
-- **3.6 Post** (`/posts/[id]`) — a news article: cover, title, date, body, "← All posts".
+- **3.6 Post** (`/posts/[id]`) — the timeline continued (chosen by Gab on 2026-11-25, replacing the card drawn in
+  `PostDetail`): a back link named after the month ("← November 2026", to `/posts`), the day and weekday in a column
+  with a line down its right side, then tag, title, a short wide cover (3:1, 16:9 on phones; left out when there is none) and the
+  body in a 680px column. A fundraising post shows its description, goal note, "Until {date}" beside the tag, the
+  leave-site note and the **Give on {host} ↗** button, with no colour band when it has no cover. Below the body,
+  **"Also in {month}"** lists up to six other live posts of that month (day and title), newest first; it is left out
+  when there are none. The admin preview (A7.4) shows this page for both kinds.
 - **Hidden when empty**: no published posts → no "Posts" link in the nav bar and `/posts` is a 404. Never an empty
   page.
 

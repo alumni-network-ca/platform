@@ -8,6 +8,8 @@ import {
   schoolToday,
   toSchoolTime,
   groupByMonth,
+  monthBounds,
+  monthLabel,
   schoolMonth,
 } from "@/lib/posts/posts";
 
@@ -98,5 +100,20 @@ describe("groupByMonth (the posts list's month headings)", () => {
       ["2026-10", ["c"]],
       ["2025-11", ["e"]],
     ]);
+  });
+});
+
+describe("monthLabel and monthBounds", () => {
+  it("names a month in either language, capitalised", () => {
+    expect(monthLabel("2026-11", "en-CA")).toBe("November 2026");
+    expect(monthLabel("2026-11", "fr-CA")).toBe("Novembre 2026");
+    expect(monthLabel("2026-11", "fr-CA", { heading: false })).toBe("novembre 2026");
+  });
+
+  it("starts and ends a month at midnight in Montreal, across the year end", () => {
+    const [start, end] = monthBounds("2026-12");
+    expect(start.toISOString()).toBe("2026-12-01T05:00:00.000Z");
+    expect(end.toISOString()).toBe("2027-01-01T05:00:00.000Z");
+    expect(monthBounds("2026-07")[0].toISOString()).toBe("2026-07-01T04:00:00.000Z");
   });
 });

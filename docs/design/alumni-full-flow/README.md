@@ -159,7 +159,7 @@ Signed-out pages use the `guest` role: FR, Sign in and the proposed Join now act
 | **Built** · 3.3 Profile and message (`Profile`) | `/profile/[id]` | DIR-03, CON-02 |
 | 3.4 Relay email (`RecipientEmail`) | email | CON-02 |
 | **Built** · 3.5 School posts (`Posts`) | `/posts`; a 404 and no nav entry when the school has no live post. The outbound button goes through `/posts/[id]/go`, which records the click. Built as a timeline grouped by month, not the canvas's card grid (`school-posts.md` §5) | POST-03 |
-| **Built** · 3.6 News post (`PostDetail`) | `/posts/[id]` | POST-03 |
+| **Built** · 3.6 News post (`PostDetail`) | `/posts/[id]`. Built as the timeline continued (day column, "Also in {month}"), not the canvas's card (`school-posts.md` §5) | POST-03 |
 | 3.7 School page (`SchoolPage`) | `/school`; hidden when the school filled in nothing | SCH-03 |
 
 Implementation notes: A2.3 uses a dedicated route with dialog styling. The record edit route was added to cover the fields accepted by `admin_update_profile`; it is not drawn on the canvas. French admin copy and empty states need Noah’s language review.

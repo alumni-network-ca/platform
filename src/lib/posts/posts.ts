@@ -130,3 +130,23 @@ export function groupByMonth<T extends { publish_at: string | null }>(
   }
   return groups;
 }
+
+/**
+ * "November 2026" / "Novembre 2026": a "YYYY-MM" month as a heading, capitalised in either language. Inside a
+ * sentence pass `heading: false`, so French keeps its lower-case month ("Aussi en novembre 2026").
+ */
+export function monthLabel(month: string, lang: string, { heading = true } = {}): string {
+  const label = new Intl.DateTimeFormat(lang, {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(`${month}-15T12:00:00Z`));
+  return heading ? label.charAt(0).toLocaleUpperCase(lang) + label.slice(1) : label;
+}
+
+/** The instants a "YYYY-MM" month starts and ends at in the schools' zone: [start, end). */
+export function monthBounds(month: string): [Date, Date] {
+  const [y, m] = month.split("-").map(Number) as [number, number];
+  const next = m === 12 ? `${y + 1}-01` : `${y}-${String(m + 1).padStart(2, "0")}`;
+  return [schoolTimeToDate(`${month}-01T00:00`)!, schoolTimeToDate(`${next}-01T00:00`)!];
+}

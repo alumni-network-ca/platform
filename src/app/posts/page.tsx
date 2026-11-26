@@ -4,7 +4,7 @@ import { requireAccess } from "@/lib/auth/account";
 import { format } from "@/lib/i18n";
 import { getServerTranslations } from "@/lib/i18n-server";
 import { coverUrls, liveKinds, livePostsQuery, type PostRow } from "@/lib/posts/data";
-import { groupByMonth, hostOf, SCHOOL_TIME_ZONE } from "@/lib/posts/posts";
+import { groupByMonth, hostOf, monthLabel, SCHOOL_TIME_ZONE } from "@/lib/posts/posts";
 import { schoolBranding } from "@/lib/school";
 import { cn } from "@/lib/utils";
 import { frame, pageTitle } from "@/components/alumni/parts";
@@ -42,15 +42,6 @@ export default async function Posts({
   const { shortName, networkName } = schoolBranding(school);
   const lang = locale === "fr" ? "fr-CA" : "en-CA";
   const dates = new Intl.DateTimeFormat(lang, { dateStyle: "medium", timeZone: SCHOOL_TIME_ZONE });
-  const months = new Intl.DateTimeFormat(lang, {
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  });
-  const monthLabel = (month: string) => {
-    const label = months.format(new Date(`${month}-15T12:00:00Z`));
-    return label.charAt(0).toLocaleUpperCase(lang) + label.slice(1);
-  };
   const chips = [
     { key: undefined, label: t.all, show: kinds.news > 0 && kinds.fundraising > 0 },
     { key: "news" as const, label: t.news, show: kinds.news > 0 },
@@ -89,7 +80,7 @@ export default async function Posts({
       )}
       <div className="flex flex-col gap-7">
         {groupByMonth(posts).map(({ month, posts: inMonth }) => (
-          <MonthGroup key={month} id={`month-${month}`} label={monthLabel(month)}>
+          <MonthGroup key={month} id={`month-${month}`} label={monthLabel(month, lang)}>
             {inMonth.map((post) => {
               const cover = post.cover_path ? covers.get(post.cover_path) : null;
               const when = whenOf(new Date(post.publish_at!), lang, SCHOOL_TIME_ZONE);

@@ -29,7 +29,7 @@ export function MonthGroup({
 }
 
 /** The day a post went live, large, with the weekday under it; screen readers get the full date instead. */
-type When = { day: string; weekday: string; full: string; iso: string };
+export type When = { day: string; weekday: string; full: string; iso: string };
 
 function Entry({
   kind,
@@ -135,12 +135,6 @@ export function FundraisingEntry({
   outboundHref: string | null;
   t: { fundraising: string; leaveNote: string; give: string; newTab: string };
 }) {
-  const label = (
-    <>
-      {t.give}
-      <ExternalLink aria-hidden="true" />
-    </>
-  );
   return (
     <Entry kind="fundraising" when={when} cover={cover}>
       <div className="flex flex-wrap items-center gap-2">
@@ -150,25 +144,54 @@ export function FundraisingEntry({
       <h3 className={title}>{heading}</h3>
       {description && <p className={cn(text, "whitespace-pre-line")}>{description}</p>}
       {goal && <p className="text-base font-bold">{goal}</p>}
+      <GiveBlock
+        outboundHref={outboundHref}
+        size="sm"
+        t={{ leaveNote: t.leaveNote, give: t.give, newTab: t.newTab }}
+      />
+    </Entry>
+  );
+}
+
+/**
+ * The leave-site note and the outbound button of a fundraising post (school-posts.md §5): the host is always printed
+ * and the button opens a new tab through our /go, which records the click.
+ */
+export function GiveBlock({
+  outboundHref,
+  size = "default",
+  t,
+}: {
+  /** Our own /posts/[id]/go; null in a preview, where the button goes nowhere. */
+  outboundHref: string | null;
+  size?: "sm" | "default";
+  t: { leaveNote: string; give: string; newTab: string };
+}) {
+  const label = (
+    <>
+      {t.give}
+      <ExternalLink aria-hidden="true" />
+    </>
+  );
+  return (
+    <div className="flex flex-col items-start gap-2.5">
       <p className="flex items-start gap-2 text-sm leading-normal text-subtle-foreground">
         <ExternalLink aria-hidden="true" className="mt-0.5 size-3.5 shrink-0" />
         <span>{t.leaveNote}</span>
       </p>
-      <div className="pt-1">
-        {outboundHref ? (
-          <Button asChild size="sm">
-            <a href={outboundHref} target="_blank" rel="noopener noreferrer">
-              {label}
-              <span className="sr-only">{t.newTab}</span>
-            </a>
-          </Button>
-        ) : (
-          <Button size="sm" type="button" className="cursor-default">
+      {outboundHref ? (
+        <Button asChild size={size}>
+          <a href={outboundHref} target="_blank" rel="noopener noreferrer">
             {label}
-          </Button>
-        )}
-      </div>
-    </Entry>
+            <span className="sr-only">{t.newTab}</span>
+          </a>
+        </Button>
+      ) : (
+        <Button size={size} type="button" className="cursor-default">
+          {label}
+        </Button>
+      )}
+    </div>
   );
 }
 

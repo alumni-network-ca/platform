@@ -4,11 +4,11 @@ import { requireStaff } from "@/lib/auth/staff";
 import { format } from "@/lib/i18n";
 import { getServerTranslations } from "@/lib/i18n-server";
 import { coverUrls, POST_COLUMNS, type PostRow } from "@/lib/posts/data";
-import { hostOf, SCHOOL_TIME_ZONE } from "@/lib/posts/posts";
+import { hostOf, monthLabel, SCHOOL_TIME_ZONE, schoolMonth } from "@/lib/posts/posts";
 import { schoolBranding } from "@/lib/school";
 import { ui } from "@/components/admin/parts";
 import { FundraisingEntry, MonthGroup, NewsEntry, whenOf } from "@/components/posts/PostTimeline";
-import { PostArticle } from "@/components/posts/PostArticle";
+import { PostArticle, PostBody } from "@/components/posts/PostArticle";
 import { Button } from "@/components/ui/button";
 
 // A7.4: the saved post as alumni will see it, in a frame only staff see. The outbound button goes nowhere here.
@@ -32,13 +32,16 @@ export default async function PreviewPost({ params }: { params: Promise<{ id: st
   const lang = locale === "fr" ? "fr-CA" : "en-CA";
   const dates = new Intl.DateTimeFormat(lang, { dateStyle: "medium", timeZone: SCHOOL_TIME_ZONE });
   const published = post.publish_at ? new Date(post.publish_at) : new Date();
-  const date = dates.format(published);
   const when = whenOf(published, lang, SCHOOL_TIME_ZONE);
-  const month = new Intl.DateTimeFormat(lang, {
-    month: "long",
-    year: "numeric",
-    timeZone: SCHOOL_TIME_ZONE,
-  }).format(published);
+  const until = post.ends_on
+    ? format(t.until, { date: dates.format(new Date(`${post.ends_on}T12:00:00Z`)) })
+    : null;
+  const give = {
+    goal: post.goal_note ? format(t.goal, { goal: post.goal_note }) : null,
+    leaveNote: format(t.leaveNote, { network: networkName, school: shortName }),
+    give: format(t.give, { host: hostOf(post.external_url ?? "") }),
+    newTab: t.newTab,
+  };
 
   return (
     <>
@@ -60,31 +63,17 @@ export default async function PreviewPost({ params }: { params: Promise<{ id: st
         </p>
         <div className="flex flex-col items-center gap-8 px-4 py-7">
           <div className="w-full max-w-[760px]">
-            <MonthGroup
-              id="preview-month"
-              label={month.charAt(0).toLocaleUpperCase(lang) + month.slice(1)}
-            >
+            <MonthGroup id="preview-month" label={monthLabel(schoolMonth(published), lang)}>
               {post.kind === "fundraising" ? (
                 <FundraisingEntry
                   heading={post.title}
                   description={post.summary}
-                  goal={post.goal_note ? format(t.goal, { goal: post.goal_note }) : null}
-                  until={
-                    post.ends_on
-                      ? format(t.until, {
-                          date: dates.format(new Date(`${post.ends_on}T12:00:00Z`)),
-                        })
-                      : null
-                  }
+                  goal={give.goal}
+                  until={until}
                   when={when}
                   cover={cover}
                   outboundHref={null}
-                  t={{
-                    fundraising: t.fundraising,
-                    leaveNote: format(t.leaveNote, { network: networkName, school: shortName }),
-                    give: format(t.give, { host: hostOf(post.external_url ?? "") }),
-                    newTab: t.newTab,
-                  }}
+                  t={{ ...give, fundraising: t.fundraising }}
                 />
               ) : (
                 <NewsEntry
@@ -98,11 +87,18 @@ export default async function PreviewPost({ params }: { params: Promise<{ id: st
               )}
             </MonthGroup>
           </div>
-          {post.kind === "news" && (
-            <div className="w-full max-w-[760px]">
-              <PostArticle post={post} cover={cover} date={date} t={t} />
-            </div>
-          )}
+          <div className="w-full max-w-[880px] rounded-lg bg-background">
+            <PostArticle
+              kind={post.kind}
+              tag={post.kind === "news" ? t.news : t.fundraising}
+              meta={post.kind === "fundraising" ? until : null}
+              title={post.title}
+              cover={cover}
+              when={when}
+            >
+              <PostBody post={post} outboundHref={null} t={give} />
+            </PostArticle>
+          </div>
         </div>
       </div>
     </>
