@@ -11,25 +11,22 @@ import { Badge } from "@/components/ui/badge";
 import { Users } from "lucide-react";
 import { EmptyState } from "@/components/EmptyState";
 import { ui } from "@/components/admin/parts";
-const states = ["published", "hidden", "onboarding", "suspended", "archived", "deceased"] as const;
+import { Button } from "@/components/ui/button";
+import { Download } from "lucide-react";
+import {
+  rosterArgs,
+  rosterFilters,
+  rosterParams,
+  rosterStates as states,
+} from "@/lib/admin/roster";
 export default async function Roster({ searchParams }: { searchParams: Search }) {
-  const { supabase, school } = await requireStaff("/admin/alumni", "records.read");
+  const { supabase, school, can } = await requireStaff("/admin/alumni", "records.read");
   const { t, locale } = await adminCopy();
   const p = await searchParams;
   const page = pageNumber(p.page);
-  const year = (v?: string) =>
-    v && /^\d{4}$/.test(v) && +v >= 1900 && +v <= 2100 ? +v : undefined;
-  const state = states.find((s) => s === p.state);
-  const query = (p.q ?? "").trim().slice(0, 200);
-  const args = {
-    p_inst: school.id,
-    p_query: query || undefined,
-    p_state: state,
-    p_class_min: year(p.min),
-    p_class_max: year(p.max),
-  };
-  if (args.p_class_min && args.p_class_max && args.p_class_min > args.p_class_max)
-    [args.p_class_min, args.p_class_max] = [args.p_class_max, args.p_class_min];
+  const filters = rosterFilters((key) => p[key]);
+  const { query, state } = filters;
+  const args = rosterArgs(school.id, filters);
   const rows = await read(
     supabase.rpc("admin_roster", { ...args, p_limit: 25, p_offset: (page - 1) * 25 }),
   );
@@ -75,7 +72,22 @@ export default async function Roster({ searchParams }: { searchParams: Search })
         </label>
         <SubmitButton>{t.apply}</SubmitButton>
       </Form>
-      {/* TODO(FRS-04): freshness filter. TODO(EML-05): email state. TODO(EXP-01): export results. */}
+      {/* TODO(FRS-04): freshness filter. TODO(EML-05): email state. */}
+      {can("records.export") && total > 0 && (
+        // A POST of the filters the table shows (not the form's unsaved edits); the route re-checks the permission.
+        <form method="post" action="/admin/alumni/export" className={ui.shellTitle}>
+          {rosterParams(filters).map(([name, value]) => (
+            <input key={name} type="hidden" name={name} value={value} />
+          ))}
+          <p>
+            {format(t.exportRows, { count: total })} · {t.exportNote}
+          </p>
+          <Button type="submit" variant="secondary">
+            <Download aria-hidden />
+            {t.exportCsv}
+          </Button>
+        </form>
+      )}
       {rows.length ? (
         <div className={ui.tableBox}>
           <table className={ui.dataTable}>

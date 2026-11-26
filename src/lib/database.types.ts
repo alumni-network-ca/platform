@@ -1489,6 +1489,33 @@ export type Database = {
         }[];
       };
       admin_dashboard: { Args: { p_inst: string; p_since?: string }; Returns: Json };
+      admin_export_alumni: {
+        Args: {
+          p_class_max?: number;
+          p_class_min?: number;
+          p_inst: string;
+          p_query?: string;
+          p_state?: string;
+        };
+        Returns: {
+          career_field_en: string;
+          career_field_fr: string;
+          city: string;
+          country: string;
+          email: string;
+          employer: string;
+          first_name: string;
+          grad_year: number;
+          id: string;
+          job_title: string;
+          last_confirmed_at: string;
+          last_name: string;
+          maiden_name: string;
+          preferred_name: string;
+          school_student_id: string;
+          state: string;
+        }[];
+      };
       admin_profile_email: { Args: { p_profile: string }; Returns: string };
       admin_roster: {
         Args: {
@@ -1799,6 +1826,19 @@ export type Database = {
         Returns: Database["public"]["Enums"]["locale"];
       };
       revoke_staff_invitation: { Args: { p_invitation: string }; Returns: undefined };
+      roster_matches: {
+        Args: {
+          p_class_max: number;
+          p_class_min: number;
+          p_inst: string;
+          p_query: string;
+          p_state: string;
+        };
+        Returns: {
+          profile_id: string;
+          roster_state: string;
+        }[];
+      };
       save_email_template: {
         Args: {
           p_body: string;
